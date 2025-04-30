@@ -2,7 +2,10 @@
 // read the user cli command, parser it and call the correct functionality
 // related to the user query.
 
-#include <bits/stdc++.h> 
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cstdlib>
 
 #include "base/path.hpp"
 #include "base/function.hpp"

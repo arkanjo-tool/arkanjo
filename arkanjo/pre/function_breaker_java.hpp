@@ -3,7 +3,11 @@
 #ifndef FUNCTION_BREAKER_JAVA_HPP
 #define FUNCTION_BREAKER_JAVA_HPP
 
-#include <bits/stdc++.h>
+#include <string>
+#include <vector>
+#include <set>
+#include <array>
+#include <utility>
 #include "../base/utils.hpp"
 #include "function_breaker_util.hpp"
 

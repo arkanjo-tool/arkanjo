@@ -5,7 +5,8 @@
 #ifndef PREPROCESSOR_HPP
 #define PREPROCESSOR_HPP
 
-#include <bits/stdc++.h> 
+#include <string>
+#include <tuple>
 #include "parser.hpp"
 #include "function_breaker.hpp"
 #include "../base/config.hpp"

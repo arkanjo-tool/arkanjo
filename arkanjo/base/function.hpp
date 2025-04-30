@@ -5,9 +5,13 @@
 #ifndef FUNCTION_HPP
 #define FUNCTION_HPP
 
-#include <bits/stdc++.h> 
+#include <string>
+#include <vector>
+#include <array>
+#include <iostream>
+
 //WARNING THIS IMPORT MAYBE ONLY WORKS IN UBUNTU, SEE HERE: https://github.com/stardust95/TinyCompiler/issues/2
-#include <jsoncpp/json/json.h>
+#include <json/json.h>
 
 #include "path.hpp"
 #include "utils.hpp"
