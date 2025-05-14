@@ -31,7 +31,8 @@ class Similarity_Explorer{
 
 		Similarity_Table *similarity_table;
 		int limit_on_results;
-		string pattern_to_match;
+		string pattern_to_match_path;
+		string pattern_to_match_function;
 		bool both_path_need_to_match_pattern;
 		int processed_results = INITIAL_PROCESSED_RESULTS;
 
@@ -50,9 +51,11 @@ class Similarity_Explorer{
 	public:
 		Similarity_Explorer(Similarity_Table *_similarity_table, 
 				int _limit_on_results, 
-				string _pattern_to_match, 
+				string _pattern_to_match_path, 
+				string _pattern_to_match_function, 
 				bool _both_path_need_to_match,
-				bool sorted_by_number_of_duplicated_code=false);
+				bool sorted_by_number_of_duplicated_code=false
+		);
 };
 
 #endif
