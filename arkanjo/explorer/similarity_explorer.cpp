@@ -4,7 +4,11 @@ This code filter the output only printing the files similar to files that contai
 The code filter every file that has the pattern as a substring, so be carefull with duplications
 */
 
-#include <bits/stdc++.h> 
+#include <iostream>
+#include <string>
+#include <vector>
+#include <utility>
+#include <algorithm>
 
 #include "similarity_explorer.hpp"
 

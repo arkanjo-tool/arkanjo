@@ -14,7 +14,8 @@ even if the bracket sequence is in a commentary
 #ifndef FUNCTION_BREAKER_HPP
 #define FUNCTION_BREAKER_HPP
 
-#include <bits/stdc++.h>
+#include <string>
+#include <vector>
 #include "../base/utils.hpp"
 #include "function_breaker_c.hpp"
 #include "function_breaker_java.hpp"

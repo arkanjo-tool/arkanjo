@@ -5,7 +5,8 @@
 #ifndef DUPLICATION_FINDER_TOOL_HPP 
 #define DUPLICATION_FINDER_TOOL_HPP 
 
-#include <bits/stdc++.h> 
+#include <string>
+#include <iostream>
 #include "parser.hpp"
 using namespace std;
 

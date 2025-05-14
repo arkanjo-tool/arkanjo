@@ -3,7 +3,12 @@
 #ifndef FUNCTION_BREAKER_C_HPP
 #define FUNCTION_BREAKER_C_HPP
 
-#include <bits/stdc++.h>
+#include <cassert>
+#include <string>
+#include <vector>
+#include <set>
+#include <array>
+#include <tuple>
 #include "../base/utils.hpp"
 #include "function_breaker_util.hpp"
 

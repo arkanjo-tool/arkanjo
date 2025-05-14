@@ -5,7 +5,7 @@
 #ifndef CONFIG_HPP
 #define CONFIG_HPP
 
-#include <bits/stdc++.h> 
+#include <string>
 using namespace std;
 
 class Config{
