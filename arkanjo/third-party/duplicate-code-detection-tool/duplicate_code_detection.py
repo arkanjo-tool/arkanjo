@@ -1,9 +1,11 @@
-"""
-A simple Python3 tool to detect similarities between files within a repository.
+"""! @package duplicate_code_detection
+@file duplicate_code_detection.py
+@brief A simple Python3 tool to detect similarities between files within a repository.
 
 Document similarity code adapted from Jonathan Mugan's tutorial:
 https://www.oreilly.com/learning/how-do-i-compare-document-similarity-using-python
 """
+
 import os
 import sys
 import argparse
@@ -26,14 +28,27 @@ similarity_label_length = len(similarity_column_label)
 loc_label = "#LoC"
 similarity_label = "Similarity"
 
-
 class ReturnCode(Enum):
+    """! @brief Enumeration of possible return codes for the application.
+    
+    @param SUCCESS Indicates successful operation (value: 0)
+    @param BAD_INPUT Indicates invalid input parameters (value: 1)
+    @param THRESHOLD_EXCEEDED Indicates a threshold limit was exceeded (value: 2)
+    """
     SUCCESS = 0
     BAD_INPUT = 1
     THRESHOLD_EXCEEDED = 2
 
 
 class CliColors:
+    """! @brief ANSI color codes for terminal text formatting.
+    
+    Provides named constants for colored terminal output using ANSI escape sequences.
+    All colors should be used with ENDC to reset formatting.
+    
+    Example:
+        print(f"{CliColors.OKGREEN}Success!{CliColors.ENDC}")
+    """
     HEADER = "\033[95m"
     OKBLUE = "\033[94m"
     OKGREEN = "\033[92m"
@@ -45,7 +60,12 @@ class CliColors:
 
 
 def get_all_source_code_from_directory(directory, file_extensions):
-    """Get a list with all the source code files within the directory"""
+    """! @brief Get a list with all the source code files within the directory
+    
+    @param directory 
+    @param file_extensions
+    @return source_code_files
+    """
     source_code_files = list()
     for dirpath, _, filenames in os.walk(directory):
         for name in filenames:
@@ -58,21 +78,22 @@ def get_all_source_code_from_directory(directory, file_extensions):
 
 
 def conditional_print(text, machine_friendly_output):
+    """! @brief
+
+    @param text
+    @param machine_friendly_output 
+    """
     if not machine_friendly_output:
         print(text)
 
 
 def remove_comments_and_docstrings(source_code: str) -> str:
-    """Strip comments and docstrings from source code
+    """! @brief Strip comments and docstrings from source code
 
-    .. seealso::
+    @see https://gist.github.com/phpdude/1ae6f19de213d66286c8183e9e3b9ec1
 
-        https://gist.github.com/phpdude/1ae6f19de213d66286c8183e9e3b9ec1
-
-    :param source_code: Raw source code as a single string
-    :type source_code: str
-    :return: Stripped source code as a single string
-    :rtype: str
+    @param source_code Raw source code as a single string
+    @return source_code_clean Stripped source code as a single string
     """
     parsed = ast.parse(source_code)
     for node in ast.walk(parsed):
@@ -99,6 +120,11 @@ def remove_comments_and_docstrings(source_code: str) -> str:
 
 
 def get_loc_count(file_path):
+    """! @brief
+
+    @param file_path
+    @return lines_count
+    """
     lines_count = -1
     try:
         with open(os.path.normpath(file_path), 'r') as the_file:
@@ -109,11 +135,20 @@ def get_loc_count(file_path):
 
 
 def get_loc_to_print(loc_count):
+    """! @brief
+
+    @param loc_count 
+    @return loc_to_print
+    """
     loc_to_print = str(loc_count) if loc_count >= 0 else ""
     return loc_to_print
 
 
 def main():
+    """! @brief
+ 
+    @return result
+    """
     parser_description = (
         CliColors.HEADER
         + CliColors.BOLD
@@ -217,6 +252,21 @@ def run(
     csv_output,
     show_loc,
 ):
+    """! @brief
+
+    @param fail_threshold
+    @param directories
+    @param files
+    @param ignore_directories
+    @param ignore_files
+    @param json_output
+    @param project_root_dir
+    @param file_extensions
+    @param ignore_threshold
+    @param only_code
+    @param csv_output
+    @param show_loc
+    """
     # Determine which files to compare for similarities
     source_code_files = list()
     files_to_ignore = list()

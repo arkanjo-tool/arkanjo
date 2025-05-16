@@ -1,4 +1,4 @@
-# Arkanjo
+\page arkanjo_readme Arkanjo Module
 
 The arkanjo is a cli tool is designed to help developers find code duplications in their codebases.
 The tool is designed to find duplication in the scope of functions.
@@ -19,7 +19,7 @@ From now on, we will use the term commands instead of functionalities.
 The tool current should cover the C programming language. 
 The tool also supports Java with limitations.
 
-## Similarity
+# Similarity
 
 The tool current uses the concept of similarity. The user can pass a similarity threshold
 to the tool. This similarity threshold is used for limiting what the tool consider a duplication. 
@@ -32,11 +32,11 @@ The arkanjo tool uses as a subrotine the
 [Duplicate Code Detection Tool](https://github.com/platisd/duplicate-code-detection-tool) to generate
 the similarity metrics.
 
-## Requirements
+# Requirements
 
 The tool have only being tested on ubuntu operation systems. The instalation guide could included.
 
-## How to install
+# How to install
 
 Run on the terminal the following commands to install the dependencies:
 
@@ -69,7 +69,7 @@ make
 
 # How to Run
 
-### Preprocessor
+## Preprocessor
 
 The tool is designed to have a heavy preprocesing, to enable the tool to answer different kind of queries fastly.
 
@@ -84,7 +84,7 @@ the similarity threshold.
 
 The preprocessor can take a while to execute. Depending on the size of the codebases, it cannot run or take a some hours. 
 
-### Execute the run
+## Execute the run
 
 To execute the tool and the tool functionalities, you need to run the command that respect this format:
 
@@ -102,7 +102,7 @@ The shared parameters over all commands are:
 
 The following are the guide on how to execute the current commands of the tool:
 
-#### Explore duplications
+### Explore duplications
 
 To execute the explore duplications command, run:
 
@@ -124,7 +124,7 @@ one of the functions match the pattern. Default value is 'F'.
 - [-c 'T' or 'F'] 'T' if the results should be sorted by the number of duplicated lines. 'F' if the results
 should be sorted by the similarity metric. Default value is 'F'.
 
-#### Find function duplicates
+### Find function duplicates
 
 To execute the relatory commands, execute:
 
@@ -135,7 +135,7 @@ To execute the relatory commands, execute:
 Where \<FUNCTION_NAME\> is a parameter passed by the user. The tool will match
 the parameter with any function that has the FUNCTION_NAME as a substring.
 
-#### Relatory
+### Relatory
 
 To execute the relatory commands, execute:
 

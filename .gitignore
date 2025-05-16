@@ -75,3 +75,8 @@ output_tool.txt
 arkanjo/tmp/
 arkanjo/output_parsed.txt
 
+#Documentation
+docs
+
+#Visual Code configurations
+.vscode
