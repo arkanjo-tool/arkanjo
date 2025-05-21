@@ -1,7 +1,12 @@
-# test-duplication-code
+\page master_artifacts_readme Master Artifacts Module
+
+texto
+
+# Test Duplication Code
+
 I want to create some test cases to check the ability to detect duplication code on C code. This repository worth is store this test cases and document my finds.
 
-## About Parser
+# About Parser
 
 In fact none of the tools accomplished the expectations. 
 
@@ -17,7 +22,7 @@ Both tools has their own REAMDE. Read them to learn more.
 
 Probably it is good to create a new repository to the parser folder, but I think about it latter when the tool is more solid.
 
-## List of Candidate Tools to Test
+# List of Candidate Tools to Test
 
 https://pmd.github.io/pmd/pmd_userdocs_cpd
 
@@ -69,4 +74,3 @@ https://github.com/platisd/duplicate-code-detection-tool
 - It is easy to install and use. 
 - Support GitHub Action. Looks easy to do CI/CD with it.
 - Do not check similarity on code of the same file. I.e, the tool cannot check a copy-paste code if the copy-paste happened on the same file.
-
