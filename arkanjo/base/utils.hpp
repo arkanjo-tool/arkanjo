@@ -10,8 +10,15 @@
 #define UTILS_HPP
 
 #pragma once
-#include <bits/stdc++.h> 
-#include <jsoncpp/json/json.h>
+#include <iostream>
+#include <iomanip>
+#include <cassert>
+#include <string>
+#include <vector>
+#include <fstream>
+#include <sstream>
+#include <cctype>
+#include <json/json.h>
 #include <sys/stat.h>
 
 using namespace std;

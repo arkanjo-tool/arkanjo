@@ -12,7 +12,9 @@
 #ifndef PATH_HPP
 #define PATH_HPP
 
-#include <bits/stdc++.h> 
+#include <string>
+#include <vector>
+#include <cassert>
 using namespace std;
 
 /**

@@ -11,7 +11,11 @@
 #ifndef BIG_CLONE_FORMATER_HPP
 #define BIG_CLONE_FORMATER_HPP
 
-#include <bits/stdc++.h> 
+#include <string>
+#include <iostream>
+#include <iomanip>
+#include <tuple>
+#include <cassert>
 
 #include "../base/path.hpp"
 #include "../base/function.hpp"

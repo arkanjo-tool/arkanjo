@@ -12,7 +12,8 @@
 #ifndef FUNCTION_BREAKER_UTIL_HPP
 #define FUNCTION_BREAKER_UTIL_HPP
 
-#include <bits/stdc++.h>
+#include <string>
+#include <vector>
 #include "../base/utils.hpp"
 #include "../base/config.hpp"
 

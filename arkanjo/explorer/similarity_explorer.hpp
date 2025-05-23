@@ -13,7 +13,9 @@
 #ifndef SIMILARITY_EXPLORER_HPP
 #define SIMILARITY_EXPLORER_HPP
 
-#include <bits/stdc++.h> 
+#include <string>
+#include <vector>
+#include <utility>
 
 #include "../base/path.hpp"
 #include "../base/function.hpp"

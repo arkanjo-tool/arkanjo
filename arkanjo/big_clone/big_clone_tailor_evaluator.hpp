@@ -12,7 +12,14 @@
 #ifndef BIG_CLONE_TAILOR_EVALUATOR_HPP
 #define BIG_CLONE_TAILOR_EVALUATOR_HPP
 
-#include <bits/stdc++.h> 
+#include <string>
+#include <vector>
+#include <map>
+#include <set>
+#include <tuple>
+#include <iostream>
+#include <iomanip>
+#include <cassert>
 
 #include "../base/path.hpp"
 #include "../base/utils.hpp"
@@ -83,6 +90,12 @@ class Big_Clone_Tailor_Evaluator {
                 set<pair<int,int>> filter_similar_id_pairs_only_relevant_ones(
                         vector<pair<int,int>> similar_id_pairs);
 
+<<<<<<< HEAD
+	void evaluate(double minimum_similarity);
+
+public:
+	Big_Clone_Tailor_Evaluator(Similarity_Table *_similarity_table);
+=======
                 /**
                  * @brief Filters pairs by similarity threshold
                  * @param similar_id_pairs Pairs to filter
@@ -127,6 +140,7 @@ class Big_Clone_Tailor_Evaluator {
                  * @param _similarity_table Pointer to similarity table
                  */
                 Big_Clone_Tailor_Evaluator(Similarity_Table *_similarity_table);
+>>>>>>> main
 };
 
 #endif

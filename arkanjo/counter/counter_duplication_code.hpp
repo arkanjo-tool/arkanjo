@@ -13,7 +13,7 @@
 #ifndef COUNTER_DUPLICATION_CODE_HPP
 #define COUNTER_DUPLICATION_CODE_HPP
 
-#include <bits/stdc++.h> 
+#include <set>
 #include "../base/path.hpp"
 #include "../base/function.hpp"
 #include "../base/similarity_table.hpp"

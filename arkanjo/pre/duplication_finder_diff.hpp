@@ -13,7 +13,9 @@
 #ifndef DUPLICATION_FINDER_DIFF_HPP
 #define DUPLICATION_FINDER_DIFF_HPP
 
-#include <bits/stdc++.h>
+#include <string>
+#include <vector>
+#include <tuple>
 #include "../base/utils.hpp"
 using namespace std;
 

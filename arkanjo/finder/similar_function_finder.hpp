@@ -12,7 +12,9 @@
 #ifndef SIMILAR_FUNCTION_FINDER_HPP
 #define SIMILAR_FUNCTION_FINDER_HPP
 
-#include <bits/stdc++.h> 
+#include <string>
+#include <vector>
+
 #include "../base/path.hpp"
 #include "../base/function.hpp"
 #include "../base/utils.hpp"

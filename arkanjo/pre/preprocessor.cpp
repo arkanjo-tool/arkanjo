@@ -1,4 +1,9 @@
 #include "preprocessor.hpp"
+#include <iostream>
+#include <iomanip>
+#include <cassert>
+#include <filesystem>
+namespace fs = std::filesystem;
 
 void Preprocessor::save_current_run_params(string path){
 	vector<string> config_content;
@@ -54,6 +59,11 @@ void Preprocessor::preprocess(string path, double similarity, bool use_duplicati
 
 	Config *config = Config::config();
 	string base_path = config->getBasePath();
+
+	fs::path dir_to_remove = base_path;
+	if (fs::exists(dir_to_remove)) {
+		fs::remove_all(dir_to_remove);
+	}
 
 	string command_rm_tmp = "rm -r -f " + base_path + "/";
 	system(command_rm_tmp.c_str());

@@ -13,7 +13,10 @@
 #ifndef COUNTER_DUPLICATION_CODE_TRIE_HPP
 #define COUNTER_DUPLICATION_CODE_TRIE_HPP
 
-#include <bits/stdc++.h> 
+#include <string>
+#include <vector>
+#include <map>
+
 #include "../base/utils.hpp"
 using namespace std;
 

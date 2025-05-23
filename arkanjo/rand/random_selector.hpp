@@ -13,7 +13,10 @@
 #ifndef RANDOM_SELECTOR_HPP
 #define RANDOM_SELECTOR_HPP
 
-#include <bits/stdc++.h> 
+#include <string>
+#include <vector>
+#include <tuple>
+#include <random>
 #include "../base/path.hpp"
 #include "../base/utils.hpp"
 #include "../base/similarity_table.hpp"

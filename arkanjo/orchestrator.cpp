@@ -1,5 +1,9 @@
 #include "orchestrator.hpp"
 
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cstdlib>
 void Orchestrator::help_command(){
 	cout << "Sorry I am tired I will do this latter" << '\n';
 }

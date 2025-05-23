@@ -13,7 +13,12 @@
 #ifndef SIMILARITY_TABLE_HPP
 #define SIMILARITY_TABLE_HPP
 
-#include <bits/stdc++.h> 
+#include <string>
+#include <vector>
+#include <map>
+#include <utility>
+#include <tuple>
+#include <fstream>
 
 #include "path.hpp"
 #include "utils.hpp"

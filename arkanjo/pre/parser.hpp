@@ -13,7 +13,10 @@
 #ifndef PARSER_HPP
 #define PARSER_HPP
 
-#include <bits/stdc++.h>
+#include <string>
+#include <vector>
+#include <set>
+#include <fstream>
 using namespace std;
 
 /**
