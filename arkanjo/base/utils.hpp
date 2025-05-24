@@ -18,10 +18,12 @@
 #include <fstream>
 #include <sstream>
 #include <cctype>
-#include <json/json.h>
 #include <sys/stat.h>
 
+#include "../third-party/json.hpp" 
+
 using namespace std;
+using json = nlohmann::json;
 
 namespace Utils{
 
@@ -140,11 +142,11 @@ namespace Utils{
         void create_parents_folder_of_file_path(string file_path);
         
         /**
-         * @brief Reads and parses a JSON file
+         * @brief Reads and parses a JSON file, uses nlohmann json library
          * @param string_path Path to the JSON file
-         * @return Json::Value Parsed JSON content
+         * @return json Parsed JSON content
          */
-        Json::Value read_json(string string_path);
+		json read_json(string string_path);
         
         /**
          * @brief Checks if a file exists at the given path

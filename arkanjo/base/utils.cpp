@@ -57,13 +57,12 @@ void Utils::create_parents_folder_of_file_path(string file_path){
 	}
 }
 
-Json::Value Utils::read_json(string string_path){
+json Utils::read_json(string string_path){
 	ifstream json_file(string_path,std::ifstream::binary);
 	ensure_file_is_open(json_file,string_path);
-	Json::Value json;
-	json_file >> json;
-	json_file.close();
-	return json;
+	json j_read;
+	json_file >> j_read;
+	return j_read;
 }
 
 bool Utils::does_file_exist(string file_path){

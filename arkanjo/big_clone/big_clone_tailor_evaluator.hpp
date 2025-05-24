@@ -1,7 +1,6 @@
 /**
  * @file big_clone_tailor_evaluator.hpp
- * @brief BigCloneBench evaluation interface
- *
+ * @brief BigCloneBench evaluation interface *
  * Provides evaluation metrics compatible with BigCloneBench dataset
  * using methodology similar to the Tailor tool for clone detection.
  * 
@@ -90,12 +89,6 @@ class Big_Clone_Tailor_Evaluator {
                 set<pair<int,int>> filter_similar_id_pairs_only_relevant_ones(
                         vector<pair<int,int>> similar_id_pairs);
 
-<<<<<<< HEAD
-	void evaluate(double minimum_similarity);
-
-public:
-	Big_Clone_Tailor_Evaluator(Similarity_Table *_similarity_table);
-=======
                 /**
                  * @brief Filters pairs by similarity threshold
                  * @param similar_id_pairs Pairs to filter
@@ -140,7 +133,6 @@ public:
                  * @param _similarity_table Pointer to similarity table
                  */
                 Big_Clone_Tailor_Evaluator(Similarity_Table *_similarity_table);
->>>>>>> main
 };
 
 #endif

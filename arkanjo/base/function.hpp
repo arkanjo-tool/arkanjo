@@ -18,12 +18,11 @@
 #include <array>
 #include <iostream>
 
-//WARNING THIS IMPORT MAYBE ONLY WORKS IN UBUNTU, SEE HERE: https://github.com/stardust95/TinyCompiler/issues/2
-#include <json/json.h>
-
 #include "path.hpp"
 #include "utils.hpp"
+#include "../third-party/json.hpp" 
 using namespace std;
+using json = nlohmann::json;
 
 /**
  * @brief Represents a code function with its content and metadata

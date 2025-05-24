@@ -5,9 +5,9 @@ UNAME_S := $(shell uname -s)
 
 ifeq ($(UNAME_S),Darwin)
   CXXFLAGS += -I/opt/homebrew/include
-  LDFLAGS = -L/opt/homebrew/lib -ljsoncpp
+  LDFLAGS = -L/opt/homebrew/lib 
 else
-  LDFLAGS = -ljsoncpp
+  LDFLAGS = 
 endif
 
 SRC_BASE = base/utils.cpp base/windows_utils.cpp base/linux_utils.cpp base/apple_utils.cpp base/config.cpp base/path.cpp base/similarity_table.cpp base/function.cpp
