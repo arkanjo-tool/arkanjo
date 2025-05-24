@@ -81,8 +81,9 @@ float UtilsOSDependable::get_terminal_bg_color_luminance(){
 
   string color_str = capture_terminal_response();
   auto [r, g, b] = parse_terminal_color_response(color_str);
+  float luminance = 0.2126 * (r / 255.0) + 0.7152 * (g / 255.0) + 0.0722 * (b / 255.0);
   
-  return 0.2126 * (r/255) + 0.7152 * (g/255) + 0.0722 * (b/255);
+  return luminance;
 }
 
 bool UtilsOSDependable::is_bg_color_dark(){

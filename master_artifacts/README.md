@@ -1,7 +1,3 @@
-\page master_artifacts_readme Master Artifacts Module
-
-texto
-
 # Test Duplication Code
 
 I want to create some test cases to check the ability to detect duplication code on C code. This repository worth is store this test cases and document my finds.

@@ -83,10 +83,10 @@ bool Utils::is_regular_file(string path){
 
 string Utils::format_colored_message(string message, COLOR color){
 	if (UtilsOSDependable::is_bg_color_dark()){
-		return COLOR_TOKENS_UTILS_LIGTH[color] + message + COLOR_TOKENS_UTILS_LIGTH[RESET];
+		return COLOR_TOKENS_UTILS_DARK[color] + message + COLOR_TOKENS_UTILS_DARK[RESET];
 	}
 	else{
-		return COLOR_TOKENS_UTILS_DARK[color] + message + COLOR_TOKENS_UTILS_DARK[RESET];
+		return COLOR_TOKENS_UTILS_LIGTH[color] + message + COLOR_TOKENS_UTILS_LIGTH[RESET];
 	}
 }
 

@@ -80,7 +80,9 @@ tuple<int, int, int> UtilsOSDependable::parse_terminal_color_response(){
 
 float UtilsOSDependable::get_terminal_bg_color_luminance(){
   auto [r, g, b] = parse_terminal_color_response();
-  return 0.2126 * (r/255) + 0.7152 * (g/255) + 0.0722 * (b/255);
+  float luminance = 0.2126 * (r/255.0) + 0.7152 * (g/255.0) + 0.0722 * (b/255.0);
+
+  return luminance;
 }
 
 bool UtilsOSDependable::is_bg_color_dark(){

@@ -54,17 +54,17 @@ namespace Utils{
          * - BLACK
          */
         const vector<string> COLOR_TOKENS_UTILS_LIGTH = {
-            "\033[0m",    //RESET
-            "\033[31m",   //RED
-            "\033[32m",   //GREEN
-            "\033[33m",   //YELLOW
-            "\033[34m",   //BLUE
-            "\033[35m",   //MAGENTA
-            "\033[36m",   //CYAN
-            "\033[37m",   //GRAY
-            "\033[97m",   //WHITE
-            "\033[33;1m", //BRIGHT_YELLOW
-            "\033[30m",   //BLACK
+            "\033[0m",      // RESET
+            "\033[31;2m",   // DARK_RED
+            "\033[32;2m",   // DARK_GREEN
+            "\033[33;2m",   // DARK_YELLOW
+            "\033[34;2m",   // DARK_BLUE
+            "\033[35;2m",   // DARK_MAGENTA
+            "\033[36;2m",   // DARK_CYAN
+            "\033[37;2m",   // DARK_GRAY
+            "\033[30;2mm",  // BLACK
+            "\033[33;2m",   // YELLOW
+            "\033[30m",     // BLACK
         };
 
         /**
@@ -85,15 +85,15 @@ namespace Utils{
          */
         const vector<string> COLOR_TOKENS_UTILS_DARK = {
             "\033[0m",    // RESET
-            "\033[31;2m", // DARK_RED
-            "\033[32;2m", // DARK_GREEN
-            "\033[33;2m", // DARK_YELLOW
-            "\033[34;2m", // DARK_BLUE
-            "\033[35;2m", // DARK_MAGENTA
-            "\033[36;2m", // DARK_CYAN
-            "\033[37;2m", // DARK_GRAY
-            "\033[30m",   // BLACK
+            "\033[31m",   // RED
+            "\033[32m",   // GREEN
             "\033[33m",   // YELLOW
+            "\033[34m",   // BLUE
+            "\033[35m",   // MAGENTA
+            "\033[36m",   // CYAN
+            "\033[37m",   // GRAY
+            "\033[97m",   // WHITE
+            "\033[33m",   // BRIGHT_YELLOW
             "\033[97m"    // WHITE
         };
         
