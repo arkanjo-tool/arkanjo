@@ -37,15 +37,26 @@ string Similarity_Explorer::format_initial_message(int number_pair_found){
 	return ret;
 }
 
-bool Similarity_Explorer::match_pattern(Path path1, Path path2){
-	bool match1 = path1.contains_given_pattern(pattern_to_match);
-	bool match2 = path2.contains_given_pattern(pattern_to_match);
+bool Similarity_Explorer::match_pattern(Path path1, Path path2) {
+    bool match_path1 = true, match_path2 = true;
+    bool match_function1 = true, match_function2 = true;
 
-	if(both_path_need_to_match_pattern){
-		return match1 && match2;
-	}
-	return match1 || match2;
+    if (!pattern_to_match_path.empty()) {
+        match_path1 = path1.contains_given_pattern(pattern_to_match_path);
+        match_path2 = path2.contains_given_pattern(pattern_to_match_path);
+    }
+
+    if (!pattern_to_match_function.empty()) {
+        match_function1 = path1.build_function_name().find(pattern_to_match_function) != string::npos;
+        match_function2 = path2.build_function_name().find(pattern_to_match_function) != string::npos;
+    }
+
+    if (both_path_need_to_match_pattern) {
+        return (match_path1 && match_function1) && (match_path2 && match_function2);
+    }
+    return (match_path1 && match_function1) || (match_path2 && match_function2);
 }
+
 
 string Similarity_Explorer::format_path_message_in_pair(Path path){
 	string ret = path.build_relative_path() + BETWEEN_RELATIVE_AND_FUNCTION_NAME + path.build_function_name();
@@ -115,12 +126,14 @@ void Similarity_Explorer::explorer(bool sorted_by_number_of_duplicated_code){
 
 Similarity_Explorer::Similarity_Explorer(Similarity_Table *_similarity_table, 
 		int _limit_on_results, 
-		string _pattern_to_match, 
+		string _pattern_to_match_path, 
+		string _pattern_to_match_function, 
 		bool _both_path_need_to_match,
 		bool sorted_by_number_of_duplicated_code){
 	similarity_table = _similarity_table;
 	limit_on_results = _limit_on_results;
-	pattern_to_match = _pattern_to_match;
+	pattern_to_match_path = _pattern_to_match_path;
+	pattern_to_match_function = _pattern_to_match_function;
 	both_path_need_to_match_pattern = _both_path_need_to_match;
 	explorer(sorted_by_number_of_duplicated_code);
 }
