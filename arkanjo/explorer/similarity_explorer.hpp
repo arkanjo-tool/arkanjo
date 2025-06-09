@@ -46,7 +46,8 @@ class Similarity_Explorer {
 
                 Similarity_Table *similarity_table;  ///< Source of similarity data
                 int limit_on_results;               ///< Maximum number of results to show
-                string pattern_to_match;            ///< Pattern to filter results
+                string pattern_to_match_path;       ///< Pattern to filter path names
+                string pattern_to_match_function;        ///< Pattern to filter function names
                 bool both_path_need_to_match_pattern;  ///< Whether both paths must match pattern
                 int processed_results = INITIAL_PROCESSED_RESULTS;  ///< Counter for processed results
 
@@ -131,13 +132,15 @@ class Similarity_Explorer {
                  * @brief Constructs explorer with configuration
                  * @param _similarity_table Similarity data source
                  * @param _limit_on_results Maximum results to show
-                 * @param _pattern_to_match Filter pattern
+                 * @param _pattern_to_match_path Filter pattern
+                 * @param _pattern_to_match_function Function name filter
                  * @param _both_path_need_to_match Whether both paths must match pattern
                  * @param sorted_by_number_of_duplicated_code Whether to sort by line count
                  */
                 Similarity_Explorer(Similarity_Table *_similarity_table,
                         int _limit_on_results,
-                        string _pattern_to_match,
+                        string _pattern_to_match_path, 
+                        string _pattern_to_match_function, 
                         bool _both_path_need_to_match,
                         bool sorted_by_number_of_duplicated_code=false);
 };
