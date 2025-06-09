@@ -11,10 +11,10 @@ void Function::read_header(){
 }
 void Function::read_info(){
 	string info_path = path.build_info_path();
-	Json::Value info = Utils::read_json(info_path);
-	line_declaration = info[LINE_DECLARATION_JSON].asInt();
-	start_number_line = info[START_NUMBER_LINE_JSON].asInt();
-	end_number_line = info[END_NUMBER_LINE_JSON].asInt();
+	json info = Utils::read_json(info_path);
+	line_declaration = info.value(LINE_DECLARATION_JSON,-1);
+	start_number_line = info.value(START_NUMBER_LINE_JSON,-1);
+	end_number_line = info.value(END_NUMBER_LINE_JSON,-1);
 }
 
 int Function::number_of_lines(){

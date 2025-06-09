@@ -1,5 +1,12 @@
-// This class is used to evaluate the tool by the big clone bench dataset
-// using the same methodology as the Tailor tool.
+/**
+ * @file big_clone_tailor_evaluator.hpp
+ * @brief BigCloneBench evaluation interface *
+ * Provides evaluation metrics compatible with BigCloneBench dataset
+ * using methodology similar to the Tailor tool for clone detection.
+ * 
+ * This class is used to evaluate the tool by the big clone bench dataset
+ * using the same methodology as the Tailor tool.
+ */
 
 #ifndef BIG_CLONE_TAILOR_EVALUATOR_HPP
 #define BIG_CLONE_TAILOR_EVALUATOR_HPP
@@ -19,43 +26,113 @@
 
 using namespace std;
 
+/**
+ * @brief Evaluates clone detection using BigCloneBench methodology
+ *
+ * Implements evaluation metrics that compare detected clones against
+ * BigCloneBench ground truth data, following Tailor tool's approach.
+ */
 class Big_Clone_Tailor_Evaluator {
-	string CLONE_LABELS_FILE_PATH = "/home/luan/linux/test-duplication-code/parser/bigclonebench/clone_labels.txt";
-	string EXTENSION = ".java";
-	int NUMBER_OF_TYPES = 6;
-	int NOT_CLONE_TYPE_ID = 5;
-	string RECALL_PER_TYPE_PRINT = "Recall Value of each type";
-	double MINIMUM_SIMILARITY_TEMP = 0;
-	vector<string> ID_TO_TYPE_LABEL = {
-		"T1", "T2", "ST3", "MT3", "WT3/T4", "Negative"
-	};
+        private:
+                string CLONE_LABELS_FILE_PATH = "/home/luan/linux/test-duplication-code/parser/bigclonebench/clone_labels.txt";  ///< Path to ground truth labels
+                string EXTENSION = ".java";                          ///< Expected file extension
+                int NUMBER_OF_TYPES = 6;                             ///< Number of clone types
+                int NOT_CLONE_TYPE_ID = 5;                           ///< ID for non-clone pairs
+                string RECALL_PER_TYPE_PRINT = "Recall Value of each type";  ///< Recall header text
+                double MINIMUM_SIMILARITY_TEMP = 0;                  ///< Temporary similarity threshold
+                
+                /// Clone type labels for output
+                vector<string> ID_TO_TYPE_LABEL = {
+                    "T1",
+                    "T2",
+                    "ST3",
+                    "MT3",
+                    "WT3/T4",
+                    "Negative",
+                };
 
-	Similarity_Table *similarity_table;
-	map<pair<int, int>, int> id_pair_to_type;
-	vector<int> count_of_samples_by_type;
+                Similarity_Table *similarity_table;                  ///< Pointer to similarity data
+                map<pair<int,int>,int> id_pair_to_type;              ///< Maps ID pairs to clone types
+                vector<int> count_of_samples_by_type;                ///< Count of samples per type
 
-	void read_clone_labels();
-	int path_to_id(Path path);
-	vector<tuple<double, int, int>> similar_path_pairs_formated_with_id();
-	bool is_relevant_pair(int id0, int id1);
+                /**
+                 * @brief Reads clone labels from ground truth file
+                 */
+                void read_clone_labels();
 
-	set<pair<int, int>> filter_similar_id_pairs_only_relevant_ones(
-		vector<pair<int, int>> similar_id_pairs);
+                /**
+                 * @brief Converts Path to numeric ID
+                 * @param path Path to convert
+                 * @return int Extracted numeric ID
+                 */
+                int path_to_id(Path path);
 
-	vector<pair<int, int>> filter_similar_path_pairs_by_similarity(
-		vector<tuple<double, int, int>> similar_id_pairs,
-		double minimum_similarity);
+                /**
+                 * @brief Formats similar path pairs with IDs
+                 * @return vector<tuple<double,int,int>> Similarity scores with ID pairs
+                 */
+                vector<tuple<double,int,int>> similar_path_pairs_formated_with_id();
 
-	vector<int> build_frequency_corrected_guessed_by_type(
-		vector<pair<int, int>> similar_id_pairs);
+                /**
+                 * @brief Checks if ID pair exists in ground truth
+                 * @param id0 First ID in pair
+                 * @param id1 Second ID in pair
+                 * @return bool True if pair is in ground truth
+                 */
+                bool is_relevant_pair(int id0, int id1);
 
-	double calc_recall(vector<int> frequency, int type);
-	void print_recall_per_type(vector<int> frequency);
+                /**
+                 * @brief Filters ID pairs to only relevant ones
+                 * @param similar_id_pairs Pairs to filter
+                 * @return set<pair<int,int>> Filtered pairs
+                 */
+                set<pair<int,int>> filter_similar_id_pairs_only_relevant_ones(
+                        vector<pair<int,int>> similar_id_pairs);
 
-	void evaluate(double minimum_similarity);
+                /**
+                 * @brief Filters pairs by similarity threshold
+                 * @param similar_id_pairs Pairs to filter
+                 * @param minimum_similarity Threshold value
+                 * @return vector<pair<int,int>> Filtered pairs
+                 */
+                vector<pair<int,int>> filter_similar_path_pairs_by_similarity(
+                        vector<tuple<double,int,int>> similar_id_pairs,
+                        double minimum_similarity);
 
-public:
-	Big_Clone_Tailor_Evaluator(Similarity_Table *_similarity_table);
+                /**
+                 * @brief Builds frequency statistics per clone type
+                 * @param similar_id_pairs Pairs to analyze
+                 * @return vector<int> Frequency counts per type
+                 */
+                vector<int> build_frequency_corrected_guessed_by_type(
+                        vector<pair<int,int>> similar_id_pairs);
+
+                /**
+                 * @brief Calculates recall for specific clone type
+                 * @param frequency Type frequencies
+                 * @param type Clone type to evaluate
+                 * @return double Recall value
+                 */
+                double calc_recall(vector<int> frequency, int type);
+
+                /**
+                 * @brief Prints recall metrics per type
+                 * @param frequency Type frequencies
+                 */
+                void print_recall_per_type(vector<int> frequency);
+
+                /**
+                 * @brief Runs full evaluation pipeline
+                 * @param minimum_similarity Similarity threshold
+                 */
+                void evaluate(double minimum_similarity);
+
+        public:
+                /**
+                 * @brief Constructs evaluator with similarity data
+                 * @param _similarity_table Pointer to similarity table
+                 */
+                Big_Clone_Tailor_Evaluator(Similarity_Table *_similarity_table);
 };
 
 #endif

@@ -1,5 +1,12 @@
-
 #include "utils.hpp"
+
+#ifdef _WIN32
+    #include "windows_utils.hpp"
+#elif __linux__
+    #include "linux_utils.hpp"
+#elif __APPLE__
+    #include "apple_utils.hpp" 
+#endif
 
 void Utils::ensure_file_is_open(std::ifstream &file, string file_name){
 	if(!file.is_open()){
@@ -30,7 +37,6 @@ void Utils::write_file_generic(string file_path, vector<string> content){
 	for(auto line : content){
 		fileout << line << '\n';
 	}
-
 	fileout.close();
 }
 
@@ -51,13 +57,12 @@ void Utils::create_parents_folder_of_file_path(string file_path){
 	}
 }
 
-Json::Value Utils::read_json(string string_path){
+json Utils::read_json(string string_path){
 	ifstream json_file(string_path,std::ifstream::binary);
 	ensure_file_is_open(json_file,string_path);
-	Json::Value json;
-	json_file >> json;
-	json_file.close();
-	return json;
+	json j_read;
+	json_file >> j_read;
+	return j_read;
 }
 
 bool Utils::does_file_exist(string file_path){
@@ -77,7 +82,12 @@ bool Utils::is_regular_file(string path){
 }
 
 string Utils::format_colored_message(string message, COLOR color){
-	return COLOR_TOKENS_UTILS[color] + message + COLOR_TOKENS_UTILS[RESET];
+	if (UtilsOSDependable::is_bg_color_dark()){
+		return COLOR_TOKENS_UTILS_DARK[color] + message + COLOR_TOKENS_UTILS_DARK[RESET];
+	}
+	else{
+		return COLOR_TOKENS_UTILS_LIGTH[color] + message + COLOR_TOKENS_UTILS_LIGTH[RESET];
+	}
 }
 
 bool Utils::is_empty_char(char c){

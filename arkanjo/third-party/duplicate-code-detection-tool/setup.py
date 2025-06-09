@@ -1,3 +1,12 @@
+"""! @package setup
+@file setup.py
+@brief Package configuration for duplicate code detection tool.
+
+This setup configuration defines the installation parameters for the duplicate
+code detection tool package, including dependencies, version control, and
+console entry points.
+"""
+
 from setuptools import setup
 
 setup(
