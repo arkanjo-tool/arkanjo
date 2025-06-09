@@ -37,39 +37,39 @@ void Orchestrator::call_preprocess(vector<string> parameters){
 void Orchestrator::exploration_command(vector<string> parameters, Similarity_Table *similarity_table){
 	int number_parameters = parameters.size();
 
-			string pattern_path = "";
-			string pattern_function = "";
-			int limiter = 0;
-			bool both_need_to_match = false;
-			bool sorted_by_number_of_duplicated_code = false;
-			for(int i = 0; i < number_parameters-1; i++){
-				string param = parameters[i];
-				string next_param = parameters[i+1];
-				if(param == "-l"){
-					limiter = stoi(next_param);
-				}
-				if(param == "-p"){
-					pattern_path = next_param;
-				}
-				if(param == "-fn"){
-					pattern_function = next_param;
-				}
-				if(param == "-b"){
-					both_need_to_match = (next_param == "T");
-				}
-				if(param == "-c"){
-					sorted_by_number_of_duplicated_code = (next_param == "T");
-				}
-			}
-			
-			Similarity_Explorer similarity_explorer(
-					similarity_table,
-					limiter,
-					pattern_path,
-					pattern_function,
-					both_need_to_match,
-					sorted_by_number_of_duplicated_code);
+	string pattern_path = "";
+	string pattern_function = "";
+	int limiter = 0;
+	bool both_need_to_match = false;
+	bool sorted_by_number_of_duplicated_code = false;
+	for(int i = 0; i < number_parameters-1; i++){
+		string param = parameters[i];
+		string next_param = parameters[i+1];
+		if(param == "-l"){
+			limiter = stoi(next_param);
 		}
+		if(param == "-p"){
+			pattern_path = next_param;
+		}
+		if(param == "-fn"){
+			pattern_function = next_param;
+		}
+		if(param == "-b"){
+			both_need_to_match = (next_param == "T");
+		}
+		if(param == "-c"){
+			sorted_by_number_of_duplicated_code = (next_param == "T");
+		}
+	}
+	
+	Similarity_Explorer similarity_explorer(
+			similarity_table,
+			limiter,
+			pattern_path,
+			pattern_function,
+			both_need_to_match,
+			sorted_by_number_of_duplicated_code);
+}
 
 void Orchestrator::random_command(vector<string> parameters, Similarity_Table *similarity_table){
 	int number_parameters = parameters.size();
