@@ -38,7 +38,7 @@ jobs:
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         
-        sudo rm -rf docs/html && mkdir -p docs/html
+        rm -rf docs/html && mkdir -p docs/html
         cd docs/html
         git init
         git remote add origin https://x-access-token:${{ secrets.TARGET_REPO_TOKEN }}@github.com/arkanjo-tool/arkanjo-tool.github.io.git
