@@ -34,16 +34,16 @@
 *.i*86
 *.x86_64
 *.hex
-arkanjo/parser
-arkanjo/filter
-arkanjo/function_breaker
-arkanjo/exec
-arkanjo/breaker
-arkanjo/preprocessor
-arkanjo/tmp
-arkanjo/test
-file_parser/filter
-file_parser/parser
+parser
+filter
+function_breaker
+exec
+breaker
+preprocessor
+tmp
+test
+filter
+parser
 
 # Debug files
 *.dSYM/
@@ -64,16 +64,16 @@ dkms.conf
 duplicate-code-detection-tool/
 
 #Ignore BigCloneEval Tool
-arkanjo/BigCloneEval/
-arkanjo/csvs/
-arkanjo/bigclonebench/
+BigCloneEval/
+csvs/
+bigclonebench/
 
 #Intermediate files from the tool
 output_tool.txt
 
 #Temporary Files
-arkanjo/tmp/
-arkanjo/output_parsed.txt
+tmp/
+output_parsed.txt
 
 #Documentation
 docs
