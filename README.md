@@ -119,13 +119,13 @@ All of the following options are optional, and their meanings are as follows:
 A function is considered a match if the pattern is a substring of the function's concatenated 
 file path and name (e.g.,`path/to/file.c:function_name`).
 
-- `-b <T/F>: Determines how pattern matching applies when comparing two functions. The default value is 'F'.
+- `-b <T/F>`: Determines how pattern matching applies when comparing two functions. The default value is 'F'.
 
 	- 'T': The pattern must match both functions in the comparison.
 
 	- 'F': The pattern must match at least one of the functions.
 
-- `-c <T/F>: Sets the sort order for the results. The default value is 'F'.
+- `-c <T/F>`: Sets the sort order for the results. The default value is 'F'.
 
 	- 'T': Sorts results by the number of duplicated lines.
 
