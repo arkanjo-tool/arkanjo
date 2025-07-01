@@ -1,14 +1,14 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Doxygen Action
+name: Doxygen Documentation Action
 
 # Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
+# events but only for the main branch
 on:
   push:
-    branches: [ docs ]
+    branches: [ main ]
   pull_request:
-    branches: [ docs ]
+    branches: [ main ]
 
 permissions:
   contents: write
@@ -33,10 +33,15 @@ jobs:
         doxyfile-path: "./Doxyfile" # default is ./Doxyfile
         # Working directory
         working-directory: "." # default is .
-    
-    - name: Deploy
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        publish_branch: gh-pages
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./docs
+
+    - name: Push docs to external repository
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        
+        cd docs/html
+        git init
+        git remote add origin https://x-access-token:${{ secrets.TARGET_REPO_TOKEN }}@github.com:arkanjo-tool/arkanjo-tool.github.io.git .
+        git commit -m "Update documentation from source repo"
+        git push --force origin main
