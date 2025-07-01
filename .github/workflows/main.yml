@@ -32,11 +32,16 @@ jobs:
         doxyfile-path: "./Doxyfile" # default is ./Doxyfile
         working-directory: "." # default is .
 
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.TARGET_REPO_TOKEN }}
-        publish_dir: ./docs/html
-        destination_dir: .
-        external_repository: arkanjo-tool/arkanjo-tool.github.io
-        keep_files: false
+    - name: Push docs to external repository
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        
+        cd docs/html
+        rm -rf .git || true  # Clear existing .git if present
+        git init
+        git remote add origin https://x-access-token:${{ secrets.TARGET_REPO_TOKEN }}@github.com/arkanjo-tool/arkanjo-tool.github.io.git
+        git add .
+        git commit -m "Update documentation from source repo"
+        git push --force origin main
