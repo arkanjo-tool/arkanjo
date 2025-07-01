@@ -1,5 +1,3 @@
-\page arkanjo_readme Arkanjo Module
-
 Arkanjo is a CLI tool designed to help developers find code duplication within 
 their codebases, specifically within the scope of functions.
 
