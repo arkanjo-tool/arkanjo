@@ -35,13 +35,12 @@ jobs:
     - name: Push docs to external repository
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
       run: |
-        sudo git config --global user.name "github-actions[bot]"
-        sudo git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
         
         cd docs/html
-        sudo rm -rf .git || true  # Clear existing .git (if any)
         git init
-        sudo git remote add origin https://x-access-token:${{ secrets.TARGET_REPO_TOKEN }}@github.com/arkanjo-tool/arkanjo-tool.github.io.git
-        sudo git add .
-        sudo git commit -m "Update documentation (auto-generated)"
-        sudo git push --force origin main
+        git remote add origin https://x-access-token:${{ secrets.TARGET_REPO_TOKEN }}@github.com/arkanjo-tool/arkanjo-tool.github.io.git
+        git add .
+        git commit -m "Update documentation (auto-generated)"
+        git push --force origin main
