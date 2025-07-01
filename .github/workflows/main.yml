@@ -47,9 +47,7 @@ jobs:
         
         # Clean any existing git files and navigate to docs/html
         rm -rf docs/html/.git*
-        rm README.md
-
-        # cd docs/html
+        cd docs/html
         
         # Initialize git repository and push
         git init
