@@ -1,44 +1,43 @@
 \page arkanjo_readme Arkanjo Module
 
-The arkanjo is a cli tool is designed to help developers find code duplications in their codebases.
-The tool is designed to find duplication in the scope of functions.
+Arkanjo is a CLI tool designed to help developers find code duplication within 
+their codebases, specifically within the scope of functions.
+
+The tool's current commands are:
 
 The current functionalities of the tool are:
 
-- Explore the duplications on a codebases, enabling a limited amount of filters to the user.
+- Explore code duplication in a codebase, with a limited number of filters available to the user.
 
-- Find all functions that are a duplication of a function given by the user.
+- Find all functions that are duplicates of a function specified by the user.
 
-- Create a "relatory" of the number of duplications in the codebases separed by folder.
+- Create a report detailing the number of duplications in the codebase, separated by folder.
 
-There are some other functionalities used for the cretor master degree, but should not matter for 
-an end user. 
+Some other commands were used for the creator's master's degree, but they are not relevant to end-users.
 
-From now on, we will use the term commands instead of functionalities.
-
-The tool current should cover the C programming language. 
-The tool also supports Java with limitations.
+The tool currently supports the C programming language and also supports Java with some limitations.
 
 # Similarity
 
-The tool current uses the concept of similarity. The user can pass a similarity threshold
-to the tool. This similarity threshold is used for limiting what the tool consider a duplication. 
+The tool currently uses the concept of similarity. A user can pass a similarity threshold to the 
+tool, which is a number between 0 and 100. This threshold is used to limit what the tool 
+considers a duplication.
 
-The similarity threshold is a number between 0 and 100. If you set the threshold to 0, everything is
-considered a duplication. If you set the threhold to 100, only complety equal functions are considered
-duplications. The current state of the tool gives good results for similarity threshols around ~90.
+If the threshold is set to 0, everything is considered a duplication. If the threshold is set 
+to 100, only completely equal functions are considered duplications. In its current state, 
+the tool provides good results with similarity thresholds around 90.
 
-The arkanjo tool uses as a subrotine the 
-[Duplicate Code Detection Tool](https://github.com/platisd/duplicate-code-detection-tool) to generate
-the similarity metrics.
+The Arkanjo tool uses the
+[Duplicate Code Detection Tool](https://github.com/platisd/duplicate-code-detection-tool) 
+as a subroutine to generate the similarity metrics.
 
 # Requirements
 
-The tool have only being tested on ubuntu operation systems. The instalation guide could included.
+The tool has only been tested on Ubuntu operating systems. An installation guide could be included.
 
 # How to install
 
-Run on the terminal the following commands to install the dependencies:
+Run the following commands in the terminal to install the dependencies:
 
 ```
 sudo apt install python3-nltk
@@ -71,36 +70,38 @@ make
 
 ## Preprocessor
 
-The tool is designed to have a heavy preprocesing, to enable the tool to answer different kind of queries fastly.
+The tool is designed with heavy preprocessing, which enables it to answer different kinds of queries quickly.
 
-To do the preprocessing, execute the preprocessor:
+To perform the preprocessing, execute the preprocessor:
 
 ```
 ./preprocessor
 ```
 
-The preprocessor will ask for the complete path to the codebase you are interested to find code duplications and
-the similarity threshold.
+The preprocessor will ask for the complete path to the codebase you want to analyze and the desired 
+similarity threshold.
 
-The preprocessor can take a while to execute. Depending on the size of the codebases, it cannot run or take a some hours. 
+The preprocessor can take a while to execute. Depending on the size of the codebase, it may take several 
+hours or fail to run altogether.
 
-## Execute the run
+## Execute the tool
 
-To execute the tool and the tool functionalities, you need to run the command that respect this format:
+To execute the tool's commands, you need to run a command that follows this format:
 
 ```
 ./exec command [command_parameters] [-pre] [-s <NUMBER>]
 ```
 
-If you have not executed the preprocessor, the tool will automatically call the preprocessor.
+If the preprocessor has not been run yet, the tool will automatically execute it.
 
-The shared parameters over all commands are:
+The parameters common to all commands are:
 
-- [-p] forces the preprocessor to execute.
 
-- [s \<NUMBER\>] changes the similarity threshould to NUMBER, but just for current command.
+- `-p`: Forces the preprocessor to execute.
 
-The following are the guide on how to execute the current commands of the tool:
+- `-s <NUMBER>`: Changes the similarity threshold to `NUMBER` for the current command only.
+
+The following is a guide on how to execute the tool's current commands:
 
 ### Explore duplications
 
@@ -110,34 +111,40 @@ To execute the explore duplications command, run:
 ./exec ex [-l <number>] [-p <string>] [-b <'T' or 'F'>] [-c 'T' or 'F'] 
 ```
 
-All the positional parameters are optional, and the meaning of them are the following:
+All of the following options are optional, and their meanings are as follows:
 
-- [-l \<number\>] limits the number of results showed to the user. The tool shows all results by default.
+- `-l \<number\>`: Limits the number of results shown to the user. By default, all results are shown.
 
-- [-p \<string\>] defines a pattern that the function names should match to show in the result. A
-function name is said to match the pattern if the function name has the pattern as a substring of the string 
-formed by the concatenation of the file path that the function exist and the function name.
+- `-p \<string\>`: Defines a pattern that function names must match to be included in the results. 
+A function is considered a match if the pattern is a substring of the function's concatenated 
+file path and name (e.g.,`path/to/file.c:function_name`).
 
-- [-b 'T' or 'F'] 'T' if the pattern need to match both of the functions in the comparation. 'F' if at least
-one of the functions match the pattern. Default value is 'F'.
+- `-b <T/F>: Determines how pattern matching applies when comparing two functions. The default value is 'F'.
 
-- [-c 'T' or 'F'] 'T' if the results should be sorted by the number of duplicated lines. 'F' if the results
-should be sorted by the similarity metric. Default value is 'F'.
+	- 'T': The pattern must match both functions in the comparison.
+
+	- 'F': The pattern must match at least one of the functions.
+
+- `-c <T/F>: Sets the sort order for the results. The default value is 'F'.
+
+	- 'T': Sorts results by the number of duplicated lines.
+
+	- 'F': Sorts results by the similarity metric.
 
 ### Find function duplicates
 
-To execute the relatory commands, execute:
+To execute the function command, execute:
 
 ```
 ./exec fu <FUNCTION_NAME>
 ```
 
-Where \<FUNCTION_NAME\> is a parameter passed by the user. The tool will match
-the parameter with any function that has the FUNCTION_NAME as a substring.
+`<FUNCTION_NAME>` is a parameter passed by the user. The tool will match the 
+parameter with any function that has the `FUNCTION_NAME` as a substring.
 
 ### Relatory
 
-To execute the relatory commands, execute:
+To execute the relatory command, execute:
 
 ```
 ./exec du
