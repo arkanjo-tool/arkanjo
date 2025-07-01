@@ -38,10 +38,22 @@ jobs:
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         
+        # Delete the entire docs/html directory (avoid permission issues)
+        rm -rf docs/html || true
+        # Recreate the directory
+        mkdir -p docs/html
+        # Navigate into it
         cd docs/html
-        rm -rf .git || true  # Clear existing .git (if any)
+        # Initialize fresh Git repo
         git init
+        # Set the remote (use your PAT)
         git remote add origin https://x-access-token:${{ secrets.TARGET_REPO_TOKEN }}@github.com/arkanjo-tool/arkanjo-tool.github.io.git
+        # Pull existing files (if any) to avoid conflicts
+        git pull origin main || true
+        # Copy fresh Doxygen-generated files into docs/html (adjust path as needed)
+        cp -r ../doxygen-output/* .  # Replace with your actual Doxygen output path
+        # Stage and commit
         git add .
-        git commit -m "Update documentation (auto-generated)"
+        git commit -m "Update documentation (automated)"
+        # Force push (caution: overwrites remote history)
         git push --force origin main
