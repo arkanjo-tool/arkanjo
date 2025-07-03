@@ -22,6 +22,10 @@ Accepted on V4
 
 - Group 7
   - PATCH: [lore.kernel.org](https://lore.kernel.org/linux-iio/20250531160807.39e54096@jic23-huawei/)
+  - Accepted on V3
+ 
+- Group 8
+  - PATCH: [lore.kernel.org](https://lore.kernel.org/all/20250614124401.32b17eda@jic23-huawei/)
   - Accepted on V4
 
 - Group 9
