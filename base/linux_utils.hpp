@@ -13,6 +13,7 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <tuple>
 #include <cstdlib>
 #include <unistd.h>
 #include <termios.h>
