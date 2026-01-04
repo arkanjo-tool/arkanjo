@@ -20,7 +20,7 @@
 
 #include "path.hpp"
 #include "utils.hpp"
-#include "../third-party/json.hpp" 
+#include "nlohmann/json.hpp" 
 using namespace std;
 using json = nlohmann::json;
 

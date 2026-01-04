@@ -10,6 +10,8 @@ else
   LDFLAGS = 
 endif
 
+CXXFLAGS += -Ithird-party 
+
 SRC_BASE = base/utils.cpp base/windows_utils.cpp base/linux_utils.cpp base/apple_utils.cpp base/config.cpp base/path.cpp base/similarity_table.cpp base/function.cpp
 SRC_PRE = pre/function_breaker_util.cpp pre/function_breaker_c.cpp pre/function_breaker_java.cpp pre/function_breaker.cpp pre/parser.cpp pre/duplication_finder_tool.cpp pre/duplication_finder_diff.cpp pre/preprocessor.cpp
 SRC_E2E = tests/e2e/test.cpp

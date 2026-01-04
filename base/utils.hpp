@@ -20,7 +20,7 @@
 #include <cctype>
 #include <sys/stat.h>
 
-#include "../third-party/json.hpp" 
+#include "nlohmann/json.hpp" 
 
 using namespace std;
 using json = nlohmann::json;
