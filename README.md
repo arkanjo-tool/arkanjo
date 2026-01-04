@@ -38,17 +38,16 @@ The tool has only been tested on Ubuntu operating systems. An installation guide
 Run the following commands in the terminal to install the dependencies:
 
 ```
-sudo apt install python3-nltk
-sudo apt install python3-gensim
-sudo apt install python3-astor
-sudo python3 -m nltk.downloader punkt
-sudo apt-get install libjsoncpp-dev
+pip3 install --user nltk
+pip3 install --user gensim
+pip3 install --user astor
+python3 -m nltk.downloader punkt
 ```
 
 Download the source code:
 
 ```
-git clone https://github.com/LipArcanjo/arkanjo.git
+git clone https://github.com/arkanjo-tool/arkanjo.git
 ```
 
 Go to the tool folder:
