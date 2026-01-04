@@ -77,6 +77,7 @@ tmp/
 output_parsed.txt
 
 #Documentation
+Doxyfile.bak
 docs
 assets
 
