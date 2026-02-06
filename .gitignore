@@ -83,3 +83,5 @@ assets
 
 #Visual Code configurations
 .vscode
+
+bin/

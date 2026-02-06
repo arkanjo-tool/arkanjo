@@ -63,6 +63,8 @@ make preprocessor
 make
 ```
 
+The binaries will be generated in the `bin/` directory.
+
 # How to Run
 
 ## Preprocessor
