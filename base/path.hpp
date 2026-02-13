@@ -9,14 +9,12 @@
  * temporary codebase.
  */
 
-#ifndef PATH_HPP
-#define PATH_HPP
+#pragma once
 
 #include <string>
 #include <vector>
 #include <cassert>
 #include <algorithm>
-using namespace std;
 
 /**
  * @brief Path manipulation class for tool-specific directory structure
@@ -26,117 +24,117 @@ using namespace std;
  */
 class Path {
         private:
-                string JSON_EXTENSION = ".json";      ///< Extension for JSON metadata files
-                string BASE_INIT_STRING = "tmp";     ///< Base directory name
-                string SOURCE_STRING = "source";     ///< Source subdirectory name
-                string HEADER_STRING = "header";     ///< Header subdirectory name
-                string INFO_STRING = "info";         ///< Info subdirectory name
-                char BAR = '/';                      ///< Path separator character
+                static constexpr const char* JSON_EXTENSION = ".json";      ///< Extension for JSON metadata files
+                static constexpr const char* BASE_INIT_STRING = "tmp";     ///< Base directory name
+                static constexpr const char* SOURCE_STRING = "source";     ///< Source subdirectory name
+                static constexpr const char* HEADER_STRING = "header";     ///< Header subdirectory name
+                static constexpr const char* INFO_STRING = "info";         ///< Info subdirectory name
+                static constexpr char BAR = '/';                      ///< Path separator character
 
-                vector<string> tokens;               ///< Path components
-                int position_start_relative_path;    ///< Index where relative path begins
+                std::vector<std::string> tokens;               ///< Path components
+                size_t position_start_relative_path;    ///< Index where relative path begins
 
                 /**
                  * @brief Splits path string into components
                  * @param string_path Path to split
                  * @return vector<string> Path components
                  */
-                vector<string> split_path(string string_path);
+                std::vector<std::string> split_path(const std::string& string_path);
 
                 /**
                  * @brief Finds start position of relative path
-                 * @return int Index in tokens where relative path begins
+                 * @return size_t Index in tokens where relative path begins
                  */
-                int find_position_start_relative_path();
+                size_t find_position_start_relative_path() const;
 
                 /**
                  * @brief Joins path components into string
                  * @param path Components to join
                  * @return string Constructed path
                  */
-                string build_string_path(vector<string> path);
+                std::string build_string_path(const std::vector<std::string>& path) const;
 
                 /**
                  * @brief Builds path with specified base directory
                  * @param base Base directory to use
                  * @return string Constructed path
                  */
-                string build_base_path(string base);
+                std::string build_base_path(const std::string& base) const;
 
                 /**
                  * @brief Extracts relative path components
                  * @return vector<string> Tokens for relative path
                  */
-                vector<string> get_tokens_from_relative_path();
+                std::vector<std::string> get_tokens_from_relative_path() const;
 
                 /**
                  * @brief Removes file extension
                  * @param token String with extension
                  * @return String without extension
                  */
-                string remove_extension(string token);
+                std::string remove_extension(std::string token) const;
 
         public:
                 /**
                  * @brief Checks if path is empty
                  * @return bool True if no path components
                  */
-                bool is_empty();
+                bool is_empty() const;
 
                 /**
                  * @brief Default constructor
                  */
-                Path();
+                Path() = default;
 
                 /**
                  * @brief Constructs from path string
                  * @param string_path Path to parse
                  */
-                Path(string string_path);
+                explicit Path(std::string string_path);
 
                 /**
                  * @brief Builds source file path
                  * @return string Path to source file
                  */
-                string build_source_path();
+                std::string build_source_path() const;
 
                 /**
                  * @brief Builds header file path
                  * @return string Path to header file
                  */
-                string build_header_path();
+                std::string build_header_path() const;
 
                 /**
                  * @brief Builds metadata file path
                  * @return string Path to JSON metadata file
                  */
-                string build_info_path();
+                std::string build_info_path() const;
 
                 /**
                  * @brief Builds relative path portion
                  * @return string Relative path
                  */
-                string build_relative_path();
+                std::string build_relative_path() const;
 
                 /**
                  * @brief Extracts function name from path
                  * @return string Function name without extension
                  */
-                string build_function_name();
+                std::string build_function_name() const;
 
                 /**
                  * @brief Finds common folders with another path
                  * @param path Other path to compare
                  * @return vector<string> Common base folders
                  */
-                vector<string> get_common_folders(Path path);
+                std::vector<std::string> get_common_folders(const Path& path) const;
 
                 /**
                  * @brief Checks for pattern in path
                  * @param pattern Pattern to search for
                  * @return bool True if pattern found
                  */
-                bool contains_given_pattern(string pattern);
+                bool contains_given_pattern(const std::string& pattern) const;
 
                 /**
                  * @brief Path comparison operator
@@ -145,5 +143,3 @@ class Path {
                  */
                 bool operator<(const Path &path) const;
 };
-
-#endif

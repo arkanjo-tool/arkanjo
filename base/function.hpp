@@ -10,18 +10,15 @@
  * open and read the files in the temporary codebase.
 */
 
-#ifndef FUNCTION_HPP
-#define FUNCTION_HPP
+#pragma once
 
 #include <string>
 #include <vector>
 #include <array>
-#include <iostream>
 
 #include "path.hpp"
 #include "utils.hpp"
 #include "nlohmann/json.hpp" 
-using namespace std;
 using json = nlohmann::json;
 
 /**
@@ -32,19 +29,19 @@ using json = nlohmann::json;
  */
 class Function {
         private:
-                string LINE_DECLARATION_JSON = "line_declaration";    ///< JSON key for declaration line
-                string START_NUMBER_LINE_JSON = "start_number_line";  ///< JSON key for start line
-                string END_NUMBER_LINE_JSON = "end_number_line";      ///< JSON key for end line
+                static constexpr const char* LINE_DECLARATION_JSON = "line_declaration";    ///< JSON key for declaration line
+                static constexpr const char* START_NUMBER_LINE_JSON = "start_number_line";  ///< JSON key for start line
+                static constexpr const char* END_NUMBER_LINE_JSON = "end_number_line";      ///< JSON key for end line
 
-                string FUNCTION_PREFIX_PRINT = "Function Name: ";    ///< Prefix for function name display
-                string RELATIVE_PATH_PRINT = "Relative Path: ";       ///< Prefix for path display
-                string LINE_DECLARATION_PRINT = "Starts on line: ";  ///< Prefix for start line display
-                string END_DECLARATION_PRINT = "Ends on line: ";     ///< Prefix for end line display
-                string NUMBER_LINE_PRINT = "Total number of lines: "; ///< Prefix for line count display
+                static constexpr const char* FUNCTION_PREFIX_PRINT = "Function Name: ";    ///< Prefix for function name display
+                static constexpr const char* RELATIVE_PATH_PRINT = "Relative Path: ";       ///< Prefix for path display
+                static constexpr const char* LINE_DECLARATION_PRINT = "Starts on line: ";  ///< Prefix for start line display
+                static constexpr const char* END_DECLARATION_PRINT = "Ends on line: ";     ///< Prefix for end line display
+                static constexpr const char* NUMBER_LINE_PRINT = "Total number of lines: "; ///< Prefix for line count display
 
                 Path path;                  ///< Path object containing function location info
-                vector<string> content;     ///< Function source code content
-                vector<string> header;      ///< Function header content
+                std::vector<std::string> content;     ///< Function source code content
+                std::vector<std::string> header;      ///< Function header content
                 int start_number_line;      ///< Line number where function starts
                 int line_declaration;       ///< Line number of function declaration
                 int end_number_line;        ///< Line number where function ends
@@ -69,13 +66,13 @@ class Function {
                  * @brief Calculates the total number of lines in the function
                  * @return int Number of lines from declaration to end (inclusive)
                  */
-                int number_of_lines();
+                int number_of_lines() const;
 
                 /**
                  * @brief Constructs a Function object
                  * @param _path Path object containing function location info
                  */
-                Function(Path _path);
+                explicit Function(const Path& _path);
 
                 /**
                  * @brief Gets the function's line number scope
@@ -84,24 +81,22 @@ class Function {
                  *         [1] - Start line
                  *         [2] - End line
                  */
-                array<int,3> get_scope_function_in_file();
+                std::array<int,3> get_scope_function_in_file() const;
 
                 /**
                  * @brief Gets the function's header content
                  * @return vector<string> Each element represents a line of header
                  */
-                vector<string> get_header();
+                std::vector<std::string> get_header() const;
 
                 /**
                  * @brief Builds combined content of header and source
                  * @return vector<string> Merged content with header and source
                  */
-                vector<string> build_all_content();
+                std::vector<std::string> build_all_content();
 
                 /**
                  * @brief Prints formatted function information to console
                  */
                 void print_basic_info();
 };
-
-#endif
