@@ -19,7 +19,6 @@
 
 #include "nlohmann/json.hpp" 
 
-using namespace std;
 using json = nlohmann::json;
 
 namespace Utils{
@@ -27,7 +26,7 @@ namespace Utils{
         /**
          * @brief Constant string used as a visual delimiter/separator in prints
          */
-        const string LIMITER_PRINT = "---------------------";
+        const std::string LIMITER_PRINT = "---------------------";
 
         /**
          * @brief Permission flags used when creating directories (rwx for owner)
@@ -50,7 +49,7 @@ namespace Utils{
          * - BRIGHT_YELLOW
          * - BLACK
          */
-        const vector<string> COLOR_TOKENS_UTILS_LIGTH = {
+        const std::vector<std::string> COLOR_TOKENS_UTILS_LIGTH = {
             "\033[0m",      // RESET
             "\033[31;2m",   // DARK_RED
             "\033[32;2m",   // DARK_GREEN
@@ -80,7 +79,7 @@ namespace Utils{
          * - YELLOW
          * - WHITE
          */
-        const vector<string> COLOR_TOKENS_UTILS_DARK = {
+        const std::vector<std::string> COLOR_TOKENS_UTILS_DARK = {
             "\033[0m",    // RESET
             "\033[31m",   // RED
             "\033[32m",   // GREEN
@@ -116,48 +115,48 @@ namespace Utils{
          * @param file Reference to the input file stream to check
          * @param file_name Name/path of the file being opened (for error message)
          */
-        void ensure_file_is_open(std::ifstream &file, string file_name);
+        void ensure_file_is_open(std::ifstream &file, const std::string& file_name);
         
         /**
          * @brief Reads a file line by line into a vector of strings
          * @param string_path Path to the file to read
          * @return vector<string> Contents of the file as a vector of strings
          */
-        vector<string> read_file_generic(string string_path);
+        std::vector<std::string> read_file_generic(const std::string& string_path);
         
         /**
          * @brief Writes content to a file at specified path
          * @param file_path Path where file should be written
          * @param content Vector of strings to write (each element becomes a line)
          */
-        void write_file_generic(string file_path, vector<string> content);
+        void write_file_generic(const std::string& file_path, const std::vector<std::string>& content);
         
         /**
          * @brief Creates all parent directories for a given file path
          * @param file_path The full file path for which to create parent directories
          */
-        void create_parents_folder_of_file_path(string file_path);
+        void create_parents_folder_of_file_path(const std::string& file_path);
         
         /**
          * @brief Reads and parses a JSON file, uses nlohmann json library
          * @param string_path Path to the JSON file
          * @return json Parsed JSON content
          */
-		json read_json(string string_path);
+		json read_json(const std::string& string_path);
         
         /**
          * @brief Checks if a file exists at the given path
          * @param file_path Path to check
          * @return bool True if file exists and is accessible, false otherwise
          */
-        bool does_file_exist(string file_path);
+        bool does_file_exist(const std::string& file_path);
         
         /**
          * @brief Determines if a path refers to a regular file
          * @param path Path to check
          * @return bool True if path is a regular file, false otherwise
          */
-        bool is_regular_file(string path);
+        bool is_regular_file(const std::string& path);
 
         /**
          * @brief Formats a message with ANSI color codes
@@ -165,7 +164,7 @@ namespace Utils{
          * @param color Color to apply
          * @return string Colorized message with reset code at the end
          */
-        string format_colored_message(string message, COLOR color);
+        std::string format_colored_message(const std::string& message, COLOR color);
 
         /**
          * @brief Checks if a character is considered empty/whitespace
@@ -187,5 +186,5 @@ namespace Utils{
          * @param delimiter Character to split on
          * @return vector<string> Vector of tokens (empty tokens are omitted)
          */
-        vector<string> split_string(string s, char delimiter);
+        std::vector<std::string> split_string(const std::string& s, char delimiter);
 };

@@ -8,7 +8,7 @@
     #include "apple_utils.hpp" 
 #endif
 
-void Utils::ensure_file_is_open(std::ifstream &file, string file_name){
+void Utils::ensure_file_is_open(std::ifstream &file, const std::string& file_name){
 	if(!file.is_open()){
 		cout << "Attempted to open file: " << file_name << " ";
 		cout << "but a Error ocurred. Check if the file exist." << endl;
@@ -16,10 +16,10 @@ void Utils::ensure_file_is_open(std::ifstream &file, string file_name){
 	}
 }
 
-vector<string> Utils::read_file_generic(string string_path){
+std::vector<std::string> Utils::read_file_generic(const std::string& string_path){
 	std::ifstream filein;
-	string line;
-	vector<string> ret;
+	std::string line;
+	vector<std::string> ret;
 	filein.open(string_path);
 	ensure_file_is_open(filein,string_path);
 	while(getline(filein,line)){
@@ -29,7 +29,7 @@ vector<string> Utils::read_file_generic(string string_path){
 	return ret;
 }
 
-void Utils::write_file_generic(string file_path, vector<string> content){
+void Utils::write_file_generic(const std::string& file_path, const std::vector<std::string>& content){
 	std::ofstream fileout;
 	create_parents_folder_of_file_path(file_path);
 	fileout.open(file_path);
@@ -40,11 +40,11 @@ void Utils::write_file_generic(string file_path, vector<string> content){
 	fileout.close();
 }
 
-void Utils::create_parents_folder_of_file_path(string file_path){
-	vector<string> parents;
+void Utils::create_parents_folder_of_file_path(const std::string& file_path){
+	std::vector<std::string> parents;
 	for(size_t i = 0; i < file_path.size(); i++){
 		if(file_path[i] == '/'){
-			string s = "";
+			std::string s = "";
 			for(size_t j = 0; j < i; j++){
 				s += file_path[j];
 			}
@@ -57,7 +57,7 @@ void Utils::create_parents_folder_of_file_path(string file_path){
 	}
 }
 
-json Utils::read_json(string string_path){
+json Utils::read_json(const std::string& string_path){
 	ifstream json_file(string_path,std::ifstream::binary);
 	ensure_file_is_open(json_file,string_path);
 	json j_read;
@@ -65,7 +65,7 @@ json Utils::read_json(string string_path){
 	return j_read;
 }
 
-bool Utils::does_file_exist(string file_path){
+bool Utils::does_file_exist(const std::string& file_path){
 	if (FILE *file = fopen(file_path.c_str(), "r")) {
 		fclose(file);
 		return true;
@@ -74,14 +74,14 @@ bool Utils::does_file_exist(string file_path){
 	} 	
 }
 
-bool Utils::is_regular_file(string path){
+bool Utils::is_regular_file(const std::string& path){
 	struct stat path_stat;
 	auto path_c_str = path.c_str();
 	stat(path_c_str,&path_stat);
 	return S_ISREG(path_stat.st_mode);
 }
 
-string Utils::format_colored_message(string message, COLOR color){
+std::string Utils::format_colored_message(const std::string& message, COLOR color){
 	if (UtilsOSDependable::is_bg_color_dark()){
 		return COLOR_TOKENS_UTILS_DARK[color] + message + COLOR_TOKENS_UTILS_DARK[RESET];
 	}
@@ -116,9 +116,9 @@ bool Utils::is_special_char(char c){
 	return true;
 }
 
-vector<string> Utils::split_string(string s, char delimiter){
-	string cur_token;
-	vector<string> ret;
+vector<string> Utils::split_string(const std::string& s, char delimiter){
+	std::string cur_token;
+	std::vector<std::string> ret;
 	for(auto c : s){
 		if(c == delimiter){
 			if(!cur_token.empty()){
