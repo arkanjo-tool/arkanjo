@@ -10,8 +10,7 @@
 
  */
 
-#ifndef COUNTER_DUPLICATION_CODE_TRIE_HPP
-#define COUNTER_DUPLICATION_CODE_TRIE_HPP
+#pragma once
 
 #include <string>
 #include <vector>
@@ -105,5 +104,3 @@ class Counter_Duplication_Code_Trie {
                  */
                 Counter_Duplication_Code_Trie();
 };
-
-#endif

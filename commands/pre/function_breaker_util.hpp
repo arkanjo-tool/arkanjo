@@ -9,8 +9,7 @@
  * the function breaker process for the suported languages
  */
 
-#ifndef FUNCTION_BREAKER_UTIL_HPP
-#define FUNCTION_BREAKER_UTIL_HPP
+#pragma once
 
 #include <string>
 #include <vector>
@@ -100,5 +99,3 @@ void create_header_file(string relative_path, string function_name,
 void create_info_file(int line_declaration, int start_number_line, 
                      int end_number_line, string relative_path, 
                      string function_name);
-
-#endif

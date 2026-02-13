@@ -10,8 +10,7 @@
  * them.
  */
 
-#ifndef SIMILARITY_TABLE_HPP
-#define SIMILARITY_TABLE_HPP
+#pragma once
 
 #include <string>
 #include <vector>
@@ -148,5 +147,3 @@ class Similarity_Table {
                  */
                 vector<pair<Path,Path>> get_all_similar_path_pairs_sorted_by_line_number();
 };
-
-#endif

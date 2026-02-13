@@ -6,9 +6,6 @@
  * color detection utilities.
  */
 
-#ifndef WINDOWS_UTILS_HPP
-#define WINDOWS_UTILS_HPP
-
 #pragma once
 #include <string>
 #include <sstream>
@@ -46,5 +43,3 @@ namespace UtilsOSDependable{
          */
         bool is_bg_color_dark();
 };
-
-#endif

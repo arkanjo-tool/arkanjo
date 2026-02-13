@@ -10,8 +10,7 @@
  * the number of functions to be selected.
  */
 
-#ifndef RANDOM_SELECTOR_HPP
-#define RANDOM_SELECTOR_HPP
+#pragma once
 
 #include <string>
 #include <vector>
@@ -105,5 +104,3 @@ class Random_Selector {
                         double _maximum_quantity
                 );
 };
-
-#endif

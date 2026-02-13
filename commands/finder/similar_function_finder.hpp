@@ -9,8 +9,7 @@
  * find the other functions that are similar to the given one.
  */
 
-#ifndef SIMILAR_FUNCTION_FINDER_HPP
-#define SIMILAR_FUNCTION_FINDER_HPP
+#pragma once
 
 #include <string>
 #include <vector>
@@ -77,5 +76,3 @@ class Similar_Function_Finder {
                  */
                 Similar_Function_Finder(std::string _function_pattern, Similarity_Table *_similarity_table);
 };
-
-#endif

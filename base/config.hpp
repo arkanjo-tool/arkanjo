@@ -11,8 +11,7 @@
  * temporary codebase.
  */
 
-#ifndef CONFIG_HPP
-#define CONFIG_HPP
+#pragma once
 
 #include <string>
 using namespace std;
@@ -69,5 +68,3 @@ public:
          */
         void setDefaultConfig();
 };
-
-#endif

@@ -10,8 +10,7 @@
  * to enable fast query response later.
  */
 
-#ifndef DUPLICATION_FINDER_DIFF_HPP
-#define DUPLICATION_FINDER_DIFF_HPP
+#pragma once
 
 #include <string>
 #include <vector>
@@ -96,5 +95,3 @@ class DuplicationFinderDiff {
                  */
                 void execute();
 };
-
-#endif

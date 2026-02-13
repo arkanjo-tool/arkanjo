@@ -10,8 +10,7 @@
  * to work with later.
  */
 
-#ifndef PARSER_HPP
-#define PARSER_HPP
+#pragma once
 
 #include <string>
 #include <vector>
@@ -124,5 +123,3 @@ class Parser {
                  */
                 Parser(string input_file, string output_file, double similarity_cap);
 };
-
-#endif

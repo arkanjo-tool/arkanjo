@@ -8,8 +8,7 @@
  * the class does not work properly in the moment and should be ignored.
  */
 
-#ifndef BIG_CLONE_FORMATER_HPP
-#define BIG_CLONE_FORMATER_HPP
+#pragma once
 
 #include <string>
 #include <iostream>
@@ -65,5 +64,3 @@ class Big_Clone_Formater {
                  */
                 Big_Clone_Formater(Similarity_Table *similarity_table);
 };
-
-#endif

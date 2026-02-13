@@ -6,9 +6,6 @@
  * color detection and conversion utilities.
  */
 
-#ifndef LINUX_UTILS_HPP
-#define LINUX_UTILS_HPP
-
 #pragma once
 #include <iostream>
 #include <string>
@@ -72,5 +69,3 @@ namespace UtilsOSDependable{
          */
         bool is_bg_color_dark();
 };
-
-#endif

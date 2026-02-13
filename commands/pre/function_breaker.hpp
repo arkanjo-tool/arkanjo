@@ -17,8 +17,7 @@
  * even if the bracket sequence is in a commentary
  */
 
-#ifndef FUNCTION_BREAKER_HPP
-#define FUNCTION_BREAKER_HPP
+#pragma once
 
 #include <string>
 #include <vector>
@@ -87,5 +86,3 @@ class FunctionBreaker {
                  */
                 FunctionBreaker(string folder_path);
 };
-
-#endif

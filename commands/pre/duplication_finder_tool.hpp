@@ -11,8 +11,7 @@
  * to enable fast query response later.
  */
 
-#ifndef DUPLICATION_FINDER_TOOL_HPP
-#define DUPLICATION_FINDER_TOOL_HPP
+#pragma once
 
 #include <string>
 #include <iostream>
@@ -49,5 +48,3 @@ class DuplicationFinderTool {
                  */
                 void execute();
 };
-
-#endif

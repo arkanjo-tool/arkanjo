@@ -6,9 +6,6 @@
  * Includes file operations, string manipulation, and colored output utilities.
  */
 
-#ifndef UTILS_HPP
-#define UTILS_HPP
-
 #pragma once
 #include <iostream>
 #include <iomanip>
@@ -192,5 +189,3 @@ namespace Utils{
          */
         vector<string> split_string(string s, char delimiter);
 };
-
-#endif

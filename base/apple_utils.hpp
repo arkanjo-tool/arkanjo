@@ -1,9 +1,7 @@
 // 
 
-#ifndef APPLE_UTILS_HPP
-#define APPLE_UTILS_HPP
-
 #pragma once
+
 #include <string>
 #include <sstream>
 
@@ -16,5 +14,3 @@ namespace UtilsOSDependable{
         string capture_terminal_response();
         bool is_bg_color_dark();
 };
-
-#endif

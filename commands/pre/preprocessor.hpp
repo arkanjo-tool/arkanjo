@@ -10,8 +10,7 @@
  * preprocessing of the input codebase to enable fast query response later.
  */
 
-#ifndef PREPROCESSOR_HPP
-#define PREPROCESSOR_HPP
+#pragma once
 
 #include <string>
 #include <tuple>
@@ -94,5 +93,3 @@ class Preprocessor {
                  */
                 Preprocessor(bool force_preprocess, string path, double similarity);
 };
-
-#endif

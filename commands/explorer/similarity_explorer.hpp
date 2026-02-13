@@ -10,8 +10,7 @@
  * filters and sortings options
  */
 
-#ifndef SIMILARITY_EXPLORER_HPP
-#define SIMILARITY_EXPLORER_HPP
+#pragma once
 
 #include <string>
 #include <vector>
@@ -143,5 +142,3 @@ class Similarity_Explorer {
                  */
                 void run(bool sorted_by_number_of_duplicated_code=false);
 };
-
-#endif

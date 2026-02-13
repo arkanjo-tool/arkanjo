@@ -10,8 +10,7 @@
 
  */
 
-#ifndef COUNTER_DUPLICATION_CODE_HPP
-#define COUNTER_DUPLICATION_CODE_HPP
+#pragma once
 
 #include <set>
 #include <arkanjo/base/path.hpp>
@@ -80,5 +79,3 @@ class Counter_Duplication_Code {
                  */
                 Counter_Duplication_Code(Similarity_Table *_similarity_table);
 };
-
-#endif

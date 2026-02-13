@@ -8,8 +8,7 @@
  * Defines the flow of parsing a java source file in multiples functions
  */
 
-#ifndef FUNCTION_BREAKER_JAVA_HPP
-#define FUNCTION_BREAKER_JAVA_HPP
+#pragma once
 
 #include <string>
 #include <vector>
@@ -186,5 +185,3 @@ class FunctionBreakerJava {
                  */
                 FunctionBreakerJava(string file_path, string folder_path);
 };
-
-#endif

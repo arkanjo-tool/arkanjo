@@ -8,8 +8,7 @@
  * using the same methodology as the Tailor tool.
  */
 
-#ifndef BIG_CLONE_TAILOR_EVALUATOR_HPP
-#define BIG_CLONE_TAILOR_EVALUATOR_HPP
+#pragma once
 
 #include <string>
 #include <vector>
@@ -134,5 +133,3 @@ class Big_Clone_Tailor_Evaluator {
                  */
                 Big_Clone_Tailor_Evaluator(Similarity_Table *_similarity_table);
 };
-
-#endif
