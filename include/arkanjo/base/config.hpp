@@ -14,7 +14,6 @@
 #pragma once
 
 #include <string>
-using namespace std;
 
 /**
  * @brief Singleton configuration manager class
@@ -23,7 +22,7 @@ using namespace std;
  * Implements the singleton pattern to ensure single instance access.
  */
 class Config {
-        string base_path = "tmp";  ///< Default base path for temporary files
+        std::string base_path = "tmp";  ///< Default base path for temporary files
 
 protected:
         static Config* config_;    ///< Static instance pointer for singleton pattern
@@ -31,7 +30,7 @@ protected:
         /**
          * @brief Protected constructor for singleton pattern
          */
-        Config(){}
+        Config() = default;
 
 public:
         /**
@@ -54,7 +53,7 @@ public:
          * @brief Gets the current base path
          * @return string The configured base path
          */
-        string getBasePath();
+        std::string getBasePath();
         
         /**
          * @brief Sets test configuration paths

@@ -13,8 +13,11 @@
 
 #include <string>
 #include <vector>
+
 #include <arkanjo/base/utils.hpp>
-#include "../base/config.hpp"
+#include <arkanjo/base/config.hpp> 
+
+using namespace std;
 
 /**
  * @brief Structure representing a line of source code

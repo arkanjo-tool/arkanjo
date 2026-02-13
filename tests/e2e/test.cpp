@@ -5,7 +5,7 @@
 #include <filesystem>
 #include <arkanjo/base/utils.hpp>
 #include "../../commands/pre/preprocessor.hpp"
-#include "../../base/config.hpp"
+#include <arkanjo/base/config.hpp> 
 
 using namespace std;
 
