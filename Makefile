@@ -1,16 +1,21 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -g
+MODE ?= debug
+
+CXXFLAGS = -std=c++17 -Ithird-party
+
+WARNINGS = -Wall -Wextra
 
 UNAME_S := $(shell uname -s)
-
 ifeq ($(UNAME_S),Darwin)
   CXXFLAGS += -I/opt/homebrew/include
   LDFLAGS = -L/opt/homebrew/lib 
-else
-  LDFLAGS = 
 endif
 
-CXXFLAGS += -Ithird-party 
+ifeq ($(MODE),debug)
+  CXXFLAGS += -g -O0 $(WARNINGS)
+else ifeq ($(MODE),release)
+  CXXFLAGS += -O2 -DNDEBUG $(WARNINGS)
+endif
 
 BIN_PATH := bin
 

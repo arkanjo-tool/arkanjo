@@ -56,7 +56,7 @@ Go to the tool folder:
 cd arkanjo
 ```
 
-Build the binary:
+Build the binary (debug mode - default):
 
 ```
 make preprocessor
