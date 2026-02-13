@@ -4,8 +4,8 @@
  *
  * Defines common utilities, structures, and constants used across
  * the function breaking process for supported programming languages.
- * 
- * Defines util functions, struct and constants used across 
+ *
+ * Defines util functions, struct and constants used across
  * the function breaker process for the suported languages
  */
 
@@ -14,8 +14,8 @@
 #include <string>
 #include <vector>
 
+#include <arkanjo/base/config.hpp>
 #include <arkanjo/utils/utils.hpp>
-#include <arkanjo/base/config.hpp> 
 
 using namespace std;
 
@@ -23,21 +23,21 @@ using namespace std;
  * @brief Structure representing a line of source code
  */
 struct Line_content {
-    int line_number;    ///< Line number in the original file
-    string content;     ///< Text content of the line
+    int line_number; ///< Line number in the original file
+    string content;  ///< Text content of the line
 };
 
 /**
  * @brief Enumeration of supported programming languages
  */
 enum PROGRAMMING_LANGUAGE {
-    C,      ///< C programming language
-    JAVA    ///< Java programming language
+    C,   ///< C programming language
+    JAVA ///< Java programming language
 };
 
-const string SOURCE_PATH = "source";   ///< Directory name for source files
-const string HEADER_PATH = "header";   ///< Directory name for header files
-const string INFO_PATH = "info";       ///< Directory name for metadata files
+const string SOURCE_PATH = "source"; ///< Directory name for source files
+const string HEADER_PATH = "header"; ///< Directory name for header files
+const string INFO_PATH = "info";     ///< Directory name for metadata files
 
 /**
  * @brief Extracts file extension from path
@@ -78,9 +78,9 @@ string build_info_path(string relative_path, string function_name);
  * @param function_name Name of the function
  * @param function_content Vector of strings containing the function body
  */
-void create_source_file(int start_number_line, int end_number_line, 
-                       string relative_path, string function_name, 
-                       const vector<string> &function_content);
+void create_source_file(int start_number_line, int end_number_line,
+    string relative_path, string function_name,
+    const vector<string>& function_content);
 
 /**
  * @brief Creates header file for a function
@@ -88,8 +88,8 @@ void create_source_file(int start_number_line, int end_number_line,
  * @param function_name Name of the function
  * @param header_content Vector of strings containing the header content
  */
-void create_header_file(string relative_path, string function_name, 
-                       const vector<string> &header_content);
+void create_header_file(string relative_path, string function_name,
+    const vector<string>& header_content);
 
 /**
  * @brief Creates JSON metadata file for a function
@@ -99,6 +99,6 @@ void create_header_file(string relative_path, string function_name,
  * @param relative_path Relative path of the original file
  * @param function_name Name of the function
  */
-void create_info_file(int line_declaration, int start_number_line, 
-                     int end_number_line, string relative_path, 
-                     string function_name);
+void create_info_file(int line_declaration, int start_number_line,
+    int end_number_line, string relative_path,
+    string function_name);

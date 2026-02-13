@@ -1,136 +1,135 @@
 #include <arkanjo/utils/utils.hpp>
 
 #ifdef _WIN32
-    #include "windows_utils.hpp"
+#include "windows_utils.hpp"
 #elif __linux__
-    #include "linux_utils.hpp"
+#include "linux_utils.hpp"
 #elif __APPLE__
-    #include "apple_utils.hpp" 
+#include "apple_utils.hpp"
 #endif
 
-void Utils::ensure_file_is_open(std::ifstream &file, const std::string& file_name){
-	if(!file.is_open()){
-		cout << "Attempted to open file: " << file_name << " ";
-		cout << "but a Error ocurred. Check if the file exist." << endl;
-		exit(0);
-	}
+void Utils::ensure_file_is_open(std::ifstream& file, const std::string& file_name) {
+    if (!file.is_open()) {
+        cout << "Attempted to open file: " << file_name << " ";
+        cout << "but a Error ocurred. Check if the file exist." << endl;
+        exit(0);
+    }
 }
 
-std::vector<std::string> Utils::read_file_generic(const std::string& string_path){
-	std::ifstream filein;
-	std::string line;
-	vector<std::string> ret;
-	filein.open(string_path);
-	ensure_file_is_open(filein,string_path);
-	while(getline(filein,line)){
-		ret.push_back(line);
-	}
-	filein.close();
-	return ret;
+std::vector<std::string> Utils::read_file_generic(const std::string& string_path) {
+    std::ifstream filein;
+    std::string line;
+    vector<std::string> ret;
+    filein.open(string_path);
+    ensure_file_is_open(filein, string_path);
+    while (getline(filein, line)) {
+        ret.push_back(line);
+    }
+    filein.close();
+    return ret;
 }
 
-void Utils::write_file_generic(const std::string& file_path, const std::vector<std::string>& content){
-	std::ofstream fileout;
-	create_parents_folder_of_file_path(file_path);
-	fileout.open(file_path);
+void Utils::write_file_generic(const std::string& file_path, const std::vector<std::string>& content) {
+    std::ofstream fileout;
+    create_parents_folder_of_file_path(file_path);
+    fileout.open(file_path);
 
-	for(auto line : content){
-		fileout << line << '\n';
-	}
-	fileout.close();
+    for (auto line : content) {
+        fileout << line << '\n';
+    }
+    fileout.close();
 }
 
-void Utils::create_parents_folder_of_file_path(const std::string& file_path){
-	std::vector<std::string> parents;
-	for(size_t i = 0; i < file_path.size(); i++){
-		if(file_path[i] == '/'){
-			std::string s = "";
-			for(size_t j = 0; j < i; j++){
-				s += file_path[j];
-			}
-			parents.push_back(s);
-		}
-	}
-	for(auto folder : parents){
-		const char *cfolder = folder.c_str();
-		mkdir(cfolder,MKDIR_FLAG);
-	}
+void Utils::create_parents_folder_of_file_path(const std::string& file_path) {
+    std::vector<std::string> parents;
+    for (size_t i = 0; i < file_path.size(); i++) {
+        if (file_path[i] == '/') {
+            std::string s = "";
+            for (size_t j = 0; j < i; j++) {
+                s += file_path[j];
+            }
+            parents.push_back(s);
+        }
+    }
+    for (auto folder : parents) {
+        const char* cfolder = folder.c_str();
+        mkdir(cfolder, MKDIR_FLAG);
+    }
 }
 
-json Utils::read_json(const std::string& string_path){
-	ifstream json_file(string_path,std::ifstream::binary);
-	ensure_file_is_open(json_file,string_path);
-	json j_read;
-	json_file >> j_read;
-	return j_read;
+json Utils::read_json(const std::string& string_path) {
+    ifstream json_file(string_path, std::ifstream::binary);
+    ensure_file_is_open(json_file, string_path);
+    json j_read;
+    json_file >> j_read;
+    return j_read;
 }
 
-bool Utils::does_file_exist(const std::string& file_path){
-	if (FILE *file = fopen(file_path.c_str(), "r")) {
-		fclose(file);
-		return true;
-	} else {
-		return false;
-	} 	
+bool Utils::does_file_exist(const std::string& file_path) {
+    if (FILE* file = fopen(file_path.c_str(), "r")) {
+        fclose(file);
+        return true;
+    } else {
+        return false;
+    }
 }
 
-bool Utils::is_regular_file(const std::string& path){
-	struct stat path_stat;
-	auto path_c_str = path.c_str();
-	stat(path_c_str,&path_stat);
-	return S_ISREG(path_stat.st_mode);
+bool Utils::is_regular_file(const std::string& path) {
+    struct stat path_stat;
+    auto path_c_str = path.c_str();
+    stat(path_c_str, &path_stat);
+    return S_ISREG(path_stat.st_mode);
 }
 
-std::string Utils::format_colored_message(const std::string& message, COLOR color){
-	if (UtilsOSDependable::is_bg_color_dark()){
-		return COLOR_TOKENS_UTILS_DARK[color] + message + COLOR_TOKENS_UTILS_DARK[RESET];
-	}
-	else{
-		return COLOR_TOKENS_UTILS_LIGTH[color] + message + COLOR_TOKENS_UTILS_LIGTH[RESET];
-	}
+std::string Utils::format_colored_message(const std::string& message, COLOR color) {
+    if (UtilsOSDependable::is_bg_color_dark()) {
+        return COLOR_TOKENS_UTILS_DARK[color] + message + COLOR_TOKENS_UTILS_DARK[RESET];
+    } else {
+        return COLOR_TOKENS_UTILS_LIGTH[color] + message + COLOR_TOKENS_UTILS_LIGTH[RESET];
+    }
 }
 
-bool Utils::is_empty_char(char c){
-	if(c == ' '){
-		return true;
-	}
-	if(c <= 20){
-		return true;
-	}
-	return false;
+bool Utils::is_empty_char(char c) {
+    if (c == ' ') {
+        return true;
+    }
+    if (c <= 20) {
+        return true;
+    }
+    return false;
 }
 
-bool Utils::is_special_char(char c){
-	if(c >= 'a' && c <= 'z'){
-		return false;
-	}
-	if(c >= 'A' && c <= 'Z'){
-		return false;
-	}
-	if(c >= '0' && c <= '9'){
-		return false;
-	}
-	if(c == '_'){
-		return false;
-	}
-	return true;
+bool Utils::is_special_char(char c) {
+    if (c >= 'a' && c <= 'z') {
+        return false;
+    }
+    if (c >= 'A' && c <= 'Z') {
+        return false;
+    }
+    if (c >= '0' && c <= '9') {
+        return false;
+    }
+    if (c == '_') {
+        return false;
+    }
+    return true;
 }
 
-vector<string> Utils::split_string(const std::string& s, char delimiter){
-	std::string cur_token;
-	std::vector<std::string> ret;
-	for(auto c : s){
-		if(c == delimiter){
-			if(!cur_token.empty()){
-				ret.push_back(cur_token);
-			}
-			cur_token = "";
-		}else{
-			cur_token.push_back(c);
-		}
-	}
-	if(!cur_token.empty()){
-		ret.push_back(cur_token);
-	}
-	return ret;
+vector<string> Utils::split_string(const std::string& s, char delimiter) {
+    std::string cur_token;
+    std::vector<std::string> ret;
+    for (auto c : s) {
+        if (c == delimiter) {
+            if (!cur_token.empty()) {
+                ret.push_back(cur_token);
+            }
+            cur_token = "";
+        } else {
+            cur_token.push_back(c);
+        }
+    }
+    if (!cur_token.empty()) {
+        ret.push_back(cur_token);
+    }
+    return ret;
 }
