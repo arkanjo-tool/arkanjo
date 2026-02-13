@@ -17,8 +17,8 @@
 #include <vector>
 #include <tuple>
 #include <random>
-#include "arkanjo/base/path.hpp"
-#include "arkanjo/base/utils.hpp"
+#include <arkanjo/base/path.hpp>
+#include <arkanjo/base/utils.hpp>
 #include "../base/similarity_table.hpp"
 using namespace std;
 

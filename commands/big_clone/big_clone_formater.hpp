@@ -17,8 +17,8 @@
 #include <tuple>
 #include <cassert>
 
-#include "arkanjo/base/path.hpp"
-#include "arkanjo/base/function.hpp"
+#include <arkanjo/base/path.hpp>
+#include <arkanjo/base/function.hpp>
 #include "../base/similarity_table.hpp"
 
 using namespace std;

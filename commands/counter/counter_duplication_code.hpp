@@ -14,9 +14,10 @@
 #define COUNTER_DUPLICATION_CODE_HPP
 
 #include <set>
-#include "arkanjo/base/path.hpp"
-#include "arkanjo/base/function.hpp"
+#include <arkanjo/base/path.hpp>
+#include <arkanjo/base/function.hpp>
 #include "../base/similarity_table.hpp"
+
 #include "counter_duplication_code_trie.hpp"
 using namespace std;
 
