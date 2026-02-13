@@ -61,8 +61,8 @@ void Orchestrator::exploration_command(vector<string> parameters, Similarity_Tab
 			similarity_table,
 			limiter,
 			pattern,
-			both_need_to_match,
-			sorted_by_number_of_duplicated_code);
+			both_need_to_match);
+	similarity_explorer.run(sorted_by_number_of_duplicated_code);
 }
 
 void Orchestrator::random_command(vector<string> parameters, Similarity_Table *similarity_table){

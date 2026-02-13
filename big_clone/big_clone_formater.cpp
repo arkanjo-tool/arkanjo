@@ -14,6 +14,7 @@ string Big_Clone_Formater::build_path_formated_string(Path path){
 	relative_path = format_relative_path(relative_path);
 
 	Function function(path);
+	function.load();
 	auto [line_declaration,start_line,end_line] = function.get_scope_function_in_file();
 
 	string ret;

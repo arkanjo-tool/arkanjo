@@ -10,6 +10,7 @@ bool Counter_Duplication_Code::is_path_processed_path(Path path){
 
 int Counter_Duplication_Code::get_number_of_lines_in_path(Path path){
 	Function function(path);
+	function.load();
 	return function.number_of_lines();
 }
 

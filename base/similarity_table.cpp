@@ -126,6 +126,7 @@ vector<tuple<int,Path,Path>> Similarity_Table::sort_pairs_by_line_number(vector<
 	vector<tuple<int,Path,Path>> similar_path_pairs_with_number_of_lines;
 	for(auto [path1,path2] : similar_path_pairs){
 		Function function(path1);
+		function.load();
 		tuple<int,Path,Path> aux = {function.number_of_lines(),path1,path2};
 		similar_path_pairs_with_number_of_lines.push_back(aux);
 	}

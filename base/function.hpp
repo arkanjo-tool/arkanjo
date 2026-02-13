@@ -74,6 +74,8 @@ class Function {
                  */
                 explicit Function(const Path& _path);
 
+                void load();
+
                 /**
                  * @brief Gets the function's line number scope
                  * @return array<int,3> Array containing:

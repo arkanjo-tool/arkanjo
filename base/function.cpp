@@ -25,6 +25,9 @@ int Function::number_of_lines() const{
 
 Function::Function(const Path& _path){
 	path = _path;
+}
+
+void Function::load() {
 	if(path.is_empty()){
 		return;
 	}
