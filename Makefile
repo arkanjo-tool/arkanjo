@@ -1,7 +1,7 @@
 CXX = g++
 MODE ?= debug
 
-CXXFLAGS = -std=c++17 -Ithird-party
+CXXFLAGS = -std=c++17 -Ithird-party -Iinclude
 
 WARNINGS = -Wall -Wextra
 

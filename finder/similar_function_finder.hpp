@@ -15,9 +15,9 @@
 #include <string>
 #include <vector>
 
-#include "../base/path.hpp"
-#include "../base/function.hpp"
-#include "../base/utils.hpp"
+#include "arkanjo/base/path.hpp"
+#include "arkanjo/base/function.hpp"
+#include "arkanjo/base/utils.hpp"
 #include "../base/similarity_table.hpp"
 
 /**

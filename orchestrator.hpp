@@ -12,9 +12,10 @@
 
 #include <bits/stdc++.h> 
 
-#include "base/path.hpp"
-#include "base/function.hpp"
-#include "base/utils.hpp"
+#include "arkanjo/base/path.hpp"
+#include "arkanjo/base/function.hpp"
+
+#include "arkanjo/base/utils.hpp"
 #include "base/similarity_table.hpp"
 #include "finder/similar_function_finder.hpp"
 #include "counter/counter_duplication_code_trie.hpp"
