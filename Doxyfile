@@ -966,8 +966,6 @@ WARN_LOGFILE           =
 # Note: If this tag is empty the current directory is searched.
 
 INPUT                  = ./ \
-                         ./arkanjo/README.md \
-                         ./arkanjo \
                          ./README.md
 
 # This tag can be used to specify the character encoding of the source files
@@ -1074,8 +1072,7 @@ RECURSIVE              = YES
 # run.
 
 EXCLUDE                = ./base/README.md \
-                         ./archive/README.md \
-                         ./third-party/duplicate-code-detection-tool/README.md
+                         ./archive/README.md
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded
@@ -1091,7 +1088,9 @@ EXCLUDE_SYMLINKS       = NO
 # Note that the wildcards are matched against the file with absolute path, so to
 # exclude all test directories for example use the pattern */test/*
 
-EXCLUDE_PATTERNS       =
+EXCLUDE_PATTERNS       = */third-party/* \
+                         */tmp/* \
+                         */tests/*
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
 # (namespaces, classes, functions, etc.) that should be excluded from the
