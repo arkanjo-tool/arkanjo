@@ -14,7 +14,7 @@
 #include <string>
 #include <vector>
 
-#include <arkanjo/base/utils.hpp>
+#include <arkanjo/utils/utils.hpp>
 #include <arkanjo/base/config.hpp> 
 
 using namespace std;

@@ -19,7 +19,7 @@ endif
 
 BIN_PATH := bin
 
-SRC_BASE = base/utils.cpp base/windows_utils.cpp base/linux_utils.cpp base/apple_utils.cpp base/config.cpp base/path.cpp base/similarity_table.cpp base/function.cpp
+SRC_BASE = utils/utils.cpp utils/windows_utils.cpp utils/linux_utils.cpp utils/apple_utils.cpp base/config.cpp base/path.cpp base/similarity_table.cpp base/function.cpp
 SRC_PRE = commands/pre/function_breaker_util.cpp commands/pre/function_breaker_c.cpp commands/pre/function_breaker_java.cpp commands/pre/function_breaker.cpp commands/pre/parser.cpp commands/pre/duplication_finder_tool.cpp commands/pre/duplication_finder_diff.cpp commands/pre/preprocessor.cpp
 SRC_E2E = tests/e2e/test.cpp
 SRC_EXTRA = commands/finder/similar_function_finder.cpp commands/counter/counter_duplication_code_trie.cpp commands/counter/counter_duplication_code.cpp commands/explorer/similarity_explorer.cpp commands/big_clone/big_clone_formater.cpp commands/big_clone/big_clone_tailor_evaluator.cpp commands/rand/random_selector.cpp orchestrator.cpp

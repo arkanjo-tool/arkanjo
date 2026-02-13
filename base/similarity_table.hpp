@@ -20,7 +20,7 @@
 #include <fstream>
 
 #include <arkanjo/base/path.hpp>
-#include <arkanjo/base/utils.hpp>
+#include <arkanjo/utils/utils.hpp>
 #include <arkanjo/base/function.hpp>
 using namespace std;
 

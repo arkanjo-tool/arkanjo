@@ -16,7 +16,7 @@
 #include <vector>
 #include <map>
 
-#include <arkanjo/base/utils.hpp>
+#include <arkanjo/utils/utils.hpp>
 using namespace std;
 
 /**

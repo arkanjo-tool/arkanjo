@@ -15,7 +15,7 @@
 #include <arkanjo/base/path.hpp>
 #include <arkanjo/base/function.hpp>
 
-#include <arkanjo/base/utils.hpp>
+#include <arkanjo/utils/utils.hpp>
 #include "base/similarity_table.hpp"
 
 #include "commands/finder/similar_function_finder.hpp"

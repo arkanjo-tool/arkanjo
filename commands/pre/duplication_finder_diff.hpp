@@ -15,7 +15,7 @@
 #include <string>
 #include <vector>
 #include <tuple>
-#include <arkanjo/base/utils.hpp>
+#include <arkanjo/utils/utils.hpp>
 using namespace std;
 
 /**
