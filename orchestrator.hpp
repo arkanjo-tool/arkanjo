@@ -17,14 +17,14 @@
 
 #include "arkanjo/base/utils.hpp"
 #include "base/similarity_table.hpp"
-#include "finder/similar_function_finder.hpp"
-#include "counter/counter_duplication_code_trie.hpp"
-#include "counter/counter_duplication_code.hpp"
-#include "explorer/similarity_explorer.hpp"
-#include "big_clone/big_clone_formater.hpp"
-#include "big_clone/big_clone_tailor_evaluator.hpp"
-#include "rand/random_selector.hpp"
-#include "pre/preprocessor.hpp"
+#include "commands/finder/similar_function_finder.hpp"
+#include "commands/counter/counter_duplication_code_trie.hpp"
+#include "commands/counter/counter_duplication_code.hpp"
+#include "commands/explorer/similarity_explorer.hpp"
+#include "commands/big_clone/big_clone_formater.hpp"
+#include "commands/big_clone/big_clone_tailor_evaluator.hpp"
+#include "commands/rand/random_selector.hpp"
+#include "commands/pre/preprocessor.hpp"
 using namespace std;
 
 /**
