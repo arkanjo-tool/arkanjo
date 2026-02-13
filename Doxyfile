@@ -1074,7 +1074,7 @@ RECURSIVE              = YES
 # run.
 
 EXCLUDE                = ./base/README.md \
-                         ./csvs/README.md \
+                         ./archive/README.md \
                          ./third-party/duplicate-code-detection-tool/README.md
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
