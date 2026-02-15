@@ -60,6 +60,8 @@ Build the binary (debug mode - default):
 
 ```
 make
+# OR
+make release # (optimized)
 ```
 
 The binaries will be generated in the `bin/` directory.
