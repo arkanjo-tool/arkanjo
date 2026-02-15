@@ -240,7 +240,6 @@ vector<string> FunctionBreakerC::build_function_content(int start_number_line, i
     }
 
     string last_line = file_content[end_number_line];
-    int last_line_size = last_line.size();
     string last_line_contribution = "";
     for (int j = 0; j <= end_column; j++) {
         last_line_contribution += last_line[j];

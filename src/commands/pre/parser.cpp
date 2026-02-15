@@ -59,7 +59,7 @@ string Parser::remove_formatation_from_similarity(string s) {
 
 double Parser::retrive_similarity(string s) {
     s = remove_formatation_from_similarity(s);
-    char* cs = s.data();
+    // char* cs = s.data();
     float similarity = stod(s);
     return similarity;
 }

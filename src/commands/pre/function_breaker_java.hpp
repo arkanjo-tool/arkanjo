@@ -52,6 +52,7 @@ class FunctionBreakerJava {
      * @param s String to search
      * @return int Position of first '{' or -1 if not found
      */
+    // TODO: Refactor, refactor this
     int find_position_first_open_bracket(string s);
 
     /**

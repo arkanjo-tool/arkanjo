@@ -102,7 +102,7 @@ void Test() {
     cout << "TEST PASSED" << '\n';
 }
 
-int main(int argc, char* argv[]) {
+int main(void) {
     Config::config()->setTestConfig();
     Preprocessor(true, CODEBASE_DIR, 0);
     Test();

@@ -1,18 +1,5 @@
 #include "function_breaker_util.hpp"
 
-// TODO Refactor, refactor this
-namespace {
-int find_position_first_open_bracket(string s) {
-    for (size_t i = 0; i < s.size(); i++) {
-        char c = s[i];
-        if (c == '{') {
-            return i;
-        }
-    }
-    return -1;
-}
-} // namespace
-
 string extract_extension(string file_path) {
     string extension = "";
     int pos_last_dot = -1;
