@@ -1,6 +1,16 @@
 CXX = g++
 MODE ?= debug
 
+PROJECT := arkanjo
+BIN_PATH := bin
+
+PREFIX ?= /usr/local
+BINDIR := $(PREFIX)/bin
+
+TARGET_MAIN := $(PROJECT)
+TARGET_PRE := $(PROJECT)-preprocessor
+TARGET_TEST := $(PROJECT)-test
+
 CXXFLAGS = -std=c++17 -Ithird-party -Iinclude
 WARNINGS = -Wall -Wextra
 LDFLAGS =
@@ -16,8 +26,6 @@ ifeq ($(MODE),debug)
 else ifeq ($(MODE),release)
   CXXFLAGS += -O2 -DNDEBUG $(WARNINGS)
 endif
-
-BIN_PATH := bin
 
 SRC_BASE = \
 	src/utils/utils.cpp \
@@ -51,21 +59,35 @@ SRC_EXTRA = \
 	src/commands/rand/random_selector.cpp \
 	src/orchestrator.cpp
 
-.PHONY: all exec preprocessor test clean
+.PHONY: all main preprocessor test clean install uninstall
 
-all: exec preprocessor test
+all: main preprocessor test
 
-exec: $(BIN_PATH)
-	$(CXX) $(CXXFLAGS) $(SRC_BASE) $(SRC_PRE) $(SRC_EXTRA) -o $(BIN_PATH)/exec $(LDFLAGS)
+main: $(BIN_PATH)
+	$(CXX) $(CXXFLAGS) $(SRC_BASE) $(SRC_PRE) $(SRC_EXTRA) -o $(BIN_PATH)/$(TARGET_MAIN) $(LDFLAGS)
+
+release:
+	$(MAKE) MODE=release
 
 preprocessor: $(BIN_PATH)
-	$(CXX) $(CXXFLAGS) $(SRC_BASE) $(SRC_PRE) src/commands/pre/preprocessor_main.cpp -o $(BIN_PATH)/preprocessor $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) $(SRC_BASE) $(SRC_PRE) src/commands/pre/preprocessor_main.cpp -o $(BIN_PATH)/$(TARGET_PRE) $(LDFLAGS)
 
 test: $(BIN_PATH)
-	$(CXX) $(CXXFLAGS) $(SRC_BASE) $(SRC_PRE) $(SRC_E2E) -o $(BIN_PATH)/test $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) $(SRC_BASE) $(SRC_PRE) $(SRC_E2E) -o $(BIN_PATH)/$(TARGET_TEST) $(LDFLAGS)
 
 clean:
-	rm -f $(BIN_PATH)/exec $(BIN_PATH)/preprocessor $(BIN_PATH)/test
+	rm -f $(BIN_PATH)/$(TARGET_MAIN) \
+		$(BIN_PATH)/$(TARGET_PRE) \
+		$(BIN_PATH)/$(TARGET_TEST)
+
+install: main preprocessor
+	install -d $(BINDIR)
+	install -m 755 $(BIN_PATH)/$(TARGET_MAIN) $(BINDIR)
+	install -m 755 $(BIN_PATH)/$(TARGET_PRE) $(BINDIR)
+
+uninstall:
+	rm -f $(BINDIR)/$(TARGET_MAIN)
+	rm -f $(BINDIR)/$(TARGET_PRE)
 
 $(BIN_PATH):
 	mkdir -p $@
