@@ -15,7 +15,7 @@
 #include <arkanjo/base/function.hpp>
 #include <arkanjo/base/path.hpp>
 
-#include "base/similarity_table.hpp"
+#include <arkanjo/base/similarity_table.hpp>
 #include <arkanjo/utils/utils.hpp>
 
 #include "commands/big_clone/big_clone_formater.hpp"

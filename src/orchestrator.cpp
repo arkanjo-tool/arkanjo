@@ -101,6 +101,7 @@ void Orchestrator::similar_function_finder_command(vector<string> parameters, Si
 Orchestrator::Orchestrator(string command, vector<string> parameters) {
     call_preprocess(parameters);
     Similarity_Table similarity_table;
+    similarity_table.load();
     check_update_similarity(parameters, &similarity_table);
 
     if (command == "du") {

@@ -16,7 +16,7 @@
 #include <string>
 #include <tuple>
 
-#include "../../base/similarity_table.hpp"
+#include <arkanjo/base/similarity_table.hpp>
 #include <arkanjo/base/function.hpp>
 #include <arkanjo/base/path.hpp>
 

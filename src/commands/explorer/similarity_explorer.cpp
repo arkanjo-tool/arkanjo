@@ -30,7 +30,7 @@ std::string Similarity_Explorer::format_initial_message(int number_pair_found) {
     ret += INITIAL_TEXT_PRINT_1;
     ret += std::to_string(number_pair_found);
     ret += INITIAL_TEXT_PRINT_2;
-    ret += to_string(find_number_pairs_show(number_pair_found));
+    ret += std::to_string(find_number_pairs_show(number_pair_found));
     ret += INITIAL_TEXT_PRINT_3;
     return ret;
 }
