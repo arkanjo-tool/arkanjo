@@ -10,7 +10,7 @@
 #define ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004
 #endif
 
-tuple<int, int, int> UtilsOSDependable::parse_terminal_color_response() {
+std::tuple<int, int, int> UtilsOSDependable::parse_terminal_color_response() {
     HANDLE hInput = GetStdHandle(STD_INPUT_HANDLE);
     HANDLE hOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 

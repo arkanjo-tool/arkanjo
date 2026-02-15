@@ -10,8 +10,6 @@
 #include <sstream>
 #include <string>
 
-using namespace std;
-
 namespace UtilsOSDependable {
 /**
  * @brief Gets the luminance of terminal background color on Windows
@@ -31,7 +29,7 @@ float get_terminal_bg_color_luminance();
  * @note Uses Windows Console API to get color information
  * @note Returns default dark theme colors if unable to determine
  */
-tuple<int, int, int> parse_terminal_color_response();
+std::tuple<int, int, int> parse_terminal_color_response();
 
 /**
  * @brief Determines if terminal background color is dark on Windows

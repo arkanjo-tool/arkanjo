@@ -10,8 +10,8 @@
 
 void Utils::ensure_file_is_open(std::ifstream& file, const std::string& file_name) {
     if (!file.is_open()) {
-        cout << "Attempted to open file: " << file_name << " ";
-        cout << "but a Error ocurred. Check if the file exist." << endl;
+        std::cout << "Attempted to open file: " << file_name << " ";
+        std::cout << "but a Error ocurred. Check if the file exist." << std::endl;
         exit(0);
     }
 }
@@ -19,7 +19,7 @@ void Utils::ensure_file_is_open(std::ifstream& file, const std::string& file_nam
 std::vector<std::string> Utils::read_file_generic(const std::string& string_path) {
     std::ifstream filein;
     std::string line;
-    vector<std::string> ret;
+    std::vector<std::string> ret;
     filein.open(string_path);
     ensure_file_is_open(filein, string_path);
     while (getline(filein, line)) {
@@ -58,7 +58,7 @@ void Utils::create_parents_folder_of_file_path(const std::string& file_path) {
 }
 
 json Utils::read_json(const std::string& string_path) {
-    ifstream json_file(string_path, std::ifstream::binary);
+    std::ifstream json_file(string_path, std::ifstream::binary);
     ensure_file_is_open(json_file, string_path);
     json j_read;
     json_file >> j_read;
@@ -115,7 +115,7 @@ bool Utils::is_special_char(char c) {
     return true;
 }
 
-vector<string> Utils::split_string(const std::string& s, char delimiter) {
+std::vector<std::string> Utils::split_string(const std::string& s, char delimiter) {
     std::string cur_token;
     std::vector<std::string> ret;
     for (auto c : s) {

@@ -19,8 +19,6 @@
 #include <unistd.h>
 #include <vector>
 
-using namespace std;
-
 namespace UtilsOSDependable {
 /**
  * @brief Converts a 16-bit hex color string to 8-bit RGB components
@@ -30,7 +28,7 @@ namespace UtilsOSDependable {
  *
  * @note Input string can be with or without leading '#'
  */
-int convert_16_bit_to_8_bit(const string& hex16);
+int convert_16_bit_to_8_bit(const std::string& hex16);
 
 /**
  * @brief Gets the luminance of terminal background color
@@ -49,7 +47,7 @@ float get_terminal_bg_color_luminance();
  *
  * @throws May throw runtime_error for malformed input
  */
-tuple<int, int, int> parse_terminal_color_response(const string& response);
+std::tuple<int, int, int> parse_terminal_color_response(const std::string& response);
 
 /**
  * @brief Captures terminal response to color query
@@ -58,7 +56,7 @@ tuple<int, int, int> parse_terminal_color_response(const string& response);
  *
  * @note Uses low-level terminal I/O to capture the response
  */
-string capture_terminal_response();
+std::string capture_terminal_response();
 
 /**
  * @brief Determines if terminal background color is dark

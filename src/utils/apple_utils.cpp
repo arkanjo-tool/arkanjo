@@ -3,7 +3,7 @@
 #ifdef __APPLE__
 #include <TargetConditionals.h>
 
-tuple<int, int, int> UtilsOSDependable::parse_terminal_color_response() {
+std::tuple<int, int, int> UtilsOSDependable::parse_terminal_color_response() {
 }
 
 float UtilsOSDependable::get_terminal_bg_color_luminance() {

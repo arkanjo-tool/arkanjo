@@ -11,23 +11,23 @@ int UtilsOSDependable::convert_16_bit_to_8_bit(const std::string& hex16) {
     }
 }
 
-tuple<int, int, int> UtilsOSDependable::parse_terminal_color_response(const string& response) {
+std::tuple<int, int, int> UtilsOSDependable::parse_terminal_color_response(const std::string& response) {
     const size_t start_pos = response.find("rgb:");
-    if (start_pos == string::npos) {
+    if (start_pos == std::string::npos) {
         return {0, 0, 0};
     }
 
     const size_t end_pos = response.find("\033\\", start_pos);
-    if (end_pos == string::npos) {
+    if (end_pos == std::string::npos) {
         return {0, 0, 0};
     }
 
-    string rgb_str = response.substr(start_pos + 4, end_pos - (start_pos + 4));
+    std::string rgb_str = response.substr(start_pos + 4, end_pos - (start_pos + 4));
 
     replace(rgb_str.begin(), rgb_str.end(), '/', ' ');
 
-    istringstream iss(rgb_str);
-    string r_hex, g_hex, b_hex;
+    std::istringstream iss(rgb_str);
+    std::string r_hex, g_hex, b_hex;
     iss >> r_hex >> g_hex >> b_hex;
 
     int r = convert_16_bit_to_8_bit(r_hex);
@@ -37,7 +37,7 @@ tuple<int, int, int> UtilsOSDependable::parse_terminal_color_response(const stri
     return {r, g, b};
 }
 
-string UtilsOSDependable::capture_terminal_response() {
+std::string UtilsOSDependable::capture_terminal_response() {
     termios oldt, newt;
     tcgetattr(STDIN_FILENO, &oldt);
     newt = oldt;
@@ -47,10 +47,10 @@ string UtilsOSDependable::capture_terminal_response() {
     int oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
     fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
 
-    cout << "\033]11;?\033\\";
-    cout.flush();
+    std::cout << "\033]11;?\033\\";
+    std::cout.flush();
 
-    string response;
+    std::string response;
     char ch;
     timeval tv;
     tv.tv_sec = 0;
@@ -79,7 +79,7 @@ float UtilsOSDependable::get_terminal_bg_color_luminance() {
         return 0;
     }
 
-    string color_str = capture_terminal_response();
+    std::string color_str = capture_terminal_response();
     auto [r, g, b] = parse_terminal_color_response(color_str);
     float luminance = 0.2126 * (r / 255.0) + 0.7152 * (g / 255.0) + 0.0722 * (b / 255.0);
 
