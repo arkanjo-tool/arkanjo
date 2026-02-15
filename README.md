@@ -59,7 +59,6 @@ cd arkanjo
 Build the binary (debug mode - default):
 
 ```
-make preprocessor
 make
 ```
 
@@ -74,7 +73,7 @@ The tool is designed with heavy preprocessing, which enables it to answer differ
 To perform the preprocessing, execute the preprocessor:
 
 ```
-./preprocessor
+arkanjo-preprocessor
 ```
 
 The preprocessor will ask for the complete path to the codebase you want to analyze and the desired 
@@ -88,7 +87,7 @@ hours or fail to run altogether.
 To execute the tool's commands, you need to run a command that follows this format:
 
 ```
-./exec command [command_parameters] [-pre] [-s <NUMBER>]
+arkanjo command [command_parameters] [-pre] [-s <NUMBER>]
 ```
 
 If the preprocessor has not been run yet, the tool will automatically execute it.
@@ -107,7 +106,7 @@ The following is a guide on how to execute the tool's current commands:
 To execute the explore duplications command, run:
 
 ```
-./exec ex [-l <number>] [-p <string>] [-b <'T' or 'F'>] [-c 'T' or 'F'] 
+arkanjo ex [-l <number>] [-p <string>] [-b <'T' or 'F'>] [-c 'T' or 'F'] 
 ```
 
 All of the following options are optional, and their meanings are as follows:
@@ -135,7 +134,7 @@ file path and name (e.g.,`path/to/file.c:function_name`).
 To execute the function command, execute:
 
 ```
-./exec fu <FUNCTION_NAME>
+arkanjo fu <FUNCTION_NAME>
 ```
 
 `<FUNCTION_NAME>` is a parameter passed by the user. The tool will match the 
@@ -146,5 +145,5 @@ parameter with any function that has the `FUNCTION_NAME` as a substring.
 To execute the relatory command, execute:
 
 ```
-./exec du
+arkanjo du
 ```
