@@ -32,16 +32,16 @@
 class Similarity_Table {
   private:
     static constexpr const char* SIMILARITY_TABLE_FILE_NAME = "tmp/output_parsed.txt"; ///< Default similarity data file
-    double DEFAULT_SIMILARITY = 100.00;                          ///< Default similarity threshold
-    double EPS_ERROR_MARGIN = 1e-6;                              ///< Floating-point comparison margin
-    double MAXIMUM_SIMILARITY = 100.00;                          ///< Maximum possible similarity score
-    double MINIMUM_SIMILARITY = 0.00;                            ///< Minimum possible similarity score
+    double DEFAULT_SIMILARITY = 100.00;                                                ///< Default similarity threshold
+    double EPS_ERROR_MARGIN = 1e-6;                                                    ///< Floating-point comparison margin
+    double MAXIMUM_SIMILARITY = 100.00;                                                ///< Maximum possible similarity score
+    double MINIMUM_SIMILARITY = 0.00;                                                  ///< Minimum possible similarity score
 
-    double similarity_threshold;                        ///< Current similarity threshold
-    std::vector<Path> paths;                                 ///< List of all known paths
-    std::map<Path, int> path_id;                             ///< Path to ID mapping
+    double similarity_threshold;                                       ///< Current similarity threshold
+    std::vector<Path> paths;                                           ///< List of all known paths
+    std::map<Path, int> path_id;                                       ///< Path to ID mapping
     std::vector<std::vector<std::pair<int, double>>> similarity_graph; ///< Graph of similarity relationships
-    std::map<std::pair<int, int>, double> similarity_table;       ///< Similarity score lookup table
+    std::map<std::pair<int, int>, double> similarity_table;            ///< Similarity score lookup table
 
     /**
      * @brief Finds or assigns ID for a path
@@ -121,7 +121,7 @@ class Similarity_Table {
      * @brief Gets list of all known paths
      * @return vector<Path> All paths in table
      */
-    std::vector<Path> get_path_list() const;
+    const std::vector<Path>& get_path_list() const;
 
     /**
      * @brief Gets paths similar to reference path

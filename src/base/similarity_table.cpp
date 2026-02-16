@@ -1,13 +1,14 @@
 #include <arkanjo/base/similarity_table.hpp>
 
 int Similarity_Table::find_id_path(const Path& path) {
-    if (path_id.find(path) == path_id.end()) {
-        path_id[path] = paths.size();
+    auto [it, inserted] = path_id.try_emplace(path, paths.size());
+
+    if (inserted) {
         paths.push_back(path);
-        std::vector<std::pair<int, double>> empty_vec;
-        similarity_graph.push_back(empty_vec);
+        similarity_graph.emplace_back();
     }
-    return path_id[path];
+
+    return it->second;
 }
 
 void Similarity_Table::read_comparation(std::ifstream& table_file) {
@@ -87,16 +88,16 @@ double Similarity_Table::is_similar(const Path& path1, const Path& path2) {
     return is_above_threshold(similarity);
 }
 
-std::vector<Path> Similarity_Table::get_path_list() const {
+const std::vector<Path>& Similarity_Table::get_path_list() const {
     return paths;
 }
 
 std::vector<Path> Similarity_Table::get_similar_path_to_the_reference(const Path& reference) {
-    int id = find_id_path(reference);
+    int reference_id = find_id_path(reference);
     std::vector<Path> ret;
-    for (auto [id, similarity] : similarity_graph[id]) {
+    for (auto [neighbor_id, similarity] : similarity_graph[reference_id]) {
         if (is_above_threshold(similarity)) {
-            ret.push_back(paths[id]);
+            ret.push_back(paths[neighbor_id]);
         }
     }
     return ret;

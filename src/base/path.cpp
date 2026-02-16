@@ -34,12 +34,12 @@ bool Path::is_empty() const {
     return tokens.empty();
 }
 
-Path::Path(std::string string_path) {
+Path::Path(const std::string& string_path) {
     tokens = split_path(string_path);
     position_start_relative_path = find_position_start_relative_path();
 }
 
-std::string Path::build_string_path(const std::vector<std::string>& path) const {
+std::string Path::build_string_path(const std::vector<std::string>& path) {
     std::string string_path;
     int sz = path.size();
     for (int i = 0; i < sz; i++) {
@@ -95,7 +95,7 @@ std::vector<std::string> Path::get_tokens_from_relative_path() const {
     return token_relative_path;
 }
 
-std::string Path::remove_extension(std::string token) const {
+std::string Path::remove_extension(std::string token) {
     while (!token.empty()) {
         auto c = token.back();
         token.pop_back();

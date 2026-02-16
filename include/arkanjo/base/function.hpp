@@ -89,7 +89,7 @@ class Function {
      * @brief Gets the function's header content
      * @return vector<string> Each element represents a line of header
      */
-    std::vector<std::string> get_header() const;
+    const std::vector<std::string>& get_header() const;
 
     /**
      * @brief Builds combined content of header and source

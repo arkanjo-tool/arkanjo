@@ -53,7 +53,7 @@ class Config {
      * @brief Gets the current base path
      * @return string The configured base path
      */
-    std::string getBasePath();
+    const std::string& getBasePath() const;
 
     /**
      * @brief Sets test configuration paths

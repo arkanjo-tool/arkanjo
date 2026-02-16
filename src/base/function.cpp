@@ -23,9 +23,7 @@ int Function::number_of_lines() const {
     return end_number_line - line_declaration + 1;
 }
 
-Function::Function(const Path& _path) {
-    path = _path;
-}
+Function::Function(const Path& _path) : path(_path), start_number_line(-1), line_declaration(-1), end_number_line(-1) {}
 
 void Function::load() {
     if (path.is_empty()) {
@@ -40,7 +38,7 @@ std::array<int, 3> Function::get_scope_function_in_file() const {
     return {line_declaration, start_number_line, end_number_line};
 }
 
-std::vector<std::string> Function::get_header() const {
+const std::vector<std::string>& Function::get_header() const {
     return header;
 }
 
@@ -48,7 +46,7 @@ std::vector<std::string> Function::build_all_content() {
 
     std::vector<std::string> ret;
     // the last line of header should merge with the first line of content
-    for (auto line : header) {
+    for (const auto& line : header) {
         ret.push_back(line);
     }
     for (int i = 0; i < int(content.size()); i++) {

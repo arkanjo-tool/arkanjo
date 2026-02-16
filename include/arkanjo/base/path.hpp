@@ -31,15 +31,15 @@ class Path {
     static constexpr const char* INFO_STRING = "info";     ///< Info subdirectory name
     static constexpr char BAR = '/';                       ///< Path separator character
 
-    std::vector<std::string> tokens;     ///< Path components
-    size_t position_start_relative_path; ///< Index where relative path begins
+    std::vector<std::string> tokens;          ///< Path components
+    size_t position_start_relative_path = -1; ///< Index where relative path begins
 
     /**
      * @brief Splits path string into components
      * @param string_path Path to split
      * @return vector<string> Path components
      */
-    std::vector<std::string> split_path(const std::string& string_path);
+    static std::vector<std::string> split_path(const std::string& string_path);
 
     /**
      * @brief Finds start position of relative path
@@ -52,7 +52,7 @@ class Path {
      * @param path Components to join
      * @return string Constructed path
      */
-    std::string build_string_path(const std::vector<std::string>& path) const;
+    static std::string build_string_path(const std::vector<std::string>& path);
 
     /**
      * @brief Builds path with specified base directory
@@ -72,7 +72,7 @@ class Path {
      * @param token String with extension
      * @return String without extension
      */
-    std::string remove_extension(std::string token) const;
+    static std::string remove_extension(std::string token);
 
   public:
     /**
@@ -90,7 +90,7 @@ class Path {
      * @brief Constructs from path string
      * @param string_path Path to parse
      */
-    explicit Path(std::string string_path);
+    explicit Path(const std::string& string_path);
 
     /**
      * @brief Builds source file path
