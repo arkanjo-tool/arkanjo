@@ -115,7 +115,7 @@ enum COLOR {
  * @param file Reference to the input file stream to check
  * @param file_name Name/path of the file being opened (for error message)
  */
-void ensure_file_is_open(std::ifstream& file, const std::string& file_name);
+void ensure_file_is_open(const std::ifstream& file, const std::string& file_name);
 
 /**
  * @brief Reads a file line by line into a vector of strings

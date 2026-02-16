@@ -8,7 +8,7 @@
 #include "apple_utils.hpp"
 #endif
 
-void Utils::ensure_file_is_open(std::ifstream& file, const std::string& file_name) {
+void Utils::ensure_file_is_open(const std::ifstream& file, const std::string& file_name) {
     if (!file.is_open()) {
         std::cout << "Attempted to open file: " << file_name << " ";
         std::cout << "but a Error ocurred. Check if the file exist." << std::endl;
@@ -34,7 +34,7 @@ void Utils::write_file_generic(const std::string& file_path, const std::vector<s
     create_parents_folder_of_file_path(file_path);
     fileout.open(file_path);
 
-    for (auto line : content) {
+    for (const auto& line : content) {
         fileout << line << '\n';
     }
     fileout.close();
@@ -51,7 +51,7 @@ void Utils::create_parents_folder_of_file_path(const std::string& file_path) {
             parents.push_back(s);
         }
     }
-    for (auto folder : parents) {
+    for (const auto& folder : parents) {
         const char* cfolder = folder.c_str();
         mkdir(cfolder, MKDIR_FLAG);
     }
