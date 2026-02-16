@@ -10,7 +10,7 @@ The code filter every file that has the pattern as a substring, so be carefull w
 
 #include "similarity_explorer.hpp"
 
-Utils::COLOR Similarity_Explorer::choose_text_color() {
+Utils::COLOR Similarity_Explorer::choose_text_color() const {
     Utils::COLOR ret = Utils::GRAY;
     if (processed_results % 2 == 0) {
         ret = Utils::CYAN;
@@ -25,7 +25,7 @@ int Similarity_Explorer::find_number_pairs_show(int number_pair_found) const {
     return std::min(limit_on_results, number_pair_found);
 }
 
-std::string Similarity_Explorer::format_initial_message(int number_pair_found) {
+std::string Similarity_Explorer::format_initial_message(int number_pair_found) const {
     std::string ret;
     ret += INITIAL_TEXT_PRINT_1;
     ret += std::to_string(number_pair_found);
@@ -50,7 +50,7 @@ std::string Similarity_Explorer::format_path_message_in_pair(const Path& path) c
     return ret;
 }
 
-int Similarity_Explorer::find_number_lines(const Path& path1) const {
+int Similarity_Explorer::find_number_lines(const Path& path1) {
     Function function(path1);
     function.load();
     return function.number_of_lines();
@@ -80,7 +80,7 @@ void Similarity_Explorer::process_similar_path_pair(const Path& path1, const Pat
     print_similar_path_pair(path1, path2);
 }
 
-int Similarity_Explorer::find_number_pair_found(std::vector<std::pair<Path, Path>> similar_path_pairs) const {
+int Similarity_Explorer::find_number_pair_found(const std::vector<std::pair<Path, Path>>& similar_path_pairs) const {
     int count = 0;
     for (auto [path1, path2] : similar_path_pairs) {
         if (match_pattern(path1, path2)) {
@@ -115,11 +115,10 @@ void Similarity_Explorer::explorer(bool sorted_by_number_of_duplicated_code) {
 Similarity_Explorer::Similarity_Explorer(
     Similarity_Table* _similarity_table,
     int _limit_on_results,
-    std::string _pattern_to_match,
-    bool _both_path_need_to_match) {
+    const std::string& _pattern_to_match,
+    bool _both_path_need_to_match) : pattern_to_match(_pattern_to_match) {
     similarity_table = _similarity_table;
     limit_on_results = _limit_on_results;
-    pattern_to_match = _pattern_to_match;
     both_path_need_to_match_pattern = _both_path_need_to_match;
 }
 

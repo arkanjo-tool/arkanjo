@@ -52,7 +52,7 @@ class Similarity_Explorer {
      * @brief Chooses text color for output
      * @return Utils::COLOR Selected color
      */
-    Utils::COLOR choose_text_color();
+    Utils::COLOR choose_text_color() const;
 
     /**
      * @brief Determines number of pairs to show
@@ -66,7 +66,7 @@ class Similarity_Explorer {
      * @param number_pair_found Total pairs found
      * @return string Formatted message
      */
-    std::string format_initial_message(int number_pair_found);
+    std::string format_initial_message(int number_pair_found) const;
 
     /**
      * @brief Checks if paths match pattern filter
@@ -88,7 +88,7 @@ class Similarity_Explorer {
      * @param path1 Path to check
      * @return int Number of lines
      */
-    int find_number_lines(const Path& path1) const;
+    static int find_number_lines(const Path& path1);
 
     /**
      * @brief Prints a pair of similar paths
@@ -109,7 +109,7 @@ class Similarity_Explorer {
      * @param similar_path_pairs Pairs to check
      * @return int Number of matching pairs
      */
-    int find_number_pair_found(std::vector<std::pair<Path, Path>> similar_path_pairs) const;
+    int find_number_pair_found(const std::vector<std::pair<Path, Path>>& similar_path_pairs) const;
 
     /**
      * @brief Builds filtered path pairs
@@ -134,7 +134,7 @@ class Similarity_Explorer {
      */
     Similarity_Explorer(Similarity_Table* _similarity_table,
         int _limit_on_results,
-        std::string _pattern_to_match,
+        const std::string& _pattern_to_match,
         bool _both_path_need_to_match);
 
     /**
