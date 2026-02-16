@@ -17,7 +17,6 @@
 #include <vector>
 
 #include <arkanjo/utils/utils.hpp>
-using namespace std;
 
 /**
  * @brief Trie structure for hierarchical duplication counting
@@ -31,17 +30,17 @@ using namespace std;
  */
 class Counter_Duplication_Code_Trie {
   private:
-    int ZERO_INITIAL_COUNTER = 0;                     ///< Initial counter value for new nodes
-    int ROOT_NODE = 0;                                ///< Index of root node
-    int BASE_DEPTH = 0;                               ///< Base depth level (root)
-    string EMPTY_FOLDER = "";                         ///< Representation of empty folder
-    string BASIC_SHIFT_PER_DEPTH = "----";            ///< Indentation per depth level
-    string END_ARROW = "--> ";                        ///< Suffix for folder display
-    string TWO_POINTER_AFTER_FOLDER = "/: ";          ///< Separator after folder name
-    string LINE_TEXT = " duplicated lines detected."; ///< Duplication count suffix
+    static constexpr const int ZERO_INITIAL_COUNTER = 0;                     ///< Initial counter value for new nodes
+    static constexpr const int ROOT_NODE = 0;                                ///< Index of root node
+    static constexpr const int BASE_DEPTH = 0;                               ///< Base depth level (root)
+    static constexpr const char* EMPTY_FOLDER = "";                         ///< Representation of empty folder
+    static constexpr const char* BASIC_SHIFT_PER_DEPTH = "----";            ///< Indentation per depth level
+    static constexpr const char* END_ARROW = "--> ";                        ///< Suffix for folder display
+    static constexpr const char* TWO_POINTER_AFTER_FOLDER = "/: ";          ///< Separator after folder name
+    static constexpr const char* LINE_TEXT = " duplicated lines detected."; ///< Duplication count suffix
 
-    vector<map<string, int>> trie;         ///< Trie structure: {edge_value -> node}
-    vector<int> counter_duplication_lines; ///< Duplication counts per node
+    std::vector<std::map<std::string, int>> trie;         ///< Trie structure: {edge_value -> node}
+    std::vector<int> counter_duplication_lines; ///< Duplication counts per node
     int number_printed_lines = 0;          ///< Track printed lines for formatting
 
     /**
@@ -61,14 +60,14 @@ class Counter_Duplication_Code_Trie {
      * @param node Source node index
      * @param folder Folder name (edge value)
      */
-    void create_edge_if_not_exist(int node, string folder);
+    void create_edge_if_not_exist(int node, const std::string& folder);
 
     /**
      * @brief Creates indentation string based on depth
      * @param depth Current depth level
      * @return string Formatted indentation string
      */
-    string create_context_string_on_depth(int depth);
+    static std::string create_context_string_on_depth(int depth);
 
     /**
      * @brief Prints node information with formatting
@@ -76,7 +75,7 @@ class Counter_Duplication_Code_Trie {
      * @param depth Current depth
      * @param folder Folder name to display
      */
-    void print_node_information(int node, int depth, string folder);
+    void print_node_information(int node, int depth, const std::string& folder);
 
     /**
      * @brief Performs depth-first search to print trie
@@ -84,7 +83,7 @@ class Counter_Duplication_Code_Trie {
      * @param depth Current depth level
      * @param folder Current folder name
      */
-    void dfs_print_duplication_code_trie(int current_node, int depth, string folder);
+    void dfs_print_duplication_code_trie(int current_node, int depth, const std::string& folder);
 
   public:
     /**
@@ -92,7 +91,7 @@ class Counter_Duplication_Code_Trie {
      * @param folder_path Hierarchical folder path
      * @param number_of_duplication_lines Count of duplicated lines
      */
-    void add_folder_duplication_code(vector<string> folder_path, int number_of_duplication_lines);
+    void add_folder_duplication_code(const std::vector<std::string>& folder_path, int number_of_duplication_lines);
 
     /**
      * @brief Prints the trie structure with duplication counts

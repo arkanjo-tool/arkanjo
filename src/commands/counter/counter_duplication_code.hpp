@@ -18,7 +18,6 @@
 #include <set>
 
 #include "counter_duplication_code_trie.hpp"
-using namespace std;
 
 /**
  * @brief Code duplication analyzer and reporter
@@ -29,7 +28,7 @@ using namespace std;
  */
 class Counter_Duplication_Code {
   private:
-    set<Path> processed_paths;                                   ///< Tracks processed paths to avoid duplicates
+    std::set<Path> processed_paths;                                   ///< Tracks processed paths to avoid duplicates
     Counter_Duplication_Code_Trie counter_duplication_code_trie; ///< Trie for hierarchical counting
     Similarity_Table* similarity_table;                          ///< Similarity data source
 
@@ -51,7 +50,7 @@ class Counter_Duplication_Code {
      * @param path Path to analyze
      * @return int Number of lines in the file
      */
-    int get_number_of_lines_in_path(Path path);
+    static int get_number_of_lines_in_path(const Path& path);
 
     /**
      * @brief Registers a duplication between two paths
@@ -59,13 +58,13 @@ class Counter_Duplication_Code {
      * @param path2 Second path in duplication pair
      * @param number_of_lines Number of duplicated lines
      */
-    void register_code_duplication(Path path1, Path path2, int number_of_lines);
+    void register_code_duplication(const Path& path1, const Path& path2, int number_of_lines);
 
     /**
      * @brief Processes a single path for duplication
      * @param path Path to process
      */
-    void process_path(Path path);
+    void process_path(const Path& path);
 
     /**
      * @brief Processes all paths in similarity table
@@ -77,5 +76,5 @@ class Counter_Duplication_Code {
      * @brief Constructs analyzer with similarity data
      * @param _similarity_table Pointer to similarity table
      */
-    Counter_Duplication_Code(Similarity_Table* _similarity_table);
+    explicit Counter_Duplication_Code(Similarity_Table* _similarity_table);
 };
