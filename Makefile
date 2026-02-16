@@ -1,5 +1,5 @@
 CXX = g++
-MODE ?= debug
+MODE ?= release
 
 PROJECT := arkanjo
 BIN_PATH := bin
