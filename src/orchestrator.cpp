@@ -96,6 +96,7 @@ void Orchestrator::similar_function_finder_command(vector<string> parameters, Si
         exit(0);
     }
     Similar_Function_Finder similar_function_finder(parameters[0], similarity_table);
+    similar_function_finder.run();
 }
 
 Orchestrator::Orchestrator(string command, vector<string> parameters) {

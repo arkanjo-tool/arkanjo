@@ -14,9 +14,9 @@
 #include <string>
 #include <vector>
 
-#include <arkanjo/base/similarity_table.hpp>
 #include <arkanjo/base/function.hpp>
 #include <arkanjo/base/path.hpp>
+#include <arkanjo/base/similarity_table.hpp>
 #include <arkanjo/utils/utils.hpp>
 
 /**
@@ -44,13 +44,13 @@ class Similar_Function_Finder {
     /**
      * @brief Prints message when no matching function found
      */
-    void print_empty_path_message();
+    void print_empty_path_message() const;
 
     /**
      * @brief Prints details about a single function
      * @param path Path of function to display
      */
-    void print_function(Path path);
+    void print_function(const Path& path) const;
 
     /**
      * @brief Prints reference function information
@@ -61,7 +61,7 @@ class Similar_Function_Finder {
      * @brief Prints information about similar functions
      * @param similar_paths List of similar function paths
      */
-    void print_similar_functions(std::vector<Path> similar_paths);
+    void print_similar_functions(const std::vector<Path>& similar_paths);
 
     /**
      * @brief Main function to print all similar functions
@@ -74,5 +74,7 @@ class Similar_Function_Finder {
      * @param _function_pattern Function name pattern to match
      * @param _similarity_table Source of similarity data
      */
-    Similar_Function_Finder(std::string _function_pattern, Similarity_Table* _similarity_table);
+    Similar_Function_Finder(const std::string& _function_pattern, Similarity_Table* _similarity_table);
+
+    void run();
 };
