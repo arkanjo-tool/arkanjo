@@ -5,21 +5,21 @@
 #include <string>
 #include <vector>
 void Orchestrator::help_command() {
-    cout << "Sorry I am tired I will do this latter" << '\n';
+    std::cout << "Sorry I am tired I will do this latter" << '\n';
 }
 
-void Orchestrator::check_update_similarity(vector<string> parameters, Similarity_Table* similarity_table) {
+void Orchestrator::check_update_similarity(const std::vector<std::string>& parameters, Similarity_Table* similarity_table) {
     int number_parameters = parameters.size();
     for (int i = 0; i < number_parameters - 1; i++) {
-        string param = parameters[i];
-        string next_param = parameters[i + 1];
+        std::string param = parameters[i];
+        std::string next_param = parameters[i + 1];
         if (param == "-s") {
             similarity_table->update_similarity(stod(next_param));
         }
     }
 }
 
-bool Orchestrator::check_force_preprocess(vector<string> parameters) {
+bool Orchestrator::check_force_preprocess(const std::vector<std::string>& parameters) {
     int number_parameters = parameters.size();
     for (int i = 0; i < number_parameters; i++) {
         if (parameters[i] == "-pre") {
@@ -29,21 +29,21 @@ bool Orchestrator::check_force_preprocess(vector<string> parameters) {
     return false;
 }
 
-void Orchestrator::call_preprocess(vector<string> parameters) {
+void Orchestrator::call_preprocess(const std::vector<std::string>& parameters) {
     bool should_force = check_force_preprocess(parameters);
     Preprocessor preprocessor(should_force);
 }
 
-void Orchestrator::exploration_command(vector<string> parameters, Similarity_Table* similarity_table) {
+void Orchestrator::exploration_command(const std::vector<std::string>& parameters, Similarity_Table* similarity_table) {
     int number_parameters = parameters.size();
 
-    string pattern = "";
+    std::string pattern = "";
     int limiter = 0;
     bool both_need_to_match = false;
     bool sorted_by_number_of_duplicated_code = false;
     for (int i = 0; i < number_parameters - 1; i++) {
-        string param = parameters[i];
-        string next_param = parameters[i + 1];
+        std::string param = parameters[i];
+        std::string next_param = parameters[i + 1];
         if (param == "-l") {
             limiter = stoi(next_param);
         }
@@ -65,10 +65,10 @@ void Orchestrator::exploration_command(vector<string> parameters, Similarity_Tab
     similarity_explorer.run(sorted_by_number_of_duplicated_code);
 }
 
-void Orchestrator::random_command(vector<string> parameters, Similarity_Table* similarity_table) {
+void Orchestrator::random_command(const std::vector<std::string>& parameters, Similarity_Table* similarity_table) {
     int number_parameters = parameters.size();
     if (number_parameters <= 2) {
-        cout << "ERROR: Random expect three parameters, but less was given" << endl;
+        std::cout << "ERROR: Random expect three parameters, but less was given" << std::endl;
         exit(0);
     }
     int minimum_similarity = stod(parameters[0]);
@@ -77,29 +77,29 @@ void Orchestrator::random_command(vector<string> parameters, Similarity_Table* s
     Random_Selector random(similarity_table, minimum_similarity, maximum_similarity, maximum_quantity);
 }
 
-void Orchestrator::duplication_command(vector<string> parameters, Similarity_Table* similarity_table) {
+void Orchestrator::duplication_command(const std::vector<std::string>& parameters, Similarity_Table* similarity_table) {
     Counter_Duplication_Code counter_duplication_code(similarity_table);
 }
 
-void Orchestrator::big_clone_formater_command(vector<string> parameters, Similarity_Table* similarity_table) {
+void Orchestrator::big_clone_formater_command(const std::vector<std::string>& parameters, Similarity_Table* similarity_table) {
     Big_Clone_Formater big_clone_formater(similarity_table);
 }
 
-void Orchestrator::big_clone_tailor_evaluator_command(vector<string> parameters, Similarity_Table* similarity_table) {
+void Orchestrator::big_clone_tailor_evaluator_command(const std::vector<std::string>& parameters, Similarity_Table* similarity_table) {
     Big_Clone_Tailor_Evaluator big_clone_tailor_evaluator(similarity_table);
 }
 
-void Orchestrator::similar_function_finder_command(vector<string> parameters, Similarity_Table* similarity_table) {
+void Orchestrator::similar_function_finder_command(const std::vector<std::string>& parameters, Similarity_Table* similarity_table) {
     int number_parameters = parameters.size();
     if (number_parameters == 0) {
-        cout << "ERROR: Similar Function Finder Command expect one parameter, but none was given" << endl;
+        std::cout << "ERROR: Similar Function Finder Command expect one parameter, but none was given" << std::endl;
         exit(0);
     }
     Similar_Function_Finder similar_function_finder(parameters[0], similarity_table);
     similar_function_finder.run();
 }
 
-Orchestrator::Orchestrator(string command, vector<string> parameters) {
+Orchestrator::Orchestrator(const std::string& command, const std::vector<std::string>& parameters) {
     call_preprocess(parameters);
     Similarity_Table similarity_table;
     similarity_table.load();
@@ -123,13 +123,13 @@ Orchestrator::Orchestrator(string command, vector<string> parameters) {
 }
 
 int main(int argc, char* argv[]) {
-    string command = "";
-    vector<string> parameters;
+    std::string command = "";
+    std::vector<std::string> parameters;
     if (argc >= 2) {
-        command = string(argv[1]);
+        command = std::string(argv[1]);
     }
     for (int i = 2; i < argc; i++) {
-        string param(argv[i]);
+        std::string param(argv[i]);
         parameters.push_back(param);
     }
 

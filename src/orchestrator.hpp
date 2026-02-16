@@ -26,7 +26,6 @@
 #include "commands/finder/similar_function_finder.hpp"
 #include "commands/pre/preprocessor.hpp"
 #include "commands/rand/random_selector.hpp"
-using namespace std;
 
 /**
  * @brief Main command orchestrator
@@ -47,62 +46,62 @@ class Orchestrator {
      * @param parameters Command line parameters
      * @param similarity_table Similarity table to modify
      */
-    void check_update_similarity(vector<string> parameters, Similarity_Table* similarity_table);
+    void check_update_similarity(const std::vector<std::string>& parameters, Similarity_Table* similarity_table);
 
     /**
      * @brief Checks if force preprocessing was requested
      * @param parameters Command line parameters
      * @return bool True if force preprocessing was requested
      */
-    bool check_force_preprocess(vector<string> parameters);
+    bool check_force_preprocess(const std::vector<std::string>& parameters);
 
     /**
      * @brief Executes preprocessing pipeline
      * @param parameters Command line parameters
      */
-    void call_preprocess(vector<string> parameters);
+    void call_preprocess(const std::vector<std::string>& parameters);
 
     /**
      * @brief Handles code exploration command
      * @param parameters Command line parameters
      * @param similarity_table Similarity data to explore
      */
-    void exploration_command(vector<string> parameters, Similarity_Table* similarity_table);
+    void exploration_command(const std::vector<std::string>& parameters, Similarity_Table* similarity_table);
 
     /**
      * @brief Handles random selection command
      * @param parameters Command line parameters
      * @param similarity_table Similarity data to sample from
      */
-    void random_command(vector<string> parameters, Similarity_Table* similarity_table);
+    void random_command(const std::vector<std::string>& parameters, Similarity_Table* similarity_table);
 
     /**
      * @brief Handles duplication analysis command
      * @param parameters Command line parameters
      * @param similarity_table Similarity data to analyze
      */
-    void duplication_command(vector<string> parameters, Similarity_Table* similarity_table);
+    void duplication_command(const std::vector<std::string>& parameters, Similarity_Table* similarity_table);
 
     /**
      * @brief Handles BigCloneEval formatting command
      * @param parameters Command line parameters
      * @param similarity_table Similarity data to format
      */
-    void big_clone_formater_command(vector<string> parameters, Similarity_Table* similarity_table);
+    void big_clone_formater_command(const std::vector<std::string>& parameters, Similarity_Table* similarity_table);
 
     /**
      * @brief Handles BigCloneBench evaluation command
      * @param parameters Command line parameters
      * @param similarity_table Similarity data to evaluate
      */
-    void big_clone_tailor_evaluator_command(vector<string> parameters, Similarity_Table* similarity_table);
+    void big_clone_tailor_evaluator_command(const std::vector<std::string>& parameters, Similarity_Table* similarity_table);
 
     /**
      * @brief Handles similar function finding command
      * @param parameters Command line parameters
      * @param similarity_table Similarity data to search
      */
-    void similar_function_finder_command(vector<string> parameters, Similarity_Table* similarity_table);
+    void similar_function_finder_command(const std::vector<std::string>& parameters, Similarity_Table* similarity_table);
 
   public:
     /**
@@ -110,5 +109,5 @@ class Orchestrator {
      * @param command The main command to execute
      * @param parameters Additional command parameters
      */
-    Orchestrator(string command, vector<string> parameters);
+    Orchestrator(const std::string& command, const std::vector<std::string>& parameters);
 };
