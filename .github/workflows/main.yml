@@ -40,9 +40,9 @@ jobs:
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git config --global init.defaultBranch main
         
-        # Check if docs were generated
-        if [ ! -d "docs/html" ] || [ -z "$(ls -A docs/html)" ]; then
-          echo "Error: docs/html directory does not exist or is empty"
+        # Check if docs/doxygen were generated
+        if [ ! -d "docs/doxygen/html" ] || [ -z "$(ls -A docs/doxygen/html)" ]; then
+          echo "Error: docs/doxygen/html directory does not exist or is empty"
           exit 1
         fi
         
@@ -51,7 +51,7 @@ jobs:
         echo "Using temporary directory: $TEMP_DIR"
         
         # Copy documentation files to temp directory
-        cp -r docs/html/* "$TEMP_DIR/"
+        cp -r docs/doxygen/html/* "$TEMP_DIR/"
         
         # Navigate to temp directory and set up git
         cd "$TEMP_DIR"
