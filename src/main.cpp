@@ -1,9 +1,12 @@
 #include <arkanjo/cli/parser_options.hpp>
 #include <arkanjo/cli/cli_error.hpp>
 #include <arkanjo/cli/formatter.hpp>
+#include <arkanjo/cli/options_collector.hpp>
 
-#include "orchestrator.hpp"
+#include <arkanjo/orchestrator.hpp>
 #include "orchestrator_helper.hpp"
+
+static constexpr const char* DEFAULT_COMMAND = "help";
 
 int main(int argc, char* argv[]) {
     Orchestrator orchestrator;
@@ -11,38 +14,29 @@ int main(int argc, char* argv[]) {
 
     Similarity_Table similarity_table;
 
-    ctx.command_name = (argc > 1) ? argv[1] : "help";
-
-    static struct option global_long_opts[] = {
-        {"color", no_argument, nullptr, 0},
-        {"no-color", no_argument, nullptr, 0},
-        {"preprocessor", no_argument, nullptr, 0},
-        {"similarity", required_argument, nullptr, 's'}
-    };
-    static std::string global_short_opts = "s";
+    ctx.command_name = (argc > 1) ? argv[1] : DEFAULT_COMMAND;
 
     std::unique_ptr<ICommand> command;
+    orchestrator.add_step(OrchestratorHelper::setup_command_step(command, similarity_table));
+    
+    OptionsCollector collector;
+    orchestrator.add_step([&command, &collector](Context& ctx) {
+        if (!command) return false;
 
-    orchestrator.add_step([&](Context& c) {
-        command = setup_command_step(c.command_name, similarity_table);
+        collector.add_options(OrchestratorHelper::global_long_opts, OrchestratorHelper::global_short_opts);
+        collector.add_options(command->get_options(), command->get_short_opts());
         return true;
     });
 
-    orchestrator.add_step([&](Context& c) {
-        return parse_options_step(argc, argv, *command, c, global_long_opts, global_short_opts);
-    });
+    orchestrator.add_step(collector.make_parse_step(argc, argv));
 
-    orchestrator.add_step(formatter_step);
+    orchestrator.add_step(OrchestratorHelper::formatter_step);
 
-    orchestrator.add_step(preprocessing_step);
+    orchestrator.add_step(OrchestratorHelper::preprocessing_step);
 
-    orchestrator.add_step([&](Context& c) {
-        return similarity_step(similarity_table, c);
-    });
+    orchestrator.add_step(OrchestratorHelper::similarity_step(similarity_table));
 
-    orchestrator.add_step([&](Context& c) {
-        return command_run_step(*command, c);
-    });
+    orchestrator.add_step(OrchestratorHelper::command_run_step(command));
 
     try {
         orchestrator.run_pipeline(ctx);
