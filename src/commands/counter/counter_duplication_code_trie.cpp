@@ -3,6 +3,7 @@ This is a Trie with a element being a folder to enable count of duplication code
 It is not simple to understand if you do not know the structure. Please refer to https://en.wikipedia.org/wiki/Trie .
 */
 #include "counter_duplication_code_trie.hpp"
+#include <arkanjo/cli/formatter.hpp>
 
 Utils::COLOR CounterDuplicationCodeTrie::choose_text_color() {
     number_printed_lines++;
@@ -39,8 +40,8 @@ std::string CounterDuplicationCodeTrie::create_context_string_on_depth(int depth
 void CounterDuplicationCodeTrie::print_node_information(int node, int depth, const std::string& folder) {
     std::string line = create_context_string_on_depth(depth) + folder + TWO_POINTER_AFTER_FOLDER;
     line += std::to_string(counter_duplication_lines[node]) + LINE_TEXT;
-    Utils::COLOR color = choose_text_color();
-    std::cout << Utils::format_colored_message(line, color) << '\n';
+
+    std::cout << FormatterManager::get_formatter()->format(line, choose_text_color()) << '\n';
 }
 
 void CounterDuplicationCodeTrie::dfs_print_duplication_code_trie(int current_node, int depth, const std::string& folder) {

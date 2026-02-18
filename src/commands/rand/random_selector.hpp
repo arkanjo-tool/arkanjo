@@ -34,7 +34,6 @@ using namespace std;
 class RandomSelector : public ICommand {
     string START_LINE_COMPARATION_PRINT = "Functions: "; ///< Prefix for pair display
     string BETWEEN_TWO_FUNCTION = " AND ";               ///< Separator between functions
-    string BETWEEN_RELATIVE_AND_FUNCTION_NAME = "::";    ///< Path/name separator
     string SIMILARITY_MESSAGE = ". Similarity: ";        ///< Similarity score prefix
 
     Similarity_Table* similarity_table; ///< Source of similarity data
@@ -52,13 +51,6 @@ class RandomSelector : public ICommand {
      * @return Utils::COLOR Selected color for display
      */
     Utils::COLOR choose_text_color();
-
-    /**
-     * @brief Formats path for display
-     * @param path Path to format
-     * @return string Formatted path string
-     */
-    string format_path_message_in_pair(Path path);
 
     /**
      * @brief Checks if pair falls within configured thresholds

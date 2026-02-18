@@ -24,6 +24,8 @@
  */
 class Path {
   private:
+    static constexpr const char* BETWEEN_RELATIVE_AND_FUNCTION_NAME = "::"; ///< Separator for path formatting
+
     static constexpr const char* JSON_EXTENSION = ".json"; ///< Extension for JSON metadata files
     static constexpr const char* BASE_INIT_STRING = "tmp"; ///< Base directory name
     static constexpr const char* SOURCE_STRING = "source"; ///< Source subdirectory name
@@ -142,4 +144,11 @@ class Path {
      * @return bool True if this path is ordered first
      */
     bool operator<(const Path& path) const;
+
+    /**
+     * @brief Formats path for display
+     * @param path Path to format
+     * @return string Formatted path string
+     */
+    std::string format_path_message_in_pair() const;
 };

@@ -22,6 +22,7 @@
 #include <arkanjo/utils/utils.hpp>
 
 #include <arkanjo/cli/cli_error.hpp>
+#include <arkanjo/cli/formatter.hpp>
 #include <arkanjo/commands/command.hpp>
 
 /**
@@ -49,7 +50,6 @@ class SimilarityExplorer : public ICommand {
     bool run(const ParsedOptions& options) override;
 
   private:
-    static constexpr const char* BETWEEN_RELATIVE_AND_FUNCTION_NAME = "::";                                               ///< Separator for path formatting
     static constexpr const char* START_LINE_COMPARATION_PRINT = "Functions find: ";                                       ///< Comparison header
     static constexpr const char* BETWEEN_TWO_FUNCTION = " AND ";                                                          ///< Separator between functions
     static constexpr const char* NUMBER_LINES_MESSAGE = " , TOTAL NUMBER LINES IN FUNCTIONS: ";                           ///< Line count label
@@ -69,7 +69,7 @@ class SimilarityExplorer : public ICommand {
      * @brief Chooses text color for output
      * @return Utils::COLOR Selected color
      */
-    Utils::COLOR choose_text_color() const;
+    Utils::COLOR alternating_row_color(size_t index) const;
 
     /**
      * @brief Determines number of pairs to show
@@ -83,7 +83,7 @@ class SimilarityExplorer : public ICommand {
      * @param number_pair_found Total pairs found
      * @return string Formatted message
      */
-    std::string format_initial_message(int number_pair_found) const;
+    std::string initial_message(int found, int show) const;
 
     /**
      * @brief Checks if paths match pattern filter
@@ -92,13 +92,6 @@ class SimilarityExplorer : public ICommand {
      * @return bool True if paths pass filter
      */
     bool match_pattern(const Path& path1, const Path& path2) const;
-
-    /**
-     * @brief Formats path for display
-     * @param path Path to format
-     * @return string Formatted path string
-     */
-    std::string format_path_message_in_pair(const Path& path) const;
 
     /**
      * @brief Gets line count for a path

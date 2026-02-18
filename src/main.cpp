@@ -1,5 +1,6 @@
 #include <arkanjo/cli/parser_options.hpp>
 #include <arkanjo/cli/cli_error.hpp>
+#include <arkanjo/cli/formatter.hpp>
 
 #include "orchestrator.hpp"
 #include "orchestrator_helper.hpp"
@@ -30,6 +31,8 @@ int main(int argc, char* argv[]) {
     orchestrator.add_step([&](Context& c) {
         return parse_options_step(argc, argv, *command, c, global_long_opts, global_short_opts);
     });
+
+    orchestrator.add_step(formatter_step);
 
     orchestrator.add_step(preprocessing_step);
 

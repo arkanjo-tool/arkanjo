@@ -8,11 +8,6 @@ Utils::COLOR RandomSelector::choose_text_color() {
     return ret;
 }
 
-string RandomSelector::format_path_message_in_pair(Path path) {
-    string ret = path.build_relative_path() + BETWEEN_RELATIVE_AND_FUNCTION_NAME + path.build_function_name();
-    return ret;
-}
-
 bool RandomSelector::is_valid_pair(tuple<double, Path, Path> path_pair) {
     auto [similarity, path1, path2] = path_pair;
     if (similarity < minimum_similarity)
@@ -45,9 +40,9 @@ void RandomSelector::print_path_pair(tuple<double, Path, Path> path_pair) {
     auto [similarity, path1, path2] = path_pair;
     string line;
     line += START_LINE_COMPARATION_PRINT;
-    line += format_path_message_in_pair(path1);
+    line += path1.format_path_message_in_pair();
     line += BETWEEN_TWO_FUNCTION;
-    line += format_path_message_in_pair(path2);
+    line += path2.format_path_message_in_pair();
     line += SIMILARITY_MESSAGE;
     line += to_string(similarity);
     Utils::COLOR color = choose_text_color();

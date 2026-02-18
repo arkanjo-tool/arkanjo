@@ -149,3 +149,7 @@ bool Path::contains_given_pattern(const std::string& pattern) const {
     std::string relative_path_plus_function_name = build_relative_path() + BAR + build_function_name();
     return relative_path_plus_function_name.find(pattern) != std::string::npos;
 }
+
+std::string Path::format_path_message_in_pair() const {
+    return build_relative_path() + BETWEEN_RELATIVE_AND_FUNCTION_NAME + build_function_name();
+}

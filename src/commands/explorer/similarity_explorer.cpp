@@ -10,12 +10,8 @@ The code filter every file that has the pattern as a substring, so be carefull w
 
 #include "similarity_explorer.hpp"
 
-Utils::COLOR SimilarityExplorer::choose_text_color() const {
-    Utils::COLOR ret = Utils::GRAY;
-    if (processed_results % 2 == 0) {
-        ret = Utils::CYAN;
-    }
-    return ret;
+Utils::COLOR SimilarityExplorer::alternating_row_color(size_t index) const {
+    return (index % 2 == 0) ? Utils::GRAY : Utils::CYAN;
 }
 
 int SimilarityExplorer::find_number_pairs_show(int number_pair_found) const {
@@ -25,14 +21,10 @@ int SimilarityExplorer::find_number_pairs_show(int number_pair_found) const {
     return std::min(limit_on_results, number_pair_found);
 }
 
-std::string SimilarityExplorer::format_initial_message(int number_pair_found) const {
-    std::string ret;
-    ret += INITIAL_TEXT_PRINT_1;
-    ret += std::to_string(number_pair_found);
-    ret += INITIAL_TEXT_PRINT_2;
-    ret += std::to_string(find_number_pairs_show(number_pair_found));
-    ret += INITIAL_TEXT_PRINT_3;
-    return ret;
+std::string SimilarityExplorer::initial_message(int found, int show) const {
+    return INITIAL_TEXT_PRINT_1 + std::to_string(found) +
+           INITIAL_TEXT_PRINT_2 + std::to_string(show) +
+           INITIAL_TEXT_PRINT_3;
 }
 
 bool SimilarityExplorer::match_pattern(const Path& path1, const Path& path2) const {
@@ -45,11 +37,6 @@ bool SimilarityExplorer::match_pattern(const Path& path1, const Path& path2) con
     return match1 || match2;
 }
 
-std::string SimilarityExplorer::format_path_message_in_pair(const Path& path) const {
-    std::string ret = path.build_relative_path() + BETWEEN_RELATIVE_AND_FUNCTION_NAME + path.build_function_name();
-    return ret;
-}
-
 int SimilarityExplorer::find_number_lines(const Path& path1) {
     Function function(path1);
     function.load();
@@ -57,16 +44,14 @@ int SimilarityExplorer::find_number_lines(const Path& path1) {
 }
 
 void SimilarityExplorer::print_similar_path_pair(const Path& path1, const Path& path2) {
-    std::string line;
-    line += START_LINE_COMPARATION_PRINT;
-    line += format_path_message_in_pair(path1);
-    line += BETWEEN_TWO_FUNCTION;
-    line += format_path_message_in_pair(path2);
-    line += NUMBER_LINES_MESSAGE;
-    line += std::to_string(find_number_lines(path1));
+    std::string row = START_LINE_COMPARATION_PRINT + 
+                       path1.format_path_message_in_pair() +
+                       BETWEEN_TWO_FUNCTION +
+                       path2.format_path_message_in_pair() +
+                       NUMBER_LINES_MESSAGE +
+                       std::to_string(find_number_lines(path1));
 
-    Utils::COLOR color = choose_text_color();
-    std::cout << Utils::format_colored_message(line, color) << '\n';
+    std::cout << FormatterManager::get_formatter()->format(row, alternating_row_color(processed_results)) << '\n';
 }
 
 void SimilarityExplorer::process_similar_path_pair(const Path& path1, const Path& path2) {
@@ -102,9 +87,10 @@ std::vector<std::pair<Path, Path>> SimilarityExplorer::build_similar_path_pairs(
 
 void SimilarityExplorer::explorer() {
     std::vector<std::pair<Path, Path>> similar_path_pairs = build_similar_path_pairs();
-    std::string initial_line = format_initial_message(find_number_pair_found(similar_path_pairs));
+    int number_pair_found = find_number_pair_found(similar_path_pairs);
+    int number_pairs_show = find_number_pairs_show(number_pair_found);
 
-    std::cout << initial_line << '\n';
+    std::cout << initial_message(number_pair_found, number_pairs_show) << '\n';
     std::cout << Utils::LIMITER_PRINT << '\n';
 
     for (auto [path1, path2] : similar_path_pairs) {

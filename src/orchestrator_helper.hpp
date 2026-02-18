@@ -60,6 +60,14 @@ bool parse_options_step(int argc, char* argv[], ICommand& command, Context& ctx,
     return true;
 }
 
+bool formatter_step(Context& ctx) {
+    bool color = ctx.options.args.count("color") > 0;
+    if (color) FormatterManager::set_formatter(std::make_shared<ConsoleFormatter>(true));
+    bool no_color = ctx.options.args.count("no-color") > 0;
+    if (no_color) FormatterManager::set_formatter(std::make_shared<ConsoleFormatter>(false));
+    return true;
+}
+
 bool preprocessing_step(Context& ctx) {
     bool force_pre = ctx.options.args.count("preprocessor") > 0;
     Preprocessor pre(force_pre);

@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include <arkanjo/base/function.hpp>
+#include <arkanjo/cli/formatter.hpp>
 
 void Function::read_content() {
     std::string source_path = path.build_source_path();
@@ -69,11 +70,10 @@ void Function::print_basic_info() {
 
     std::cout << '\n';
     std::cout << Utils::LIMITER_PRINT << '\n';
-    std::cout << Utils::format_colored_message(function_message, Utils::BRIGHT_YELLOW) << '\n';
-    std::cout << Utils::format_colored_message(relative_message, Utils::GREEN) << '\n';
-    std::cout << Utils::format_colored_message(start_message, Utils::WHITE) << '\n';
-    std::cout << Utils::format_colored_message(end_message, Utils::WHITE) << '\n';
-    std::cout << Utils::format_colored_message(number_message, Utils::WHITE) << '\n';
+    std::cout << YELLOW(function_message) << '\n';
+    std::cout << GREEN(relative_message) << '\n';
+    std::cout << WHITE(start_message) << '\n';
+    std::cout << WHITE(end_message) << '\n';
+    std::cout << WHITE(number_message) << '\n';
     std::cout << Utils::LIMITER_PRINT << '\n';
-    std::cout << '\n';
 }
