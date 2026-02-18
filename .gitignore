@@ -68,12 +68,8 @@ third-party/duplicate-code-detection-tool
 BigCloneEval/
 bigclonebench/
 
-#Intermediate files from the tool
-output_tool.txt
-
 #Temporary Files
 tmp/
-output_parsed.txt
 
 #Documentation
 Doxyfile.bak
