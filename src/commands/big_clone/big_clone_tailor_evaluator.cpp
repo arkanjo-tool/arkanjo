@@ -1,6 +1,6 @@
 #include "big_clone_tailor_evaluator.hpp"
 
-void Big_Clone_Tailor_Evaluator::read_clone_labels() {
+void BigCloneTailorEvaluator::read_clone_labels() {
     count_of_samples_by_type = vector<int>(NUMBER_OF_TYPES);
     vector<string> content = Utils::read_file_generic(CLONE_LABELS_FILE_PATH);
     for (auto line : content) {
@@ -20,7 +20,7 @@ void Big_Clone_Tailor_Evaluator::read_clone_labels() {
     }
 }
 
-int Big_Clone_Tailor_Evaluator::path_to_id(Path path) {
+int BigCloneTailorEvaluator::path_to_id(Path path) {
     string relative_path = path.build_relative_path();
     vector<string> tokens = Utils::split_string(relative_path, '/');
     string file_name = tokens.back();
@@ -30,7 +30,7 @@ int Big_Clone_Tailor_Evaluator::path_to_id(Path path) {
     return stoi(file_name);
 }
 
-vector<tuple<double, int, int>> Big_Clone_Tailor_Evaluator::similar_path_pairs_formated_with_id() {
+vector<tuple<double, int, int>> BigCloneTailorEvaluator::similar_path_pairs_formated_with_id() {
     auto similar_path_pairs = similarity_table->get_all_path_pairs_and_similarity_sorted_by_similarity();
     vector<tuple<double, int, int>> ret;
     for (auto [similarity, path0, path1] : similar_path_pairs) {
@@ -44,12 +44,12 @@ vector<tuple<double, int, int>> Big_Clone_Tailor_Evaluator::similar_path_pairs_f
     return ret;
 }
 
-bool Big_Clone_Tailor_Evaluator::is_relevant_pair(int id0, int id1) {
+bool BigCloneTailorEvaluator::is_relevant_pair(int id0, int id1) {
     pair<int, int> ids = {id0, id1};
     return id_pair_to_type.find(ids) != id_pair_to_type.end();
 }
 
-set<pair<int, int>> Big_Clone_Tailor_Evaluator::filter_similar_id_pairs_only_relevant_ones(
+set<pair<int, int>> BigCloneTailorEvaluator::filter_similar_id_pairs_only_relevant_ones(
     vector<pair<int, int>> similar_id_pairs) {
     set<pair<int, int>> ret;
     for (auto [id0, id1] : similar_id_pairs) {
@@ -60,7 +60,7 @@ set<pair<int, int>> Big_Clone_Tailor_Evaluator::filter_similar_id_pairs_only_rel
     return ret;
 }
 
-vector<pair<int, int>> Big_Clone_Tailor_Evaluator::filter_similar_path_pairs_by_similarity(
+vector<pair<int, int>> BigCloneTailorEvaluator::filter_similar_path_pairs_by_similarity(
     vector<tuple<double, int, int>> similar_id_pairs,
     double minimum_similarity) {
     vector<pair<int, int>> ret;
@@ -72,7 +72,7 @@ vector<pair<int, int>> Big_Clone_Tailor_Evaluator::filter_similar_path_pairs_by_
     return ret;
 }
 
-vector<int> Big_Clone_Tailor_Evaluator::build_frequency_corrected_guessed_by_type(
+vector<int> BigCloneTailorEvaluator::build_frequency_corrected_guessed_by_type(
     vector<pair<int, int>> similar_id_pairs) {
     set<pair<int, int>> similar_id_pairs_set = filter_similar_id_pairs_only_relevant_ones(similar_id_pairs);
     vector<int> frequency(NUMBER_OF_TYPES);
@@ -85,14 +85,14 @@ vector<int> Big_Clone_Tailor_Evaluator::build_frequency_corrected_guessed_by_typ
     return frequency;
 }
 
-double Big_Clone_Tailor_Evaluator::calc_recall(vector<int> frequency, int type) {
+double BigCloneTailorEvaluator::calc_recall(vector<int> frequency, int type) {
     double TP = frequency[type];
     double FN = count_of_samples_by_type[type] - frequency[type];
     double recall = TP / (TP + FN);
     return recall;
 }
 
-void Big_Clone_Tailor_Evaluator::print_recall_per_type(vector<int> frequency) {
+void BigCloneTailorEvaluator::print_recall_per_type(vector<int> frequency) {
     cout << RECALL_PER_TYPE_PRINT << '\n';
     for (int type = 0; type < NUMBER_OF_TYPES; type++) {
         double recall = calc_recall(frequency, type);
@@ -101,7 +101,7 @@ void Big_Clone_Tailor_Evaluator::print_recall_per_type(vector<int> frequency) {
     }
 }
 
-void Big_Clone_Tailor_Evaluator::evaluate(double minimum_similarity) {
+void BigCloneTailorEvaluator::evaluate(double minimum_similarity) {
     vector<tuple<double, int, int>> similar_id_pairs_similarity = similar_path_pairs_formated_with_id();
     vector<pair<int, int>> similar_id_pairs = filter_similar_path_pairs_by_similarity(
         similar_id_pairs_similarity,
@@ -110,8 +110,17 @@ void Big_Clone_Tailor_Evaluator::evaluate(double minimum_similarity) {
     print_recall_per_type(frequency);
 }
 
-Big_Clone_Tailor_Evaluator::Big_Clone_Tailor_Evaluator(Similarity_Table* _similarity_table) {
+BigCloneTailorEvaluator::BigCloneTailorEvaluator(Similarity_Table* _similarity_table) {
     similarity_table = _similarity_table;
+}
+
+bool BigCloneTailorEvaluator::validate([[maybe_unused]] const ParsedOptions& options) {
+    return true;
+}
+
+bool BigCloneTailorEvaluator::run([[maybe_unused]] const ParsedOptions& options) {
     read_clone_labels();
     evaluate(MINIMUM_SIMILARITY_TEMP);
+
+    return true;
 }

@@ -20,6 +20,8 @@
 #include <arkanjo/base/function.hpp>
 #include <arkanjo/base/path.hpp>
 
+#include <arkanjo/commands/command.hpp>
+
 using namespace std;
 
 /**
@@ -31,8 +33,10 @@ using namespace std;
  *
  * @note Designed to operate within the BigCloneBench dataset directory structure
  */
-class Big_Clone_Formater {
+class BigCloneFormater : public ICommand {
   private:
+    Similarity_Table* similarity_table;                          ///< Similarity data source
+
     /**
      * @brief Formats relative path string for BigCloneEval output
      * @param relative_path Path string to format
@@ -62,5 +66,12 @@ class Big_Clone_Formater {
      *
      * @note Immediately outputs all formatted pairs to stdout
      */
-    Big_Clone_Formater(Similarity_Table* similarity_table);
+    explicit BigCloneFormater(Similarity_Table* _similarity_table);
+
+    bool validate(const ParsedOptions& options);
+
+    /**
+     * @brief Handles BigCloneEval formatting command
+     */
+    bool run(const ParsedOptions& options) override;
 };

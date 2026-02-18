@@ -89,7 +89,7 @@ hours or fail to run altogether.
 To execute the tool's commands, you need to run a command that follows this format:
 
 ```
-arkanjo command [command_parameters] [-pre] [-s <NUMBER>]
+arkanjo command [command_parameters] [--preprocessor] [-s <NUMBER>]
 ```
 
 If the preprocessor has not been run yet, the tool will automatically execute it.
@@ -97,7 +97,7 @@ If the preprocessor has not been run yet, the tool will automatically execute it
 The parameters common to all commands are:
 
 
-- `-p`: Forces the preprocessor to execute.
+- `--preprocessor`: Forces the preprocessor to execute.
 
 - `-s <NUMBER>`: Changes the similarity threshold to `NUMBER` for the current command only.
 
@@ -108,7 +108,7 @@ The following is a guide on how to execute the tool's current commands:
 To execute the explore duplications command, run:
 
 ```
-arkanjo ex [-l <number>] [-p <string>] [-b <'T' or 'F'>] [-c 'T' or 'F'] 
+arkanjo explorer [-l <number>] [-p <string>] [-b] [-c] 
 ```
 
 All of the following options are optional, and their meanings are as follows:
@@ -119,24 +119,16 @@ All of the following options are optional, and their meanings are as follows:
 A function is considered a match if the pattern is a substring of the function's concatenated 
 file path and name (e.g.,`path/to/file.c:function_name`).
 
-- `-b <T/F>`: Determines how pattern matching applies when comparing two functions. The default value is 'F'.
+- `-b`: Enable both-pattern matching. By default, the pattern only needs to match one function.
 
-	- 'T': The pattern must match both functions in the comparison.
-
-	- 'F': The pattern must match at least one of the functions.
-
-- `-c <T/F>`: Sets the sort order for the results. The default value is 'F'.
-
-	- 'T': Sorts results by the number of duplicated lines.
-
-	- 'F': Sorts results by the similarity metric.
+- `-c`: Sort results by number of duplicated lines. By default, results are sorted by the similarity metric.
 
 ### Find function duplicates
 
 To execute the function command, execute:
 
 ```
-arkanjo fu <FUNCTION_NAME>
+arkanjo function <FUNCTION_NAME>
 ```
 
 `<FUNCTION_NAME>` is a parameter passed by the user. The tool will match the 
@@ -147,5 +139,5 @@ parameter with any function that has the `FUNCTION_NAME` as a substring.
 To execute the relatory command, execute:
 
 ```
-arkanjo du
+arkanjo duplication
 ```

@@ -1,6 +1,6 @@
 #include "big_clone_formater.hpp"
 
-string Big_Clone_Formater::format_relative_path(string relative_path) {
+string BigCloneFormater::format_relative_path(string relative_path) {
     for (auto& c : relative_path) {
         if (c == '/') {
             c = ',';
@@ -9,7 +9,7 @@ string Big_Clone_Formater::format_relative_path(string relative_path) {
     return relative_path;
 }
 
-string Big_Clone_Formater::build_path_formated_string(Path path) {
+string BigCloneFormater::build_path_formated_string(Path path) {
     string relative_path = path.build_relative_path();
     relative_path = format_relative_path(relative_path);
 
@@ -25,7 +25,7 @@ string Big_Clone_Formater::build_path_formated_string(Path path) {
 
     return ret;
 }
-auto Big_Clone_Formater::process_similar_path_pair(Path path1, Path path2, double similarity) {
+auto BigCloneFormater::process_similar_path_pair(Path path1, Path path2, double similarity) {
     auto string_path1 = build_path_formated_string(path1);
     auto string_path2 = build_path_formated_string(path2);
 
@@ -34,9 +34,19 @@ auto Big_Clone_Formater::process_similar_path_pair(Path path1, Path path2, doubl
     cout << fixed << setprecision(2) << similarity << '\n';
 }
 
-Big_Clone_Formater::Big_Clone_Formater(Similarity_Table* similarity_table) {
+BigCloneFormater::BigCloneFormater(Similarity_Table* _similarity_table) {
+    similarity_table = _similarity_table;
+}
+
+bool BigCloneFormater::validate([[maybe_unused]] const ParsedOptions& options) {
+    return true;
+}
+
+bool BigCloneFormater::run([[maybe_unused]] const ParsedOptions& options) {
     auto similar_paths = similarity_table->get_all_path_pairs_and_similarity_sorted_by_similarity();
     for (auto [similarity, path1, path2] : similar_paths) {
         process_similar_path_pair(path1, path2, similarity);
     }
+
+    return true;
 }

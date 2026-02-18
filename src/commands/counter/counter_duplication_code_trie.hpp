@@ -28,7 +28,7 @@
  * @note For understanding the trie structure, refer to:
  *       https://en.wikipedia.org/wiki/Trie
  */
-class Counter_Duplication_Code_Trie {
+class CounterDuplicationCodeTrie {
   private:
     static constexpr const int ZERO_INITIAL_COUNTER = 0;                     ///< Initial counter value for new nodes
     static constexpr const int ROOT_NODE = 0;                                ///< Index of root node
@@ -101,5 +101,5 @@ class Counter_Duplication_Code_Trie {
     /**
      * @brief Constructs a new trie with root node
      */
-    Counter_Duplication_Code_Trie();
+    CounterDuplicationCodeTrie();
 };

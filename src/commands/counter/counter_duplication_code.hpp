@@ -15,6 +15,7 @@
 #include <arkanjo/base/similarity_table.hpp>
 #include <arkanjo/base/function.hpp>
 #include <arkanjo/base/path.hpp>
+#include <arkanjo/commands/command.hpp>
 #include <set>
 
 #include "counter_duplication_code_trie.hpp"
@@ -26,10 +27,10 @@
  * across the codebase, organized by folder hierarchy using a trie structure
  * for efficient hierarchical counting and reporting.
  */
-class Counter_Duplication_Code {
+class CounterDuplicationCode : public ICommand {
   private:
     std::set<Path> processed_paths;                                   ///< Tracks processed paths to avoid duplicates
-    Counter_Duplication_Code_Trie counter_duplication_code_trie; ///< Trie for hierarchical counting
+    CounterDuplicationCodeTrie counter_duplication_code_trie; ///< Trie for hierarchical counting
     Similarity_Table* similarity_table;                          ///< Similarity data source
 
     /**
@@ -76,5 +77,12 @@ class Counter_Duplication_Code {
      * @brief Constructs analyzer with similarity data
      * @param _similarity_table Pointer to similarity table
      */
-    explicit Counter_Duplication_Code(Similarity_Table* _similarity_table);
+    explicit CounterDuplicationCode(Similarity_Table* _similarity_table);
+
+    bool validate(const ParsedOptions& options);
+
+    /**
+     * @brief Handles duplication analysis command
+     */
+    bool run(const ParsedOptions& options) override;
 };

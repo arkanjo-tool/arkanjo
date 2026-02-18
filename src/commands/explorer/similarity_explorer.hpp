@@ -21,16 +21,32 @@
 #include <arkanjo/base/path.hpp>
 #include <arkanjo/utils/utils.hpp>
 
+#include <arkanjo/cli/cli_error.hpp>
+#include <arkanjo/commands/command.hpp>
+
 /**
  * @brief Duplicate function explorer and analyzer
  *
  * Enables exploration of duplicate functions with configurable
  * filtering and sorting capabilities to identify code duplication patterns.
  */
-class Similarity_Explorer {
+class SimilarityExplorer : public ICommand {
   public:
     static constexpr int UNLIMITED_RESULTS = 0;      ///< Constant for unlimited results display
     static constexpr const char* EMPTY_PATTERN = ""; ///< Constant for empty search pattern
+
+    /**
+     * @brief Constructs explorer with configuration
+     * @param _similarity_table Similarity data source
+     */
+    explicit SimilarityExplorer(Similarity_Table* _similarity_table);
+
+    bool validate(const ParsedOptions& options);
+
+    /**
+     * @brief Handles code exploration command
+     */
+    bool run(const ParsedOptions& options) override;
 
   private:
     static constexpr const char* BETWEEN_RELATIVE_AND_FUNCTION_NAME = "::";                                               ///< Separator for path formatting
@@ -46,6 +62,7 @@ class Similarity_Explorer {
     int limit_on_results;                              ///< Maximum number of results to show
     std::string pattern_to_match;                      ///< Pattern to filter results
     bool both_path_need_to_match_pattern;              ///< Whether both paths must match pattern
+    bool sorted_by_number_of_duplicated_code;          ///< Whether to sort by line count
     int processed_results = INITIAL_PROCESSED_RESULTS; ///< Counter for processed results
 
     /**
@@ -113,32 +130,12 @@ class Similarity_Explorer {
 
     /**
      * @brief Builds filtered path pairs
-     * @param sorted_by_number_of_duplicated_code Whether to sort by line count
      * @return vector<pair<Path,Path>> Filtered and sorted pairs
      */
-    std::vector<std::pair<Path, Path>> build_similar_path_pairs(bool sorted_by_number_of_duplicated_code);
+    std::vector<std::pair<Path, Path>> build_similar_path_pairs();
 
     /**
      * @brief Main exploration driver
-     * @param sorted_by_number_of_duplicated_code Whether to sort by line count
      */
-    void explorer(bool sorted_by_number_of_duplicated_code);
-
-  public:
-    /**
-     * @brief Constructs explorer with configuration
-     * @param _similarity_table Similarity data source
-     * @param _limit_on_results Maximum results to show
-     * @param _pattern_to_match Filter pattern
-     * @param _both_path_need_to_match Whether both paths must match pattern
-     */
-    Similarity_Explorer(Similarity_Table* _similarity_table,
-        int _limit_on_results,
-        const std::string& _pattern_to_match,
-        bool _both_path_need_to_match);
-
-    /**
-     * @param sorted_by_number_of_duplicated_code Whether to sort by line count
-     */
-    void run(bool sorted_by_number_of_duplicated_code = false);
+    void explorer();
 };

@@ -19,13 +19,16 @@
 #include <arkanjo/base/similarity_table.hpp>
 #include <arkanjo/utils/utils.hpp>
 
+#include <arkanjo/cli/cli_error.hpp>
+#include <arkanjo/commands/command.hpp>
+
 /**
  * @brief Similar function locator and reporter
  *
  * Identifies functions similar to a specified reference function pattern
  * and provides detailed reporting about the matches found.
  */
-class Similar_Function_Finder {
+class SimilarFunctionFinder : public ICommand {
     static constexpr const char* EMPTY_PATH_MESSAGE_1 = "There is no functions that resembles the name: ";                             ///< First part of no-results message
     static constexpr const char* EMPTY_PATH_MESSAGE_2 = "Value incorrected passed or there is no duplication code with this function"; ///< Second part of no-results message
     static constexpr const char* REFERENCE_PATH_MESSAGE = "The following function was found:";                                         ///< Reference function header
@@ -74,7 +77,12 @@ class Similar_Function_Finder {
      * @param _function_pattern Function name pattern to match
      * @param _similarity_table Source of similarity data
      */
-    Similar_Function_Finder(const std::string& _function_pattern, Similarity_Table* _similarity_table);
+    explicit SimilarFunctionFinder(Similarity_Table* _similarity_table);
 
-    void run();
+    bool validate(const ParsedOptions& options);
+
+    /**
+     * @brief Handles similar function finding command
+     */
+    bool run(const ParsedOptions& options) override;
 };

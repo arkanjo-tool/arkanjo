@@ -19,6 +19,9 @@
 #include <string>
 #include <tuple>
 #include <vector>
+
+#include <arkanjo/cli/cli_error.hpp>
+#include <arkanjo/commands/command.hpp>
 using namespace std;
 
 /**
@@ -28,7 +31,7 @@ using namespace std;
  * configurable similarity thresholds, with formatted output and
  * color-coded display options.
  */
-class Random_Selector {
+class RandomSelector : public ICommand {
     string START_LINE_COMPARATION_PRINT = "Functions: "; ///< Prefix for pair display
     string BETWEEN_TWO_FUNCTION = " AND ";               ///< Separator between functions
     string BETWEEN_RELATIVE_AND_FUNCTION_NAME = "::";    ///< Path/name separator
@@ -97,9 +100,12 @@ class Random_Selector {
      * @param _maximum_similarity Maximum similarity threshold (0-100)
      * @param _maximum_quantity Maximum number of pairs to select
      */
-    Random_Selector(
-        Similarity_Table* _similarity_table,
-        double _minimum_similarity,
-        double _maximum_similarity,
-        double _maximum_quantity);
+    explicit RandomSelector(Similarity_Table* _similarity_table);
+
+    bool validate(const ParsedOptions& options);
+
+    /**
+     * @brief Handles random selection command
+     */
+    bool run(const ParsedOptions& options) override;
 };

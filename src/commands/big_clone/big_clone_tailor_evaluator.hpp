@@ -23,6 +23,8 @@
 #include <arkanjo/base/path.hpp>
 #include <arkanjo/utils/utils.hpp>
 
+#include <arkanjo/commands/command.hpp>
+
 using namespace std;
 
 /**
@@ -31,7 +33,7 @@ using namespace std;
  * Implements evaluation metrics that compare detected clones against
  * BigCloneBench ground truth data, following Tailor tool's approach.
  */
-class Big_Clone_Tailor_Evaluator {
+class BigCloneTailorEvaluator : public ICommand {
   private:
     string CLONE_LABELS_FILE_PATH = "/home/luan/linux/test-duplication-code/parser/bigclonebench/clone_labels.txt"; ///< Path to ground truth labels
     string EXTENSION = ".java";                                                                                     ///< Expected file extension
@@ -131,5 +133,12 @@ class Big_Clone_Tailor_Evaluator {
      * @brief Constructs evaluator with similarity data
      * @param _similarity_table Pointer to similarity table
      */
-    Big_Clone_Tailor_Evaluator(Similarity_Table* _similarity_table);
+    explicit BigCloneTailorEvaluator(Similarity_Table* _similarity_table);
+
+    bool validate(const ParsedOptions& options);
+
+    /**
+     * @brief Handles BigCloneBench evaluation command
+     */
+    bool run(const ParsedOptions& options) override;
 };

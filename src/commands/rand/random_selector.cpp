@@ -1,6 +1,6 @@
 #include "random_selector.hpp"
 
-Utils::COLOR Random_Selector::choose_text_color() {
+Utils::COLOR RandomSelector::choose_text_color() {
     Utils::COLOR ret = Utils::GRAY;
     if (processed_results % 2 == 0) {
         ret = Utils::CYAN;
@@ -8,12 +8,12 @@ Utils::COLOR Random_Selector::choose_text_color() {
     return ret;
 }
 
-string Random_Selector::format_path_message_in_pair(Path path) {
+string RandomSelector::format_path_message_in_pair(Path path) {
     string ret = path.build_relative_path() + BETWEEN_RELATIVE_AND_FUNCTION_NAME + path.build_function_name();
     return ret;
 }
 
-bool Random_Selector::is_valid_pair(tuple<double, Path, Path> path_pair) {
+bool RandomSelector::is_valid_pair(tuple<double, Path, Path> path_pair) {
     auto [similarity, path1, path2] = path_pair;
     if (similarity < minimum_similarity)
         return false;
@@ -22,7 +22,7 @@ bool Random_Selector::is_valid_pair(tuple<double, Path, Path> path_pair) {
     return true;
 }
 
-vector<tuple<double, Path, Path>> Random_Selector::get_similarity_pairs_filtered() {
+vector<tuple<double, Path, Path>> RandomSelector::get_similarity_pairs_filtered() {
     auto path_pairs = similarity_table->get_all_path_pairs_and_similarity_sorted_by_similarity();
     vector<tuple<double, Path, Path>> ret;
     for (auto path_pair : path_pairs) {
@@ -33,7 +33,7 @@ vector<tuple<double, Path, Path>> Random_Selector::get_similarity_pairs_filtered
     return ret;
 }
 
-vector<tuple<double, Path, Path>> Random_Selector::make_random_selection(vector<tuple<double, Path, Path>> path_pairs) {
+vector<tuple<double, Path, Path>> RandomSelector::make_random_selection(vector<tuple<double, Path, Path>> path_pairs) {
     shuffle(path_pairs.begin(), path_pairs.end(), rng);
     while (int(path_pairs.size()) > maximum_quantity) {
         path_pairs.pop_back();
@@ -41,7 +41,7 @@ vector<tuple<double, Path, Path>> Random_Selector::make_random_selection(vector<
     return path_pairs;
 }
 
-void Random_Selector::print_path_pair(tuple<double, Path, Path> path_pair) {
+void RandomSelector::print_path_pair(tuple<double, Path, Path> path_pair) {
     auto [similarity, path1, path2] = path_pair;
     string line;
     line += START_LINE_COMPARATION_PRINT;
@@ -54,24 +54,37 @@ void Random_Selector::print_path_pair(tuple<double, Path, Path> path_pair) {
     cout << Utils::format_colored_message(line, color) << '\n';
 }
 
-void Random_Selector::print_path_pairs(vector<tuple<double, Path, Path>> path_pairs) {
+void RandomSelector::print_path_pairs(vector<tuple<double, Path, Path>> path_pairs) {
     for (auto path_pair : path_pairs) {
         print_path_pair(path_pair);
     }
 }
 
-Random_Selector::Random_Selector(
-    Similarity_Table* _similarity_table,
-    double _minimum_similarity,
-    double _maximum_similarity,
-    double _maximum_quantity) {
+RandomSelector::RandomSelector(Similarity_Table* _similarity_table) {
     similarity_table = _similarity_table;
     similarity_table->update_similarity(0);
-    minimum_similarity = _minimum_similarity;
-    maximum_similarity = _maximum_similarity;
-    maximum_quantity = _maximum_quantity;
+    minimum_similarity = 0;
+    maximum_similarity = 0;
+    maximum_quantity = 0;
+}
+
+bool RandomSelector::validate(const ParsedOptions& options) {
+    if (options.extra_args.size() <= 2) {
+        throw CLIError("Random expect three parameters, but less was given");
+        return false;
+    }
+
+    return true;
+}
+
+bool RandomSelector::run(const ParsedOptions& options) {
+    minimum_similarity = stod(options.extra_args[0]);
+    maximum_similarity = stod(options.extra_args[1]);
+    maximum_quantity = stod(options.extra_args[2]);
 
     auto path_pairs = get_similarity_pairs_filtered();
     path_pairs = make_random_selection(path_pairs);
     print_path_pairs(path_pairs);
+
+    return true;
 }

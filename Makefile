@@ -22,7 +22,7 @@ ifeq ($(UNAME_S),Darwin)
 endif
 
 ifeq ($(MODE),debug)
-  CXXFLAGS += -g -O0 $(WARNINGS)
+  CXXFLAGS += -g -O0 -DDEBUG $(WARNINGS)
 else ifeq ($(MODE),release)
   CXXFLAGS += -O2 -DNDEBUG $(WARNINGS)
 endif
@@ -57,7 +57,9 @@ SRC_EXTRA = \
 	src/commands/big_clone/big_clone_formater.cpp \
 	src/commands/big_clone/big_clone_tailor_evaluator.cpp \
 	src/commands/rand/random_selector.cpp \
-	src/orchestrator.cpp
+	src/commands/help/help.cpp \
+	src/cli/parser_options.cpp \
+	src/main.cpp
 
 .PHONY: all main preprocessor test clean install uninstall
 
