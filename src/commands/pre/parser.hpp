@@ -18,6 +18,8 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <filesystem>
+namespace fs = std::filesystem;
 using namespace std;
 
 /**
@@ -121,5 +123,5 @@ class Parser {
      * @param output_file Path for cleaned output
      * @param similarity_cap Minimum similarity threshold (0-100)
      */
-    Parser(string input_file, string output_file, double similarity_cap);
+    Parser(const fs::path& input_file, const fs::path& output_file, double similarity_cap);
 };

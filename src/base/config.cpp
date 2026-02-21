@@ -1,7 +1,7 @@
 
 #include <arkanjo/base/config.hpp>
 
-const std::string& Config::getBasePath() const {
+const fs::path& Config::getBasePath() const {
     return base_path;
 }
 

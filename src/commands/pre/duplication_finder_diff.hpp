@@ -16,7 +16,9 @@
 #include <string>
 #include <tuple>
 #include <vector>
+#include <filesystem>
 using namespace std;
+namespace fs = std::filesystem;
 
 /**
  * @brief Code duplication preprocessor
@@ -29,7 +31,7 @@ class DuplicationFinderDiff {
   private:
     string SAVING_MESSAGE = "Saving results..."; ///< Status message for saving output
 
-    string base_path;  ///< Root path of the codebase to analyze
+    fs::path base_path;  ///< Root path of the codebase to analyze
     double similarity; ///< Similarity threshold for considering duplicates
 
     /**
@@ -37,7 +39,7 @@ class DuplicationFinderDiff {
      * @param folder_path Root path to search from
      * @return vector<string> List of file paths found
      */
-    vector<string> find_files(string folder_path);
+    vector<string> find_files(const fs::path& folder_path);
 
     /**
      * @brief Checks if a line is empty/whitespace
@@ -88,7 +90,7 @@ class DuplicationFinderDiff {
      * @param base_path_ Root path of codebase
      * @param similarity_ Similarity threshold (0-100)
      */
-    DuplicationFinderDiff(string base_path_, double similarity_);
+    DuplicationFinderDiff(const fs::path& base_path_, double similarity_);
 
     /**
      * @brief Executes the preprocessing pipeline

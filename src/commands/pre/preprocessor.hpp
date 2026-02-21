@@ -19,7 +19,9 @@
 #include <arkanjo/base/config.hpp>
 #include <string>
 #include <tuple>
+#include <filesystem>
 using namespace std;
+namespace fs = std::filesystem;
 
 /**
  * @brief Codebase preprocessing orchestrator
@@ -67,7 +69,7 @@ class Preprocessor {
      * @brief Saves preprocessing parameters for future runs
      * @param path Project path to save
      */
-    void save_current_run_params(string path);
+    void save_current_run_params(const fs::path& path);
 
     /**
      * @brief Executes full preprocessing pipeline
@@ -75,7 +77,7 @@ class Preprocessor {
      * @param similarity Similarity threshold
      * @param use_duplication_finder_by_tool Flag to select duplication detection method
      */
-    void preprocess(string path, double similarity, bool use_duplication_finder_by_tool);
+    void preprocess(const fs::path& path, double similarity, bool use_duplication_finder_by_tool);
 
   public:
     /**
@@ -91,5 +93,5 @@ class Preprocessor {
      * @param similarity Direct similarity threshold specification
      * @note Exposed for testing purposes only
      */
-    Preprocessor(bool force_preprocess, string path, double similarity);
+    Preprocessor(bool force_preprocess, const fs::path& path, double similarity);
 };

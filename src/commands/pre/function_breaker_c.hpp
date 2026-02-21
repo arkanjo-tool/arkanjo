@@ -18,6 +18,8 @@
 #include <string>
 #include <tuple>
 #include <vector>
+#include <filesystem>
+namespace fs = std::filesystem;
 
 /**
  * @brief C/C++ function parser and extractor
@@ -41,7 +43,7 @@ class FunctionBreakerC {
      * @param pos Column position
      * @return bool True if position contains a define
      */
-    bool is_define(int line, int pos);
+    bool is_define(size_t line, size_t pos);
 
     /**
      * @brief Filters out comments and preprocessor directives
@@ -112,7 +114,7 @@ class FunctionBreakerC {
      * @param end_column End column of function
      * @param relative_path Relative path of source file
      */
-    void process_function(int start_number_line, int start_column, int end_number_line, int end_column, string relative_path);
+    void process_function(int start_number_line, int start_column, int end_number_line, int end_column, const fs::path& relative_path);
 
     /**
      * @brief Constructs full file path from folder path
@@ -120,14 +122,14 @@ class FunctionBreakerC {
      * @param folder_path Containing folder path
      * @return string Full file path
      */
-    string file_path_from_folder_path(string file_path, string folder_path);
+    fs::path file_path_from_folder_path(const fs::path& file_path, const fs::path& folder_path);
 
     /**
      * @brief Main file parsing driver
      * @param file_path File to parse
      * @param folder_path Containing folder path
      */
-    void file_breaker_c(string file_path, string folder_path);
+    void file_breaker_c(const fs::path& file_path, const fs::path& folder_path);
 
   public:
     /**
@@ -135,5 +137,5 @@ class FunctionBreakerC {
      * @param file_path Source file to parse
      * @param folder_path Containing folder path
      */
-    FunctionBreakerC(string file_path, string folder_path);
+    FunctionBreakerC(const fs::path& file_path, const fs::path& folder_path);
 };

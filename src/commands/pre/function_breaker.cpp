@@ -12,7 +12,7 @@ even if the bracket sequence is in a commentary
 
 #include "function_breaker.hpp"
 
-bool FunctionBreaker::is_c_extension(string extension) {
+bool FunctionBreaker::is_c_extension(const std::string& extension) {
     for (auto c_extension : C_EXTENSIONS) {
         if (extension == c_extension) {
             return true;
@@ -21,7 +21,7 @@ bool FunctionBreaker::is_c_extension(string extension) {
     return false;
 }
 
-bool FunctionBreaker::is_java_extension(string extension) {
+bool FunctionBreaker::is_java_extension(const std::string& extension) {
     for (auto java_extension : JAVA_EXTENSIONS) {
         if (extension == java_extension) {
             return true;
@@ -30,7 +30,7 @@ bool FunctionBreaker::is_java_extension(string extension) {
     return false;
 }
 
-bool FunctionBreaker::is_allowed_extension(string extension) {
+bool FunctionBreaker::is_allowed_extension(const std::string& extension) {
     for (auto allowed_extension : ALLOWED_EXTENSIONS) {
         if (extension == allowed_extension) {
             return true;
@@ -39,7 +39,7 @@ bool FunctionBreaker::is_allowed_extension(string extension) {
     return false;
 }
 
-void FunctionBreaker::file_breaker(string file_path, string folder_path) {
+void FunctionBreaker::file_breaker(const fs::path& file_path, const fs::path& folder_path) {
     string extension = extract_extension(file_path);
 
     if (!is_allowed_extension(extension)) {
@@ -55,13 +55,12 @@ void FunctionBreaker::file_breaker(string file_path, string folder_path) {
     }
 }
 
-void FunctionBreaker::function_breaker(string folder_path) {
-    for (const auto& dirEntry : std::filesystem::recursive_directory_iterator(folder_path)) {
-        string file_path = dirEntry.path().string();
-        file_breaker(file_path, folder_path);
+void FunctionBreaker::function_breaker(const fs::path& folder_path) {
+    for (const auto& dirEntry : fs::recursive_directory_iterator(folder_path)) {
+        file_breaker(dirEntry.path(), folder_path);
     }
 }
 
-FunctionBreaker::FunctionBreaker(string folder_path) {
+FunctionBreaker::FunctionBreaker(const fs::path& folder_path) {
     function_breaker(folder_path);
 }

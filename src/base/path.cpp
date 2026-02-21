@@ -1,21 +1,17 @@
 
 #include <arkanjo/base/path.hpp>
 
-std::vector<std::string> Path::split_path(const std::string& string_path) {
-    std::string aux = "";
-    std::vector<std::string> ret;
-    for (auto c : string_path) {
-        if (c == BAR) {
-            ret.push_back(aux);
-            aux = "";
-        } else {
-            aux += c;
+#include <iostream>
+
+std::vector<std::string> Path::split_path(const fs::path& path) {
+    std::vector<std::string> parts;
+    for (const auto& part : path) {
+        std::string s = part.string();
+        if (!s.empty()) {
+            parts.push_back(s);
         }
     }
-    if (!aux.empty()) {
-        ret.push_back(aux);
-    }
-    return ret;
+    return parts;
 }
 
 size_t Path::find_position_start_relative_path() const {
@@ -34,21 +30,17 @@ bool Path::is_empty() const {
     return tokens.empty();
 }
 
-Path::Path(const std::string& string_path) {
-    tokens = split_path(string_path);
+Path::Path(const fs::path& path) {
+    tokens = split_path(path);
     position_start_relative_path = find_position_start_relative_path();
 }
 
-std::string Path::build_string_path(const std::vector<std::string>& path) {
-    std::string string_path;
-    int sz = path.size();
-    for (int i = 0; i < sz; i++) {
-        string_path += path[i];
-        if (i != sz - 1) {
-            string_path += BAR;
-        }
+std::string Path::build_string_path(const std::vector<std::string>& path_tokens) {
+    fs::path p;
+    for (const auto& token : path_tokens) {
+        p /= token;
     }
-    return string_path;
+    return p.string();
 }
 
 std::string Path::build_base_path(const std::string& base) const {
@@ -95,7 +87,7 @@ std::vector<std::string> Path::get_tokens_from_relative_path() const {
     return token_relative_path;
 }
 
-std::string Path::remove_extension(std::string token) {
+std::string Path::remove_extension(std::string& token) {
     while (!token.empty()) {
         auto c = token.back();
         token.pop_back();

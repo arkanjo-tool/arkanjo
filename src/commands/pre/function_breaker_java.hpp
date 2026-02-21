@@ -17,6 +17,8 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <filesystem>
+namespace fs = std::filesystem;
 
 /**
  * @brief Java function parser and extractor
@@ -37,7 +39,7 @@ class FunctionBreakerJava {
      * @param brackets_content Processed bracket content
      * @return set<array<int,3>> Bracket pairs with {start_pos, end_pos, depth}
      */
-    set<array<int, 3>> find_start_end_and_depth_of_brackets(vector<string> brackets_content);
+    set<array<int, 3>> find_start_end_and_depth_of_brackets(const vector<string>& brackets_content);
 
     /**
      * @brief Finds bracket pairs at method-relevant depth
@@ -53,14 +55,14 @@ class FunctionBreakerJava {
      * @return int Position of first '{' or -1 if not found
      */
     // TODO: Refactor, refactor this
-    int find_position_first_open_bracket(string s);
+    int find_position_first_open_bracket(const string& s);
 
     /**
      * @brief Extracts last token from string
      * @param s String to process
      * @return string Last token (space-separated)
      */
-    string extract_last_token_of_string(string s);
+    string extract_last_token_of_string(const string& s);
 
     /**
      * @brief Creates Line_content object
@@ -68,7 +70,7 @@ class FunctionBreakerJava {
      * @param content Line content
      * @return Line_content Structured line information
      */
-    Line_content build_line_code(int line_number, string content);
+    Line_content build_line_code(int line_number, const string& content);
 
     /**
      * @brief Gets lines preceding method body
@@ -142,7 +144,7 @@ class FunctionBreakerJava {
      * @param file_content Full file content
      * @return vector<string> Header content lines
      */
-    vector<string> build_header_content(int start_number_line, int line_declaration, string relative_path, string function_name, const vector<string>& file_content);
+    vector<string> build_header_content(int start_number_line, int line_declaration, const fs::path& relative_path, const string& function_name, const vector<string>& file_content);
 
     /**
      * @brief Checks if method body is empty
@@ -161,7 +163,7 @@ class FunctionBreakerJava {
      * @param file_content Full file content
      * @param programming_language Language variant
      */
-    void process_function(int start_number_line, int end_number_line, string relative_path, const vector<string>& file_content, PROGRAMMING_LANGUAGE programming_language);
+    void process_function(int start_number_line, int end_number_line, const fs::path& relative_path, const vector<string>& file_content, PROGRAMMING_LANGUAGE programming_language);
 
     /**
      * @brief Constructs full file path from components
@@ -169,14 +171,14 @@ class FunctionBreakerJava {
      * @param folder_path Containing folder path
      * @return string Full file path
      */
-    string file_path_from_folder_path(string file_path, string folder_path);
+    fs::path file_path_from_folder_path(const fs::path& file_path, const fs::path& folder_path);
 
     /**
      * @brief Main Java file parsing driver
      * @param file_path File to parse
      * @param folder_path Containing folder path
      */
-    void file_breaker_java(string file_path, string folder_path);
+    void file_breaker_java(const fs::path& file_path, const fs::path& folder_path);
 
   public:
     /**
@@ -184,5 +186,5 @@ class FunctionBreakerJava {
      * @param file_path Java source file to parse
      * @param folder_path Containing folder path
      */
-    FunctionBreakerJava(string file_path, string folder_path);
+    FunctionBreakerJava(const fs::path& file_path, const fs::path& folder_path);
 };

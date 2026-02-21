@@ -13,6 +13,8 @@
 
 #include <string>
 #include <vector>
+#include <filesystem>
+namespace fs = std::filesystem;
 
 #include <arkanjo/base/config.hpp>
 #include <arkanjo/utils/utils.hpp>
@@ -44,7 +46,7 @@ const string INFO_PATH = "info";     ///< Directory name for metadata files
  * @param file_path Path to the file
  * @return string File extension
  */
-string extract_extension(string file_path);
+string extract_extension(const fs::path& file_path);
 
 /**
  * @brief Builds source file path for a function
@@ -52,7 +54,7 @@ string extract_extension(string file_path);
  * @param function_name Name of the function
  * @return string Full path for the source file
  */
-string build_source_path(string relative_path, string function_name);
+fs::path build_source_path(const fs::path& relative_path, const string& function_name);
 
 /**
  * @brief Builds header file path for a function
@@ -60,7 +62,7 @@ string build_source_path(string relative_path, string function_name);
  * @param function_name Name of the function
  * @return string Full path for the header file
  */
-string build_header_path(string relative_path, string function_name);
+fs::path build_header_path(const fs::path& relative_path, const string& function_name);
 
 /**
  * @brief Builds info file path for a function
@@ -68,7 +70,7 @@ string build_header_path(string relative_path, string function_name);
  * @param function_name Name of the function
  * @return string Full path for the info file
  */
-string build_info_path(string relative_path, string function_name);
+fs::path build_info_path(const fs::path& relative_path, const string& function_name);
 
 /**
  * @brief Creates source file for a function
@@ -79,7 +81,7 @@ string build_info_path(string relative_path, string function_name);
  * @param function_content Vector of strings containing the function body
  */
 void create_source_file(int start_number_line, int end_number_line,
-    string relative_path, string function_name,
+    const fs::path& relative_path, const string& function_name,
     const vector<string>& function_content);
 
 /**
@@ -88,7 +90,7 @@ void create_source_file(int start_number_line, int end_number_line,
  * @param function_name Name of the function
  * @param header_content Vector of strings containing the header content
  */
-void create_header_file(string relative_path, string function_name,
+void create_header_file(const fs::path& relative_path, const string& function_name,
     const vector<string>& header_content);
 
 /**
@@ -100,5 +102,5 @@ void create_header_file(string relative_path, string function_name,
  * @param function_name Name of the function
  */
 void create_info_file(int line_declaration, int start_number_line,
-    int end_number_line, string relative_path,
-    string function_name);
+    int end_number_line, const fs::path& relative_path,
+    const string& function_name);

@@ -14,6 +14,8 @@
 #pragma once
 
 #include <string>
+#include <filesystem>
+namespace fs = std::filesystem;
 
 /**
  * @brief Singleton configuration manager class
@@ -22,7 +24,7 @@
  * Implements the singleton pattern to ensure single instance access.
  */
 class Config {
-    std::string base_path = "tmp"; ///< Default base path for temporary files
+  fs::path base_path = "tmp"; ///< Default base path for temporary files
 
   protected:
     static Config* config_; ///< Static instance pointer for singleton pattern
@@ -53,7 +55,7 @@ class Config {
      * @brief Gets the current base path
      * @return string The configured base path
      */
-    const std::string& getBasePath() const;
+    const fs::path& getBasePath() const;
 
     /**
      * @brief Sets test configuration paths

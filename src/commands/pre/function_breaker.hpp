@@ -25,6 +25,8 @@
 #include <arkanjo/utils/utils.hpp>
 #include <string>
 #include <vector>
+#include <filesystem>
+namespace fs = std::filesystem;
 using namespace std;
 
 /**
@@ -50,39 +52,39 @@ class FunctionBreaker {
      * @param extension File extension to check
      * @return bool True if extension is for C/C++
      */
-    bool is_c_extension(string extension);
+    bool is_c_extension(const std::string& extension);
 
     /**
      * @brief Checks if extension is for Java files
      * @param extension File extension to check
      * @return bool True if extension is for Java
      */
-    bool is_java_extension(string extension);
+    bool is_java_extension(const std::string& extension);
 
     /**
      * @brief Checks if extension is supported
      * @param extension File extension to check
      * @return bool True if extension is supported
      */
-    bool is_allowed_extension(string extension);
+    bool is_allowed_extension(const std::string& extension);
 
     /**
      * @brief Processes individual source file
      * @param file_path Path to source file
      * @param folder_path Containing directory path
      */
-    void file_breaker(string file_path, string folder_path);
+    void file_breaker(const fs::path& file_path, const fs::path& folder_path);
 
     /**
      * @brief Processes all files in directory
      * @param folder_path Directory path to process
      */
-    void function_breaker(string folder_path);
+    void function_breaker(const fs::path& folder_path);
 
   public:
     /**
      * @brief Constructs function breaker and processes directory
      * @param folder_path Directory containing source files to process
      */
-    FunctionBreaker(string folder_path);
+    FunctionBreaker(const fs::path& folder_path);
 };

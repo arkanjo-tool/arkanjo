@@ -3,15 +3,15 @@
 
 #include "function_breaker_c.hpp"
 
-bool FunctionBreakerC::is_define(int line, int pos) {
-    int line_size = file_content.size();
+bool FunctionBreakerC::is_define(size_t line, size_t pos) {
+    size_t line_size = file_content.size();
     // does not fit the #define token
     if (pos + 7 > line_size)
         return false;
     // match the token
     string token = "#define";
     bool match = true;
-    for (int j = 0; j < 7; j++) {
+    for (size_t j = 0; j < 7; j++) {
         match &= file_content[line][pos + j] == token[j];
     }
     return match;
@@ -22,19 +22,19 @@ bool FunctionBreakerC::is_define(int line, int pos) {
 void FunctionBreakerC::filter_mask_commentaries_and_defines(vector<vector<bool>>& mask) {
     // aqui tbm tem que lidar com string literal, ie, "#define" nao eh define a
     // eh "//" nao eh commentario
-    int number_lines = file_content.size();
+    size_t number_lines = file_content.size();
     bool is_open_block_comment = false;
     bool is_open_define = false;
     bool is_open_quotation_marks = false;
     bool is_open_line_comment = false;
 
-    for (int i = 0; i < number_lines; i++) {
+    for (size_t i = 0; i < number_lines; i++) {
         auto& line = file_content[i];
         auto& mask_line = mask[i];
-        int line_size = line.size();
+        size_t line_size = line.size();
 
         if (is_open_define) {
-            for (int j = 0; j < line_size; j++) {
+            for (size_t j = 0; j < line_size; j++) {
                 mask_line[j] = false;
             }
             // if the last token is to continue the define
@@ -45,7 +45,7 @@ void FunctionBreakerC::filter_mask_commentaries_and_defines(vector<vector<bool>>
         }
 
         if (is_open_line_comment) {
-            for (int j = 0; j < line_size; j++) {
+            for (size_t j = 0; j < line_size; j++) {
                 mask_line[j] = false;
             }
             // if the last token is to continue the define
@@ -55,7 +55,7 @@ void FunctionBreakerC::filter_mask_commentaries_and_defines(vector<vector<bool>>
             continue;
         }
 
-        for (int j = 0; j < line_size; j++) {
+        for (size_t j = 0; j < line_size; j++) {
             if (is_open_block_comment) {
                 mask_line[j] = false;
                 // if the block line comes to an end
@@ -115,7 +115,7 @@ void FunctionBreakerC::filter_mask_commentaries_and_defines(vector<vector<bool>>
                 }
 
                 if (line[j + 1] == '/') {
-                    for (int k = j; k < line_size; k++) {
+                    for (size_t k = j; k < line_size; k++) {
                         mask_line[k] = false;
                     }
                     // find line comment, everything after is comment and
@@ -134,7 +134,7 @@ void FunctionBreakerC::filter_mask_commentaries_and_defines(vector<vector<bool>>
             }
 
             if (is_define(i, j)) {
-                for (int k = j; k < line_size; k++) {
+                for (size_t k = j; k < line_size; k++) {
                     mask_line[k] = false;
                 }
                 // find #define, everything after is comment and
@@ -154,7 +154,7 @@ void FunctionBreakerC::filter_mask_commentaries_and_defines(vector<vector<bool>>
 // the exactly same size of the input source, the character will be 1 if it is not in a commentary nor a #define's
 vector<vector<bool>> FunctionBreakerC::build_mask_valid_code() {
     vector<vector<bool>> mask(file_content.size());
-    for (int i = 0; i < (int)file_content.size(); i++) {
+    for (size_t i = 0; i < file_content.size(); i++) {
         mask[i] = vector<bool>(file_content[i].size(), true);
     }
     filter_mask_commentaries_and_defines(mask);
@@ -343,7 +343,7 @@ void FunctionBreakerC::process_function(int start_number_line,
     int start_column,
     int end_number_line,
     int end_column,
-    string relative_path) {
+    const fs::path& relative_path) {
     string first_line = file_content[start_number_line];
     auto [function_name, line_declaration, header_content] = extract_header_related_information(start_number_line, start_column);
     if (function_name.empty()) {
@@ -361,17 +361,13 @@ void FunctionBreakerC::process_function(int start_number_line,
     create_info_file(line_declaration, start_number_line, end_number_line, relative_path, function_name);
 }
 
-string FunctionBreakerC::file_path_from_folder_path(string file_path, string folder_path) {
-    string ret = "";
-    for (size_t i = folder_path.size(); i < file_path.size(); i++) {
-        ret += file_path[i];
-    }
-    return ret;
+fs::path FunctionBreakerC::file_path_from_folder_path(const fs::path& file_path, const fs::path& folder_path) {
+    return fs::relative(file_path, folder_path);
 }
 
-void FunctionBreakerC::file_breaker_c(string file_path, string folder_path) {
-    string relative_path = file_path_from_folder_path(file_path, folder_path);
-    file_content = Utils::read_file_generic(file_path);
+void FunctionBreakerC::file_breaker_c(const fs::path& file_path, const fs::path& folder_path) {
+    const fs::path& relative_path = file_path_from_folder_path(file_path, folder_path);
+    file_content = Utils::read_file_generic(file_path.string());
     mask_valid = build_mask_valid_code();
 
     set<array<int, 4>> start_end_of_functions = find_start_end_of_brackets_of_given_depth();
@@ -380,6 +376,6 @@ void FunctionBreakerC::file_breaker_c(string file_path, string folder_path) {
     }
 }
 
-FunctionBreakerC::FunctionBreakerC(string file_path, string folder_path) {
+FunctionBreakerC::FunctionBreakerC(const fs::path& file_path, const fs::path& folder_path) {
     file_breaker_c(file_path, folder_path);
 }

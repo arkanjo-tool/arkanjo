@@ -1,6 +1,6 @@
 #include "function_breaker_java.hpp"
 
-set<array<int, 3>> FunctionBreakerJava::find_start_end_and_depth_of_brackets(vector<string> brackets_content) {
+set<array<int, 3>> FunctionBreakerJava::find_start_end_and_depth_of_brackets(const vector<string>& brackets_content) {
     set<array<int, 3>> start_ends;
     int open_brackets = 0;
 
@@ -46,7 +46,7 @@ set<pair<int, int>> FunctionBreakerJava::find_start_end_of_brackets_of_given_dep
     return ret;
 }
 
-int FunctionBreakerJava::find_position_first_open_bracket(string s) {
+int FunctionBreakerJava::find_position_first_open_bracket(const string& s) {
     for (size_t i = 0; i < s.size(); i++) {
         char c = s[i];
         if (c == '{') {
@@ -56,7 +56,7 @@ int FunctionBreakerJava::find_position_first_open_bracket(string s) {
     return -1;
 }
 
-string FunctionBreakerJava::extract_last_token_of_string(string s) {
+string FunctionBreakerJava::extract_last_token_of_string(const string& s) {
     vector<string> tokens;
     string cur_token = "";
     for (size_t i = 0; i < s.size(); i++) {
@@ -80,7 +80,7 @@ string FunctionBreakerJava::extract_last_token_of_string(string s) {
     return tokens.back();
 }
 
-Line_content FunctionBreakerJava::build_line_code(int line_number, string content) {
+Line_content FunctionBreakerJava::build_line_code(int line_number, const string& content) {
     Line_content ret;
     ret.line_number = line_number;
     ret.content = content;
@@ -216,7 +216,7 @@ vector<string> FunctionBreakerJava::build_function_content(int start_number_line
     return function_content;
 }
 
-vector<string> FunctionBreakerJava::build_header_content(int start_number_line, int line_declaration, string relative_path, string function_name, const vector<string>& file_content) {
+vector<string> FunctionBreakerJava::build_header_content(int start_number_line, int line_declaration, const fs::path& relative_path, const string& function_name, const vector<string>& file_content) {
     vector<string> function_content;
     for (int i = line_declaration; i < start_number_line; i++) {
         function_content.push_back(file_content[i]);
@@ -245,7 +245,7 @@ bool FunctionBreakerJava::is_body_function_empty(int start_number_line, int end_
     return is_empty;
 }
 
-void FunctionBreakerJava::process_function(int start_number_line, int end_number_line, string relative_path, const vector<string>& file_content, PROGRAMMING_LANGUAGE programming_language) {
+void FunctionBreakerJava::process_function(int start_number_line, int end_number_line, const fs::path& relative_path, const vector<string>& file_content, PROGRAMMING_LANGUAGE programming_language) {
     string first_line = file_content[start_number_line];
     auto [function_name, line_declaration] = extract_function_name_and_line_from_declaration(file_content, start_number_line, programming_language);
     if (function_name.empty()) {
@@ -265,17 +265,13 @@ void FunctionBreakerJava::process_function(int start_number_line, int end_number
     create_info_file(line_declaration, start_number_line, end_number_line, relative_path, function_name);
 }
 
-string FunctionBreakerJava::file_path_from_folder_path(string file_path, string folder_path) {
-    string ret = "";
-    for (size_t i = folder_path.size(); i < file_path.size(); i++) {
-        ret += file_path[i];
-    }
-    return ret;
+fs::path FunctionBreakerJava::file_path_from_folder_path(const fs::path& file_path, const fs::path& folder_path) {
+    return fs::relative(file_path, folder_path);
 }
 
-void FunctionBreakerJava::file_breaker_java(string file_path, string folder_path) {
-    string relative_path = file_path_from_folder_path(file_path, folder_path);
-    vector<string> file_content = Utils::read_file_generic(file_path);
+void FunctionBreakerJava::file_breaker_java(const fs::path& file_path, const fs::path& folder_path) {
+    fs::path relative_path = file_path_from_folder_path(file_path, folder_path);
+    vector<string> file_content = Utils::read_file_generic(file_path.string());
     set<pair<int, int>> start_end_of_functions = find_start_end_of_brackets_of_given_depth(file_content, JAVA_RELEVANT_DEPTH);
 
     for (auto [start_line, end_line] : start_end_of_functions) {
@@ -283,6 +279,6 @@ void FunctionBreakerJava::file_breaker_java(string file_path, string folder_path
     }
 }
 
-FunctionBreakerJava::FunctionBreakerJava(string file_path, string folder_path) {
+FunctionBreakerJava::FunctionBreakerJava(const fs::path& file_path, const fs::path& folder_path) {
     file_breaker_java(file_path, folder_path);
 }

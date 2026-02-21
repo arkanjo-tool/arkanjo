@@ -1,6 +1,6 @@
 #include "duplication_finder_diff.hpp"
 
-DuplicationFinderDiff::DuplicationFinderDiff(string base_path_, double similarity_) {
+DuplicationFinderDiff::DuplicationFinderDiff(const fs::path& base_path_, double similarity_) {
     base_path = base_path_;
     similarity = similarity_;
 
@@ -9,7 +9,7 @@ DuplicationFinderDiff::DuplicationFinderDiff(string base_path_, double similarit
     }
 }
 
-vector<string> DuplicationFinderDiff::find_files(string folder_path) {
+vector<string> DuplicationFinderDiff::find_files(const fs::path& folder_path) {
     vector<string> file_paths;
     for (const auto& dirEntry : std::filesystem::recursive_directory_iterator(folder_path)) {
         string file_path = dirEntry.path().string();
@@ -64,11 +64,11 @@ double DuplicationFinderDiff::find_similarity(string path1, string path2) {
     }
 
     // execute diff command to extract the differences
-    string output_file = base_path + "/diff.txt";
+    fs::path output_file = base_path / "diff.txt";
 
     //-c is to print in the desired format
     // 2>&1 is to also send standard error to the output_file
-    string command = "diff " + path1 + " " + path2 + " -c > " + output_file + " 2>&1";
+    string command = "diff " + path1 + " " + path2 + " -c > " + output_file.string() + " 2>&1";
     system(command.c_str());
 
     vector<string> content = Utils::read_file_generic(output_file);
@@ -120,7 +120,7 @@ vector<tuple<double, string, string>> DuplicationFinderDiff::find_similar_pairs(
 }
 
 void DuplicationFinderDiff::save_duplications(vector<tuple<double, string, string>>& file_duplication_pairs) {
-    string output_file_path = base_path + "/output_parsed.txt";
+    string output_file_path = base_path / "output_parsed.txt";
 
     auto fout = ofstream(output_file_path);
 
@@ -135,7 +135,7 @@ void DuplicationFinderDiff::save_duplications(vector<tuple<double, string, strin
 
 void DuplicationFinderDiff::execute() {
 
-    vector<string> file_paths = find_files(base_path + "/source");
+    vector<string> file_paths = find_files(base_path / "source");
 
     vector<tuple<double, string, string>> file_duplication_pairs = find_similar_pairs(file_paths);
 

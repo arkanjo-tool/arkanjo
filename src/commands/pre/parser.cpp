@@ -111,9 +111,9 @@ void Parser::exec() {
     }
 }
 
-Parser::Parser(string input_file, string output_file, double similarity_cap) {
-    fin = ifstream(input_file);
-    fout = ofstream(output_file);
+Parser::Parser(const fs::path& input_file, const fs::path& output_file, double similarity_cap) {
+    fin = ifstream(input_file.string());
+    fout = ofstream(output_file.string());
     similarity_cap_ = similarity_cap;
 
     exec();

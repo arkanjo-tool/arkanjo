@@ -16,7 +16,9 @@
 #include "parser.hpp"
 #include <iostream>
 #include <string>
+#include <filesystem>
 using namespace std;
+namespace fs = std::filesystem;
 
 /**
  * @brief Main code duplication detection tool
@@ -29,7 +31,7 @@ class DuplicationFinderTool {
   private:
     string SAVING_MESSAGE = "Saving results..."; ///< Status message displayed when saving analysis results
 
-    string base_path;  ///< Root directory path of the codebase to analyze
+    fs::path base_path;  ///< Root directory path of the codebase to analyze
     double similarity; ///< Similarity threshold for considering code segments duplicates (0-100 scale)
 
   public:
@@ -38,7 +40,7 @@ class DuplicationFinderTool {
      * @param base_path_ Root path of the codebase to analyze
      * @param similarity_ Minimum similarity threshold (0-100) to consider as duplicate
      */
-    DuplicationFinderTool(string base_path_, double similarity_);
+    DuplicationFinderTool(const fs::path& base_path_, double similarity_);
 
     /**
      * @brief Executes the full duplication analysis pipeline

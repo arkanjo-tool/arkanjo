@@ -15,6 +15,8 @@
 #include <cassert>
 #include <string>
 #include <vector>
+#include <filesystem>
+namespace fs = std::filesystem;
 
 /**
  * @brief Path manipulation class for tool-specific directory structure
@@ -41,7 +43,7 @@ class Path {
      * @param string_path Path to split
      * @return vector<string> Path components
      */
-    static std::vector<std::string> split_path(const std::string& string_path);
+    static std::vector<std::string> split_path(const fs::path& path);
 
     /**
      * @brief Finds start position of relative path
@@ -54,7 +56,7 @@ class Path {
      * @param path Components to join
      * @return string Constructed path
      */
-    static std::string build_string_path(const std::vector<std::string>& path);
+    static std::string build_string_path(const std::vector<std::string>& path_tokens);
 
     /**
      * @brief Builds path with specified base directory
@@ -74,7 +76,7 @@ class Path {
      * @param token String with extension
      * @return String without extension
      */
-    static std::string remove_extension(std::string token);
+    static std::string remove_extension(std::string& token);
 
   public:
     /**
@@ -92,7 +94,7 @@ class Path {
      * @brief Constructs from path string
      * @param string_path Path to parse
      */
-    explicit Path(const std::string& string_path);
+    explicit Path(const fs::path& string_path);
 
     /**
      * @brief Builds source file path
