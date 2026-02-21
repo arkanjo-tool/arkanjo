@@ -12,8 +12,8 @@
 
 #pragma once
 
-#include <arkanjo/base/similarity_table.hpp>
 #include <arkanjo/base/path.hpp>
+#include <arkanjo/base/similarity_table.hpp>
 #include <arkanjo/utils/utils.hpp>
 #include <random>
 #include <string>
@@ -21,7 +21,7 @@
 #include <vector>
 
 #include <arkanjo/cli/cli_error.hpp>
-#include <arkanjo/commands/command.hpp>
+#include <arkanjo/commands/command_base.hpp>
 using namespace std;
 
 /**
@@ -31,7 +31,7 @@ using namespace std;
  * configurable similarity thresholds, with formatted output and
  * color-coded display options.
  */
-class RandomSelector : public ICommand {
+class RandomSelector : public CommandBase<RandomSelector> {
     string START_LINE_COMPARATION_PRINT = "Functions: "; ///< Prefix for pair display
     string BETWEEN_TWO_FUNCTION = " AND ";               ///< Separator between functions
     string SIMILARITY_MESSAGE = ". Similarity: ";        ///< Similarity score prefix
@@ -85,6 +85,12 @@ class RandomSelector : public ICommand {
     void print_path_pairs(vector<tuple<double, Path, Path>> path_pairs);
 
   public:
+    COMMAND_DESCRIPTION(
+        "Select random pairs of functions within a specified similarity range. "
+        "The provided MIN_SIMILARITY and MAX_SIMILARITY parameters define the "
+        "inclusive similarity interval, and up to MAX_QUANTITY pairs are randomly "
+        "selected and displayed.")
+
     /**
      * @brief Constructs selector with configuration
      * @param _similarity_table Source of similarity data

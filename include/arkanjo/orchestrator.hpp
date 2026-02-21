@@ -37,13 +37,18 @@ using Step = std::function<bool(Context&)>;
 class Orchestrator {
   private:
     std::vector<Step> steps;
+    size_t current_step = 0;
 
   public:
     void add_step(Step step) { steps.push_back(step); };
 
+    void skip() {
+        current_step = steps.size();
+    }
+
     void run_pipeline(Context& ctx) {
-        for (size_t i = 0; i < steps.size(); ++i) {
-            if (!steps[i](ctx)) {
+        for (current_step = 0; current_step < steps.size(); ++current_step) {
+            if (!steps[current_step] || !steps[current_step](ctx)) {
                 std::cerr << "Pipeline aborted\n";
                 break;
             }

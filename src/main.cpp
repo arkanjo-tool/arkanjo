@@ -1,10 +1,10 @@
-#include <arkanjo/cli/parser_options.hpp>
 #include <arkanjo/cli/cli_error.hpp>
 #include <arkanjo/cli/formatter.hpp>
 #include <arkanjo/cli/options_collector.hpp>
+#include <arkanjo/cli/parser_options.hpp>
 
-#include <arkanjo/orchestrator.hpp>
 #include "orchestrator_helper.hpp"
+#include <arkanjo/orchestrator.hpp>
 
 static constexpr const char* DEFAULT_COMMAND = "help";
 
@@ -18,13 +18,15 @@ int main(int argc, char* argv[]) {
 
     std::unique_ptr<ICommand> command;
     orchestrator.add_step(OrchestratorHelper::setup_command_step(command, similarity_table));
-    
+
     OptionsCollector collector;
     orchestrator.add_step([&command, &collector](Context& ctx) {
-        if (!command) return false;
+        if (!command)
+            return false;
 
         collector.add_options(OrchestratorHelper::global_long_opts, OrchestratorHelper::global_short_opts);
-        collector.add_options(command->get_options(), command->get_short_opts());
+        collector.add_options(command->options(), command->short_opts());
+
         return true;
     });
 
@@ -32,16 +34,21 @@ int main(int argc, char* argv[]) {
 
     orchestrator.add_step(OrchestratorHelper::formatter_step);
 
-    orchestrator.add_step(OrchestratorHelper::preprocessing_step);
+    orchestrator.add_step([&similarity_table, &orchestrator, &command](Context& ctx) {
+        if (ctx.command_name != "help" && ctx.options.args.count("help") == 0) {
+            orchestrator.add_step(OrchestratorHelper::preprocessing_step);
+            orchestrator.add_step(OrchestratorHelper::similarity_step(similarity_table));
+        }
 
-    orchestrator.add_step(OrchestratorHelper::similarity_step(similarity_table));
+        orchestrator.add_step(OrchestratorHelper::command_run_step(std::move(command)));
 
-    orchestrator.add_step(OrchestratorHelper::command_run_step(command));
+        return true;
+    });
 
     try {
         orchestrator.run_pipeline(ctx);
     } catch (const CommandNotFoundError& e) {
-        std::make_unique<Help>()->run(ctx.options);
+        std::make_unique<Help>()->do_run(ctx.options);
         return 1;
     } catch (const CLIError& e) {
         std::cerr << "Error: " << e.what() << "\n";

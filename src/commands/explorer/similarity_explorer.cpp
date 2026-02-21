@@ -44,12 +44,12 @@ int SimilarityExplorer::find_number_lines(const Path& path1) {
 }
 
 void SimilarityExplorer::print_similar_path_pair(const Path& path1, const Path& path2) {
-    std::string row = START_LINE_COMPARATION_PRINT + 
-                       path1.format_path_message_in_pair() +
-                       BETWEEN_TWO_FUNCTION +
-                       path2.format_path_message_in_pair() +
-                       NUMBER_LINES_MESSAGE +
-                       std::to_string(find_number_lines(path1));
+    std::string row = START_LINE_COMPARATION_PRINT +
+                      path1.format_path_message_in_pair() +
+                      BETWEEN_TWO_FUNCTION +
+                      path2.format_path_message_in_pair() +
+                      NUMBER_LINES_MESSAGE +
+                      std::to_string(find_number_lines(path1));
 
     std::cout << FormatterManager::get_formatter()->format(row, alternating_row_color(processed_results)) << '\n';
 }
@@ -67,7 +67,7 @@ void SimilarityExplorer::process_similar_path_pair(const Path& path1, const Path
 
 int SimilarityExplorer::find_number_pair_found(const std::vector<std::pair<Path, Path>>& similar_path_pairs) const {
     int count = 0;
-    for (auto [path1, path2] : similar_path_pairs) {
+    for (const auto& [path1, path2] : similar_path_pairs) {
         if (match_pattern(path1, path2)) {
             count++;
         }
@@ -93,34 +93,24 @@ void SimilarityExplorer::explorer() {
     std::cout << initial_message(number_pair_found, number_pairs_show) << '\n';
     std::cout << Utils::LIMITER_PRINT << '\n';
 
-    for (auto [path1, path2] : similar_path_pairs) {
+    for (const auto& [path1, path2] : similar_path_pairs) {
         process_similar_path_pair(path1, path2);
     }
 }
 
-SimilarityExplorer::SimilarityExplorer(Similarity_Table* _similarity_table) 
-    : ICommand(
-        std::vector<struct option>{
-            {"limiter", required_argument, nullptr, 'l'},
-            {"pattern", required_argument, nullptr, 'p'},
-            {"both-match", no_argument, nullptr, 'b'},
-            {"sort", no_argument, nullptr, 'c'}
-        },
-        "l:p:bc" // short options
-    ) {
-    similarity_table = _similarity_table;
-    limit_on_results = 0;
-    pattern_to_match = "";
-    both_path_need_to_match_pattern = false;
-    sorted_by_number_of_duplicated_code = false;
-}
+SimilarityExplorer::SimilarityExplorer(Similarity_Table* table)
+    : similarity_table(table),
+      limit_on_results(0),
+      pattern_to_match(""),
+      both_path_need_to_match_pattern(false),
+      sorted_by_number_of_duplicated_code(false) {}
 
 bool SimilarityExplorer::validate(const ParsedOptions& options) {
     auto it_limiter = options.args.find("limiter");
 
     if (it_limiter != options.args.end()) {
         try {
-            std::stoi(it_limiter->second);
+            limit_on_results = std::stoi(it_limiter->second);
         } catch (const std::invalid_argument&) {
             throw CLIError("--limiter must be a valid number (passing " + it_limiter->second + ")");
             return false;
@@ -134,10 +124,6 @@ bool SimilarityExplorer::validate(const ParsedOptions& options) {
 }
 
 bool SimilarityExplorer::run(const ParsedOptions& options) {
-    auto it_limiter = options.args.find("limiter");
-    if (it_limiter != options.args.end()) {
-        limit_on_results = std::stoi(it_limiter->second);
-    }
     auto it_pattern = options.args.find("pattern");
     if (it_pattern != options.args.end()) {
         pattern_to_match = it_pattern->second;

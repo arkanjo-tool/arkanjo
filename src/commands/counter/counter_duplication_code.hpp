@@ -12,10 +12,10 @@
 
 #pragma once
 
-#include <arkanjo/base/similarity_table.hpp>
 #include <arkanjo/base/function.hpp>
 #include <arkanjo/base/path.hpp>
-#include <arkanjo/commands/command.hpp>
+#include <arkanjo/base/similarity_table.hpp>
+#include <arkanjo/commands/command_base.hpp>
 #include <set>
 
 #include "counter_duplication_code_trie.hpp"
@@ -27,11 +27,11 @@
  * across the codebase, organized by folder hierarchy using a trie structure
  * for efficient hierarchical counting and reporting.
  */
-class CounterDuplicationCode : public ICommand {
+class CounterDuplicationCode : public CommandBase<CounterDuplicationCode> {
   private:
-    std::set<Path> processed_paths;                                   ///< Tracks processed paths to avoid duplicates
+    std::set<Path> processed_paths;                           ///< Tracks processed paths to avoid duplicates
     CounterDuplicationCodeTrie counter_duplication_code_trie; ///< Trie for hierarchical counting
-    Similarity_Table* similarity_table;                          ///< Similarity data source
+    Similarity_Table* similarity_table;                       ///< Similarity data source
 
     /**
      * @brief Marks a path as processed
@@ -73,6 +73,11 @@ class CounterDuplicationCode : public ICommand {
     void process_every_path_in_similarity_table();
 
   public:
+    COMMAND_DESCRIPTION(
+        "Analyze and report duplicated lines across the codebase, grouped by "
+        "folder hierarchy. The command processes all detected duplications and "
+        "displays the total number of duplicated lines per directory.")
+
     /**
      * @brief Constructs analyzer with similarity data
      * @param _similarity_table Pointer to similarity table

@@ -1,20 +1,20 @@
 #pragma once
 
-#include <arkanjo/orchestrator.hpp>
 #include <arkanjo/cli/parser_options.hpp>
-#include <vector>
+#include <arkanjo/orchestrator.hpp>
 #include <string>
+#include <vector>
 
 class OptionsCollector {
-private:
+  private:
     std::vector<struct option> merged_long_opts;
     std::string merged_short_opts;
 
-public:
-    void add_options(const std::vector<option>& long_opts, const std::string& short_opts) {
-        if (long_opts.size() > 0) {
-            for (int i = 0; long_opts[i].name != nullptr; i++) {
-                merged_long_opts.push_back(long_opts[i]);
+  public:
+    void add_options(const option* long_opts, const std::string& short_opts) {
+        if (long_opts != nullptr) {
+            for (const option* opt = long_opts; opt->name != nullptr; ++opt) {
+                merged_long_opts.push_back(*opt);
             }
         }
         merged_short_opts += short_opts;

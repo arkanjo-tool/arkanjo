@@ -16,14 +16,14 @@
 #include <utility>
 #include <vector>
 
-#include <arkanjo/base/similarity_table.hpp>
 #include <arkanjo/base/function.hpp>
 #include <arkanjo/base/path.hpp>
+#include <arkanjo/base/similarity_table.hpp>
 #include <arkanjo/utils/utils.hpp>
 
 #include <arkanjo/cli/cli_error.hpp>
 #include <arkanjo/cli/formatter.hpp>
-#include <arkanjo/commands/command.hpp>
+#include <arkanjo/commands/command_base.hpp>
 
 /**
  * @brief Duplicate function explorer and analyzer
@@ -31,10 +31,24 @@
  * Enables exploration of duplicate functions with configurable
  * filtering and sorting capabilities to identify code duplication patterns.
  */
-class SimilarityExplorer : public ICommand {
+class SimilarityExplorer : public CommandBase<SimilarityExplorer> {
   public:
     static constexpr int UNLIMITED_RESULTS = 0;      ///< Constant for unlimited results display
     static constexpr const char* EMPTY_PATTERN = ""; ///< Constant for empty search pattern
+
+    static constexpr option options_[] = {
+        {"limiter", required_argument, nullptr, 'l'},
+        {"pattern", required_argument, nullptr, 'p'},
+        {"both-match", no_argument, nullptr, 'b'},
+        {"sort", no_argument, nullptr, 'c'},
+        OPTION_END};
+    static constexpr const char* short_opts_ = "l:p:bc";
+    COMMAND_DESCRIPTION(
+        "Explore duplicated functions detected in the project. "
+        "Allows limiting the number of results, filtering by substring "
+        "match against the full function identifier (path:name), "
+        "requiring both functions to match the pattern, "
+        "and sorting results by similarity or duplicated line count.")
 
     /**
      * @brief Constructs explorer with configuration
@@ -64,6 +78,7 @@ class SimilarityExplorer : public ICommand {
     bool both_path_need_to_match_pattern;              ///< Whether both paths must match pattern
     bool sorted_by_number_of_duplicated_code;          ///< Whether to sort by line count
     int processed_results = INITIAL_PROCESSED_RESULTS; ///< Counter for processed results
+    bool help_option;
 
     /**
      * @brief Chooses text color for output

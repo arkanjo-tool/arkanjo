@@ -19,11 +19,11 @@
 #include <tuple>
 #include <vector>
 
-#include <arkanjo/base/similarity_table.hpp>
 #include <arkanjo/base/path.hpp>
+#include <arkanjo/base/similarity_table.hpp>
 #include <arkanjo/utils/utils.hpp>
 
-#include <arkanjo/commands/command.hpp>
+#include <arkanjo/commands/command_base.hpp>
 
 using namespace std;
 
@@ -33,7 +33,7 @@ using namespace std;
  * Implements evaluation metrics that compare detected clones against
  * BigCloneBench ground truth data, following Tailor tool's approach.
  */
-class BigCloneTailorEvaluator : public ICommand {
+class BigCloneTailorEvaluator : public CommandBase<BigCloneTailorEvaluator> {
   private:
     string CLONE_LABELS_FILE_PATH = "/home/luan/linux/test-duplication-code/parser/bigclonebench/clone_labels.txt"; ///< Path to ground truth labels
     string EXTENSION = ".java";                                                                                     ///< Expected file extension
@@ -129,6 +129,11 @@ class BigCloneTailorEvaluator : public ICommand {
     void evaluate(double minimum_similarity);
 
   public:
+    COMMAND_DESCRIPTION(
+        "Evaluate clone detection results using the BigCloneBench dataset "
+        "methodology. The command compares detected similarities against "
+        "ground truth labels and reports recall metrics per clone type.")
+
     /**
      * @brief Constructs evaluator with similarity data
      * @param _similarity_table Pointer to similarity table

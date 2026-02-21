@@ -16,11 +16,11 @@
 #include <string>
 #include <tuple>
 
-#include <arkanjo/base/similarity_table.hpp>
 #include <arkanjo/base/function.hpp>
 #include <arkanjo/base/path.hpp>
+#include <arkanjo/base/similarity_table.hpp>
 
-#include <arkanjo/commands/command.hpp>
+#include <arkanjo/commands/command_base.hpp>
 
 using namespace std;
 
@@ -33,9 +33,9 @@ using namespace std;
  *
  * @note Designed to operate within the BigCloneBench dataset directory structure
  */
-class BigCloneFormater : public ICommand {
+class BigCloneFormater : public CommandBase<BigCloneFormater> {
   private:
-    Similarity_Table* similarity_table;                          ///< Similarity data source
+    Similarity_Table* similarity_table; ///< Similarity data source
 
     /**
      * @brief Formats relative path string for BigCloneEval output
@@ -60,6 +60,11 @@ class BigCloneFormater : public ICommand {
     auto process_similar_path_pair(Path path1, Path path2, double similarity);
 
   public:
+    COMMAND_DESCRIPTION(
+        "Format clone detection results into the BigCloneBench evaluation "
+        "output format. The command converts internal similarity data into "
+        "the standardized BigCloneEval compatible representation.")
+
     /**
      * @brief Constructs formatter and processes similarity table
      * @param similarity_table Pointer to similarity data to format

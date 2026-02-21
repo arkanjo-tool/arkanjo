@@ -13,10 +13,12 @@
 #pragma once
 
 #include <arkanjo/cli/cli_error.hpp>
-#include <arkanjo/commands/command.hpp>
+#include <arkanjo/commands/command_base.hpp>
 
-class Help : public ICommand {
+class Help : public CommandBase<Help> {
   public:
+    COMMAND_DESCRIPTION("Help")
+
     bool validate(const ParsedOptions& options);
 
     /**

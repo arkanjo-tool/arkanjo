@@ -20,7 +20,7 @@
 #include <arkanjo/utils/utils.hpp>
 
 #include <arkanjo/cli/cli_error.hpp>
-#include <arkanjo/commands/command.hpp>
+#include <arkanjo/commands/command_base.hpp>
 
 /**
  * @brief Similar function locator and reporter
@@ -28,7 +28,7 @@
  * Identifies functions similar to a specified reference function pattern
  * and provides detailed reporting about the matches found.
  */
-class SimilarFunctionFinder : public ICommand {
+class SimilarFunctionFinder : public CommandBase<SimilarFunctionFinder> {
     static constexpr const char* EMPTY_PATH_MESSAGE_1 = "There is no functions that resembles the name: ";                             ///< First part of no-results message
     static constexpr const char* EMPTY_PATH_MESSAGE_2 = "Value incorrected passed or there is no duplication code with this function"; ///< Second part of no-results message
     static constexpr const char* REFERENCE_PATH_MESSAGE = "The following function was found:";                                         ///< Reference function header
@@ -72,6 +72,12 @@ class SimilarFunctionFinder : public ICommand {
     void print_similar_functions();
 
   public:
+    COMMAND_DESCRIPTION(
+        "Search for functions using a substring match. "
+        "The provided FUNCTION_NAME parameter is compared against all "
+        "detected function names, and any function containing the given "
+        "substring will be included in the results.")
+
     /**
      * @brief Constructs finder and initiates search
      * @param _function_pattern Function name pattern to match
