@@ -2,6 +2,11 @@
 
 name: Doxygen Documentation Action
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the main branch
 on:
@@ -9,9 +14,6 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
-permissions:
-  contents: write
 
   
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -24,45 +26,22 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
         
     - name: Doxygen Action
       uses: mattnotmitt/doxygen-action@v1.12.0
       with:
-        doxyfile-path: "./Doxyfile" # default is ./Doxyfile
-        working-directory: "." # default is .
-        
-    - name: Push docs to external repository
-      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-      run: |
-        # Set git configuration
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git config --global init.defaultBranch main
-        
-        # Check if docs/doxygen were generated
-        if [ ! -d "docs/doxygen/html" ] || [ -z "$(ls -A docs/doxygen/html)" ]; then
-          echo "Error: docs/doxygen/html directory does not exist or is empty"
-          exit 1
-        fi
-        
-        # Create a clean temporary directory for git operations
-        TEMP_DIR=$(mktemp -d)
-        echo "Using temporary directory: $TEMP_DIR"
-        
-        # Copy documentation files to temp directory
-        cp -r docs/doxygen/html/* "$TEMP_DIR/"
-        
-        # Navigate to temp directory and set up git
-        cd "$TEMP_DIR"
-        
-        git init
-        git branch -M main
-        git remote add origin https://x-access-token:${{ secrets.TARGET_REPO_TOKEN }}@github.com/arkanjo-tool/arkanjo-tool.github.io.git
-        git add .
-        git commit -m "Update documentation (auto-generated on $(date))"
-        git push --force origin main
-        
-        # Clean up
-        cd "$GITHUB_WORKSPACE"
-        rm -rf "$TEMP_DIR"
+        doxyfile-path: "./Doxyfile"
+        working-directory: "."
+    
+    - name: Setup Pages
+      uses: actions/configure-pages@v5
+
+    - name: Upload Artifact
+      uses: actions/upload-pages-artifact@v4
+      with:
+        path: 'docs/doxygen/html'
+
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
