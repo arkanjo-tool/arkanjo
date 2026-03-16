@@ -21,6 +21,7 @@
 #include "nlohmann/json.hpp"
 
 using json = nlohmann::json;
+namespace fs = std::filesystem;
 
 namespace Utils {
 
@@ -136,13 +137,7 @@ std::vector<std::string> read_file_generic(const std::string& string_path);
  * @param file_path Path where file should be written
  * @param content Vector of strings to write (each element becomes a line)
  */
-void write_file_generic(const std::string& file_path, const std::vector<std::string>& content);
-
-/**
- * @brief Creates all parent directories for a given file path
- * @param file_path The full file path for which to create parent directories
- */
-void create_parents_folder_of_file_path(const std::string& file_path);
+void write_file_generic(const fs::path& file_path, const std::vector<std::string>& content);
 
 /**
  * @brief Reads and parses a JSON file, uses nlohmann json library

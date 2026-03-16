@@ -10,6 +10,9 @@
 using namespace std;
 
 int main(void) {
+    auto& cfg = Config::config();
+    cfg.setDefaultConfig();
+    
     Preprocessor preprocessor(true);
     return 0;
 }

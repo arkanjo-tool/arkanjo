@@ -29,32 +29,15 @@ std::vector<std::string> Utils::read_file_generic(const std::string& string_path
     return ret;
 }
 
-void Utils::write_file_generic(const std::string& file_path, const std::vector<std::string>& content) {
+void Utils::write_file_generic(const fs::path& file_path, const std::vector<std::string>& content) {
     std::ofstream fileout;
-    create_parents_folder_of_file_path(file_path);
+    fs::create_directories(file_path.parent_path());
     fileout.open(file_path);
 
     for (const auto& line : content) {
         fileout << line << '\n';
     }
     fileout.close();
-}
-
-void Utils::create_parents_folder_of_file_path(const std::string& file_path) {
-    std::vector<std::string> parents;
-    for (size_t i = 0; i < file_path.size(); i++) {
-        if (file_path[i] == '/') {
-            std::string s = "";
-            for (size_t j = 0; j < i; j++) {
-                s += file_path[j];
-            }
-            parents.push_back(s);
-        }
-    }
-    for (const auto& folder : parents) {
-        const char* cfolder = folder.c_str();
-        mkdir(cfolder, MKDIR_FLAG);
-    }
 }
 
 json Utils::read_json(const std::string& string_path) {

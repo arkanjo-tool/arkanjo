@@ -35,12 +35,12 @@ fs::path build_info_path(const fs::path& relative_path, const string& function_n
 
 void create_source_file(int start_number_line, int end_number_line, const fs::path& relative_path, const string& function_name, const vector<string>& function_content) {
     fs::path path = build_source_path(relative_path, function_name);
-    Utils::write_file_generic(path.string(), function_content);
+    Utils::write_file_generic(path, function_content);
 }
 
 void create_header_file(const fs::path& relative_path, const string& function_name, const vector<string>& header_content) {
     fs::path path = build_header_path(relative_path, function_name);
-    Utils::write_file_generic(path.string(), header_content);
+    Utils::write_file_generic(path, header_content);
 }
 
 /*This creates a json file*/
@@ -54,5 +54,5 @@ void create_info_file(int line_declaration, int start_number_line, int end_numbe
     content.push_back("\"end_number_line\":" + to_string(end_number_line) + "\n");
     content.push_back("}\n");
     fs::path path = build_info_path(relative_path, function_name);
-    Utils::write_file_generic(path.string(), content);
+    Utils::write_file_generic(path, content);
 }
