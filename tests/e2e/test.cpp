@@ -13,7 +13,7 @@ const string EXPECTED_DIR = "tests/e2e/expected";
 const string CURRENT_DIR = "tests/e2e/current";
 const string CODEBASE_DIR = "tests/e2e/codebase";
 
-vector<string> skip_check_list = {"/tmp/source", "/tmp/info", "/tmp/header", "/tmp/config.txt", "/tmp/output_tool.txt", "/tmp/output_parsed.txt", ".gitkeep"};
+vector<string> skip_check_list = {"/tmp/arkanjo/source", "/tmp/arkanjo/info", "/tmp/arkanjo/header", "/tmp/arkanjo/config.txt", "/tmp/arkanjo/output_tool.txt", "/tmp/arkanjo/output_parsed.txt", ".gitkeep"};
 
 bool should_skip(string s) {
     for (auto x : skip_check_list) {
