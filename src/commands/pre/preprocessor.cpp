@@ -15,7 +15,7 @@ void Preprocessor::save_current_run_params(const fs::path& path) {
     config_content.push_back(path_message);
     config_content.push_back(time_message);
 
-    Utils::write_file_generic(Config::config()->getBasePath() / CONFIG_PATH, config_content);
+    Utils::write_file_generic(Config::config().base_path / CONFIG_PATH, config_content);
 }
 
 tuple<string, double, bool> Preprocessor::read_parameters() {
@@ -57,8 +57,7 @@ tuple<string, double, bool> Preprocessor::read_parameters() {
 void Preprocessor::preprocess(const fs::path& path, double similarity, bool use_duplication_finder_by_tool) {
     cout << BREAKER_MESSAGE << '\n';
 
-    Config* config = Config::config();
-    fs::path base_path = config->getBasePath();
+    fs::path base_path = Config::config().base_path;
 
     if (fs::exists(base_path)) {
         fs::remove_all(base_path);
@@ -82,8 +81,7 @@ void Preprocessor::preprocess(const fs::path& path, double similarity, bool use_
 }
 
 Preprocessor::Preprocessor(bool force_preprocess) {
-    Config* config = Config::config();
-    fs::path base_path = config->getBasePath();
+    fs::path base_path = Config::config().base_path;
     if (force_preprocess || !Utils::does_file_exist(base_path / CONFIG_PATH)) {
         auto [path, similarity, use_duplication_finder_by_tool] = read_parameters();
         preprocess(path, similarity, use_duplication_finder_by_tool);
@@ -91,8 +89,7 @@ Preprocessor::Preprocessor(bool force_preprocess) {
 }
 
 Preprocessor::Preprocessor(bool force_preprocess, const fs::path& path, double similarity) {
-    Config* config = Config::config();
-    fs::path base_path = config->getBasePath();
+    fs::path base_path = Config::config().base_path;
     if (force_preprocess || !Utils::does_file_exist(base_path / CONFIG_PATH)) {
         preprocess(path, similarity, true);
     }

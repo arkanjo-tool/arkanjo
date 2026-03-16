@@ -9,6 +9,9 @@
 static constexpr const char* DEFAULT_COMMAND = "help";
 
 int main(int argc, char* argv[]) {
+    auto& cfg = Config::config();
+    cfg.setDefaultConfig();
+
     Orchestrator orchestrator;
     Context ctx;
 

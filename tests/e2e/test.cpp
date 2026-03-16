@@ -99,7 +99,7 @@ void Test() {
 }
 
 int main(void) {
-    Config::config()->setTestConfig();
+    Config::config().setTestConfig();
     Preprocessor(true, CODEBASE_DIR, 0);
     Test();
 }

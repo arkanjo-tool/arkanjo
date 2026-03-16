@@ -29,38 +29,31 @@ namespace fs = std::filesystem;
  */
 class Config {
   protected:
-    static Config* config_; ///< Static instance pointer for singleton pattern
-
     /**
      * @brief Protected constructor for singleton pattern
      */
     Config() = default;
 
   public:
-    fs::path base_path = "tmp"; ///< Default base path for temporary files
-    std::string_view third_party_dir = THIRD_PARTY_DIR;
+    std::string program_name{"arkanjo"}; ///< Name of the program
+    fs::path base_path{"tmp"}; ///< Default base path for temporary files
+    fs::path third_party_dir{THIRD_PARTY_DIR}; ///< Directory containing third-party dependencies
     
     /**
      * @brief Deleted copy constructor
      */
-    Config(Config& other) = delete;
+    Config(const Config&) = delete;
 
     /**
      * @brief Deleted assignment operator
      */
-    void operator=(const Config&) = delete;
+    Config& operator=(const Config&) = delete;
 
     /**
      * @brief Gets the singleton configuration instance
-     * @return Config* Pointer to the singleton instance
+     * @return Returns the global configuration instance
      */
-    static Config* config();
-
-    /**
-     * @brief Gets the current base path
-     * @return string The configured base path
-     */
-    const fs::path& getBasePath() const;
+    static Config& config();
 
     /**
      * @brief Sets test configuration paths

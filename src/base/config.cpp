@@ -1,23 +1,21 @@
-
 #include <arkanjo/base/config.hpp>
-
-const fs::path& Config::getBasePath() const {
-    return base_path;
-}
 
 void Config::setTestConfig() {
     base_path = "tests/e2e/current/tmp";
 }
 
 void Config::setDefaultConfig() {
-    base_path = "tmp";
+    const char* cache_env = std::getenv("XDG_CACHE_HOME");
+
+    if (cache_env) {
+        base_path = fs::path(cache_env) / program_name;
+    } else {
+        const char* home = std::getenv("HOME");
+        base_path = fs::path(home) / ".cache" / program_name;
+    }
 }
 
-Config* Config::config_ = nullptr;
-
-Config* Config::config() {
-    if (config_ == nullptr) {
-        config_ = new Config();
-    }
-    return config_;
+Config& Config::config() {
+    static Config instance;
+    return instance;
 }

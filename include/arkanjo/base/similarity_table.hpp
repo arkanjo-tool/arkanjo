@@ -22,6 +22,7 @@
 #include <arkanjo/base/function.hpp>
 #include <arkanjo/base/path.hpp>
 #include <arkanjo/utils/utils.hpp>
+#include <arkanjo/base/config.hpp>
 
 /**
  * @brief Manages and analyzes function similarity relationships
@@ -31,7 +32,7 @@
  */
 class Similarity_Table {
   private:
-    static constexpr const char* SIMILARITY_TABLE_FILE_NAME = "tmp/output_parsed.txt"; ///< Default similarity data file
+    static constexpr const char* SIMILARITY_TABLE_FILE_NAME = "output_parsed.txt";     ///< Default similarity data file
     double DEFAULT_SIMILARITY = 100.00;                                                ///< Default similarity threshold
     double EPS_ERROR_MARGIN = 1e-6;                                                    ///< Floating-point comparison margin
     double MAXIMUM_SIMILARITY = 100.00;                                                ///< Maximum possible similarity score

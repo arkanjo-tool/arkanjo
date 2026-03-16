@@ -134,7 +134,6 @@ void DuplicationFinderDiff::save_duplications(vector<tuple<double, string, strin
 }
 
 void DuplicationFinderDiff::execute() {
-
     vector<string> file_paths = find_files(base_path / "source");
 
     vector<tuple<double, string, string>> file_duplication_pairs = find_similar_pairs(file_paths);

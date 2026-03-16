@@ -38,8 +38,9 @@ void Similarity_Table::read_file_table(std::ifstream& table_file) {
 
 void Similarity_Table::init_similarity_table() {
     std::ifstream table_file;
-    table_file.open(SIMILARITY_TABLE_FILE_NAME);
-    Utils::ensure_file_is_open(table_file, SIMILARITY_TABLE_FILE_NAME);
+    auto similarity_table_file_name = Config::config().base_path / SIMILARITY_TABLE_FILE_NAME;
+    table_file.open(similarity_table_file_name);
+    Utils::ensure_file_is_open(table_file, similarity_table_file_name);
 
     read_file_table(table_file);
 
