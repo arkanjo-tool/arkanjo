@@ -11,7 +11,7 @@ TARGET_MAIN := $(PROJECT)
 TARGET_PRE := $(PROJECT)-preprocessor
 TARGET_TEST := $(PROJECT)-test
 
-CXXFLAGS = -std=c++17 -Ithird-party -Iinclude
+CXXFLAGS = -std=c++17 -Ithird-party -Iinclude -DTHIRD_PARTY_DIR=\"$(PREFIX)/lib/arkanjo/third-party\"
 WARNINGS = -Wall -Wextra
 LDFLAGS =
 
@@ -84,12 +84,17 @@ clean:
 
 install: main preprocessor
 	install -d $(BINDIR)
+	install -d $(PREFIX)/lib/arkanjo
+
 	install -m 755 $(BIN_PATH)/$(TARGET_MAIN) $(BINDIR)
 	install -m 755 $(BIN_PATH)/$(TARGET_PRE) $(BINDIR)
+	
+	cp -r third-party $(PREFIX)/lib/arkanjo/
 
 uninstall:
 	rm -f $(BINDIR)/$(TARGET_MAIN)
 	rm -f $(BINDIR)/$(TARGET_PRE)
+	rm -f $(PREFIX)/lib/arkanjo
 
 $(BIN_PATH):
 	mkdir -p $@

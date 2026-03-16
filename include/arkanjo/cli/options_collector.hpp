@@ -7,12 +7,12 @@
 
 class OptionsCollector {
   private:
-    std::vector<struct option> merged_long_opts;
+    std::vector<struct CliOption> merged_long_opts;
 
   public:
-    void add_options(const option* long_opts) {
+    void add_options(const CliOption* long_opts) {
         if (long_opts != nullptr) {
-            for (const option* opt = long_opts; opt->name != nullptr; ++opt) {
+            for (const CliOption* opt = long_opts; opt->long_name != nullptr; ++opt) {
                 merged_long_opts.push_back(*opt);
             }
         }
@@ -25,9 +25,7 @@ class OptionsCollector {
             opterr = 0;
             char** cmd_argv = argv + 1;
             int cmd_argc = argc - 1;
-            parse_options(cmd_argc, cmd_argv, merged_long_opts.data(), ctx.options);
-
-            return true;
+            return parse_options(cmd_argc, cmd_argv, merged_long_opts, ctx.options);
         };
     }
 };

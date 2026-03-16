@@ -36,18 +36,14 @@ class SimilarityExplorer : public CommandBase<SimilarityExplorer> {
     static constexpr int UNLIMITED_RESULTS = 0;      ///< Constant for unlimited results display
     static constexpr const char* EMPTY_PATTERN = ""; ///< Constant for empty search pattern
 
-    static constexpr option options_[] = {
-        {"limiter", required_argument, nullptr, 'l'},
-        {"pattern", required_argument, nullptr, 'p'},
-        {"both-match", no_argument, nullptr, 'b'},
-        {"sort", no_argument, nullptr, 'c'},
+    static constexpr CliOption options_[] = {
+        {"limiter", 'l', RequiredArgument, "Limits the number of results shown to the user. By default, all results are shown."},
+        {"pattern", 'p', RequiredArgument, "Defines a pattern that function names must match to be included in the results. A function is considered a match if the pattern is a substring of the function's concatenated file path and name (e.g., `path/to/file.c:function_name`)."},
+        {"both-match", 'b', NoArgument, "Enable both-pattern matching. By default, the pattern only needs to match one function."},
+        {"sort", 'c', NoArgument, "Sort results by number of duplicated lines. By default, results are sorted by the similarity metric."},
         OPTION_END};
     COMMAND_DESCRIPTION(
-        "Explore duplicated functions detected in the project. "
-        "Allows limiting the number of results, filtering by substring "
-        "match against the full function identifier (path:name), "
-        "requiring both functions to match the pattern, "
-        "and sorting results by similarity or duplicated line count.")
+        "Explore duplicated functions detected in the project.")
 
     /**
      * @brief Constructs explorer with configuration

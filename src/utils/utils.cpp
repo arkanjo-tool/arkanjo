@@ -133,3 +133,39 @@ std::vector<std::string> Utils::split_string(const std::string& s, char delimite
     }
     return ret;
 }
+
+Wrapped wrapped(const std::string& text, size_t spaces, bool use_first_line) {
+    return {text, spaces, use_first_line};
+}
+
+std::ostream& operator<<(std::ostream& os, const Wrapped& w) {
+    std::string indent(w.spaces, ' ');
+    bool first_line = w.use_first_line;
+    size_t max_line = 80 - w.spaces;
+    std::string word;
+    std::string current_line;
+    std::istringstream stream(w.text);
+    while (stream >> word) {
+        if (current_line.empty()) {
+            current_line = word;
+        } else if (current_line.length() + 1 + word.length() > max_line) {
+            if (first_line) {
+                os << current_line << "\n";
+                first_line = false;
+            } else {
+                os << indent << current_line << "\n";
+            }
+            current_line = word;
+        } else {
+            current_line += " " + word;
+        }
+    }
+    if (!current_line.empty()) {
+        if (first_line) {
+            os << current_line << "\n";
+        } else {
+            os << indent << current_line << "\n";
+        }
+    }
+    return os;
+}

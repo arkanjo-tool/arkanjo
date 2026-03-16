@@ -4,10 +4,26 @@
 #include <vector>
 #include <getopt.h>
 
+#include <arkanjo/cli/cli_error.hpp>
+
+enum ArgumentsType {
+    NoArgument,
+    RequiredArgument,
+    OptionalArgument,
+    PositionalArgument,
+};
+
+struct CliOption {
+    const char *long_name;
+    char short_name;
+    ArgumentsType has_arg;
+    const char *description {""};
+};
+
 /**
  * @brief This marks the end of a long array of options.
  */
-#define OPTION_END {nullptr, 0, nullptr, 0}
+#define OPTION_END {nullptr, 0, NoArgument, nullptr}
 
 struct ParsedOptions {
     /**
@@ -37,4 +53,4 @@ struct ParsedOptions {
  * @param long_opts Array of `struct option` containing the long options.
  * @param ctx_options Reference to ParsedOptions that will be filled in.
  */
-void parse_options(int argc, char* argv[], struct option* long_opts, ParsedOptions& ctx_options);
+bool parse_options(int argc, char* argv[], const std::vector<CliOption>& options, ParsedOptions& ctx_options);

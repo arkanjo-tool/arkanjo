@@ -17,6 +17,10 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
+#ifndef THIRD_PARTY_DIR
+  #define THIRD_PARTY_DIR "third-party"
+#endif
+
 /**
  * @brief Singleton configuration manager class
  *
@@ -24,8 +28,6 @@ namespace fs = std::filesystem;
  * Implements the singleton pattern to ensure single instance access.
  */
 class Config {
-  fs::path base_path = "tmp"; ///< Default base path for temporary files
-
   protected:
     static Config* config_; ///< Static instance pointer for singleton pattern
 
@@ -35,6 +37,9 @@ class Config {
     Config() = default;
 
   public:
+    fs::path base_path = "tmp"; ///< Default base path for temporary files
+    std::string_view third_party_dir = THIRD_PARTY_DIR;
+    
     /**
      * @brief Deleted copy constructor
      */

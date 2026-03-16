@@ -2,6 +2,22 @@
 
 #include <iostream>
 
+option* build_longopts(const std::vector<CliOption>& options) {
+    size_t n = options.size();
+    option* opts = new option[n + 1];
+
+    for (size_t i = 0; i < n; ++i) {
+        opts[i].name = options[i].long_name;
+        opts[i].has_arg = options[i].has_arg;
+        opts[i].flag = nullptr;
+        opts[i].val = options[i].short_name;
+    }
+
+    opts[n] = {0,0,0,0};
+
+    return opts;
+}
+
 std::string build_shortopts(const option* long_opts) {
     std::string shortopts;
 
@@ -19,17 +35,27 @@ std::string build_shortopts(const option* long_opts) {
     return shortopts;
 }
 
-void parse_options(int argc, char* argv[], option* long_opts, ParsedOptions& ctx_options) {
+bool parse_options(int argc, char* argv[], const std::vector<CliOption>& options, ParsedOptions& ctx_options) {
     ctx_options.extra_args.clear();
 
     int option_index = 0;
     int opt;
 
+    option* long_opts = build_longopts(options);
     std::string shortopts = build_shortopts(long_opts);
 
     while ((opt = getopt_long(argc, argv, shortopts.c_str(), long_opts, &option_index)) != -1) {
         if (opt == '?') {
-            continue;
+            std::string cerr = "invalid option: ";
+            if (optopt) {
+                cerr += "-";
+                cerr += char(optopt);
+            } else {
+                cerr += argv[optind - 1];
+            }
+            cerr += "\nTry '--help' for usage.";
+            throw CLIError(cerr);
+            return false;
         }
 
         std::string name;
@@ -60,4 +86,6 @@ void parse_options(int argc, char* argv[], option* long_opts, ParsedOptions& ctx
     for (auto& a : ctx_options.extra_args)
         std::cout << "[DEBUG] Extra arg: " << a << "\n";
 #endif
+
+    return true;
 }

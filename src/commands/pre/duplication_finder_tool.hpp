@@ -14,6 +14,7 @@
 #pragma once
 
 #include "parser.hpp"
+#include <arkanjo/base/config.hpp>
 #include <iostream>
 #include <string>
 #include <filesystem>

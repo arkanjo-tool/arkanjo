@@ -22,13 +22,14 @@
 #include "commands/rand/random_selector.hpp"
 
 namespace OrchestratorHelper {
-constexpr option global_long_opts[] = {
-    {"color", no_argument, nullptr, 0},
-    {"no-color", no_argument, nullptr, 0},
-    {"preprocessor", no_argument, nullptr, 0},
-    {"similarity", required_argument, nullptr, 's'},
-    {"help", no_argument, nullptr, 'h'},
-    OPTION_END};
+constexpr CliOption global_long_opts[] = {
+    {"color", 0, NoArgument, nullptr},
+    {"no-color", 0, NoArgument, nullptr},
+    {"preprocessor", 0, NoArgument, nullptr},
+    {"similarity", 's', RequiredArgument, nullptr},
+    {"help", 'h', NoArgument, nullptr},
+    OPTION_END
+};
 
 inline Step setup_command_step(std::unique_ptr<ICommand>& command, Similarity_Table& table) {
     return [&table, &command](Context& ctx) mutable {

@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
         std::make_unique<Help>()->do_run(ctx.options);
         return 1;
     } catch (const CLIError& e) {
-        std::cerr << "Error: " << e.what() << "\n";
+        std::cerr << e.what() << "\n";
         return 1;
     } catch (const std::exception& e) {
         std::cerr << "Unexpected error: " << e.what() << "\n";

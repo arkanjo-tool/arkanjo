@@ -16,6 +16,7 @@
 #include <string>
 #include <sys/stat.h>
 #include <vector>
+#include <sstream>
 
 #include "nlohmann/json.hpp"
 
@@ -194,3 +195,12 @@ bool is_special_char(char c);
  */
 std::vector<std::string> split_string(const std::string& s, char delimiter);
 }; // namespace Utils
+
+struct Wrapped {
+    std::string text;
+    size_t spaces;
+    bool use_first_line;
+};
+
+Wrapped wrapped(const std::string& text, size_t spaces = 1, bool use_first_line = true);
+std::ostream& operator<<(std::ostream& os, const Wrapped& w);

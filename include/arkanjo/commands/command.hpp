@@ -12,7 +12,7 @@ class ICommand {
   public:
     virtual ~ICommand() = default;
 
-    virtual const option* options() const = 0;
+    virtual const CliOption* options() const = 0;
     virtual std::string_view description() const = 0;
 
     /**
