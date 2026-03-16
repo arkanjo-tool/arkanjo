@@ -42,7 +42,6 @@ class SimilarityExplorer : public CommandBase<SimilarityExplorer> {
         {"both-match", no_argument, nullptr, 'b'},
         {"sort", no_argument, nullptr, 'c'},
         OPTION_END};
-    static constexpr const char* short_opts_ = "l:p:bc";
     COMMAND_DESCRIPTION(
         "Explore duplicated functions detected in the project. "
         "Allows limiting the number of results, filtering by substring "

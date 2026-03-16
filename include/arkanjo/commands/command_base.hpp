@@ -1,18 +1,13 @@
 #pragma once
 
 #include <arkanjo/commands/command.hpp>
+#include <arkanjo/cli/formatter.hpp>
 
 #define COMMAND_DESCRIPTION(str)                    \
     std::string_view description() const override { \
         static constexpr char str__[] = str;        \
         return str__;                               \
     }
-
-template <typename, typename = std::void_t<>>
-struct has_short_opts : std::false_type {};
-
-template <typename T>
-struct has_short_opts<T, std::void_t<decltype(T::short_opts_)>> : std::true_type {};
 
 template <typename, typename = std::void_t<>>
 struct has_options : std::false_type {};
@@ -25,21 +20,38 @@ class CommandBase : public ICommand {
 
   public:
     virtual void print_help() const {
-        std::cout << "Description:\n  " << description() << "\n\n";
+        std::string out;
+
+        out += description();
+        out += "\n\n";
         if (options()) {
-            std::cout << "Options:\n";
+            out += BOLD(UNDERLINE("Options:"));
+            out += "\n";
 
             for (const option* opt = options(); opt->name != nullptr; ++opt) {
-                std::string opts;
+                std::string opts_str;
                 if (opt->val != 0)
-                    opts += "-" + std::string(1, static_cast<char>(opt->val));
-                if (!opts.empty() && opt->name)
-                    opts += ", ";
+                    opts_str += "-" + std::string(1, static_cast<char>(opt->val));
+                if (!opts_str.empty() && opt->name)
+                    opts_str += ", ";
                 if (opt->name)
-                    opts += "--" + std::string(opt->name);
-                std::cout << "  " << opts << "\n";
+                    opts_str += "--" + std::string(opt->name);
+                out += "  ";
+                out += BOLD(opts_str);
+                
+                if (opt->has_arg == required_argument || opt->has_arg == optional_argument) {
+                    std::string result = opt->name;
+                    for (char &c : result) {
+                        c = std::toupper((unsigned char) c);
+                    }
+                    out += " <";
+                    out += result;
+                    out += ">";
+                }
+                out += "\n";
             }
         }
+        std::cout << out;
     }
 
     const option* options() const final {
@@ -47,14 +59,6 @@ class CommandBase : public ICommand {
             return Derived::options_;
         } else {
             return nullptr;
-        }
-    }
-
-    const char* short_opts() const final {
-        if constexpr (has_short_opts<Derived>::value) {
-            return Derived::short_opts_;
-        } else {
-            return "";
         }
     }
 

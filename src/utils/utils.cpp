@@ -11,7 +11,7 @@
 void Utils::ensure_file_is_open(const std::ifstream& file, const std::string& file_name) {
     if (!file.is_open()) {
         std::cout << "Attempted to open file: " << file_name << " ";
-        std::cout << "but a Error ocurred. Check if the file exist." << std::endl;
+        std::cout << "but a Error ocurred. Check if the file exist." << "\n";
         exit(0);
     }
 }

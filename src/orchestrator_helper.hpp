@@ -29,7 +29,6 @@ constexpr option global_long_opts[] = {
     {"similarity", required_argument, nullptr, 's'},
     {"help", no_argument, nullptr, 'h'},
     OPTION_END};
-const std::string global_short_opts = "sh";
 
 inline Step setup_command_step(std::unique_ptr<ICommand>& command, Similarity_Table& table) {
     return [&table, &command](Context& ctx) mutable {

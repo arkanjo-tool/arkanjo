@@ -2,13 +2,32 @@
 
 #include <iostream>
 
-void parse_options(int argc, char* argv[], const std::string& short_opts, option* long_opts, ParsedOptions& ctx_options) {
+std::string build_shortopts(const option* long_opts) {
+    std::string shortopts;
+
+    for (; long_opts->name != nullptr; ++long_opts) {
+        if (long_opts->flag == nullptr && long_opts->val < 256 && long_opts->val > 0) {
+            shortopts += static_cast<char>(long_opts->val);
+
+            if (long_opts->has_arg == required_argument)
+                shortopts += ":";
+            else if (long_opts->has_arg == optional_argument)
+                shortopts += "::";
+        }
+    }
+
+    return shortopts;
+}
+
+void parse_options(int argc, char* argv[], option* long_opts, ParsedOptions& ctx_options) {
     ctx_options.extra_args.clear();
 
     int option_index = 0;
     int opt;
 
-    while ((opt = getopt_long(argc, argv, short_opts.c_str(), long_opts, &option_index)) != -1) {
+    std::string shortopts = build_shortopts(long_opts);
+
+    while ((opt = getopt_long(argc, argv, shortopts.c_str(), long_opts, &option_index)) != -1) {
         if (opt == '?') {
             continue;
         }
@@ -17,7 +36,6 @@ void parse_options(int argc, char* argv[], const std::string& short_opts, option
 
         if (opt == 0) { // long option
             name = long_opts[option_index].name;
-            std::cout << name << "\n";
         } else { // short option
             name = std::string(1, static_cast<char>(opt));
 

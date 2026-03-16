@@ -48,6 +48,8 @@ const int MKDIR_FLAG = 0700;
  * - WHITE
  * - BRIGHT_YELLOW
  * - BLACK
+ * - BOLD
+ * - UNDERLINE
  */
 const std::vector<std::string> COLOR_TOKENS_UTILS_LIGTH = {
     "\033[0m",     // RESET
@@ -90,7 +92,9 @@ const std::vector<std::string> COLOR_TOKENS_UTILS_DARK = {
     "\033[37m", // GRAY
     "\033[97m", // WHITE
     "\033[33m", // BRIGHT_YELLOW
-    "\033[97m"  // WHITE
+    "\033[97m", // WHITE
+    "\033[1m",  // BOLD
+    "\033[4m",  // UNDERLINE
 };
 
 /**
@@ -107,7 +111,9 @@ enum COLOR {
     GRAY,          ///< Gray color
     WHITE,         ///< White color
     BRIGHT_YELLOW, ///< Bright yellow color
-    BLACK          ///< Black color
+    BLACK,         ///< Black color
+    BOLD,          ///< Bold text
+    UNDERLINE      ///< Underline text
 };
 
 /**

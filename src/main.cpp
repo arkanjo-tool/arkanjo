@@ -24,8 +24,8 @@ int main(int argc, char* argv[]) {
         if (!command)
             return false;
 
-        collector.add_options(OrchestratorHelper::global_long_opts, OrchestratorHelper::global_short_opts);
-        collector.add_options(command->options(), command->short_opts());
+        collector.add_options(OrchestratorHelper::global_long_opts);
+        collector.add_options(command->options());
 
         return true;
     });

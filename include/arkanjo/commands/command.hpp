@@ -13,7 +13,6 @@ class ICommand {
     virtual ~ICommand() = default;
 
     virtual const option* options() const = 0;
-    virtual const char* short_opts() const = 0;
     virtual std::string_view description() const = 0;
 
     /**
