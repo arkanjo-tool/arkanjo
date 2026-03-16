@@ -37,13 +37,13 @@ int main(int argc, char* argv[]) {
 
     orchestrator.add_step(OrchestratorHelper::formatter_step);
 
-    orchestrator.add_step([&similarity_table, &orchestrator, &command](Context& ctx) {
+    orchestrator.add_step([&similarity_table, &orchestrator, &command, &collector](Context& ctx) {
         if (ctx.command_name != "help" && ctx.options.args.count("help") == 0) {
             orchestrator.add_step(OrchestratorHelper::preprocessing_step);
             orchestrator.add_step(OrchestratorHelper::similarity_step(similarity_table));
         }
 
-        orchestrator.add_step(OrchestratorHelper::command_run_step(std::move(command)));
+        orchestrator.add_step(OrchestratorHelper::command_run_step(std::move(command), collector));
 
         return true;
     });

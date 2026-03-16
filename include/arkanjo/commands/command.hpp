@@ -1,5 +1,6 @@
 #pragma once
 #include <arkanjo/cli/parser_options.hpp>
+#include <arkanjo/cli/options_collector.hpp>
 
 /**
  * @brief Basic interface for all CLI commands.
@@ -38,5 +39,5 @@ class ICommand {
      * @return True if the execution is successful, false if an error occurs.
      */
     virtual bool run(const ParsedOptions& options) = 0;
-    virtual bool do_run(const std::string command_name, const ParsedOptions& options) = 0;
+    virtual bool do_run(const std::string command_name, const ParsedOptions& options, const OptionsCollector* collector = nullptr) = 0;
 };

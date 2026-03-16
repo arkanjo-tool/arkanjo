@@ -28,4 +28,8 @@ class OptionsCollector {
             return parse_options(cmd_argc, cmd_argv, merged_long_opts, ctx.options);
         };
     }
+
+    const std::vector<CliOption>& get_options() const {
+        return merged_long_opts;
+    }
 };

@@ -22,15 +22,16 @@ template <typename Derived>
 class CommandBase : public ICommand {
 
   public:
-    virtual void print_help(const std::string command_name) const {
+    virtual void print_help(const std::string command_name, const OptionsCollector* collector) const {
         constexpr int OPTION_WIDTH = 26;
 
         std::string s(description());
         std::cout << wrapped(s, 0) << "\n";
         
-        if (options()) {
+        const CliOption* command_options = collector == nullptr ? options() : collector->get_options().data();
+        if (command_options) {
             std::vector<const CliOption*> vector_arguments, vector_options;
-            for (const CliOption* opt = options(); opt->long_name != nullptr; ++opt) {
+            for (const CliOption* opt = command_options; opt->long_name != nullptr; ++opt) {
                 if (opt->has_arg == PositionalArgument) {
                     vector_arguments.push_back(opt);
                 } else {
@@ -42,7 +43,8 @@ class CommandBase : public ICommand {
                       << Config::config().program_name << " " 
                       << command_name
                       << (!vector_options.empty() ? " [OPTIONS]" : "") 
-                      << (!vector_arguments.empty() ? " [ARGUMENTS]" : "") << "\n\n";
+                      << (!vector_arguments.empty() ? " [--] [ARGUMENTS]" : "") 
+                      << "..." << "\n\n";
 
             if (!vector_arguments.empty()) {
                 std::cout << BOLD(UNDERLINE("Arguments:")) << "\n";
@@ -60,8 +62,6 @@ class CommandBase : public ICommand {
                 }
             }
 
-            if (!vector_arguments.empty() && !vector_options.empty()) std::cout << "\n";
-
             if (!vector_options.empty()) {
                 std::sort(vector_options.begin(), vector_options.end(), [](const CliOption* a, const CliOption* b) {
                     return std::string_view(a->long_name) < std::string_view(b->long_name);
@@ -73,8 +73,10 @@ class CommandBase : public ICommand {
                     std::string opts_str = "  ";
                     if (item->short_name != 0)
                         opts_str += "-" + std::string(1, static_cast<char>(item->short_name));
-                    if (!opts_str.empty() && item->long_name)
+                    if (!opts_str.empty() && item->long_name && item->short_name)
                         opts_str += ", ";
+                    if (!item->short_name) 
+                        opts_str += "    ";
                     if (item->long_name)
                         opts_str += "--" + std::string(item->long_name);
                     opts_str = BOLD(opts_str);
@@ -100,9 +102,9 @@ class CommandBase : public ICommand {
         }
     }
 
-    bool do_run(const std::string command_name, const ParsedOptions& options) {
+    bool do_run(const std::string command_name, const ParsedOptions& options, const OptionsCollector* collector = nullptr) {
         if (options.args.count("help") > 0) {
-            print_help(command_name);
+            print_help(command_name, collector);
             return true;
         }
         return run(options);

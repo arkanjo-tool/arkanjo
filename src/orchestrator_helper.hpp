@@ -23,11 +23,11 @@
 
 namespace OrchestratorHelper {
 constexpr CliOption global_long_opts[] = {
-    {"color", 0, NoArgument, nullptr},
-    {"no-color", 0, NoArgument, nullptr},
-    {"preprocessor", 0, NoArgument, nullptr},
-    {"similarity", 's', RequiredArgument, nullptr},
-    {"help", 'h', NoArgument, nullptr},
+    {"color", 0, NoArgument, "Enable colored output."},
+    {"no-color", 0, NoArgument, "Disable colored output."},
+    {"preprocessor", 0, NoArgument, "Forces the preprocessor to execute."},
+    {"similarity", 'S', RequiredArgument, "Changes the similarity threshold to `SIMILARITY` for the current command only."},
+    {"help", 'h', NoArgument, "Show this help message."},
     OPTION_END
 };
 
@@ -82,9 +82,9 @@ inline Step similarity_step(Similarity_Table& table) {
     };
 }
 
-inline Step command_run_step(std::shared_ptr<ICommand> command) {
-    return [cmd = std::move(command)](Context& ctx) mutable {
-        return cmd->validate(ctx.options) && cmd->do_run(ctx.command_name, ctx.options);
+inline Step command_run_step(std::shared_ptr<ICommand> command, const OptionsCollector& collector) {
+    return [cmd = std::move(command), &collector](Context& ctx) mutable {
+        return cmd->validate(ctx.options) && cmd->do_run(ctx.command_name, ctx.options, &collector);
     };
 }
 } // namespace OrchestratorHelper

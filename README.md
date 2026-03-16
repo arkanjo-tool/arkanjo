@@ -121,7 +121,7 @@ file path and name (e.g.,`path/to/file.c:function_name`).
 
 - `-b`: Enable both-pattern matching. By default, the pattern only needs to match one function.
 
-- `-c`: Sort results by number of duplicated lines. By default, results are sorted by the similarity metric.
+- `-s`: Sort results by number of duplicated lines. By default, results are sorted by the similarity metric.
 
 ### Find function duplicates
 
