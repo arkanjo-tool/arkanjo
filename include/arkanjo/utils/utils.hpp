@@ -204,3 +204,5 @@ struct Wrapped {
 
 Wrapped wrapped(const std::string& text, size_t spaces = 1, bool use_first_line = true);
 std::ostream& operator<<(std::ostream& os, const Wrapped& w);
+
+std::string to_uppercase(const std::string input);

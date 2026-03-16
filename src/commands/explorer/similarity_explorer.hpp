@@ -41,7 +41,8 @@ class SimilarityExplorer : public CommandBase<SimilarityExplorer> {
         {"pattern", 'p', RequiredArgument, "Defines a pattern that function names must match to be included in the results. A function is considered a match if the pattern is a substring of the function's concatenated file path and name (e.g., `path/to/file.c:function_name`)."},
         {"both-match", 'b', NoArgument, "Enable both-pattern matching. By default, the pattern only needs to match one function."},
         {"sort", 'c', NoArgument, "Sort results by number of duplicated lines. By default, results are sorted by the similarity metric."},
-        OPTION_END};
+        OPTION_END
+    };
     COMMAND_DESCRIPTION(
         "Explore duplicated functions detected in the project.")
 

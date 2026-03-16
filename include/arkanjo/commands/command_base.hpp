@@ -21,35 +21,59 @@ class CommandBase : public ICommand {
 
   public:
     virtual void print_help() const {
-        std::cout << description() << "\n\n";
+        std::string s(description());
+        std::cout << wrapped(s, 0) << "\n";
         
         if (options()) {
-            std::cout << BOLD(UNDERLINE("Options:")) << "\n";
-
+            std::vector<const CliOption*> vector_arguments, vector_options;
             for (const CliOption* opt = options(); opt->long_name != nullptr; ++opt) {
-                std::string opts_str = "  ";
-                if (opt->short_name != 0)
-                    opts_str += "-" + std::string(1, static_cast<char>(opt->short_name));
-                if (!opts_str.empty() && opt->long_name)
-                    opts_str += ", ";
-                if (opt->long_name)
-                    opts_str += "--" + std::string(opt->long_name);
-                opts_str = BOLD(opts_str);
-                
-                if (opt->has_arg == RequiredArgument || opt->has_arg == OptionalArgument) {
-                    std::string result = opt->long_name;
-                    for (char &c : result) {
-                        c = std::toupper((unsigned char) c);
+                if (opt->has_arg == PositionalArgument) {
+                    vector_arguments.push_back(opt);
+                } else {
+                    vector_options.push_back(opt);
+                }
+            }
+
+            if (!vector_arguments.empty()) {
+                std::cout << BOLD(UNDERLINE("Arguments:")) << "\n";
+
+                for (const auto& item : vector_arguments) {
+                    std::string opts_str = "  ";
+                    opts_str += "<";
+                    opts_str += to_uppercase(item->long_name);
+                    opts_str += ">";
+                    std::cout << std::left << std::setw(26) << opts_str;
+                    if (item->description != nullptr) {
+                        std::cout << wrapped(item->description, 26);
                     }
-                    opts_str += " <";
-                    opts_str += result;
-                    opts_str += "> ";
+                    std::cout << "\n";
                 }
-                std::cout << std::left << std::setw(36) << opts_str;
-                if (opt->description != nullptr) {
-                    std::cout << wrapped(opt->description, 28);
+            }
+
+            if (!vector_arguments.empty() && !vector_options.empty()) std::cout << "\n";
+
+            if (!vector_options.empty()) {
+                std::cout << BOLD(UNDERLINE("Options:")) << "\n";
+
+                for (const auto& item : vector_options) {
+                    std::string opts_str = "  ";
+                    if (item->short_name != 0)
+                        opts_str += "-" + std::string(1, static_cast<char>(item->short_name));
+                    if (!opts_str.empty() && item->long_name)
+                        opts_str += ", ";
+                    if (item->long_name)
+                        opts_str += "--" + std::string(item->long_name);
+                    opts_str = BOLD(opts_str);
+                    
+                    if (item->has_arg == RequiredArgument || item->has_arg == OptionalArgument) {
+                        opts_str += " <" + to_uppercase(item->long_name) + "> ";
+                    }
+                    std::cout << std::left << std::setw(34) << opts_str;
+                    if (item->description != nullptr) {
+                        std::cout << wrapped(item->description, 26);
+                    }
+                    std::cout << "\n";
                 }
-                std::cout << "\n";
             }
         }
     }

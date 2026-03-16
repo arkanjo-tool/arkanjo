@@ -72,11 +72,11 @@ class SimilarFunctionFinder : public CommandBase<SimilarFunctionFinder> {
     void print_similar_functions();
 
   public:
-    COMMAND_DESCRIPTION(
-        "Search for functions using a substring match. "
-        "The provided FUNCTION_NAME parameter is compared against all "
-        "detected function names, and any function containing the given "
-        "substring will be included in the results.")
+    static constexpr CliOption options_[] = {
+        {"function_name", 0, PositionalArgument, "The provided FUNCTION_NAME parameter is compared against all detected function names, and any function containing the given substring will be included in the results."},
+        OPTION_END
+    };
+    COMMAND_DESCRIPTION("Search for functions using a substring match.")
 
     /**
      * @brief Constructs finder and initiates search

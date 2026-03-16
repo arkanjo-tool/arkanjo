@@ -169,3 +169,11 @@ std::ostream& operator<<(std::ostream& os, const Wrapped& w) {
     }
     return os;
 }
+
+std::string to_uppercase(const std::string input) {
+    std::string output = input;
+    for (char &c : output) {
+        c = std::toupper((unsigned char) c);
+    }
+    return output;
+}

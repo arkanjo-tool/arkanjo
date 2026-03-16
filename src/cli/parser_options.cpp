@@ -7,6 +7,8 @@ option* build_longopts(const std::vector<CliOption>& options) {
     option* opts = new option[n + 1];
 
     for (size_t i = 0; i < n; ++i) {
+        if (options[i].has_arg == PositionalArgument) continue;
+        
         opts[i].name = options[i].long_name;
         opts[i].has_arg = options[i].has_arg;
         opts[i].flag = nullptr;

@@ -85,6 +85,12 @@ class RandomSelector : public CommandBase<RandomSelector> {
     void print_path_pairs(vector<tuple<double, Path, Path>> path_pairs);
 
   public:
+    static constexpr CliOption options_[] = {
+        {"minimum_similarity", 0, PositionalArgument, nullptr},
+        {"maximum_similarity", 0, PositionalArgument, nullptr},
+        {"maximum_quantity", 0, PositionalArgument, nullptr},
+        OPTION_END
+    };
     COMMAND_DESCRIPTION(
         "Select random pairs of functions within a specified similarity range. "
         "The provided MIN_SIMILARITY and MAX_SIMILARITY parameters define the "
