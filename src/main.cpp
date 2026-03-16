@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
     try {
         orchestrator.run_pipeline(ctx);
     } catch (const CommandNotFoundError& e) {
-        std::make_unique<Help>()->do_run(ctx.options);
+        std::make_unique<Help>()->do_run(ctx.command_name, ctx.options);
         return 1;
     } catch (const CLIError& e) {
         std::cerr << e.what() << "\n";

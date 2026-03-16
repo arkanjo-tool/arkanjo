@@ -3,6 +3,8 @@
 #include <arkanjo/commands/command.hpp>
 #include <arkanjo/utils/utils.hpp>
 #include <arkanjo/cli/formatter.hpp>
+#include <arkanjo/base/config.hpp>
+#include <algorithm> 
 
 #define COMMAND_DESCRIPTION(str)                    \
     std::string_view description() const override { \
@@ -20,7 +22,9 @@ template <typename Derived>
 class CommandBase : public ICommand {
 
   public:
-    virtual void print_help() const {
+    virtual void print_help(const std::string command_name) const {
+        constexpr int OPTION_WIDTH = 26;
+
         std::string s(description());
         std::cout << wrapped(s, 0) << "\n";
         
@@ -34,6 +38,12 @@ class CommandBase : public ICommand {
                 }
             }
 
+            std::cout << BOLD(UNDERLINE("Usage:")) << " " 
+                      << Config::config().program_name << " " 
+                      << command_name
+                      << (!vector_options.empty() ? " [OPTIONS]" : "") 
+                      << (!vector_arguments.empty() ? " [ARGUMENTS]" : "") << "\n\n";
+
             if (!vector_arguments.empty()) {
                 std::cout << BOLD(UNDERLINE("Arguments:")) << "\n";
 
@@ -42,9 +52,9 @@ class CommandBase : public ICommand {
                     opts_str += "<";
                     opts_str += to_uppercase(item->long_name);
                     opts_str += ">";
-                    std::cout << std::left << std::setw(26) << opts_str;
+                    std::cout << std::left << std::setw(OPTION_WIDTH) << opts_str;
                     if (item->description != nullptr) {
-                        std::cout << wrapped(item->description, 26);
+                        std::cout << wrapped(item->description, OPTION_WIDTH);
                     }
                     std::cout << "\n";
                 }
@@ -53,6 +63,10 @@ class CommandBase : public ICommand {
             if (!vector_arguments.empty() && !vector_options.empty()) std::cout << "\n";
 
             if (!vector_options.empty()) {
+                std::sort(vector_options.begin(), vector_options.end(), [](const CliOption* a, const CliOption* b) {
+                    return std::string_view(a->long_name) < std::string_view(b->long_name);
+                });
+
                 std::cout << BOLD(UNDERLINE("Options:")) << "\n";
 
                 for (const auto& item : vector_options) {
@@ -68,9 +82,9 @@ class CommandBase : public ICommand {
                     if (item->has_arg == RequiredArgument || item->has_arg == OptionalArgument) {
                         opts_str += " <" + to_uppercase(item->long_name) + "> ";
                     }
-                    std::cout << std::left << std::setw(34) << opts_str;
+                    std::cout << std::left << std::setw(OPTION_WIDTH + 8) << opts_str;
                     if (item->description != nullptr) {
-                        std::cout << wrapped(item->description, 26);
+                        std::cout << wrapped(item->description, OPTION_WIDTH);
                     }
                     std::cout << "\n";
                 }
@@ -86,9 +100,9 @@ class CommandBase : public ICommand {
         }
     }
 
-    bool do_run(const ParsedOptions& options) {
+    bool do_run(const std::string command_name, const ParsedOptions& options) {
         if (options.args.count("help") > 0) {
-            print_help();
+            print_help(command_name);
             return true;
         }
         return run(options);

@@ -38,5 +38,5 @@ class ICommand {
      * @return True if the execution is successful, false if an error occurs.
      */
     virtual bool run(const ParsedOptions& options) = 0;
-    virtual bool do_run(const ParsedOptions& options) = 0;
+    virtual bool do_run(const std::string command_name, const ParsedOptions& options) = 0;
 };

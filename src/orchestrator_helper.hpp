@@ -84,7 +84,7 @@ inline Step similarity_step(Similarity_Table& table) {
 
 inline Step command_run_step(std::shared_ptr<ICommand> command) {
     return [cmd = std::move(command)](Context& ctx) mutable {
-        return cmd->validate(ctx.options) && cmd->do_run(ctx.options);
+        return cmd->validate(ctx.options) && cmd->do_run(ctx.command_name, ctx.options);
     };
 }
 } // namespace OrchestratorHelper
