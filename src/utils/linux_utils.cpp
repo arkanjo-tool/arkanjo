@@ -1,6 +1,7 @@
 #include "linux_utils.hpp"
 
 #include <sys/utsname.h>
+#include <tuple>
 
 int UtilsOSDependable::convert_16_bit_to_8_bit(const std::string& hex16) {
     try {
