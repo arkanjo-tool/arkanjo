@@ -36,3 +36,11 @@ jobs:
 
     - name: Build
       run: cmake --build build --config ${{ matrix.build_type }}
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v6
+      with:
+        name: arkanjo-cli-${{ matrix.os }}
+        path: |
+          build/**/arkanjo*
+          build/**/arkanjo-preprocessor*
