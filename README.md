@@ -52,10 +52,13 @@ cd arkanjo
 Build the binary:
 
 ```sh
-make [install] # optionally install globally
+mkdir build
+cd build
+
+cmake --build . --target install
 ```
 
-The binaries will be generated in the `bin/` directory.
+The binaries will be generated in the `build/` directory.
 
 # How to Run
 
