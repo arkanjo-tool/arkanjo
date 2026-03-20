@@ -52,30 +52,30 @@ std::tuple<int, int, int> UtilsOSDependable::parse_terminal_color_response() {
     // Parse RGB from response
     size_t start = response.find("rgb:");
     if (start == std::string::npos)
-        return false;
+        return {0,0,0};
     start += 4;
 
     size_t end = response.find("/", start);
     if (end == std::string::npos)
-        return false;
+        return {0,0,0};
     std::string rStr = response.substr(start, end - start);
 
     start = end + 1;
     end = response.find("/", start);
     if (end == std::string::npos)
-        return false;
+        return {0,0,0};
     std::string gStr = response.substr(start, end - start);
 
     start = end + 1;
     end = response.find("\x1b", start);
     if (end == std::string::npos)
-        return false;
+        return {0,0,0};
     std::string bStr = response.substr(start, end - start);
 
     try {
-        r = std::stoi(rStr, nullptr, 16) / 256;
-        g = std::stoi(gStr, nullptr, 16) / 256;
-        b = std::stoi(bStr, nullptr, 16) / 256;
+        auto r = std::stoi(rStr, nullptr, 16) / 256;
+        auto g = std::stoi(gStr, nullptr, 16) / 256;
+        auto b = std::stoi(bStr, nullptr, 16) / 256;
         return {r, g, b};
     } catch (...) {
         return {0, 0, 0};

@@ -367,7 +367,7 @@ fs::path FunctionBreakerC::file_path_from_folder_path(const fs::path& file_path,
 
 void FunctionBreakerC::file_breaker_c(const fs::path& file_path, const fs::path& folder_path) {
     const fs::path& relative_path = file_path_from_folder_path(file_path, folder_path);
-    file_content = Utils::read_file_generic(file_path.string());
+    file_content = Utils::read_file_generic(file_path);
     mask_valid = build_mask_valid_code();
 
     set<array<int, 4>> start_end_of_functions = find_start_end_of_brackets_of_given_depth();

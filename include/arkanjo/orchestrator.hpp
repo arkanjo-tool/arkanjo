@@ -12,8 +12,6 @@
 
 #pragma once
 
-#include <bits/stdc++.h>
-
 #include <arkanjo/base/function.hpp>
 #include <arkanjo/base/path.hpp>
 
