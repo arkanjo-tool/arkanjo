@@ -113,6 +113,9 @@ if(ENABLE_TESTS)
     )
 
     add_test(NAME run_tests COMMAND arkanjo-test)
+    set_tests_properties(run_tests PROPERTIES
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    )
 endif()
 
 install(TARGETS arkanjo arkanjo-preprocessor
