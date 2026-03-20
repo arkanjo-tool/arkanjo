@@ -42,5 +42,5 @@ jobs:
       with:
         name: arkanjo-cli-${{ matrix.os }}
         path: |
-          build/**/arkanjo*
-          build/**/arkanjo-preprocessor*
+          build/arkanjo
+          build/arkanjo-preprocessor
