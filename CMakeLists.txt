@@ -121,9 +121,9 @@ endif()
 install(TARGETS arkanjo arkanjo-preprocessor
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
-install(DIRECTORY include/
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
+#install(DIRECTORY include/
+#    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+#)
 install(DIRECTORY third-party/
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/arkanjo/third-party
 )

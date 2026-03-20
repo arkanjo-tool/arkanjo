@@ -55,7 +55,8 @@ Build the binary:
 mkdir build
 cd build
 
-cmake --build . --target install
+cmake ..
+cmake --build .
 ```
 
 The binaries will be generated in the `build/` directory.
