@@ -8,7 +8,7 @@
 #include "apple_utils.hpp"
 #endif
 
-void Utils::ensure_file_is_open(const std::ifstream& file, const std::string& file_name) {
+void Utils::ensure_file_is_open(const std::ifstream& file, const fs::path& file_name) {
     if (!file.is_open()) {
         std::cout << "Attempted to open file: " << file_name << " ";
         std::cout << "but a Error ocurred. Check if the file exist." << "\n";
@@ -16,11 +16,11 @@ void Utils::ensure_file_is_open(const std::ifstream& file, const std::string& fi
     }
 }
 
-std::vector<std::string> Utils::read_file_generic(const std::string& string_path) {
+std::vector<std::string> Utils::read_file_generic(const fs::path& string_path) {
     std::ifstream filein;
     std::string line;
     std::vector<std::string> ret;
-    filein.open(string_path);
+    filein.open(string_path.string());
     ensure_file_is_open(filein, string_path);
     while (getline(filein, line)) {
         ret.push_back(line);
@@ -40,28 +40,12 @@ void Utils::write_file_generic(const fs::path& file_path, const std::vector<std:
     fileout.close();
 }
 
-json Utils::read_json(const std::string& string_path) {
-    std::ifstream json_file(string_path, std::ifstream::binary);
+json Utils::read_json(const fs::path& string_path) {
+    std::ifstream json_file(string_path.string(), std::ifstream::binary);
     ensure_file_is_open(json_file, string_path);
     json j_read;
     json_file >> j_read;
     return j_read;
-}
-
-bool Utils::does_file_exist(const std::string& file_path) {
-    if (FILE* file = fopen(file_path.c_str(), "r")) {
-        fclose(file);
-        return true;
-    } else {
-        return false;
-    }
-}
-
-bool Utils::is_regular_file(const std::string& path) {
-    struct stat path_stat;
-    auto path_c_str = path.c_str();
-    stat(path_c_str, &path_stat);
-    return S_ISREG(path_stat.st_mode);
 }
 
 std::string Utils::format_colored_message(const std::string& message, COLOR color) {

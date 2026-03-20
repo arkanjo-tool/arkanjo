@@ -12,9 +12,9 @@ DuplicationFinderDiff::DuplicationFinderDiff(const fs::path& base_path_, double 
 vector<string> DuplicationFinderDiff::find_files(const fs::path& folder_path) {
     vector<string> file_paths;
     for (const auto& dirEntry : std::filesystem::recursive_directory_iterator(folder_path)) {
-        string file_path = dirEntry.path().string();
-        if (Utils::does_file_exist(file_path) && Utils::is_regular_file(file_path)) {
-            file_paths.push_back(file_path);
+        fs::path file_path = dirEntry.path();
+        if (std::filesystem::exists(file_path) && std::filesystem::is_regular_file(file_path)) {
+            file_paths.push_back(file_path.string());
         }
     }
     return file_paths;

@@ -271,7 +271,7 @@ fs::path FunctionBreakerJava::file_path_from_folder_path(const fs::path& file_pa
 
 void FunctionBreakerJava::file_breaker_java(const fs::path& file_path, const fs::path& folder_path) {
     fs::path relative_path = file_path_from_folder_path(file_path, folder_path);
-    vector<string> file_content = Utils::read_file_generic(file_path.string());
+    vector<string> file_content = Utils::read_file_generic(file_path);
     set<pair<int, int>> start_end_of_functions = find_start_end_of_brackets_of_given_depth(file_content, JAVA_RELEVANT_DEPTH);
 
     for (auto [start_line, end_line] : start_end_of_functions) {

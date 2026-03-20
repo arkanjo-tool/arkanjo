@@ -82,7 +82,7 @@ void Preprocessor::preprocess(const fs::path& path, double similarity, bool use_
 
 Preprocessor::Preprocessor(bool force_preprocess) {
     fs::path base_path = Config::config().base_path;
-    if (force_preprocess || !Utils::does_file_exist(base_path / CONFIG_PATH)) {
+    if (force_preprocess || !std::filesystem::exists(base_path / CONFIG_PATH)) {
         auto [path, similarity, use_duplication_finder_by_tool] = read_parameters();
         preprocess(path, similarity, use_duplication_finder_by_tool);
     }
@@ -90,7 +90,7 @@ Preprocessor::Preprocessor(bool force_preprocess) {
 
 Preprocessor::Preprocessor(bool force_preprocess, const fs::path& path, double similarity) {
     fs::path base_path = Config::config().base_path;
-    if (force_preprocess || !Utils::does_file_exist(base_path / CONFIG_PATH)) {
+    if (force_preprocess || !std::filesystem::exists(base_path / CONFIG_PATH)) {
         preprocess(path, similarity, true);
     }
 }

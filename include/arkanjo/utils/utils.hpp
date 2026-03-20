@@ -123,14 +123,14 @@ enum COLOR {
  * @param file Reference to the input file stream to check
  * @param file_name Name/path of the file being opened (for error message)
  */
-void ensure_file_is_open(const std::ifstream& file, const std::string& file_name);
+void ensure_file_is_open(const std::ifstream& file, const fs::path& file_name);
 
 /**
  * @brief Reads a file line by line into a vector of strings
  * @param string_path Path to the file to read
  * @return vector<string> Contents of the file as a vector of strings
  */
-std::vector<std::string> read_file_generic(const std::string& string_path);
+std::vector<std::string> read_file_generic(const fs::path& string_path);
 
 /**
  * @brief Writes content to a file at specified path
@@ -144,21 +144,7 @@ void write_file_generic(const fs::path& file_path, const std::vector<std::string
  * @param string_path Path to the JSON file
  * @return json Parsed JSON content
  */
-json read_json(const std::string& string_path);
-
-/**
- * @brief Checks if a file exists at the given path
- * @param file_path Path to check
- * @return bool True if file exists and is accessible, false otherwise
- */
-bool does_file_exist(const std::string& file_path);
-
-/**
- * @brief Determines if a path refers to a regular file
- * @param path Path to check
- * @return bool True if path is a regular file, false otherwise
- */
-bool is_regular_file(const std::string& path);
+json read_json(const fs::path& string_path);
 
 /**
  * @brief Formats a message with ANSI color codes
