@@ -4,6 +4,7 @@
 #include <TargetConditionals.h>
 
 std::tuple<int, int, int> UtilsOSDependable::parse_terminal_color_response() {
+    return {0, 0, 0};
 }
 
 float UtilsOSDependable::get_terminal_bg_color_luminance() {
