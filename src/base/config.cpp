@@ -1,4 +1,5 @@
 #include <arkanjo/base/config.hpp>
+#include <arkanjo/utils/utils.hpp>
 #include <iostream>
 
 void Config::setTestConfig() {
@@ -6,6 +7,7 @@ void Config::setTestConfig() {
 }
 
 void Config::setDefaultConfig() {
+    // BASE PATH
     const char* cache_env = std::getenv("XDG_CACHE_HOME");
     const char* home = std::getenv("HOME");
 
@@ -16,6 +18,11 @@ void Config::setDefaultConfig() {
     } else {
         std::cerr << "Warning: neither XDG_CACHE_HOME nor HOME is set. Using default path.\n";
     }
+
+    // THEME
+    theme = UtilsOSDependable::is_bg_color_dark()
+        ? config::Theme::Dark
+        : config::Theme::Light;
 }
 
 Config& Config::config() {

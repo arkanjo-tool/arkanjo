@@ -15,6 +15,9 @@
 
 #include <string>
 #include <filesystem>
+
+#include <arkanjo/base/config_types.hpp>
+
 namespace fs = std::filesystem;
 
 #ifndef THIRD_PARTY_DIR
@@ -38,6 +41,7 @@ class Config {
     std::string program_name{"arkanjo"}; ///< Name of the program
     fs::path base_path{"tmp/arkanjo"}; ///< Default base path for temporary files
     fs::path third_party_dir{THIRD_PARTY_DIR}; ///< Directory containing third-party dependencies
+    config::Theme theme{config::Theme::Dark}; ///< Current terminal theme
     
     /**
      * @brief Deleted copy constructor

@@ -1,5 +1,7 @@
 #include <arkanjo/utils/utils.hpp>
 
+#include <arkanjo/base/config.hpp>
+
 void Utils::ensure_file_is_open(const std::ifstream& file, const fs::path& file_name) {
     if (!file.is_open()) {
         std::cout << "Attempted to open file: " << file_name << " ";
@@ -41,7 +43,7 @@ json Utils::read_json(const fs::path& string_path) {
 }
 
 std::string Utils::format_colored_message(const std::string& message, COLOR color) {
-    if (UtilsOSDependable::is_bg_color_dark()) {
+    if (Config::config().theme == config::Theme::Dark) {
         return COLOR_TOKENS_UTILS_DARK[color] + message + COLOR_TOKENS_UTILS_DARK[RESET];
     } else {
         return COLOR_TOKENS_UTILS_LIGTH[color] + message + COLOR_TOKENS_UTILS_LIGTH[RESET];
