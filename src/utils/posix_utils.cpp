@@ -1,9 +1,12 @@
-#include "linux_utils.hpp"
+#include <arkanjo/utils/os_utils.hpp>
 
+#include <termios.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
 #include <sys/utsname.h>
 #include <tuple>
 
-int UtilsOSDependable::convert_16_bit_to_8_bit(const std::string& hex16) {
+int convert_16_bit_to_8_bit(const std::string& hex16) {
     try {
         unsigned long value = std::stoul(hex16, nullptr, 16);
         return static_cast<int>(value / 256);

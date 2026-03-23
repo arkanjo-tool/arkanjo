@@ -1,13 +1,5 @@
 #include <arkanjo/utils/utils.hpp>
 
-#ifdef _WIN32
-#include "windows_utils.hpp"
-#elif __linux__
-#include "linux_utils.hpp"
-#elif __APPLE__
-#include "apple_utils.hpp"
-#endif
-
 void Utils::ensure_file_is_open(const std::ifstream& file, const fs::path& file_name) {
     if (!file.is_open()) {
         std::cout << "Attempted to open file: " << file_name << " ";

@@ -38,9 +38,9 @@ add_library(core_utils
 if(WIN32)
     target_sources(core_utils PRIVATE src/utils/windows_utils.cpp)
 elseif(APPLE)
-    target_sources(core_utils PRIVATE src/utils/apple_utils.cpp)
-elseif(UNIX)
-    target_sources(core_utils PRIVATE src/utils/linux_utils.cpp)
+    target_sources(core_utils PRIVATE src/utils/posix_utils.cpp)
+else(UNIX)
+    target_sources(core_utils PRIVATE src/utils/posix_utils.cpp)
 endif()
 
 target_include_directories(core_utils PUBLIC ${ARKANJO_INCLUDE_DIRS})
