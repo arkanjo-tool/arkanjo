@@ -295,8 +295,8 @@ tuple<string, int, vector<string>> FunctionBreakerC::extract_header_related_info
     bool has_parenteses = move_pointer_until_character_outside_parenteses(line, column);
 
     string file_name = "";
-    while (column != -1) {
-        auto c = file_content[line][column];
+    while (column >= 0 && column < (int)file_content[line].size()) {
+        char c = file_content[line][column];
         if (Utils::is_special_char(c)) {
             break;
         }
@@ -307,7 +307,7 @@ tuple<string, int, vector<string>> FunctionBreakerC::extract_header_related_info
 
     move_pointer_until_character_outside_parenteses(line, column);
 
-    while (column != -1 || !Utils::is_special_char(file_content[line][column])) {
+    while (column >= 0 && column < (int)file_content[line].size() && !Utils::is_special_char(file_content[line][column])) {
         column--;
     }
     column++;
