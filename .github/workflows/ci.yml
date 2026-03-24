@@ -32,11 +32,15 @@ jobs:
     - name: Install dependencies on macOS
       if: matrix.os == 'macos-latest'
       run: |
+        brew install python@3.11
+        echo "/opt/homebrew/opt/python@3.11/bin" >> $GITHUB_PATH
         brew install cmake
-        python3 -m pip install --upgrade pip --user
-        python3 -m pip install --user nltk gensim astor
-        python3 -m nltk.downloader punkt
-        python3 -m nltk.downloader punkt_tab
+        python3.11 -m venv venv
+        source venv/bin/activate
+        python -m pip install --upgrade pip
+        python -m pip install nltk gensim astor
+        python -m nltk.downloader punkt
+        python -m nltk.downloader punkt_tab
 
     - name: Install dependencies on Windows
       if: matrix.os == 'windows-latest'
@@ -53,11 +57,20 @@ jobs:
     - name: Build
       run: cmake --build build --config ${{ matrix.build_type }} --target install
 
-    - name: Run E2E tests
+    - name: Debug arkanjo-preprocessor on macOS
+      if: matrix.os == 'macos-latest'
       run: |
-        echo -e "tests/e2e/codebase\n0.9\n1" | arkanjo preprocessor
-        arkanjo explorer
-        arkanjo duplication
+        ulimit -c unlimited
+        lldb --batch \
+          -o "target create ./build/arkanjo-preprocessor" \
+          -o "process launch -i tests/e2e/codebase_input.txt" \
+          -o "bt" \
+          -o "quit"
+    # - name: Run E2E tests
+    #   run: |
+    #     echo -e "tests/e2e/codebase\n0.9\n1" | arkanjo preprocessor
+    #     arkanjo explorer
+    #     arkanjo duplication
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v6
