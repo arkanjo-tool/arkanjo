@@ -29,7 +29,6 @@ namespace fs = std::filesystem;
  */
 class FunctionBreakerJava {
     const int NUMBER_OF_LINES_BEFORE_FOR_FUNCTION_NAME = 7; ///< Lookback range for method name detection
-    const int C_RELEVANT_DEPTH = 0;                         ///< Base bracket depth for scope detection
     const int JAVA_RELEVANT_DEPTH = 1;                      ///< Java-specific bracket depth for methods
     const bool IGNORE_EMPTY_FUNCTIONS = true;               ///< Whether to skip empty method bodies
     const bool ALLOW_STRUCTS = false;                       ///< Whether to process class/struct definitions

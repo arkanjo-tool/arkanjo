@@ -19,7 +19,7 @@ class Help : public CommandBase<Help> {
   public:
     COMMAND_DESCRIPTION("Help")
 
-    bool validate(const ParsedOptions& options);
+    bool validate(const ParsedOptions& options) override;
 
     /**
      * @brief Displays help information about available commands

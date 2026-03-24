@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
     orchestrator.add_step(OrchestratorHelper::setup_command_step(command, similarity_table));
 
     OptionsCollector collector;
-    orchestrator.add_step([&command, &collector](Context& ctx) {
+    orchestrator.add_step([&command, &collector](Context&) {
         if (!command)
             return false;
 

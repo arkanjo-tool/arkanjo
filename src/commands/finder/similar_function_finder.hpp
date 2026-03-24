@@ -85,7 +85,7 @@ class SimilarFunctionFinder : public CommandBase<SimilarFunctionFinder> {
      */
     explicit SimilarFunctionFinder(Similarity_Table* _similarity_table);
 
-    bool validate(const ParsedOptions& options);
+    bool validate(const ParsedOptions& options) override;
 
     /**
      * @brief Handles similar function finding command

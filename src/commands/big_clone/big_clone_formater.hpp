@@ -73,7 +73,7 @@ class BigCloneFormater : public CommandBase<BigCloneFormater> {
      */
     explicit BigCloneFormater(Similarity_Table* _similarity_table);
 
-    bool validate(const ParsedOptions& options);
+    bool validate(const ParsedOptions& options) override;
 
     /**
      * @brief Handles BigCloneEval formatting command

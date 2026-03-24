@@ -140,7 +140,7 @@ class BigCloneTailorEvaluator : public CommandBase<BigCloneTailorEvaluator> {
      */
     explicit BigCloneTailorEvaluator(Similarity_Table* _similarity_table);
 
-    bool validate(const ParsedOptions& options);
+    bool validate(const ParsedOptions& options) override;
 
     /**
      * @brief Handles BigCloneBench evaluation command

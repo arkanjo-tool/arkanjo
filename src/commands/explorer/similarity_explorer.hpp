@@ -52,7 +52,7 @@ class SimilarityExplorer : public CommandBase<SimilarityExplorer> {
      */
     explicit SimilarityExplorer(Similarity_Table* _similarity_table);
 
-    bool validate(const ParsedOptions& options);
+    bool validate(const ParsedOptions& options) override;
 
     /**
      * @brief Handles code exploration command
@@ -74,7 +74,6 @@ class SimilarityExplorer : public CommandBase<SimilarityExplorer> {
     bool both_path_need_to_match_pattern;              ///< Whether both paths must match pattern
     bool sorted_by_number_of_duplicated_code;          ///< Whether to sort by line count
     int processed_results = INITIAL_PROCESSED_RESULTS; ///< Counter for processed results
-    bool help_option;
 
     /**
      * @brief Chooses text color for output

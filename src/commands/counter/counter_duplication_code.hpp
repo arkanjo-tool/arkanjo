@@ -84,7 +84,7 @@ class CounterDuplicationCode : public CommandBase<CounterDuplicationCode> {
      */
     explicit CounterDuplicationCode(Similarity_Table* _similarity_table);
 
-    bool validate(const ParsedOptions& options);
+    bool validate(const ParsedOptions& options) override;
 
     /**
      * @brief Handles duplication analysis command

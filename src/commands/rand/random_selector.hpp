@@ -106,7 +106,7 @@ class RandomSelector : public CommandBase<RandomSelector> {
      */
     explicit RandomSelector(Similarity_Table* _similarity_table);
 
-    bool validate(const ParsedOptions& options);
+    bool validate(const ParsedOptions& options) override;
 
     /**
      * @brief Handles random selection command
