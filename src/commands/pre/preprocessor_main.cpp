@@ -1,7 +1,7 @@
 // As preprocessor is, in the moment, separated from orchestrator
 // we define a main function to use it.
 
-#include "preprocessor.hpp"
+#include "build/preprocessor.hpp"
 #include "../help/help.hpp"
 #include <cassert>
 #include <filesystem>
@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
 
     static const std::unordered_map<std::string,
         std::function<std::unique_ptr<ICommand>()>> internal_commands = {
-        {"run", [&]() { return std::make_unique<Preprocessor>(); }}
+        {"build", [&]() { return std::make_unique<Preprocessor>(); }}
     };
 
     std::unique_ptr<ICommand> command;

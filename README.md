@@ -70,7 +70,7 @@ The tool is designed with **heavy preprocessing**, which enables it to answer di
 To perform the preprocessing, execute the preprocessor:
 
 ```sh
-arkanjo-preprocessor run
+arkanjo-preprocessor build
 ```
 
 * The preprocessor will ask for the complete path to the codebase you want to analyze and the desired similarity threshold. 

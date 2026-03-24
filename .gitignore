@@ -79,7 +79,7 @@ assets
 #Visual Code configurations
 .vscode
 
-build/
+build/**
 
 CMakeLists.txt.user
 CMakeCache.txt

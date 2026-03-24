@@ -6,6 +6,7 @@
 #include <arkanjo/orchestrator_helper.hpp>
 #include <arkanjo/orchestrator.hpp>
 #include "orchestrator_commands.hpp"
+#include "commands/pre/build/preprocessor.hpp"
 
 int main(int argc, char* argv[]) {
     auto& cfg = Config::config();

@@ -56,7 +56,7 @@ jobs:
     - name: Run E2E tests
       run: |
         source venv/bin/activate || call venv\Scripts\activate
-        echo -e "tests/e2e/codebase\n0.9\n1" | arkanjo preprocessor
+        echo -e "tests/e2e/codebase\n0.9\n1" | arkanjo preprocessor build
         arkanjo explorer
         arkanjo duplication
 

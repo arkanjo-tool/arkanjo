@@ -9,7 +9,6 @@
 #include "commands/explorer/similarity_explorer.hpp"
 #include "commands/finder/similar_function_finder.hpp"
 #include "commands/help/help.hpp"
-#include "commands/pre/preprocessor.hpp"
 #include "commands/rand/random_selector.hpp"
 
 namespace OrchestratorCommands {
