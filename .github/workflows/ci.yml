@@ -24,20 +24,40 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y cmake build-essential
+        python3 -m pip install --upgrade pip --user
+        python3 -m pip install --user nltk gensim astor
+        python3 -m nltk.downloader punkt
+        python3 -m nltk.downloader punkt_tab
 
     - name: Install dependencies on macOS
       if: matrix.os == 'macos-latest'
-      run: brew install cmake
+      run: |
+        brew install cmake
+        python3 -m pip install --upgrade pip --user
+        python3 -m pip install --user nltk gensim astor
+        python3 -m nltk.downloader punkt
+        python3 -m nltk.downloader punkt_tab
 
     - name: Install dependencies on Windows
       if: matrix.os == 'windows-latest'
-      run: choco install cmake -y
+      run: |
+        choco install cmake -y
+        py -3 -m pip install --upgrade pip --user
+        py -3 -m pip install --user nltk gensim astor
+        py -3 -m nltk.downloader punkt
+        py -3 -m nltk.downloader punkt_tab
 
     - name: Configure CMake
-      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DCMAKE_INSTALL_PREFIX=$HOME/.local
 
     - name: Build
-      run: cmake --build build --config ${{ matrix.build_type }}
+      run: cmake --build build --config ${{ matrix.build_type }} --target install
+
+    - name: Run E2E tests
+      run: |
+        echo -e "tests/e2e/codebase\n0.9\n1" | arkanjo preprocessor
+        arkanjo explorer
+        arkanjo duplication
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v6

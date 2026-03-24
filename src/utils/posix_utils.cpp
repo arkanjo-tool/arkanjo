@@ -79,7 +79,7 @@ std::string UtilsOSDependable::capture_terminal_response() {
 }
 
 float UtilsOSDependable::get_terminal_bg_color_luminance() {
-    if (!isatty(STDOUT_FILENO)) {
+    if (!isatty(fileno(stdout)) || !isatty(fileno(stdin))) {
         return 0;
     }
 
