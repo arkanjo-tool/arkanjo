@@ -5,6 +5,7 @@
 
 #ifdef _WIN32
 #include <windows.h>
+#include <process.h>
 
 #ifndef ENABLE_VIRTUAL_TERMINAL_PROCESSING
 #define ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004
@@ -91,6 +92,10 @@ float UtilsOSDependable::get_terminal_bg_color_luminance() {
 
 bool UtilsOSDependable::is_bg_color_dark() {
     return get_terminal_bg_color_luminance() <= 0.5;
+}
+
+int UtilsOSDependable::run_process(const char* cmd, char* const argv[]) {
+    return _spawnvp(_P_OVERLAY, cmd, argv);
 }
 
 #endif

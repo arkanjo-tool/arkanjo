@@ -45,8 +45,12 @@ inline Step setup_command_step(std::unique_ptr<ICommand>& command, Similarity_Ta
             command = std::make_unique<BigCloneTailorEvaluator>(&table);
         else if (ctx.command_name == "help")
             command = std::make_unique<Help>();
-        else
+        else {
+            std::string external_cmd = Config::config().program_name + "-" + ctx.command_name;
+            UtilsOSDependable::run_process(external_cmd.c_str(), ctx.argv);
+
             throw CommandNotFoundError(ctx.command_name);
+        }
 
         return true;
     };

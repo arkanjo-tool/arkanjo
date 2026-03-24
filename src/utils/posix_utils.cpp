@@ -93,3 +93,8 @@ float UtilsOSDependable::get_terminal_bg_color_luminance() {
 bool UtilsOSDependable::is_bg_color_dark() {
     return get_terminal_bg_color_luminance() <= 0.5;
 }
+
+int UtilsOSDependable::run_process(const char* cmd, char* const argv[]) {
+    execvp(cmd, argv);
+    return -1;
+}

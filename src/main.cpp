@@ -19,6 +19,9 @@ int main(int argc, char* argv[]) {
 
     ctx.command_name = (argc > 1) ? argv[1] : DEFAULT_COMMAND;
 
+    ctx.argc = argc;
+    ctx.argv = argv;
+
     std::unique_ptr<ICommand> command;
     orchestrator.add_step(OrchestratorHelper::setup_command_step(command, similarity_table));
 

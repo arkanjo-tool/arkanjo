@@ -53,4 +53,21 @@ public:
      * @note Uses get_terminal_bg_color_luminance() internally
      */
     static bool is_bg_color_dark();
+
+    /**
+     * @brief Executes an external program, replacing the current process (exec-style).
+     *
+     * This function launches an external command using the given executable name
+     * and argument list. 
+     *
+     * @param cmd   Name of the executable (e.g., "git", "ls")
+     * @param argv  Argument vector in C-style format (null-terminated).
+     *              Example: {"git", "status", nullptr}
+     *
+     * @return int  Returns only on failure (e.g., -1). On success, does not return (POSIX).
+     *
+     * @note
+     * - The command is searched in the system PATH.
+     */
+    static int run_process(const char* cmd, char* const argv[]);
 }; // UtilsOSDependable

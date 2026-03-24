@@ -24,6 +24,9 @@ struct Context {
     std::string command_name;
     ParsedOptions options;
     std::vector<std::string> extra_args;
+
+    int argc;
+    char** argv;
 };
 
 using Step = std::function<bool(Context&)>;
