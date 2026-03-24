@@ -4,8 +4,8 @@
 
 void Utils::ensure_file_is_open(const std::ifstream& file, const fs::path& file_name) {
     if (!file.is_open()) {
-        std::cout << "Attempted to open file: " << file_name << " ";
-        std::cout << "but a Error ocurred. Check if the file exist." << "\n";
+        std::cerr << "Attempted to open file: " << file_name << " ";
+        std::cerr << "but a Error ocurred. Check if the file exist." << "\n";
         exit(0);
     }
 }
@@ -14,7 +14,7 @@ std::vector<std::string> Utils::read_file_generic(const fs::path& string_path) {
     std::ifstream filein;
     std::string line;
     std::vector<std::string> ret;
-    filein.open(string_path.string());
+    filein.open(string_path);
     ensure_file_is_open(filein, string_path);
     while (getline(filein, line)) {
         ret.push_back(line);
@@ -61,19 +61,8 @@ bool Utils::is_empty_char(char c) {
 }
 
 bool Utils::is_special_char(char c) {
-    if (c >= 'a' && c <= 'z') {
-        return false;
-    }
-    if (c >= 'A' && c <= 'Z') {
-        return false;
-    }
-    if (c >= '0' && c <= '9') {
-        return false;
-    }
-    if (c == '_') {
-        return false;
-    }
-    return true;
+    unsigned char uc = static_cast<unsigned char>(c);
+    return !(std::isalnum(uc) || c == '_');
 }
 
 std::vector<std::string> Utils::split_string(const std::string& s, char delimiter) {
