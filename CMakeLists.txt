@@ -62,7 +62,6 @@ target_link_libraries(core_cli PUBLIC core_base core_utils)
 
 add_executable(arkanjo
     src/main.cpp
-    src/orchestrator_helper.hpp
 )
 target_link_libraries(arkanjo PRIVATE core_base core_utils core_commands core_cli)
 

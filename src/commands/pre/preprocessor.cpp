@@ -80,6 +80,8 @@ void Preprocessor::preprocess(const fs::path& path, double similarity, bool use_
     cout << END_MESSAGE << '\n';
 }
 
+Preprocessor::Preprocessor() { }
+
 Preprocessor::Preprocessor(bool force_preprocess) {
     fs::path base_path = Config::config().base_path;
     if (force_preprocess || !std::filesystem::exists(base_path / CONFIG_PATH)) {
@@ -93,4 +95,16 @@ Preprocessor::Preprocessor(bool force_preprocess, const fs::path& path, double s
     if (force_preprocess || !std::filesystem::exists(base_path / CONFIG_PATH)) {
         preprocess(path, similarity, true);
     }
+}
+
+bool Preprocessor::validate([[maybe_unused]] const ParsedOptions& options) {
+    return true;
+}
+
+bool Preprocessor::run([[maybe_unused]] const ParsedOptions& options) {
+    fs::path base_path = Config::config().base_path;
+    auto [path, similarity, use_duplication_finder_by_tool] = read_parameters();
+    preprocess(path, similarity, use_duplication_finder_by_tool);
+
+    return true;
 }

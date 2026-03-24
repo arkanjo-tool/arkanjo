@@ -16,8 +16,21 @@
 #include <arkanjo/commands/command_base.hpp>
 
 class Help : public CommandBase<Help> {
+  private:
+    const std::unordered_map<std::string, std::function<std::unique_ptr<ICommand>()>> internal_commands;
+    const std::string command_name{""};
+
   public:
     COMMAND_DESCRIPTION("Help")
+
+    explicit Help(
+      const std::unordered_map<std::string, std::function<std::unique_ptr<ICommand>()>>& commands
+    );
+
+    explicit Help(
+      const std::unordered_map<std::string, std::function<std::unique_ptr<ICommand>()>>& commands,
+      const std::string command_name
+    );
 
     bool validate(const ParsedOptions& options) override;
 

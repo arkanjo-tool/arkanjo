@@ -17,6 +17,7 @@
 #include "function_breaker.hpp"
 #include "parser.hpp"
 #include <arkanjo/base/config.hpp>
+#include <arkanjo/commands/command_base.hpp>
 #include <string>
 #include <tuple>
 #include <filesystem>
@@ -34,7 +35,7 @@ namespace fs = std::filesystem;
  *
  * Creates the foundation for fast query responses during the main operation phase.
  */
-class Preprocessor {
+class Preprocessor : public CommandBase<Preprocessor> {
   private:
     // User interaction messages
     string PROJECT_PATH_MESSAGE = "Enter your project path:";                                  ///< Project path prompt
@@ -80,6 +81,8 @@ class Preprocessor {
     void preprocess(const fs::path& path, double similarity, bool use_duplication_finder_by_tool);
 
   public:
+    Preprocessor();
+
     /**
      * @brief Constructs preprocessor with optional forcing
      * @param force_preprocess Whether to force preprocessing even if cached results exist
@@ -94,4 +97,13 @@ class Preprocessor {
      * @note Exposed for testing purposes only
      */
     Preprocessor(bool force_preprocess, const fs::path& path, double similarity);
+
+    COMMAND_DESCRIPTION("Creates the foundation for fast query responses during the main operation phase.")
+
+    bool validate(const ParsedOptions& options) override;
+
+    /**
+     * @brief Displays help information about available commands
+     */
+    bool run(const ParsedOptions& options) override;
 };

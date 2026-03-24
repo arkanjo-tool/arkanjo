@@ -3,10 +3,9 @@
 #include <arkanjo/cli/options_collector.hpp>
 #include <arkanjo/cli/parser_options.hpp>
 
-#include "orchestrator_helper.hpp"
+#include <arkanjo/orchestrator_helper.hpp>
 #include <arkanjo/orchestrator.hpp>
-
-static constexpr const char* DEFAULT_COMMAND = "help";
+#include "orchestrator_commands.hpp"
 
 int main(int argc, char* argv[]) {
     auto& cfg = Config::config();
@@ -17,13 +16,14 @@ int main(int argc, char* argv[]) {
 
     Similarity_Table similarity_table;
 
-    ctx.command_name = (argc > 1) ? argv[1] : DEFAULT_COMMAND;
+    ctx.command_name = (argc > 1) ? argv[1] : OrchestratorHelper::DEFAULT_COMMAND;
 
     ctx.argc = argc;
     ctx.argv = argv;
 
     std::unique_ptr<ICommand> command;
-    orchestrator.add_step(OrchestratorHelper::setup_command_step(command, similarity_table));
+    auto internal_commands = OrchestratorCommands::create_internal_commands(similarity_table);
+    orchestrator.add_step(OrchestratorHelper::setup_command_step(command, internal_commands));
 
     OptionsCollector collector;
     orchestrator.add_step([&command, &collector](Context&) {
@@ -42,7 +42,11 @@ int main(int argc, char* argv[]) {
 
     orchestrator.add_step([&similarity_table, &orchestrator, &command, &collector](Context& ctx) {
         if (ctx.command_name != "help" && ctx.options.args.count("help") == 0) {
-            orchestrator.add_step(OrchestratorHelper::preprocessing_step);
+            orchestrator.add_step([](Context& ctx) {
+                bool force_pre = ctx.options.args.count("preprocessor") > 0;
+                Preprocessor pre(force_pre);
+                return true;
+            });
             orchestrator.add_step(OrchestratorHelper::similarity_step(similarity_table));
         }
 
@@ -54,7 +58,9 @@ int main(int argc, char* argv[]) {
     try {
         orchestrator.run_pipeline(ctx);
     } catch (const CommandNotFoundError& e) {
-        std::make_unique<Help>()->do_run(ctx.command_name, ctx.options);
+        if (ctx.command_name != "help" && ctx.options.args.count("help") == 0)
+            std::cerr << "Warning: '" << ctx.command_name << "' is not a " << Config::config().program_name << " command.\n";
+        std::make_unique<Help>(internal_commands)->do_run(ctx.command_name, ctx.options);
         return 1;
     } catch (const CLIError& e) {
         std::cerr << e.what() << "\n";
