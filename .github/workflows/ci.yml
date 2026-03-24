@@ -23,33 +23,29 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       run: |
         sudo apt-get update
-        sudo apt-get install -y cmake build-essential
-        python3 -m pip install --upgrade pip --user
-        python3 -m pip install --user nltk gensim astor
-        python3 -m nltk.downloader punkt
-        python3 -m nltk.downloader punkt_tab
+        sudo apt-get install -y python3-venv cmake build-essential
+        python3 -m venv venv
 
     - name: Install dependencies on macOS
       if: matrix.os == 'macos-latest'
       run: |
-        brew install python@3.11
+        brew install python@3.11 cmake
         echo "/opt/homebrew/opt/python@3.11/bin" >> $GITHUB_PATH
-        brew install cmake
         python3.11 -m venv venv
-        source venv/bin/activate
-        python -m pip install --upgrade pip
-        python -m pip install nltk gensim astor
-        python -m nltk.downloader punkt
-        python -m nltk.downloader punkt_tab
 
     - name: Install dependencies on Windows
       if: matrix.os == 'windows-latest'
       run: |
-        choco install cmake -y
-        py -3 -m pip install --upgrade pip --user
-        py -3 -m pip install --user nltk gensim astor
-        py -3 -m nltk.downloader punkt
-        py -3 -m nltk.downloader punkt_tab
+        choco install python cmake -y
+        py -3 -m venv venv
+
+    - name: Setup Python virtual environment
+      run: |
+        source venv/bin/activate || call venv\Scripts\activate
+        python -m pip install --upgrade pip
+        python -m pip install nltk gensim astor
+        python -m nltk.downloader punkt
+        python -m nltk.downloader punkt_tab
 
     - name: Configure CMake
       run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DCMAKE_INSTALL_PREFIX=$HOME/.local
@@ -57,20 +53,12 @@ jobs:
     - name: Build
       run: cmake --build build --config ${{ matrix.build_type }} --target install
 
-    - name: Debug arkanjo-preprocessor on macOS
-      if: matrix.os == 'macos-latest'
+    - name: Run E2E tests
       run: |
-        ulimit -c unlimited
-        lldb --batch \
-          -o "target create ./build/arkanjo-preprocessor" \
-          -o "process launch -i tests/e2e/codebase_input.txt" \
-          -o "bt" \
-          -o "quit"
-    # - name: Run E2E tests
-    #   run: |
-    #     echo -e "tests/e2e/codebase\n0.9\n1" | arkanjo preprocessor
-    #     arkanjo explorer
-    #     arkanjo duplication
+        source venv/bin/activate || call venv\Scripts\activate
+        echo -e "tests/e2e/codebase\n0.9\n1" | arkanjo preprocessor
+        arkanjo explorer
+        arkanjo duplication
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v6
