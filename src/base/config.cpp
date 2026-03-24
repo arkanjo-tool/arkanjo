@@ -23,6 +23,14 @@ void Config::setDefaultConfig() {
     theme = UtilsOSDependable::is_bg_color_dark()
         ? config::Theme::Dark
         : config::Theme::Light;
+
+    // THIRD PARTY
+    std::filesystem::path path = THIRD_PARTY_DIR;
+    if (std::filesystem::exists(path)) {
+        third_party_dir = path;
+    } else if (!std::filesystem::exists(third_party_dir)) {
+        throw std::runtime_error("Could not locate third-party directory");
+    }
 }
 
 Config& Config::config() {

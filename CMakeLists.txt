@@ -13,6 +13,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 if(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release CACHE STRING "" FORCE)
 endif()
+set(THIRD_PARTY_DIR "" CACHE PATH "Override for third party directory")
 
 include(GNUInstallDirs)
 
@@ -72,8 +73,18 @@ target_link_libraries(arkanjo-preprocessor PRIVATE core_base core_utils core_com
 
 add_library(project_options INTERFACE)
 
+set(THIRD_PARTY_BUILD_DIR
+    "${CMAKE_BINARY_DIR}/third-party"
+)
+
+add_custom_target(copy_third_party ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/third-party
+        ${THIRD_PARTY_BUILD_DIR}
+)
+
 target_compile_definitions(project_options INTERFACE 
-    THIRD_PARTY_DIR="${CMAKE_INSTALL_PREFIX}/lib/arkanjo/third-party"
+    THIRD_PARTY_DIR="${CMAKE_INSTALL_FULL_LIBDIR}/arkanjo/third-party"
 )
 
 target_compile_definitions(project_options INTERFACE
