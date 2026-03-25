@@ -50,7 +50,7 @@ class Orchestrator {
     void run_pipeline(Context& ctx) {
         for (current_step = 0; current_step < steps.size(); ++current_step) {
             if (!steps[current_step] || !steps[current_step](ctx)) {
-                std::cerr << "Pipeline aborted\n";
+                std::cerr << "Pipeline aborted (" << current_step << ")\n";
                 break;
             }
         }

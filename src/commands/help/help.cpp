@@ -3,11 +3,11 @@
 #include <iostream>
 
 Help::Help(
-    const std::unordered_map<std::string, std::function<std::unique_ptr<ICommand>()>>& commands)
+    const std::vector<std::pair<std::vector<std::string>, CommandsRegistry::CommandFactory>>& commands)
     : internal_commands(commands) {}
 
 Help::Help(
-    const std::unordered_map<std::string, std::function<std::unique_ptr<ICommand>()>>& commands,
+    const std::vector<std::pair<std::vector<std::string>, CommandsRegistry::CommandFactory>>& commands,
     const std::string command_name)
     : internal_commands(commands), command_name(command_name) {}
 
@@ -27,7 +27,8 @@ bool Help::run([[maybe_unused]] const ParsedOptions& options) {
     std::cout << "\n";
 
     for (const auto& [name, _] : internal_commands) {
-        std::cout << "  " << name << "\n";
+        if (name.empty()) continue;
+        std::cout << "  " << name[0] << "\n";
     }
     std::cout << "\n";
 

@@ -15,21 +15,19 @@ namespace OrchestratorCommands {
     static constexpr const char* DEFAULT_COMMAND = "help";
 
     template<typename Table>
-    using CommandMap = std::unordered_map<std::string, std::function<std::unique_ptr<ICommand>()>>;
+    using CommandMap = const std::vector<std::pair<std::vector<std::string>, CommandsRegistry::CommandFactory>>;
 
     template<typename Table>
     inline CommandMap<Table> create_internal_commands(Table& table) {
         CommandMap<Table> commands = {
-            {"explorer", [&]() { return std::make_unique<SimilarityExplorer>(&table); }},
-            {"duplication", [&]() { return std::make_unique<CounterDuplicationCode>(&table); }},
-            {"function", [&]() { return std::make_unique<SimilarFunctionFinder>(&table); }},
-            {"random", [&]() { return std::make_unique<RandomSelector>(&table); }},
-            {"bigclone-formater", [&]() { return std::make_unique<BigCloneFormater>(&table); }},
-            {"bigclone-evaluator", [&]() { return std::make_unique<BigCloneTailorEvaluator>(&table); }}
+            {{"explorer"}, [&]() { return std::make_unique<SimilarityExplorer>(&table); }},
+            {{"duplication"}, [&]() { return std::make_unique<CounterDuplicationCode>(&table); }},
+            {{"function"}, [&]() { return std::make_unique<SimilarFunctionFinder>(&table); }},
+            {{"random"}, [&]() { return std::make_unique<RandomSelector>(&table); }},
+            {{"bigclone-formater"}, [&]() { return std::make_unique<BigCloneFormater>(&table); }},
+            {{"bigclone-evaluator"}, [&]() { return std::make_unique<BigCloneTailorEvaluator>(&table); }},
+            {{"help"}, [&]() { return std::make_unique<Help>(commands); }}
         };
-
-        // Adiciona Help agora que o map existe
-        commands["help"] = [&]() { return std::make_unique<Help>(commands); };
 
         return commands;
     }

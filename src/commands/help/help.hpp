@@ -14,21 +14,22 @@
 
 #include <arkanjo/cli/cli_error.hpp>
 #include <arkanjo/commands/command_base.hpp>
+#include <arkanjo/commands/commands_registry.hpp>
 
 class Help : public CommandBase<Help> {
   private:
-    const std::unordered_map<std::string, std::function<std::unique_ptr<ICommand>()>> internal_commands;
+    const std::vector<std::pair<std::vector<std::string>, CommandsRegistry::CommandFactory>> internal_commands;
     const std::string command_name{""};
 
   public:
     COMMAND_DESCRIPTION("Help")
 
     explicit Help(
-      const std::unordered_map<std::string, std::function<std::unique_ptr<ICommand>()>>& commands
+      const std::vector<std::pair<std::vector<std::string>, CommandsRegistry::CommandFactory>>& commands
     );
 
     explicit Help(
-      const std::unordered_map<std::string, std::function<std::unique_ptr<ICommand>()>>& commands,
+      const std::vector<std::pair<std::vector<std::string>, CommandsRegistry::CommandFactory>>& commands,
       const std::string command_name
     );
 

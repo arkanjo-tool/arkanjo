@@ -9,6 +9,7 @@
 #include <arkanjo/cli/parser_options.hpp>
 #include <arkanjo/orchestrator.hpp>
 #include <arkanjo/commands/command.hpp>
+#include <arkanjo/commands/commands_registry.hpp>
 
 namespace OrchestratorHelper {
 static constexpr const char* DEFAULT_COMMAND = "help";
@@ -25,12 +26,11 @@ constexpr CliOption global_long_opts[] = {
 
 inline Step setup_command_step(
     std::unique_ptr<ICommand>& command,
-    const std::unordered_map<std::string, std::function<std::unique_ptr<ICommand>()>>& commands
+    const std::vector<std::pair<std::vector<std::string>, CommandsRegistry::CommandFactory>>& commands
 ) {
     return [&command, &commands](Context& ctx) mutable {
-        auto it = commands.find(ctx.command_name);
-        if (it != commands.end()) {
-            command = it->second();
+        command = CommandsRegistry::get_command(ctx.command_name, commands);
+        if (command.get() != nullptr) {
             return true;
         }
 

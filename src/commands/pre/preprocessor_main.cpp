@@ -28,10 +28,9 @@ int main(int argc, char* argv[]) {
     ctx.argc = argc;
     ctx.argv = argv;
 
-    static const std::unordered_map<std::string,
-        std::function<std::unique_ptr<ICommand>()>> internal_commands = {
-        {"build", [&]() { return std::make_unique<Preprocessor>(); }},
-        {"list", [&]() { return std::make_unique<PreprocessorList>(); }}
+    static const std::vector<std::pair<std::vector<std::string>, CommandsRegistry::CommandFactory>> internal_commands = {
+        {{"build"}, [&]() { return std::make_unique<Preprocessor>(); }},
+        {{"list", "ls"}, [&]() { return std::make_unique<PreprocessorList>(); }}
     };
 
     std::unique_ptr<ICommand> command;
