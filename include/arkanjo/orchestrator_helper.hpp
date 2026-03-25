@@ -14,6 +14,7 @@ namespace OrchestratorHelper {
 static constexpr const char* DEFAULT_COMMAND = "help";
 
 constexpr CliOption global_long_opts[] = {
+    {"name", 'n', RequiredArgument, "Assign a name to the cache container; defaults to 'default' if not provided."},
     {"color", 0, NoArgument, "Enable colored output."},
     {"no-color", 0, NoArgument, "Disable colored output."},
     {"preprocessor", 0, NoArgument, "Forces the preprocessor to execute."},

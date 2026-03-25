@@ -42,6 +42,11 @@ int main(int argc, char* argv[]) {
     orchestrator.add_step(OrchestratorHelper::formatter_step);
 
     orchestrator.add_step([&similarity_table, &orchestrator, &command, &collector](Context& ctx) {
+        auto it_name = ctx.options.args.find("name");
+        if (it_name != ctx.options.args.end()) {
+            Config::config().name_container = it_name->second;
+        }
+        
         if (ctx.command_name != "help" && ctx.options.args.count("help") == 0) {
             orchestrator.add_step([](Context& ctx) {
                 bool force_pre = ctx.options.args.count("preprocessor") > 0;

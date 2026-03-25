@@ -17,7 +17,7 @@ using namespace std;
 int main(int argc, char* argv[]) {
     auto& cfg = Config::config();
     cfg.setDefaultConfig();
-    Config::config().program_name = "arkanjo-preprocessor";
+    cfg.program_name = "arkanjo-preprocessor";
 
     Orchestrator orchestrator;
     Context ctx;

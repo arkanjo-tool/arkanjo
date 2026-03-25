@@ -17,8 +17,8 @@ std::vector<std::string> Path::split_path(const fs::path& path) {
 size_t Path::find_position_start_relative_path() const {
     size_t sz = tokens.size();
     size_t ret = sz;
-    for (size_t i = 0; i < sz - 1; i++) {
-        if (tokens[i] == BASE_INIT_STRING && tokens[i + 1] == SOURCE_STRING) {
+    for (size_t i = 1; i < sz - 1; i++) {
+        if (tokens[i - 1] == BASE_INIT_STRING && tokens[i + 1] == SOURCE_STRING) {
             ret = i + 2;
         }
     }

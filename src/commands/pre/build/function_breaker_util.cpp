@@ -8,7 +8,7 @@ string extract_extension(const fs::path& file_path) {
 
 fs::path build_source_path(const fs::path& relative_path, const string& function_name) {
     string extension = extract_extension(relative_path);
-    fs::path final_path = Config::config().base_path;
+    fs::path final_path = Config::config().base_path / Config::config().name_container;
     final_path /= SOURCE_PATH;
     final_path /= relative_path;
     final_path /= function_name + "." + extension;
@@ -17,7 +17,7 @@ fs::path build_source_path(const fs::path& relative_path, const string& function
 
 fs::path build_header_path(const fs::path& relative_path, const string& function_name) {
     string extension = extract_extension(relative_path);
-    fs::path final_path = Config::config().base_path;
+    fs::path final_path = Config::config().base_path / Config::config().name_container;
     final_path /= HEADER_PATH;
     final_path /= relative_path;
     final_path /= function_name + "." + extension;
@@ -26,7 +26,7 @@ fs::path build_header_path(const fs::path& relative_path, const string& function
 
 fs::path build_info_path(const fs::path& relative_path, const string& function_name) {
     string extension = extract_extension(relative_path);
-    fs::path final_path = Config::config().base_path;
+    fs::path final_path = Config::config().base_path / Config::config().name_container;
     final_path /= INFO_PATH;
     final_path /= relative_path;
     final_path /= function_name + ".json";

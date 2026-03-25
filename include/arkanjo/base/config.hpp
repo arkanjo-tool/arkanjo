@@ -41,6 +41,7 @@ class Config {
     std::string program_name{"arkanjo"}; ///< Name of the program
     fs::path base_path{"tmp/arkanjo"}; ///< Default base path for temporary files
     fs::path third_party_dir{"third-party"}; ///< Directory containing third-party dependencies
+    fs::path name_container{"default"}; ///< Name of the cache container
     config::Theme theme{config::Theme::Dark}; ///< Current terminal theme
     
     /**

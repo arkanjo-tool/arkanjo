@@ -15,7 +15,7 @@ void Preprocessor::save_current_run_params(const fs::path& path) {
     config_content.push_back(path_message);
     config_content.push_back(time_message);
 
-    Utils::write_file_generic(Config::config().base_path / CONFIG_PATH, config_content);
+    Utils::write_file_generic(Config::config().base_path / Config::config().name_container / CONFIG_PATH, config_content);
 }
 
 tuple<string, double, bool> Preprocessor::read_parameters() {
@@ -57,7 +57,7 @@ tuple<string, double, bool> Preprocessor::read_parameters() {
 void Preprocessor::preprocess(const fs::path& path, double similarity, bool use_duplication_finder_by_tool) {
     cout << BREAKER_MESSAGE << '\n';
 
-    fs::path base_path = Config::config().base_path;
+    fs::path base_path = Config::config().base_path / Config::config().name_container;
 
     if (fs::exists(base_path)) {
         fs::remove_all(base_path);
@@ -83,7 +83,7 @@ void Preprocessor::preprocess(const fs::path& path, double similarity, bool use_
 Preprocessor::Preprocessor() { }
 
 Preprocessor::Preprocessor(bool force_preprocess) {
-    fs::path base_path = Config::config().base_path;
+    fs::path base_path = Config::config().base_path / Config::config().name_container;
     if (force_preprocess || !std::filesystem::exists(base_path / CONFIG_PATH)) {
         auto [path, similarity, use_duplication_finder_by_tool] = read_parameters();
         preprocess(path, similarity, use_duplication_finder_by_tool);
@@ -91,18 +91,22 @@ Preprocessor::Preprocessor(bool force_preprocess) {
 }
 
 Preprocessor::Preprocessor(bool force_preprocess, const fs::path& path, double similarity) {
-    fs::path base_path = Config::config().base_path;
+    fs::path base_path = Config::config().base_path / Config::config().name_container;
     if (force_preprocess || !std::filesystem::exists(base_path / CONFIG_PATH)) {
         preprocess(path, similarity, true);
     }
 }
 
 bool Preprocessor::validate([[maybe_unused]] const ParsedOptions& options) {
+    auto it_name = options.args.find("name");
+    if (it_name != options.args.end()) {
+        Config::config().name_container = it_name->second;
+    }
     return true;
 }
 
 bool Preprocessor::run([[maybe_unused]] const ParsedOptions& options) {
-    fs::path base_path = Config::config().base_path;
+    fs::path base_path = Config::config().base_path / Config::config().name_container;
     auto [path, similarity, use_duplication_finder_by_tool] = read_parameters();
     preprocess(path, similarity, use_duplication_finder_by_tool);
 
