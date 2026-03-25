@@ -20,9 +20,9 @@ namespace OrchestratorCommands {
     template<typename Table>
     inline CommandMap<Table> create_internal_commands(Table& table) {
         CommandMap<Table> commands = {
-            {{"explorer"}, [&]() { return std::make_unique<SimilarityExplorer>(&table); }},
-            {{"duplication"}, [&]() { return std::make_unique<CounterDuplicationCode>(&table); }},
-            {{"function"}, [&]() { return std::make_unique<SimilarFunctionFinder>(&table); }},
+            {{"explorer", "ex"}, [&]() { return std::make_unique<SimilarityExplorer>(&table); }},
+            {{"duplication", "du"}, [&]() { return std::make_unique<CounterDuplicationCode>(&table); }},
+            {{"function", "fu"}, [&]() { return std::make_unique<SimilarFunctionFinder>(&table); }},
             {{"random"}, [&]() { return std::make_unique<RandomSelector>(&table); }},
             {{"bigclone-formater"}, [&]() { return std::make_unique<BigCloneFormater>(&table); }},
             {{"bigclone-evaluator"}, [&]() { return std::make_unique<BigCloneTailorEvaluator>(&table); }},
