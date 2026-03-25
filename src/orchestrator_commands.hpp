@@ -26,7 +26,8 @@ namespace OrchestratorCommands {
             {{"random"}, [&]() { return std::make_unique<RandomSelector>(&table); }},
             {{"bigclone-formater"}, [&]() { return std::make_unique<BigCloneFormater>(&table); }},
             {{"bigclone-evaluator"}, [&]() { return std::make_unique<BigCloneTailorEvaluator>(&table); }},
-            {{"help"}, [&]() { return std::make_unique<Help>(commands); }}
+            {{"help"}, [&]() { return std::make_unique<Help>(commands); }},
+            {{"preprocessor"}, [&]() { return nullptr; }}
         };
 
         return commands;
