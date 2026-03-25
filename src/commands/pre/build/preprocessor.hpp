@@ -102,8 +102,5 @@ class Preprocessor : public CommandBase<Preprocessor> {
 
     bool validate(const ParsedOptions& options) override;
 
-    /**
-     * @brief Displays help information about available commands
-     */
     bool run(const ParsedOptions& options) override;
 };

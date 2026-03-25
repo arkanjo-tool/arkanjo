@@ -2,6 +2,7 @@
 // we define a main function to use it.
 
 #include "build/preprocessor.hpp"
+#include "list/preprocessor_list.hpp"
 #include "../help/help.hpp"
 #include <cassert>
 #include <filesystem>
@@ -29,7 +30,8 @@ int main(int argc, char* argv[]) {
 
     static const std::unordered_map<std::string,
         std::function<std::unique_ptr<ICommand>()>> internal_commands = {
-        {"build", [&]() { return std::make_unique<Preprocessor>(); }}
+        {"build", [&]() { return std::make_unique<Preprocessor>(); }},
+        {"list", [&]() { return std::make_unique<PreprocessorList>(); }}
     };
 
     std::unique_ptr<ICommand> command;

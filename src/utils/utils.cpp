@@ -120,10 +120,57 @@ std::ostream& operator<<(std::ostream& os, const Wrapped& w) {
     return os;
 }
 
-std::string to_uppercase(const std::string input) {
+std::string Utils::to_uppercase(const std::string input) {
     std::string output = input;
     for (char &c : output) {
         c = std::toupper((unsigned char) c);
     }
     return output;
+}
+
+std::string Utils::hash(const std::string& content) {
+    std::hash<std::string> hasher;
+    size_t hash = hasher(content);
+
+    std::stringstream ss;
+    ss << std::hex << hash;
+
+    std::string hash_str = ss.str();
+    if (hash_str.length() > 12) {
+        hash_str = hash_str.substr(0, 12);
+    }
+
+    return hash_str;
+}
+
+std::uintmax_t Utils::folder_size(const fs::path& folder) {
+    std::uintmax_t size = 0;
+
+    if (!fs::exists(folder)) return 0;
+
+    std::error_code ec;
+    for (auto& p : fs::recursive_directory_iterator(folder, fs::directory_options::skip_permission_denied, ec)) {
+        if (ec) continue;
+
+        if (fs::is_regular_file(p.status(ec)) && !ec) {
+            size += fs::file_size(p, ec);
+        }
+    }
+
+    return size;
+}
+
+std::string Utils::format_size(std::uintmax_t bytes) {
+    double size = static_cast<double>(bytes);
+    const char* units[] = {"B", "KB", "MB", "GB", "TB"};
+    int unit = 0;
+
+    while (size >= 1024 && unit < 4) {
+        size /= 1024;
+        ++unit;
+    }
+
+    std::ostringstream out;
+    out << std::fixed << std::setprecision(2) << size << units[unit];
+    return out.str();
 }

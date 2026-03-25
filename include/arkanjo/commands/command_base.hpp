@@ -52,7 +52,7 @@ class CommandBase : public ICommand {
                 for (const auto& item : vector_arguments) {
                     std::string opts_str = "  ";
                     opts_str += "<";
-                    opts_str += to_uppercase(item->long_name);
+                    opts_str += Utils::to_uppercase(item->long_name);
                     opts_str += ">";
                     std::cout << std::left << std::setw(OPTION_WIDTH) << opts_str;
                     if (item->description != nullptr) {
@@ -82,7 +82,7 @@ class CommandBase : public ICommand {
                     opts_str = BOLD(opts_str);
                     
                     if (item->has_arg == RequiredArgument || item->has_arg == OptionalArgument) {
-                        opts_str += " <" + to_uppercase(item->long_name) + "> ";
+                        opts_str += " <" + Utils::to_uppercase(item->long_name) + "> ";
                     }
                     std::cout << std::left << std::setw(OPTION_WIDTH + 8) << opts_str;
                     if (item->description != nullptr) {

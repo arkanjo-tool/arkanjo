@@ -86,7 +86,7 @@ const std::vector<std::string> COLOR_TOKENS_UTILS_LIGTH = {
  * - WHITE
  */
 const std::vector<std::string> COLOR_TOKENS_UTILS_DARK = {
-    "\033[0m",  // RESET
+    "\033[00m",  // RESET
     "\033[31m", // RED
     "\033[32m", // GREEN
     "\033[33m", // YELLOW
@@ -97,8 +97,8 @@ const std::vector<std::string> COLOR_TOKENS_UTILS_DARK = {
     "\033[97m", // WHITE
     "\033[33m", // BRIGHT_YELLOW
     "\033[97m", // WHITE
-    "\033[1m",  // BOLD
-    "\033[4m",  // UNDERLINE
+    "\033[01m",  // BOLD
+    "\033[04m",  // UNDERLINE
 };
 
 /**
@@ -177,6 +177,33 @@ bool is_special_char(char c);
  * @return vector<string> Vector of tokens (empty tokens are omitted)
  */
 std::vector<std::string> split_string(const std::string& s, char delimiter);
+
+std::string to_uppercase(const std::string input);
+
+/**
+ * @brief Computes a simple hash of a string
+ * @param content Input string to hash
+ * @return std::string Hexadecimal hash string (truncated to 12 chars)
+ * @note Uses std::hash, not cryptographically secure
+ */
+std::string hash(const std::string& content);
+
+/**
+ * @brief Calculates the total size of all regular files in a folder
+ * @param folder Path to the folder
+ * @return std::uintmax_t Total size in bytes
+ * @note Skips files/folders without permission
+ */
+std::uintmax_t folder_size(const fs::path& folder);
+
+
+/**
+ * @brief Formats a byte size into a human-readable string
+ * @param bytes Size in bytes
+ * @return std::string Formatted string with units (B, KB, MB, GB, TB)
+ * @note Uses 1024 as the multiplier between units
+ */
+std::string format_size(std::uintmax_t bytes);
 }; // namespace Utils
 
 struct Wrapped {
@@ -187,5 +214,3 @@ struct Wrapped {
 
 Wrapped wrapped(const std::string& text, size_t spaces = 1, bool use_first_line = true);
 std::ostream& operator<<(std::ostream& os, const Wrapped& w);
-
-std::string to_uppercase(const std::string input);

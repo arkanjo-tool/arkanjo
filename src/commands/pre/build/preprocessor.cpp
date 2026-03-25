@@ -97,7 +97,7 @@ Preprocessor::Preprocessor(bool force_preprocess, const fs::path& path, double s
     }
 }
 
-bool Preprocessor::validate([[maybe_unused]] const ParsedOptions& options) {
+bool Preprocessor::validate(const ParsedOptions& options) {
     auto it_name = options.args.find("name");
     if (it_name != options.args.end()) {
         Config::config().name_container = it_name->second;
