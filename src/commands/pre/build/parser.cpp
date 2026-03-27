@@ -22,7 +22,7 @@ bool Comparation::operator==(const Comparation& com) const {
     return path1 == com.path1 && path2 == com.path2;
 }
 
-vector<string> Parser::parser_line(string line) {
+vector<string> Parser::parser_line(const string& line) {
     string at = "";
     vector<string> ret;
     for (auto c : line) {
@@ -40,84 +40,98 @@ vector<string> Parser::parser_line(string line) {
     return ret;
 }
 
-bool Parser::is_an_file(string s) {
+bool Parser::is_an_file(const std::string& s) {
     return !s.empty() && s[0] == '/';
 }
 
-string Parser::remove_formatation_from_similarity(string s) {
-    for (int i = 0; i < 4; i++) {
-        s.pop_back();
-    }
-    reverse(s.begin(), s.end());
-    while (s.back() != 'm') {
-        s.pop_back();
-    }
-    s.pop_back();
-    reverse(s.begin(), s.end());
-    return s;
-}
+void removeANSI_inplace(std::string& s) {
+    size_t write = 0;
 
-double Parser::retrive_similarity(string s) {
-    s = remove_formatation_from_similarity(s);
-    // char* cs = s.data();
-    float similarity = stod(s);
-    return similarity;
-}
-
-void Parser::parser_block(string path, set<Comparation>& comparations) {
-    string line;
-    while (getline(fin, line)) {
-        vector<string> tokens = parser_line(line);
-        if (tokens.empty()) {
-            break;
-        }
-        if (int32_t(tokens.size()) != 2 || !is_an_file(tokens[0])) {
-            continue;
-        }
-        string path_compared = tokens[0];
-
-        double similarity = retrive_similarity(tokens[1]);
-        Comparation com(path, path_compared, similarity);
-        if (similarity >= similarity_cap_)
-            comparations.insert(com);
-    }
-}
-
-void Parser::exec() {
-    string line;
-    set<Comparation> comparations;
-
-    while (getline(fin, line)) {
-        vector<string> tokens = parser_line(line);
-        if (tokens.empty())
-            continue;
-
-        string path;
-        for (auto token : tokens) {
-            if (is_an_file(token)) {
-                path = token;
-                break;
+    for (size_t i = 0; i < s.size(); ++i) {
+        if (s[i] == '\033' && i + 1 < s.size() && s[i + 1] == '[') {
+            i += 2;
+            while (i < s.size() && (s[i] < '@' || s[i] > '~')) {
+                i++;
             }
+        } else {
+            s[write++] = s[i];
         }
-        // Removing some formatation that shows on terminal
-        for (int i = 0; i < 4; i++)
-            path.pop_back();
-        parser_block(path, comparations);
+    }
+
+    s.resize(write);
+}
+
+double Parser::retrive_similarity(const std::string& s) {
+    try {
+        return std::stod(s);
+    } catch (...) {
+        return 0.0;
+    }
+}
+
+void Parser::parser_block_stream(const std::string& path, const std::vector<std::string>& tokens, set<Comparation>& comparations) {
+    if (tokens.size() < 2)
+        return;
+
+    const std::string& path_comp = tokens[0];
+
+    if (!is_an_file(path_comp))
+        return;
+
+    double similarity = retrive_similarity(tokens[1]);
+
+    if (similarity < similarity_cap)
+        return;
+    
+    Comparation com(path, path_comp, similarity);
+    comparations.insert(com);
+}
+
+void Parser::exec_from_stream(FILE* pipe) {
+    std::string line;
+    char chunk[256];
+
+    std::string path;
+
+    while (fgets(chunk, sizeof(chunk), pipe)) {
+        line += chunk;
+
+        if (!line.empty() && line.back() == '\n') {
+            removeANSI_inplace(line);
+
+            auto tokens = parser_line(line);
+            if (tokens.size() > 2) {
+                for (auto token : tokens) {
+                    if (is_an_file(token)) {
+                        path = token;
+                        break;
+                    }
+                }
+                line.clear();
+                continue;
+            }
+
+            parser_block_stream(path, tokens, comparations);
+
+            line.clear();
+        }
     }
     fout << comparations.size() << '\n';
-    for (auto com : comparations) {
+    for (const auto& com : comparations) {
         fout << com.path1 << ' ' << com.path2 << ' ';
         fout << fixed << setprecision(2) << com.similarity << '\n';
     }
 }
 
-Parser::Parser(const fs::path& input_file, const fs::path& output_file, double similarity_cap) {
-    fin = ifstream(input_file.string());
-    fout = ofstream(output_file.string());
-    similarity_cap_ = similarity_cap;
+Parser::Parser(const fs::path& output_file, double similarity_cap)
+    : fout(output_file), similarity_cap(similarity_cap) {
 
-    exec();
+    if (!fout) {
+        throw std::runtime_error("Failed to open output file");
+    }
+}
 
-    fin.close();
-    fout.close();
+Parser::~Parser() {
+    if (fout.is_open())
+        fout.close();
 }

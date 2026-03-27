@@ -72,56 +72,50 @@ class Parser {
     string PROJECT_PATH_MESSAGE = "Enter your project path:";                                  ///< Project path prompt
     string MINIMUM_SIMILARITY_MESSAGE = "Enter minimum similarity desired on using the tool:"; ///< Similarity threshold prompt
 
-    ifstream fin;           ///< Input file stream
     ofstream fout;          ///< Output file stream
-    double similarity_cap_; ///< Minimum similarity threshold
+    double similarity_cap; ///< Minimum similarity threshold
+    std::set<Comparation> comparations;
 
     /**
      * @brief Splits a line into components
      * @param line Input line to parse
      * @return vector<string> Tokenized line components
      */
-    vector<string> parser_line(string line);
+    vector<string> parser_line(const string& line);
 
     /**
      * @brief Checks if string represents a valid file path
      * @param s String to check
      * @return bool True if string is a file path
      */
-    bool is_an_file(string s);
-
-    /**
-     * @brief Cleans similarity score string
-     * @param s Raw similarity string
-     * @return string Cleaned similarity string
-     */
-    string remove_formatation_from_similarity(string s);
+    bool is_an_file(const std::string& s);
 
     /**
      * @brief Extracts similarity score from string
      * @param s String containing similarity value
      * @return double Parsed similarity score
      */
-    double retrive_similarity(string s);
+    double retrive_similarity(const std::string& s);
 
     /**
      * @brief Processes a block of comparison results
-     * @param path Project base path
+     * @param tokens Tokenized line components
      * @param comparations Set to store parsed comparisons
      */
-    void parser_block(string path, set<Comparation>& comparations);
-
-    /**
-     * @brief Main parsing execution method
-     */
-    void exec();
+    void parser_block_stream(const std::string& path, const std::vector<std::string>& tokens, set<Comparation>& comparations);
 
   public:
     /**
      * @brief Constructs parser with configuration
-     * @param input_file Path to raw tool output
      * @param output_file Path for cleaned output
      * @param similarity_cap Minimum similarity threshold (0-100)
      */
-    Parser(const fs::path& input_file, const fs::path& output_file, double similarity_cap);
+    explicit Parser(const fs::path& output_file, double similarity_cap);
+
+    /**
+     * @brief Main parsing execution method using stream
+     */
+    void exec_from_stream(FILE* pipe);
+
+    ~Parser();
 };

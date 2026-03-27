@@ -18,7 +18,6 @@
 #include <iostream>
 #include <string>
 #include <filesystem>
-using namespace std;
 namespace fs = std::filesystem;
 
 /**
@@ -30,7 +29,7 @@ namespace fs = std::filesystem;
  */
 class DuplicationFinderTool {
   private:
-    string SAVING_MESSAGE = "Saving results..."; ///< Status message displayed when saving analysis results
+    std::string SAVING_MESSAGE = "Saving results..."; ///< Status message displayed when saving analysis results
 
     fs::path base_path;  ///< Root directory path of the codebase to analyze
     double similarity; ///< Similarity threshold for considering code segments duplicates (0-100 scale)
