@@ -1,5 +1,5 @@
 #include <arkanjo/cli/cli_error.hpp>
-#include <arkanjo/cli/formatter.hpp>
+#include <arkanjo/formatter/format_manager.hpp>
 #include <arkanjo/cli/options_collector.hpp>
 #include <arkanjo/cli/parser_options.hpp>
 
@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
         orchestrator.run_pipeline(ctx);
     } catch (const CommandNotFoundError& e) {
         if (ctx.command_name != "help" && ctx.options.args.count("help") == 0)
-            std::cerr << "Warning: '" << ctx.command_name << "' is not a " << Config::config().program_name << " command.\n";
+            FormatterManager::warn(ctx.command_name + " is not a " + Config::config().program_name + " command.");
         std::make_unique<Help>(internal_commands)->do_run(ctx.command_name, ctx.options);
         return 1;
     } catch (const CLIError& e) {

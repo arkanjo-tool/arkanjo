@@ -8,23 +8,16 @@ The code filter every file that has the pattern as a substring, so be carefull w
 #include <iostream>
 #include <utility>
 
+#include <arkanjo/formatter/format_manager.hpp>
 #include "similarity_explorer.hpp"
 
-Utils::COLOR SimilarityExplorer::alternating_row_color(size_t index) const {
-    return (index % 2 == 0) ? Utils::GRAY : Utils::CYAN;
-}
+using fm = FormatterManager;
 
 int SimilarityExplorer::find_number_pairs_show(int number_pair_found) const {
     if (limit_on_results == UNLIMITED_RESULTS) {
         return number_pair_found;
     }
     return std::min(limit_on_results, number_pair_found);
-}
-
-std::string SimilarityExplorer::initial_message(int found, int show) const {
-    return INITIAL_TEXT_PRINT_1 + std::to_string(found) +
-           INITIAL_TEXT_PRINT_2 + std::to_string(show) +
-           INITIAL_TEXT_PRINT_3;
 }
 
 bool SimilarityExplorer::match_pattern(const Path& path1, const Path& path2) const {
@@ -43,26 +36,20 @@ int SimilarityExplorer::find_number_lines(const Path& path1) {
     return function.number_of_lines();
 }
 
-void SimilarityExplorer::print_similar_path_pair(const Path& path1, const Path& path2) {
-    std::string row = START_LINE_COMPARATION_PRINT +
-                      path1.format_path_message_in_pair() +
-                      BETWEEN_TWO_FUNCTION +
-                      path2.format_path_message_in_pair() +
-                      NUMBER_LINES_MESSAGE +
-                      std::to_string(find_number_lines(path1));
-
-    std::cout << FormatterManager::get_formatter()->format(row, alternating_row_color(processed_results)) << '\n';
-}
-
-void SimilarityExplorer::process_similar_path_pair(const Path& path1, const Path& path2) {
+SimilarityExplorerEntry SimilarityExplorer::process_similar_path_pair(const Path& path1, const Path& path2) {
     if (!match_pattern(path1, path2)) {
-        return;
+        return {};
     }
     if (limit_on_results != UNLIMITED_RESULTS && processed_results >= limit_on_results) {
-        return;
+        return {};
     }
     processed_results++;
-    print_similar_path_pair(path1, path2);
+    
+    return {
+        path1.format_path_message_in_pair(),
+        path2.format_path_message_in_pair(),
+        find_number_lines(path1)
+    };
 }
 
 int SimilarityExplorer::find_number_pair_found(const std::vector<std::pair<Path, Path>>& similar_path_pairs) const {
@@ -90,12 +77,22 @@ void SimilarityExplorer::explorer() {
     int number_pair_found = find_number_pair_found(similar_path_pairs);
     int number_pairs_show = find_number_pairs_show(number_pair_found);
 
-    std::cout << initial_message(number_pair_found, number_pairs_show) << '\n';
-    std::cout << Utils::LIMITER_PRINT << '\n';
+    fm::write(TEMPLATE_INITIAL_TEXT, SimilarityExplorerInitialMessage{
+        number_pair_found, number_pairs_show
+    }, Format::TEXT);
+    fm::write(Utils::LIMITER_PRINT);
 
+    std::vector<SimilarityExplorerEntry> vector_entry = {};
     for (const auto& [path1, path2] : similar_path_pairs) {
-        process_similar_path_pair(path1, path2);
+        auto entry = process_similar_path_pair(path1, path2);
+        if (entry.duplicated_lines < 0) continue;
+        vector_entry.push_back(entry);
     }
+    fm::write(TEMPLATE_PROCESSED_RESULTS, vector_entry, Format::AUTO, [](size_t i) {
+        return (i % 2 == 0)
+            ? fm::get_formatter()->style().at("row_even")
+            : fm::get_formatter()->style().at("row_odd");
+    });
 }
 
 SimilarityExplorer::SimilarityExplorer(Similarity_Table* table)

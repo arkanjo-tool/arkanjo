@@ -29,11 +29,16 @@
  * and provides detailed reporting about the matches found.
  */
 class SimilarFunctionFinder : public CommandBase<SimilarFunctionFinder> {
-    static constexpr const char* EMPTY_PATH_MESSAGE_1 = "There is no functions that resembles the name: ";                             ///< First part of no-results message
-    static constexpr const char* EMPTY_PATH_MESSAGE_2 = "Value incorrected passed or there is no duplication code with this function"; ///< Second part of no-results message
-    static constexpr const char* REFERENCE_PATH_MESSAGE = "The following function was found:";                                         ///< Reference function header
-    static constexpr const char* COUNT_MESSAGE_1 = "The total number of functions that are similar to the found one is ";              ///< Similar count prefix
-    static constexpr const char* COUNT_MESSAGE_2 = ". More info about them are listed below.";                                         ///< Similar count suffix
+    static constexpr const char* TEMPLATE_EMPTY_FUNCTION =
+      "There is no functions that resembles the "
+      "name: {pattern:function}\n"
+      "Value incorrected passed or there is no "
+      "duplication code with this function";
+    static constexpr const char* TEMPLATE_COUNT =
+      "The total number of functions that are "
+      "similar to the found one is {count}. "
+      "More info about them are listed below.";
+    static constexpr const char* REFERENCE_PATH_MESSAGE = "The following function was found:"; ///< Reference function header
 
     Similarity_Table* similarity_table; ///< Source of similarity data
     std::string function_pattern;       ///< Function name pattern to match

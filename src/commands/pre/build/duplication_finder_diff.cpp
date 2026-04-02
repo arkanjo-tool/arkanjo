@@ -1,11 +1,14 @@
+#include <arkanjo/formatter/format_manager.hpp>
 #include "duplication_finder_diff.hpp"
+
+using fm = FormatterManager;
 
 DuplicationFinderDiff::DuplicationFinderDiff(const fs::path& base_path_, double similarity_) {
     base_path = base_path_;
     similarity = similarity_;
 
     if (similarity < 0) {
-        std::cout << "SIMILARITY SHOULD BE GREATER OR EQUAL 0 TO USE DUPLICATION FINDER BY DIFF COMMAND";
+        std::cerr << "SIMILARITY SHOULD BE GREATER OR EQUAL 0 TO USE DUPLICATION FINDER BY DIFF COMMAND";
     }
 }
 
@@ -138,7 +141,7 @@ void DuplicationFinderDiff::execute() {
 
     vector<tuple<double, string, string>> file_duplication_pairs = find_similar_pairs(file_paths);
 
-    cout << SAVING_MESSAGE << '\n';
+    fm::write(SAVING_MESSAGE);
 
     save_duplications(file_duplication_pairs);
 }

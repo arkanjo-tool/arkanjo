@@ -2,7 +2,7 @@
 
 #include <arkanjo/commands/command.hpp>
 #include <arkanjo/utils/utils.hpp>
-#include <arkanjo/cli/formatter.hpp>
+#include <arkanjo/formatter/format_manager.hpp>
 #include <arkanjo/base/config.hpp>
 #include <algorithm> 
 

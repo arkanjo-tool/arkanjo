@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include <arkanjo/base/function.hpp>
-#include <arkanjo/cli/formatter.hpp>
+#include <arkanjo/formatter/format_manager.hpp>
 
 void Function::read_content() {
     std::string source_path = path.build_source_path();

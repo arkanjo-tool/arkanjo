@@ -32,9 +32,8 @@ using namespace std;
  * color-coded display options.
  */
 class RandomSelector : public CommandBase<RandomSelector> {
-    string START_LINE_COMPARATION_PRINT = "Functions: "; ///< Prefix for pair display
-    string BETWEEN_TWO_FUNCTION = " AND ";               ///< Separator between functions
-    string SIMILARITY_MESSAGE = ". Similarity: ";        ///< Similarity score prefix
+    static constexpr const char* TEMPLATE_RANDOM_ENTRY =
+      "Functions: {path_a} AND {path_b}. Similarity: {similarity} ";
 
     Similarity_Table* similarity_table; ///< Source of similarity data
     double minimum_similarity;          ///< Minimum similarity threshold
@@ -43,14 +42,6 @@ class RandomSelector : public CommandBase<RandomSelector> {
 
     const int seed = 123456789;  ///< Fixed random seed for reproducibility
     mt19937 rng = mt19937(seed); ///< Mersenne Twister random generator
-
-    int processed_results = 0; ///< Counter for processed pairs
-
-    /**
-     * @brief Selects text color based on similarity score
-     * @return Utils::COLOR Selected color for display
-     */
-    Utils::COLOR choose_text_color();
 
     /**
      * @brief Checks if pair falls within configured thresholds
@@ -71,12 +62,6 @@ class RandomSelector : public CommandBase<RandomSelector> {
      * @return vector<tuple<double,Path,Path>> Randomly selected subset
      */
     vector<tuple<double, Path, Path>> make_random_selection(vector<tuple<double, Path, Path>> path_pairs);
-
-    /**
-     * @brief Prints a single path pair with formatting
-     * @param path_pair Pair to display
-     */
-    void print_path_pair(tuple<double, Path, Path> path_pair);
 
     /**
      * @brief Prints all selected path pairs

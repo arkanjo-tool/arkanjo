@@ -3,6 +3,10 @@
 #include <iomanip>
 #include <iostream>
 
+#include <arkanjo/formatter/format_manager.hpp>
+
+using fm = FormatterManager;
+
 void Preprocessor::save_current_run_params(const fs::path& path) {
     vector<string> config_content;
 
@@ -19,24 +23,24 @@ void Preprocessor::save_current_run_params(const fs::path& path) {
 }
 
 tuple<string, double, bool> Preprocessor::read_parameters() {
-    cout << INITIAL_MESSAGE << '\n';
+    fm::write(INITIAL_MESSAGE);
     string similarity_message;
 
-    cout << PROJECT_PATH_MESSAGE << '\n';
+    fm::write(PROJECT_PATH_MESSAGE);
     string path_str;
     cin >> path_str;
     fs::path path(path_str);
 
-    cout << MINIMUM_SIMILARITY_MESSAGE << '\n';
+    fm::write(MINIMUM_SIMILARITY_MESSAGE);
     cin >> similarity_message;
     double similarity = stod(similarity_message);
 
     bool use_duplication_finder_by_tool = false;
 
     while (true) {
-        cout << MESSAGE_DUPLICATION_FINDER_TYPE_1 << '\n';
-        cout << MESSAGE_DUPLICATION_FINDER_TYPE_2 << '\n';
-        cout << MESSAGE_DUPLICATION_FINDER_TYPE_3 << '\n';
+        fm::write(MESSAGE_DUPLICATION_FINDER_TYPE_1);
+        fm::write(MESSAGE_DUPLICATION_FINDER_TYPE_2);
+        fm::write(MESSAGE_DUPLICATION_FINDER_TYPE_3);
         int x;
         cin >> x;
         if (x == 1) {
@@ -44,7 +48,7 @@ tuple<string, double, bool> Preprocessor::read_parameters() {
         } else if (x == 2) {
             use_duplication_finder_by_tool = false;
         } else {
-            cout << INVALID_CODE_DUPLICATION_FINDER << '\n';
+            std::cerr << INVALID_CODE_DUPLICATION_FINDER << '\n';
             exit(0);
             continue;
         }
@@ -55,7 +59,7 @@ tuple<string, double, bool> Preprocessor::read_parameters() {
 }
 
 void Preprocessor::preprocess(const fs::path& path, double similarity, bool use_duplication_finder_by_tool) {
-    cout << BREAKER_MESSAGE << '\n';
+    fm::write(BREAKER_MESSAGE);
 
     fs::path base_path = Config::config().base_path / Config::config().name_container;
 
@@ -65,7 +69,7 @@ void Preprocessor::preprocess(const fs::path& path, double similarity, bool use_
 
     FunctionBreaker function_breaker(path);
 
-    cout << DUPLICATION_MESSAGE << '\n';
+    fm::write(DUPLICATION_MESSAGE);
 
     if (use_duplication_finder_by_tool) {
         DuplicationFinderTool duplicationFinder(base_path, similarity);
@@ -77,7 +81,7 @@ void Preprocessor::preprocess(const fs::path& path, double similarity, bool use_
 
     save_current_run_params(path);
 
-    cout << END_MESSAGE << '\n';
+    fm::write(END_MESSAGE);
 }
 
 Preprocessor::Preprocessor() { }
@@ -101,6 +105,11 @@ bool Preprocessor::validate(const ParsedOptions& options) {
     auto it_name = options.args.find("name");
     if (it_name != options.args.end()) {
         Config::config().name_container = it_name->second;
+    }
+    auto it_json = options.args.find("json");
+    if (it_json != options.args.end()) {
+        throw CLIError("--json is not supported in this command.");
+        return false;
     }
     return true;
 }

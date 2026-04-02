@@ -43,7 +43,12 @@ CounterDuplicationCode::CounterDuplicationCode(Similarity_Table* _similarity_tab
     similarity_table = _similarity_table;
 }
 
-bool CounterDuplicationCode::validate([[maybe_unused]] const ParsedOptions& options) {
+bool CounterDuplicationCode::validate(const ParsedOptions& options) {
+    auto it_json = options.args.find("json");
+    if (it_json != options.args.end()) {
+        throw CLIError("--json is not supported in this command.");
+        return false;
+    }
     return true;
 }
 

@@ -37,6 +37,10 @@ namespace fs = std::filesystem;
  */
 class Preprocessor : public CommandBase<Preprocessor> {
   private:
+    static constexpr const char* TEMPLATE_COUNT =
+      "The total number of functions that are "
+      "similar to the found one is {count}. "
+      "More info about them are listed below.";
     // User interaction messages
     string PROJECT_PATH_MESSAGE = "Enter your project path:";                                  ///< Project path prompt
     string MINIMUM_SIMILARITY_MESSAGE = "Enter minimum similarity desired on using the tool:"; ///< Similarity threshold prompt

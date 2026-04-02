@@ -1,6 +1,7 @@
 #include <arkanjo/base/config.hpp>
 #include <arkanjo/utils/utils.hpp>
 #include <iostream>
+#include <arkanjo/formatter/format_manager.hpp>
 
 void Config::setTestConfig() {
     base_path = "tests/e2e/current/tmp/arkanjo";
@@ -16,7 +17,7 @@ void Config::setDefaultConfig() {
     } else if (home) {
         base_path = fs::path(home) / ".cache" / program_name;
     } else {
-        std::cerr << "Warning: neither XDG_CACHE_HOME nor HOME is set. Using default path.\n";
+        FormatterManager::warn("neither XDG_CACHE_HOME nor HOME is set. Using default path.");
     }
 
     // THEME

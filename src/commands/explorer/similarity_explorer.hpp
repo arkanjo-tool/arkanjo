@@ -22,8 +22,9 @@
 #include <arkanjo/utils/utils.hpp>
 
 #include <arkanjo/cli/cli_error.hpp>
-#include <arkanjo/cli/formatter.hpp>
 #include <arkanjo/commands/command_base.hpp>
+
+#include "similarity_explorer_entry.hpp"
 
 /**
  * @brief Duplicate function explorer and analyzer
@@ -60,12 +61,15 @@ class SimilarityExplorer : public CommandBase<SimilarityExplorer> {
     bool run(const ParsedOptions& options) override;
 
   private:
-    static constexpr const char* START_LINE_COMPARATION_PRINT = "Functions find: ";                                       ///< Comparison header
-    static constexpr const char* BETWEEN_TWO_FUNCTION = " AND ";                                                          ///< Separator between functions
-    static constexpr const char* NUMBER_LINES_MESSAGE = " , TOTAL NUMBER LINES IN FUNCTIONS: ";                           ///< Line count label
-    static constexpr const char* INITIAL_TEXT_PRINT_1 = "It was found a total of ";                                       ///< Results message part 1
-    static constexpr const char* INITIAL_TEXT_PRINT_2 = " pair of duplicate functions in the codebase. Which the first "; ///< Results message part 2
-    static constexpr const char* INITIAL_TEXT_PRINT_3 = " can be found below.";                                           ///< Results message part 3
+    static constexpr const char* TEMPLATE_PROCESSED_RESULTS = 
+      "Functions find: {path_a} "
+      "AND {path_b}"
+      ", TOTAL NUMBER LINES IN FUNCTIONS: {duplicated_lines}";
+    static constexpr const char* TEMPLATE_INITIAL_TEXT =
+      "It was found a total of {found:bold} "
+      "pair of duplicate functions in the codebase. Which the first "
+      "{show:bold} can be found below.";
+      
     int INITIAL_PROCESSED_RESULTS = 0;                                                                                    ///< Initial counter for processed results
 
     Similarity_Table* similarity_table;                ///< Source of similarity data
@@ -76,24 +80,11 @@ class SimilarityExplorer : public CommandBase<SimilarityExplorer> {
     int processed_results = INITIAL_PROCESSED_RESULTS; ///< Counter for processed results
 
     /**
-     * @brief Chooses text color for output
-     * @return Utils::COLOR Selected color
-     */
-    Utils::COLOR alternating_row_color(size_t index) const;
-
-    /**
      * @brief Determines number of pairs to show
      * @param number_pair_found Total pairs found
      * @return int Number to actually display
      */
     int find_number_pairs_show(int number_pair_found) const;
-
-    /**
-     * @brief Formats initial results message
-     * @param number_pair_found Total pairs found
-     * @return string Formatted message
-     */
-    std::string initial_message(int found, int show) const;
 
     /**
      * @brief Checks if paths match pattern filter
@@ -111,18 +102,11 @@ class SimilarityExplorer : public CommandBase<SimilarityExplorer> {
     static int find_number_lines(const Path& path1);
 
     /**
-     * @brief Prints a pair of similar paths
-     * @param path1 First path in pair
-     * @param path2 Second path in pair
-     */
-    void print_similar_path_pair(const Path& path1, const Path& path2);
-
-    /**
      * @brief Processes a pair of similar paths
      * @param path1 First path in pair
      * @param path2 Second path in pair
      */
-    void process_similar_path_pair(const Path& path1, const Path& path2);
+    SimilarityExplorerEntry process_similar_path_pair(const Path& path1, const Path& path2);
 
     /**
      * @brief Counts matching pairs

@@ -18,6 +18,7 @@ constexpr CliOption global_long_opts[] = {
     {"name", 'n', RequiredArgument, "Assign a name to the cache container; defaults to 'default' if not provided."},
     {"color", 0, NoArgument, "Enable colored output."},
     {"no-color", 0, NoArgument, "Disable colored output."},
+    {"json", 0, NoArgument, "Json output."},
     {"preprocessor", 0, NoArgument, "Forces the preprocessor to execute."},
     {"similarity", 'S', RequiredArgument, "Changes the similarity threshold to `SIMILARITY` for the current command only."},
     {"help", 'h', NoArgument, "Show this help message."},
@@ -50,9 +51,12 @@ inline Step setup_command_step(
 }
 
 inline bool formatter_step(Context& ctx) {
-    bool color = ctx.options.args.count("color") > 0;
-    if (color)
-        FormatterManager::set_formatter(std::make_shared<ConsoleFormatter>(true));
+    bool json = ctx.options.args.count("json") > 0;
+    enum Format format_output = Format::TEXT;
+    if (json)
+        format_output = Format::JSON;
+    FormatterManager::set_format(format_output);
+    FormatterManager::set_formatter(std::make_shared<ConsoleFormatter>(true));
     bool no_color = ctx.options.args.count("no-color") > 0;
     if (no_color)
         FormatterManager::set_formatter(std::make_shared<ConsoleFormatter>(false));

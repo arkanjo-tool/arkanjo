@@ -43,6 +43,9 @@ json Utils::read_json(const fs::path& string_path) {
 }
 
 std::string Utils::format_colored_message(const std::string& message, COLOR color) {
+    if (color == COLOR::NONE) {
+        return message;
+    }
     if (Config::config().theme == config::Theme::Dark) {
         return COLOR_TOKENS_UTILS_DARK[color] + message + COLOR_TOKENS_UTILS_DARK[RESET];
     } else {

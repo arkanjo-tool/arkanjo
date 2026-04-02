@@ -1,4 +1,7 @@
+#include <arkanjo/formatter/format_manager.hpp>
 #include "duplication_finder_tool.hpp"
+
+using fm = FormatterManager;
 
 DuplicationFinderTool::DuplicationFinderTool(const fs::path& base_path_, double similarity_) {
     base_path = base_path_;
@@ -13,7 +16,7 @@ void DuplicationFinderTool::execute() {
     command_tool += "/duplicate-code-detection-tool/duplicate_code_detection.py -d ";
     command_tool += base_path / "source";
 
-    std::cout << SAVING_MESSAGE << '\n';
+    fm::write(SAVING_MESSAGE);
 
     FILE* pipe = popen(command_tool.c_str(), "r");
     if (!pipe) {

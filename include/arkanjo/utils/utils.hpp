@@ -64,9 +64,12 @@ const std::vector<std::string> COLOR_TOKENS_UTILS_LIGTH = {
     "\033[35;2m",  // DARK_MAGENTA
     "\033[36;2m",  // DARK_CYAN
     "\033[37;2m",  // DARK_GRAY
-    "\033[30;2mm", // BLACK
+    "\033[30;2m", // BLACK
     "\033[33;2m",  // YELLOW
     "\033[30m",    // BLACK
+    "\033[01m",    // BOLD
+    "\033[04m",    // UNDERLINE
+    "",            // NONE
 };
 
 /**
@@ -87,18 +90,19 @@ const std::vector<std::string> COLOR_TOKENS_UTILS_LIGTH = {
  */
 const std::vector<std::string> COLOR_TOKENS_UTILS_DARK = {
     "\033[00m",  // RESET
-    "\033[31m", // RED
-    "\033[32m", // GREEN
-    "\033[33m", // YELLOW
-    "\033[34m", // BLUE
-    "\033[35m", // MAGENTA
-    "\033[36m", // CYAN
-    "\033[37m", // GRAY
-    "\033[97m", // WHITE
-    "\033[33m", // BRIGHT_YELLOW
-    "\033[97m", // WHITE
+    "\033[31m",  // RED
+    "\033[32m",  // GREEN
+    "\033[33m",  // YELLOW
+    "\033[34m",  // BLUE
+    "\033[35m",  // MAGENTA
+    "\033[36m",  // CYAN
+    "\033[37m",  // GRAY
+    "\033[97m",  // WHITE
+    "\033[33m",  // BRIGHT_YELLOW
+    "\033[97m",  // WHITE
     "\033[01m",  // BOLD
     "\033[04m",  // UNDERLINE
+    "",          // NONE
 };
 
 /**
@@ -117,7 +121,8 @@ enum COLOR {
     BRIGHT_YELLOW, ///< Bright yellow color
     BLACK,         ///< Black color
     BOLD,          ///< Bold text
-    UNDERLINE      ///< Underline text
+    UNDERLINE,     ///< Underline text
+    NONE
 };
 
 /**

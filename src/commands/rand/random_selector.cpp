@@ -1,12 +1,8 @@
+#include <arkanjo/formatter/format_manager.hpp>
 #include "random_selector.hpp"
+#include "random_selector_entry.hpp"
 
-Utils::COLOR RandomSelector::choose_text_color() {
-    Utils::COLOR ret = Utils::GRAY;
-    if (processed_results % 2 == 0) {
-        ret = Utils::CYAN;
-    }
-    return ret;
-}
+using fm = FormatterManager;
 
 bool RandomSelector::is_valid_pair(tuple<double, Path, Path> path_pair) {
     auto [similarity, path1, path2] = path_pair;
@@ -36,23 +32,22 @@ vector<tuple<double, Path, Path>> RandomSelector::make_random_selection(vector<t
     return path_pairs;
 }
 
-void RandomSelector::print_path_pair(tuple<double, Path, Path> path_pair) {
-    auto [similarity, path1, path2] = path_pair;
-    string line;
-    line += START_LINE_COMPARATION_PRINT;
-    line += path1.format_path_message_in_pair();
-    line += BETWEEN_TWO_FUNCTION;
-    line += path2.format_path_message_in_pair();
-    line += SIMILARITY_MESSAGE;
-    line += to_string(similarity);
-    Utils::COLOR color = choose_text_color();
-    cout << Utils::format_colored_message(line, color) << '\n';
-}
-
 void RandomSelector::print_path_pairs(vector<tuple<double, Path, Path>> path_pairs) {
-    for (auto path_pair : path_pairs) {
-        print_path_pair(path_pair);
+    std::vector<RandomSelectorEntry> vector_entry = {};
+    for (const auto& [similarity, path1, path2] : path_pairs) {
+        vector_entry.push_back(RandomSelectorEntry{
+            path1.format_path_message_in_pair(),
+            path2.format_path_message_in_pair(),
+            similarity
+        });
     }
+    if (vector_entry.size() <= 0) return;
+    
+    fm::write(TEMPLATE_RANDOM_ENTRY, vector_entry, Format::AUTO, [](size_t i) {
+        return (i % 2 == 0)
+            ? fm::get_formatter()->style().at("row_even")
+            : fm::get_formatter()->style().at("row_odd");
+    });
 }
 
 RandomSelector::RandomSelector(Similarity_Table* _similarity_table) {

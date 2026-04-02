@@ -1,6 +1,10 @@
 #include <iostream>
 
+#include <arkanjo/formatter/format_manager.hpp>
 #include "similar_function_finder.hpp"
+#include "similar_function_finder_entry.hpp"
+
+using fm = FormatterManager;
 
 void SimilarFunctionFinder::find_path_that_meets_pattern() {
     std::vector<Path> paths = similarity_table->get_path_list();
@@ -12,10 +16,9 @@ void SimilarFunctionFinder::find_path_that_meets_pattern() {
 }
 
 void SimilarFunctionFinder::print_empty_path_message() const {
-    std::string line1 = EMPTY_PATH_MESSAGE_1 + function_pattern;
-    std::string line2 = EMPTY_PATH_MESSAGE_2;
-    std::cout << line1 << '\n';
-    std::cout << line2 << '\n';
+    fm::write(TEMPLATE_EMPTY_FUNCTION, SimilarFunctionEmptyEntry{
+        function_pattern
+    }, Format::TEXT);
 }
 
 void SimilarFunctionFinder::print_function(const Path& path) const {
@@ -25,14 +28,14 @@ void SimilarFunctionFinder::print_function(const Path& path) const {
 }
 
 void SimilarFunctionFinder::print_reference_path() {
-    std::string line1 = REFERENCE_PATH_MESSAGE;
-    std::cout << line1 << '\n';
+    fm::write(REFERENCE_PATH_MESSAGE);
     print_function(path);
 }
 
 void SimilarFunctionFinder::print_similar_functions(const std::vector<Path>& similar_paths) {
-    std::string line1 = COUNT_MESSAGE_1 + std::to_string(similar_paths.size()) + COUNT_MESSAGE_2;
-    std::cout << line1 << '\n';
+    fm::write(TEMPLATE_COUNT, SimilarFunctionCountEntry{
+        similar_paths.size()
+    }, Format::TEXT);
     for (const auto& similar_path : similar_paths) {
         print_function(similar_path);
     }
@@ -45,7 +48,7 @@ void SimilarFunctionFinder::print_similar_functions() {
     }
     std::vector<Path> similar_paths = similarity_table->get_similar_path_to_the_reference(path);
 
-    std::cout << Utils::LIMITER_PRINT << '\n';
+    fm::write(Utils::LIMITER_PRINT);
     print_reference_path();
     print_similar_functions(similar_paths);
 }
