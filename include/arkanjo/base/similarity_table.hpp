@@ -25,10 +25,23 @@
 #include <arkanjo/base/config.hpp>
 
 /**
- * @brief Manages and analyzes function similarity relationships
+ * @brief Represents a similarity graph between functions (paths).
  *
- * Stores pairs of similar functions with their similarity scores,
- * providing various query and analysis capabilities.
+ * Each node corresponds to a function (identified by a Path).
+ * Stores pairs of similar functions with their similarity scores.
+ *
+ * Internally:
+ * - `paths` stores all known functions.
+ * - `path_id` maps a Path to its unique node ID.
+ * - `similarity_graph` is an adjacency list representation:
+ *      node -> [(neighbor_id, similarity), ...]
+ * - `similarity_table` stores pairwise similarity for fast lookup.
+ *
+ * Graph interpretation:
+ * - Nodes = functions
+ * - Edges = similarity >= threshold (filtered at query time)
+ *
+ * @note The graph is undirected.
  */
 class Similarity_Table {
   private:
@@ -41,7 +54,11 @@ class Similarity_Table {
     double similarity_threshold;                                       ///< Current similarity threshold
     std::vector<Path> paths;                                           ///< List of all known paths
     std::map<Path, int> path_id;                                       ///< Path to ID mapping
-    std::vector<std::vector<std::pair<int, double>>> similarity_graph; ///< Graph of similarity relationships
+
+    /// Adjacency list representing the similarity graph.
+    /// Each index corresponds to a function ID, and stores
+    /// (neighbor_id, similarity_score).
+    std::vector<std::vector<std::pair<int, double>>> similarity_graph;
     std::map<std::pair<int, int>, double> similarity_table;            ///< Similarity score lookup table
 
     /**

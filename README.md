@@ -16,16 +16,18 @@ The tool currently supports the C programming language and also supports Java wi
 # Similarity
 
 The tool currently uses the concept of **similarity**. A user can pass a **similarity threshold** to the 
-tool, which is a number between 0 and 100. This threshold is used to limit what the tool 
+tool, which is a number between 0.0 and 100.0. This threshold is used to limit what the tool 
 considers a duplication.
 
-If the threshold is set to **0**, everything is considered a duplication. If the threshold is set 
-to **100**, only completely equal functions are considered duplications. In its current state, 
-the tool provides good results with similarity thresholds around **90**.
+If the threshold is set to **0.0**, everything is considered a duplication. If the threshold is set 
+to **100.0**, only completely equal functions are considered duplications. In its current state, 
+the tool provides good results with similarity thresholds around **90.0**.
 
 The Arkanjo tool uses the
 [Duplicate Code Detection Tool](https://github.com/platisd/duplicate-code-detection-tool) 
 as a subroutine to generate the similarity metrics.
+
+For more details about the similarity model, see [`docs/similarity.md`](docs/similarity.md).
 
 # Requirements
 
