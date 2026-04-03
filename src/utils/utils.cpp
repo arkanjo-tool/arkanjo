@@ -126,7 +126,9 @@ std::ostream& operator<<(std::ostream& os, const Wrapped& w) {
 std::string Utils::to_uppercase(const std::string input) {
     std::string output = input;
     for (char &c : output) {
-        c = std::toupper((unsigned char) c);
+        c = static_cast<char>(
+            std::toupper(static_cast<unsigned char>(c))
+        );
     }
     return output;
 }

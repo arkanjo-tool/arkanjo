@@ -24,9 +24,9 @@ vector<string> DuplicationFinderDiff::find_files(const fs::path& folder_path) {
 }
 
 bool DuplicationFinderDiff::is_empty_line(string line) {
-    int line_size = line.size();
+    size_t line_size = line.size();
     bool is_empty = true;
-    for (int i = 1; i < line_size; i++) {
+    for (size_t i = 1; i < line_size; i++) {
         is_empty &= Utils::is_empty_char(line[i]);
     }
     return is_empty;
@@ -46,8 +46,8 @@ bool DuplicationFinderDiff::is_equal_files(vector<string> content1, vector<strin
     if (content1.size() != content2.size()) {
         return false;
     }
-    int sz = content1.size();
-    for (int i = 0; i < sz; i++) {
+    size_t sz = content1.size();
+    for (size_t i = 0; i < sz; i++) {
         if (content1[i] != content2[i]) {
             return false;
         }
@@ -76,11 +76,11 @@ double DuplicationFinderDiff::find_similarity(string path1, string path2) {
 
     vector<string> content = Utils::read_file_generic(output_file);
 
-    int number_lines = content.size();
+    size_t number_lines = content.size();
 
     int different_lines = 0;
 
-    for (int i = 4; i < number_lines; i++) {
+    for (size_t i = 4; i < number_lines; i++) {
         auto& line = content[i];
         if (is_empty_line(line)) {
             continue;

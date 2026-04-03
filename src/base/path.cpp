@@ -48,7 +48,7 @@ std::string Path::build_base_path(const std::string& base) const {
         return "";
     }
     std::vector<std::string> path = tokens;
-    int pos_change = position_start_relative_path - 1;
+    size_t pos_change = position_start_relative_path - 1;
     path[pos_change] = base;
     std::string string_path = build_string_path(path);
     return string_path;
@@ -78,9 +78,9 @@ std::string Path::build_info_path() const {
 std::vector<std::string> Path::get_tokens_from_relative_path() const {
     std::vector<std::string> token_relative_path = tokens;
     token_relative_path.pop_back();
-    int to_remove = position_start_relative_path;
+    size_t to_remove = position_start_relative_path;
     reverse(token_relative_path.begin(), token_relative_path.end());
-    for (int i = 0; i < to_remove; i++) {
+    for (size_t i = 0; i < to_remove; i++) {
         token_relative_path.pop_back();
     }
     reverse(token_relative_path.begin(), token_relative_path.end());
@@ -119,9 +119,9 @@ std::string Path::build_function_name() const {
 std::vector<std::string> Path::get_common_folders(const Path& path) const {
     std::vector<std::string> tokens_relative_1 = get_tokens_from_relative_path();
     std::vector<std::string> tokens_relative_2 = path.get_tokens_from_relative_path();
-    int minimum_size_tokens = std::min(tokens_relative_1.size(), tokens_relative_2.size());
+    size_t minimum_size_tokens = std::min(tokens_relative_1.size(), tokens_relative_2.size());
     std::vector<std::string> common_folders;
-    for (int i = 0; i < minimum_size_tokens; i++) {
+    for (size_t i = 0; i < minimum_size_tokens; i++) {
         auto token_1 = tokens_relative_1[i];
         auto token_2 = tokens_relative_2[i];
         if (token_1 == token_2) {

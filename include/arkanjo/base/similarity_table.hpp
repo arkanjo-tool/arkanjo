@@ -133,7 +133,7 @@ class Similarity_Table {
      * @param path2 Second path to compare
      * @return bool True if paths are similar
      */
-    double is_similar(const Path& path1, const Path& path2);
+    bool is_similar(const Path& path1, const Path& path2);
 
     /**
      * @brief Gets list of all known paths

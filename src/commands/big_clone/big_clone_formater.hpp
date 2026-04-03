@@ -67,7 +67,7 @@ class BigCloneFormater : public CommandBase<BigCloneFormater> {
 
     /**
      * @brief Constructs formatter and processes similarity table
-     * @param similarity_table Pointer to similarity data to format
+     * @param _similarity_table Pointer to similarity data to format
      *
      * @note Immediately outputs all formatted pairs to stdout
      */

@@ -50,7 +50,7 @@ std::vector<std::string> Function::build_all_content() {
     for (const auto& line : header) {
         ret.push_back(line);
     }
-    for (int i = 0; i < int(content.size()); i++) {
+    for (size_t i = 0; i < content.size(); i++) {
         auto line = content[i];
         if (i >= 1) {
             ret.push_back(line);

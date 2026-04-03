@@ -50,7 +50,7 @@ struct ParsedOptions {
  * 
  * @param argc Number of arguments passed to the application.
  * @param argv Vector of strings containing the arguments.
- * @param long_opts Array of `struct option` containing the long options.
+ * @param options Array of `CliOption` containing the options.
  * @param ctx_options Reference to ParsedOptions that will be filled in.
  */
 bool parse_options(int argc, char* argv[], const std::vector<CliOption>& options, ParsedOptions& ctx_options);

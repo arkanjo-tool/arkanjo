@@ -6,10 +6,10 @@
 #include <arkanjo/base/config.hpp>
 #include <algorithm> 
 
-#define COMMAND_DESCRIPTION(str)                    \
-    std::string_view description() const override { \
-        static constexpr char str__[] = str;        \
-        return str__;                               \
+#define COMMAND_DESCRIPTION(str)                       \
+    std::string_view description() const override {    \
+        static constexpr char description_str[] = str; \
+        return description_str;                        \
     }
 
 template <typename, typename = std::void_t<>>
@@ -102,7 +102,7 @@ class CommandBase : public ICommand {
         }
     }
 
-    bool do_run(const std::string command_name, const ParsedOptions& options, const OptionsCollector* collector = nullptr) {
+    bool do_run(const std::string command_name, const ParsedOptions& options, const OptionsCollector* collector = nullptr) override {
         if (options.args.count("help") > 0) {
             print_help(command_name, collector);
             return true;

@@ -8,8 +8,8 @@ Help::Help(
 
 Help::Help(
     const std::vector<std::pair<std::vector<std::string>, CommandsRegistry::CommandFactory>>& commands,
-    const std::string command_name)
-    : internal_commands(commands), command_name(command_name) {}
+    const std::string command_name_)
+    : internal_commands(commands), command_name(command_name_) {}
 
 bool Help::validate([[maybe_unused]] const ParsedOptions& options) {
     return true;

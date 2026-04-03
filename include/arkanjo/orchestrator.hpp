@@ -41,7 +41,7 @@ class Orchestrator {
     size_t current_step = 0;
 
   public:
-    void add_step(Step step) { steps.push_back(step); };
+    void add_step(Step step) { steps.push_back(step); }
 
     void skip() {
         current_step = steps.size();
@@ -54,5 +54,5 @@ class Orchestrator {
                 break;
             }
         }
-    };
+    }
 };

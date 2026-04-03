@@ -5,11 +5,11 @@
 
 using json = nlohmann::json;
 
-typedef struct {
+struct SimilarityExplorerEntry {
   std::string path_a;
   std::string path_b;
-  int duplicated_lines = -1;
-} SimilarityExplorerEntry;
+  int duplicated_lines{-1};
+};
 
 inline void to_json(json& j, const SimilarityExplorerEntry& d) {
   j = {

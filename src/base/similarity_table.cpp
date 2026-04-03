@@ -84,7 +84,7 @@ bool Similarity_Table::is_above_threshold(double similarity) const {
     return similarity_threshold <= similarity + EPS_ERROR_MARGIN;
 }
 
-double Similarity_Table::is_similar(const Path& path1, const Path& path2) {
+bool Similarity_Table::is_similar(const Path& path1, const Path& path2) {
     double similarity = get_similarity(path1, path2);
     return is_above_threshold(similarity);
 }

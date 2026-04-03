@@ -40,7 +40,7 @@ class Path {
 
     /**
      * @brief Splits path string into components
-     * @param string_path Path to split
+     * @param path Path to split
      * @return vector<string> Path components
      */
     static std::vector<std::string> split_path(const fs::path& path);
@@ -53,7 +53,7 @@ class Path {
 
     /**
      * @brief Joins path components into string
-     * @param path Components to join
+     * @param path_tokens Components to join
      * @return string Constructed path
      */
     static std::string build_string_path(const std::vector<std::string>& path_tokens);
@@ -92,9 +92,9 @@ class Path {
 
     /**
      * @brief Constructs from path string
-     * @param string_path Path to parse
+     * @param path Path to parse
      */
-    explicit Path(const fs::path& string_path);
+    explicit Path(const fs::path& path);
 
     /**
      * @brief Builds source file path
@@ -149,7 +149,6 @@ class Path {
 
     /**
      * @brief Formats path for display
-     * @param path Path to format
      * @return string Formatted path string
      */
     std::string format_path_message_in_pair() const;

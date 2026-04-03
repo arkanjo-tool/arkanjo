@@ -3,7 +3,7 @@
 #include <iostream>
 #include <memory>
 
-option* build_longopts(const std::vector<CliOption>& options) {
+static option* build_longopts(const std::vector<CliOption>& options) {
     size_t n = options.size();
     option* opts = new option[n + 1];
 
@@ -18,7 +18,7 @@ option* build_longopts(const std::vector<CliOption>& options) {
         j++;
     }
 
-    opts[j] = {0,0,0,0};
+    opts[j] = {nullptr,0,nullptr,0};
 
     return opts;
 }
@@ -72,7 +72,7 @@ bool parse_options(int argc, char* argv[], const std::vector<CliOption>& options
         } else { // short option
             name = std::string(1, static_cast<char>(opt));
 
-            for (int i = 0; long_opts[i].name != nullptr; i++) {
+            for (size_t i = 0; long_opts[i].name != nullptr; i++) {
                 if (long_opts[i].val == opt) {
                     name = long_opts[i].name;
                     break;
