@@ -42,6 +42,7 @@ class SimilarityExplorer : public CommandBase<SimilarityExplorer> {
         {"pattern", 'p', RequiredArgument, "Defines a pattern that function names must match to be included in the results. A function is considered a match if the pattern is a substring of the function's concatenated file path and name (e.g., `path/to/file.c:function_name`)."},
         {"both-match", 'b', NoArgument, "Enable both-pattern matching. By default, the pattern only needs to match one function."},
         {"sort", 's', NoArgument, "Sort results by number of duplicated lines. By default, results are sorted by the similarity metric."},
+        {"cluster", 'c', NoArgument, "Print results with cluster relationships from the similarity table."},
         OPTION_END
     };
     COMMAND_DESCRIPTION(
@@ -65,6 +66,9 @@ class SimilarityExplorer : public CommandBase<SimilarityExplorer> {
       "Functions find: {path_a} "
       "AND {path_b}"
       ", TOTAL NUMBER LINES IN FUNCTIONS: {duplicated_lines}";
+    static constexpr const char* TEMPLATE_PROCESSED_RESULTS_CLUSTERS = 
+      "Function find: {path_a}"
+      ", TOTAL NUMBER LINES IN FUNCTION: {duplicated_lines}";
     static constexpr const char* TEMPLATE_INITIAL_TEXT =
       "It was found a total of {found:bold} "
       "pair of duplicate functions in the codebase. Which the first "
@@ -77,6 +81,7 @@ class SimilarityExplorer : public CommandBase<SimilarityExplorer> {
     std::string pattern_to_match;                      ///< Pattern to filter results
     bool both_path_need_to_match_pattern;              ///< Whether both paths must match pattern
     bool sorted_by_number_of_duplicated_code;          ///< Whether to sort by line count
+    bool use_clusters;                                 ///< Whether clusters be printed
     int processed_results = INITIAL_PROCESSED_RESULTS; ///< Counter for processed results
 
     /**
@@ -120,6 +125,11 @@ class SimilarityExplorer : public CommandBase<SimilarityExplorer> {
      * @return vector<pair<Path,Path>> Filtered and sorted pairs
      */
     std::vector<std::pair<Path, Path>> build_similar_path_pairs();
+
+    /**
+     * @brief Display clusters of similar functions.
+     */
+    void explorer_clusters();
 
     /**
      * @brief Main exploration driver

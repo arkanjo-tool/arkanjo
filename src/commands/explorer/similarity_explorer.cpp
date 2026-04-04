@@ -72,6 +72,39 @@ std::vector<std::pair<Path, Path>> SimilarityExplorer::build_similar_path_pairs(
     return similar_path_pairs;
 }
 
+void SimilarityExplorer::explorer_clusters() {
+    auto clusters_info = similarity_table->get_clusters_info(sorted_by_number_of_duplicated_code);
+
+    int clusters_to_show = limit_on_results > 0 
+        ? std::min(limit_on_results, (int)clusters_info.size()) 
+        : (int)clusters_info.size();
+
+    for (int idx = 0; idx < clusters_to_show; idx++) {
+        const auto& info = clusters_info[idx];
+        fm::write("Cluster #" + std::to_string(idx + 1)
+          + " (Files: " + std::to_string(info.paths.size())
+          + ", Pairs: " + std::to_string(info.total_pairs)
+          + ", Lines: " + std::to_string(info.total_lines)
+          + ", Score: " + std::to_string(info.score()) + ")");
+        fm::write(Utils::LIMITER_PRINT);
+
+        std::vector<SimilarityExplorerEntry> entries{};
+        for (const auto& path : info.paths) {
+            entries.push_back({
+                path.format_path_message_in_pair(), "",
+                find_number_lines(path)
+            });
+        }
+
+        fm::write(TEMPLATE_PROCESSED_RESULTS_CLUSTERS, entries, Format::AUTO, [](size_t i) {
+            return (i % 2 == 0)
+                ? fm::get_formatter()->style().at("row_even")
+                : fm::get_formatter()->style().at("row_odd");
+        });
+        fm::write("");
+    }
+}
+
 void SimilarityExplorer::explorer() {
     std::vector<std::pair<Path, Path>> similar_path_pairs = build_similar_path_pairs();
     int number_pair_found = find_number_pair_found(similar_path_pairs);
@@ -100,7 +133,8 @@ SimilarityExplorer::SimilarityExplorer(Similarity_Table* table)
       limit_on_results(0),
       pattern_to_match(""),
       both_path_need_to_match_pattern(false),
-      sorted_by_number_of_duplicated_code(false) {}
+      sorted_by_number_of_duplicated_code(false),
+      use_clusters(false) {}
 
 bool SimilarityExplorer::validate(const ParsedOptions& options) {
     auto it_limiter = options.args.find("limiter");
@@ -127,8 +161,12 @@ bool SimilarityExplorer::run(const ParsedOptions& options) {
     }
     both_path_need_to_match_pattern = options.args.count("both-match") > 0;
     sorted_by_number_of_duplicated_code = options.args.count("sort") > 0;
+    use_clusters = options.args.count("cluster") > 0;
 
+    if (use_clusters) {
+        explorer_clusters();
+        return true;
+    }
     explorer();
-
     return true;
 }
