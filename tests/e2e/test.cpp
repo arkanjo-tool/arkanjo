@@ -1,4 +1,4 @@
-#include "../src/commands/pre/build/preprocessor.hpp"
+#include "../src/commands/pre/build/preprocessor_build.hpp"
 #include <algorithm>
 #include <arkanjo/base/config.hpp>
 #include <arkanjo/utils/utils.hpp>
@@ -100,6 +100,6 @@ void Test() {
 
 int main(void) {
     Config::config().setTestConfig();
-    Preprocessor(true, CODEBASE_DIR, 0);
+    PreprocessorBuild(true, CODEBASE_DIR, 0);
     Test();
 }

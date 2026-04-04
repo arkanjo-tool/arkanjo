@@ -1,7 +1,7 @@
 // As preprocessor is, in the moment, separated from orchestrator
 // we define a main function to use it.
 
-#include "build/preprocessor.hpp"
+#include "build/preprocessor_build.hpp"
 #include "list/preprocessor_list.hpp"
 #include "../help/help.hpp"
 #include <cassert>
@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
     ctx.argv = argv;
 
     static const std::vector<std::pair<std::vector<std::string>, CommandsRegistry::CommandFactory>> internal_commands = {
-        {{"build"}, [&]() { return std::make_unique<Preprocessor>(); }},
+        {{"build"}, [&]() { return std::make_unique<PreprocessorBuild>(); }},
         {{"list", "ls"}, [&]() { return std::make_unique<PreprocessorList>(); }}
     };
 

@@ -1,5 +1,5 @@
 /**
- * @file preprocessor.hpp
+ * @file preprocessor_build.hpp
  * @brief Codebase preprocessing interface
  *
  * Defines the preprocessing stage that prepares the codebase for
@@ -17,6 +17,7 @@
 #include "function_breaker.hpp"
 #include "parser.hpp"
 #include <arkanjo/base/config.hpp>
+#include <arkanjo/commands/pre/preprocessor.hpp>
 #include <arkanjo/commands/command_base.hpp>
 #include <string>
 #include <tuple>
@@ -35,7 +36,7 @@ namespace fs = std::filesystem;
  *
  * Creates the foundation for fast query responses during the main operation phase.
  */
-class Preprocessor : public CommandBase<Preprocessor> {
+class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBuild> {
   private:
     static constexpr const char* TEMPLATE_COUNT =
       "The total number of functions that are "
@@ -44,9 +45,6 @@ class Preprocessor : public CommandBase<Preprocessor> {
     // User interaction messages
     string PROJECT_PATH_MESSAGE = "Enter your project path:";                                  ///< Project path prompt
     string MINIMUM_SIMILARITY_MESSAGE = "Enter minimum similarity desired on using the tool:"; ///< Similarity threshold prompt
-    string CONFIG_PATH = "config.txt";                                                         ///< Configuration file path
-    string PATH_MESSAGE = "path of the current preprocess: ";                                  ///< Current processing path display
-    string TIME_MESSAGE = "Finished time: ";                                                   ///< Timing information prefix
 
     // Processing stage messages
     string INITIAL_MESSAGE = "Initiating Preprocessing";                                           ///< Initialization message
@@ -71,12 +69,6 @@ class Preprocessor : public CommandBase<Preprocessor> {
     tuple<string, double, bool> read_parameters();
 
     /**
-     * @brief Saves preprocessing parameters for future runs
-     * @param path Project path to save
-     */
-    void save_current_run_params(const fs::path& path);
-
-    /**
      * @brief Executes full preprocessing pipeline
      * @param path Project path to process
      * @param similarity Similarity threshold
@@ -85,13 +77,13 @@ class Preprocessor : public CommandBase<Preprocessor> {
     void preprocess(const fs::path& path, double similarity, bool use_duplication_finder_by_tool);
 
   public:
-    Preprocessor();
+    PreprocessorBuild();
 
     /**
-     * @brief Constructs preprocessor with optional forcing
+     * @brief Constructs preprocessor build with optional forcing
      * @param force_preprocess Whether to force preprocessing even if cached results exist
      */
-    Preprocessor(bool force_preprocess);
+    PreprocessorBuild(bool force_preprocess);
 
     /**
      * @brief Testing constructor with direct parameter specification
@@ -100,7 +92,7 @@ class Preprocessor : public CommandBase<Preprocessor> {
      * @param similarity Direct similarity threshold specification
      * @note Exposed for testing purposes only
      */
-    Preprocessor(bool force_preprocess, const fs::path& path, double similarity);
+    PreprocessorBuild(bool force_preprocess, const fs::path& path, double similarity);
 
     COMMAND_DESCRIPTION("Creates the foundation for fast query responses during the main operation phase.")
 

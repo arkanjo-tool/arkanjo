@@ -6,7 +6,7 @@
 #include <arkanjo/orchestrator_helper.hpp>
 #include <arkanjo/orchestrator.hpp>
 #include "orchestrator_commands.hpp"
-#include "commands/pre/build/preprocessor.hpp"
+#include "commands/pre/build/preprocessor_build.hpp"
 
 int main(int argc, char* argv[]) {
     auto& cfg = Config::config();
@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
         if (ctx.command_name != "help" && ctx.options.args.count("help") == 0) {
             orchestrator.add_step([](Context& ctx) {
                 bool force_pre = ctx.options.args.count("preprocessor") > 0;
-                Preprocessor pre(force_pre);
+                PreprocessorBuild pre(force_pre);
                 return true;
             });
             orchestrator.add_step(OrchestratorHelper::similarity_step(similarity_table));

@@ -1,4 +1,4 @@
-#include "preprocessor.hpp"
+#include "preprocessor_build.hpp"
 #include <cassert>
 #include <iomanip>
 #include <iostream>
@@ -7,22 +7,7 @@
 
 using fm = FormatterManager;
 
-void Preprocessor::save_current_run_params(const fs::path& path) {
-    vector<string> config_content;
-
-    string path_message = PATH_MESSAGE + path.string();
-
-    auto end = std::chrono::system_clock::now();
-    std::time_t end_time = std::chrono::system_clock::to_time_t(end);
-    string time_message = TIME_MESSAGE + std::ctime(&end_time);
-
-    config_content.push_back(path_message);
-    config_content.push_back(time_message);
-
-    Utils::write_file_generic(Config::config().base_path / Config::config().name_container / CONFIG_PATH, config_content);
-}
-
-tuple<string, double, bool> Preprocessor::read_parameters() {
+tuple<string, double, bool> PreprocessorBuild::read_parameters() {
     fm::write(INITIAL_MESSAGE);
     string similarity_message;
 
@@ -58,7 +43,7 @@ tuple<string, double, bool> Preprocessor::read_parameters() {
     return {path, similarity, use_duplication_finder_by_tool};
 }
 
-void Preprocessor::preprocess(const fs::path& path, double similarity, bool use_duplication_finder_by_tool) {
+void PreprocessorBuild::preprocess(const fs::path& path, double similarity, bool use_duplication_finder_by_tool) {
     fm::write(BREAKER_MESSAGE);
 
     fs::path base_path = Config::config().base_path / Config::config().name_container;
@@ -79,14 +64,14 @@ void Preprocessor::preprocess(const fs::path& path, double similarity, bool use_
         duplicationFinder.execute();
     }
 
-    save_current_run_params(path);
+    Preprocessor::save_current_run_params(path);
 
     fm::write(END_MESSAGE);
 }
 
-Preprocessor::Preprocessor() { }
+PreprocessorBuild::PreprocessorBuild() { }
 
-Preprocessor::Preprocessor(bool force_preprocess) {
+PreprocessorBuild::PreprocessorBuild(bool force_preprocess) {
     fs::path base_path = Config::config().base_path / Config::config().name_container;
     if (force_preprocess || !std::filesystem::exists(base_path / CONFIG_PATH)) {
         auto [path, similarity, use_duplication_finder_by_tool] = read_parameters();
@@ -94,14 +79,14 @@ Preprocessor::Preprocessor(bool force_preprocess) {
     }
 }
 
-Preprocessor::Preprocessor(bool force_preprocess, const fs::path& path, double similarity) {
+PreprocessorBuild::PreprocessorBuild(bool force_preprocess, const fs::path& path, double similarity) {
     fs::path base_path = Config::config().base_path / Config::config().name_container;
     if (force_preprocess || !std::filesystem::exists(base_path / CONFIG_PATH)) {
         preprocess(path, similarity, true);
     }
 }
 
-bool Preprocessor::validate(const ParsedOptions& options) {
+bool PreprocessorBuild::validate(const ParsedOptions& options) {
     auto it_name = options.args.find("name");
     if (it_name != options.args.end()) {
         Config::config().name_container = it_name->second;
@@ -114,7 +99,7 @@ bool Preprocessor::validate(const ParsedOptions& options) {
     return true;
 }
 
-bool Preprocessor::run([[maybe_unused]] const ParsedOptions& options) {
+bool PreprocessorBuild::run([[maybe_unused]] const ParsedOptions& options) {
     fs::path base_path = Config::config().base_path / Config::config().name_container;
     auto [path, similarity, use_duplication_finder_by_tool] = read_parameters();
     preprocess(path, similarity, use_duplication_finder_by_tool);
