@@ -33,11 +33,10 @@ class Function {
     static constexpr const char* START_NUMBER_LINE_JSON = "start_number_line"; ///< JSON key for start line
     static constexpr const char* END_NUMBER_LINE_JSON = "end_number_line";     ///< JSON key for end line
 
-    static constexpr const char* FUNCTION_PREFIX_PRINT = "Function Name: ";     ///< Prefix for function name display
-    static constexpr const char* RELATIVE_PATH_PRINT = "Relative Path: ";       ///< Prefix for path display
-    static constexpr const char* LINE_DECLARATION_PRINT = "Starts on line: ";   ///< Prefix for start line display
-    static constexpr const char* END_DECLARATION_PRINT = "Ends on line: ";      ///< Prefix for end line display
-    static constexpr const char* NUMBER_LINE_PRINT = "Total number of lines: "; ///< Prefix for line count display
+    static constexpr const char* FUNCTION_PREFIX_PRINT = "Function: ";          ///< Prefix for function name display
+    static constexpr const char* RELATIVE_PATH_PRINT = "File: ";                ///< Prefix for path display
+    static constexpr const char* LINE_DECLARATION_PRINT = "Lines: ";            ///< Prefix for line display
+    static constexpr const char* NUMBER_LINE_PRINT = "Size: "; ///< Prefix for line count display
 
     Path path;                        ///< Path object containing function location info
     std::vector<std::string> content; ///< Function source code content
@@ -101,4 +100,6 @@ class Function {
      * @brief Prints formatted function information to console
      */
     void print_basic_info();
+
+    void print_code(bool no_numbers = false);
 };

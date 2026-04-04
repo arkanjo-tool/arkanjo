@@ -43,6 +43,8 @@ class SimilarFunctionFinder : public CommandBase<SimilarFunctionFinder> {
     Similarity_Table* similarity_table; ///< Source of similarity data
     std::string function_pattern;       ///< Function name pattern to match
     bool open_folder;
+    bool show_mode;
+    bool no_numbers;
     Path path;                          ///< Reference function path
 
     /**
@@ -59,7 +61,7 @@ class SimilarFunctionFinder : public CommandBase<SimilarFunctionFinder> {
      * @brief Prints details about a single function
      * @param path Path of function to display
      */
-    void print_function(const Path& path) const;
+    Function get_reference_function(const Path& path) const;
 
     /**
      * @brief Prints reference function information
@@ -77,10 +79,14 @@ class SimilarFunctionFinder : public CommandBase<SimilarFunctionFinder> {
      */
     void print_similar_functions();
 
+    void handle_show_mode();
+
   public:
     static constexpr CliOption options_[] = {
         {"function_name", 0, PositionalArgument, "The tool will match the parameter with any function that has the `FUNCTION_NAME` as a substring."},
-        {"open", 0, NoArgument, ""},
+        {"open", 'o', NoArgument, "Open the folder where the function is located."},
+        {"show", 's', NoArgument, "Show detailed information and the full source code of the function."},
+        {"no-numbers", 0, NoArgument, "Hide line numbers in the displayed source code."},
         OPTION_END
     };
     COMMAND_DESCRIPTION("Search for functions using a substring match.")
