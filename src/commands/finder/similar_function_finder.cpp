@@ -59,9 +59,6 @@ SimilarFunctionFinder::SimilarFunctionFinder(Similarity_Table* _similarity_table
 }
 
 bool SimilarFunctionFinder::validate(const ParsedOptions& options) {
-    if (options.args.count("help") > 0)
-        return true;
-
     if (options.extra_args.empty()) {
         throw CLIError("Similar Function Finder Command expect one parameter, but none was given");
         return false;
