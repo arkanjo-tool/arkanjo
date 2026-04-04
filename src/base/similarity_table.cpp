@@ -157,3 +157,83 @@ std::vector<std::pair<Path, Path>> Similarity_Table::get_all_similar_path_pairs_
     return ret;
 }
 
+int Similarity_Table::get_number_lines_in_pair(const Path& path1, const Path& path2) {
+    Function f1(path1);
+    f1.load();
+    Function f2(path2);
+    f2.load();
+    return f1.number_of_lines() + f2.number_of_lines();
+}
+
+std::vector<Cluster> Similarity_Table::get_clusters() {
+    int n = paths.size();
+
+    std::vector<bool> visited(n, false);
+    std::vector<Cluster> clusters;
+
+    for (int i = 0; i < n; i++) {
+        if (visited[i]) continue;
+
+        std::vector<int> stack;
+        std::vector<int> component;
+
+        stack.push_back(i);
+        visited[i] = true;
+
+        while (!stack.empty()) {
+            int current = stack.back();
+            stack.pop_back();
+
+            component.push_back(current);
+
+            for (auto [neighbor, similarity] : similarity_graph[current]) {
+                if (!visited[neighbor] && is_above_threshold(similarity)) {
+                    visited[neighbor] = true;
+                    stack.push_back(neighbor);
+                }
+            }
+        }
+
+        if (component.size() > 1) {
+            clusters.push_back({component});
+        }
+    }
+
+    return clusters;
+}
+
+std::vector<ClusterInfo> Similarity_Table::get_clusters_info(bool sorted) {
+    auto raw_clusters = get_clusters();
+    std::vector<ClusterInfo> clusters_info;
+
+    for (const auto& cluster : raw_clusters) {
+        ClusterInfo info;
+
+        for (int id : cluster.members) {
+            info.paths.push_back(paths[id]);
+        }
+
+        for (size_t i = 0; i < info.paths.size(); i++) {
+            for (size_t j = i + 1; j < info.paths.size(); j++) {
+                int lines = get_number_lines_in_pair(info.paths[i], info.paths[j]);
+                if (lines > 0) {
+                    info.total_pairs++;
+                    info.total_lines += lines;
+                }
+            }
+        }
+
+        if (info.total_pairs > 0) {
+            clusters_info.push_back(info);
+        }
+    }
+
+    if (sorted) {
+        std::sort(clusters_info.begin(), clusters_info.end(), 
+            [](const ClusterInfo& a, const ClusterInfo& b) {
+                return a.score() > b.score();
+            });
+    }
+
+    return clusters_info;
+}

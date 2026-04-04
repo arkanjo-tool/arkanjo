@@ -56,6 +56,28 @@ template<typename Key, typename Weight>
 using AdjacencyList = std::vector<std::vector<std::pair<Key, Weight>>>;
 
 /**
+ * @struct Cluster
+ * @brief Represents a cluster of similar functions in the similarity graph.
+ */
+struct Cluster {
+    std::vector<int> members; ///< List of node indices (Path IDs) in the cluster 
+};
+
+struct ClusterInfo {
+    std::vector<Path> paths;
+    int total_lines = 0;
+    int total_pairs = 0;
+
+    double score() const {
+        double w_files = 0.3;
+        double w_lines = 0.4;
+        double w_density = 0.3;
+        double d = total_pairs > 0 ? (double)total_lines / total_pairs : 0;
+        return w_files * paths.size() + w_lines * total_lines + w_density * d;
+    }
+};
+
+/**
  * @brief Represents a similarity graph between functions (paths).
  *
  * Each node corresponds to a function (identified by a Path).
@@ -201,4 +223,18 @@ class Similarity_Table {
      * @return vector<pair<Path,Path>> Similar path pairs
      */
     std::vector<std::pair<Path, Path>> get_all_similar_path_pairs_sorted_by_line_number();
+
+    /**
+     * @brief Generate clusters of similar functions using DFS on the similarity graph.
+     * Only edges with similarity >= threshold are considered.
+     * @return vector of Cluster objects
+     */
+    std::vector<Cluster> get_clusters();
+
+    /**
+     * @brief Returns detailed information about all clusters found in the similarity table.
+     *
+     * @return std::vector<ClusterInfo>
+     */
+    std::vector<ClusterInfo> get_clusters_info(bool sorted);
 };
