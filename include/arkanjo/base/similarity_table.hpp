@@ -24,6 +24,37 @@
 #include <arkanjo/utils/utils.hpp>
 #include <arkanjo/base/config.hpp>
 
+struct PathId {
+  int value;
+
+  explicit PathId(int v = -1) : value(v) {}
+
+  bool operator==(const PathId& other) const {
+    return value == other.value;
+  }
+
+  bool operator!=(const PathId& other) const {
+    return value != other.value;
+  }
+
+  bool operator<(const PathId& other) const {
+    return value < other.value;
+  }
+
+  operator int() const { return value; }
+};
+
+/**
+ * {
+ * 1: [{ key, weight }, { key, weight }]
+ * 2: [{ key, weight }]
+ * 3: []
+ * ...
+ * }
+ */
+template<typename Key, typename Weight>
+using AdjacencyList = std::vector<std::vector<std::pair<Key, Weight>>>;
+
 /**
  * @brief Represents a similarity graph between functions (paths).
  *
@@ -45,31 +76,34 @@
  */
 class Similarity_Table {
   private:
-    static constexpr const char* SIMILARITY_TABLE_FILE_NAME = "output_parsed.txt";     ///< Default similarity data file
-    double DEFAULT_SIMILARITY = 100.00;                                                ///< Default similarity threshold
-    double EPS_ERROR_MARGIN = 1e-6;                                                    ///< Floating-point comparison margin
-    double MAXIMUM_SIMILARITY = 100.00;                                                ///< Maximum possible similarity score
-    double MINIMUM_SIMILARITY = 0.00;                                                  ///< Minimum possible similarity score
+    static constexpr const char* SIMILARITY_TABLE_FILE_NAME = "output_parsed.txt"; ///< Default similarity data file
+    static constexpr const double DEFAULT_SIMILARITY = 100.00; ///< Default similarity threshold
+    static constexpr const double EPS_ERROR_MARGIN = 1e-6;     ///< Floating-point comparison margin
+    static constexpr const double MAXIMUM_SIMILARITY = 100.00; ///< Maximum possible similarity score
+    static constexpr const double MINIMUM_SIMILARITY = 0.00;   ///< Minimum possible similarity score
 
-    double similarity_threshold;                                       ///< Current similarity threshold
-    std::vector<Path> paths;                                           ///< List of all known paths
-    std::map<Path, int> path_id;                                       ///< Path to ID mapping
+    double similarity_threshold;    ///< Current similarity threshold
+    std::vector<Path> paths;        ///< List of all known paths
+    std::map<Path, PathId> path_id; ///< Path to ID mapping
 
     /// Adjacency list representing the similarity graph.
     /// Each index corresponds to a function ID, and stores
     /// (neighbor_id, similarity_score).
-    std::vector<std::vector<std::pair<int, double>>> similarity_graph;
-    std::map<std::pair<int, int>, double> similarity_table;            ///< Similarity score lookup table
+    AdjacencyList<PathId, double> similarity_graph;
+    std::map<std::pair<PathId, PathId>, double> similarity_table; ///< Similarity score lookup table
 
     /**
      * @brief Finds or assigns ID for a path
      * @param path Path to look up
      * @return int Unique ID for the path
      */
-    int find_id_path(const Path& path);
+    PathId find_id_path(const Path& path);
 
     /**
      * @brief Reads single comparison from file
+     * 
+     * Format: string_path1 >> string_path2 >> similarity
+     * 
      * @param table_file Input file stream
      */
     void read_comparation(std::ifstream& table_file);
@@ -109,7 +143,7 @@ class Similarity_Table {
     /**
      * @brief Constructs with default similarity threshold
      */
-    Similarity_Table();
+    explicit Similarity_Table();
 
     void load();
 
@@ -140,6 +174,8 @@ class Similarity_Table {
      * @return vector<Path> All paths in table
      */
     const std::vector<Path>& get_path_list() const;
+
+    int get_number_lines_in_pair(const Path& path1, const Path& path2);
 
     /**
      * @brief Gets paths similar to reference path

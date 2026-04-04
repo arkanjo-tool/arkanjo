@@ -1,6 +1,6 @@
 #include <arkanjo/base/similarity_table.hpp>
 
-int Similarity_Table::find_id_path(const Path& path) {
+PathId Similarity_Table::find_id_path(const Path& path) {
     auto [it, inserted] = path_id.try_emplace(path, paths.size());
 
     if (inserted) {
@@ -16,8 +16,8 @@ void Similarity_Table::read_comparation(std::ifstream& table_file) {
     double similarity;
     table_file >> string_path1 >> string_path2 >> similarity;
 
-    int id1 = find_id_path(Path(string_path1));
-    int id2 = find_id_path(Path(string_path2));
+    PathId id1 = find_id_path(Path(string_path1));
+    PathId id2 = find_id_path(Path(string_path2));
 
     if (id1 > id2) {
         std::swap(id1, id2);
@@ -47,13 +47,11 @@ void Similarity_Table::init_similarity_table() {
     table_file.close();
 }
 
-Similarity_Table::Similarity_Table(double _similarity_threshold) {
-    similarity_threshold = _similarity_threshold;
-}
+Similarity_Table::Similarity_Table(double _similarity_threshold)
+    : similarity_threshold{_similarity_threshold} { }
 
-Similarity_Table::Similarity_Table() {
-    similarity_threshold = DEFAULT_SIMILARITY;
-}
+Similarity_Table::Similarity_Table()
+    :  similarity_threshold{DEFAULT_SIMILARITY} { }
 
 void Similarity_Table::load() {
     init_similarity_table();
@@ -64,8 +62,8 @@ void Similarity_Table::update_similarity(double new_similarity_threshold) {
 }
 
 double Similarity_Table::get_similarity(const Path& path1, const Path& path2) {
-    int id1 = find_id_path(path1);
-    int id2 = find_id_path(path2);
+    PathId id1 = find_id_path(path1);
+    PathId id2 = find_id_path(path2);
 
     if (id1 == id2) {
         return MAXIMUM_SIMILARITY;
@@ -73,7 +71,7 @@ double Similarity_Table::get_similarity(const Path& path1, const Path& path2) {
     if (id1 > id2) {
         std::swap(id1, id2);
     }
-    std::pair<int, int> aux = std::make_pair(id1, id2);
+    std::pair<PathId, PathId> aux = std::make_pair(id1, id2);
     if (similarity_table.find(aux) != similarity_table.end()) {
         return similarity_table[aux];
     }
@@ -158,3 +156,4 @@ std::vector<std::pair<Path, Path>> Similarity_Table::get_all_similar_path_pairs_
 
     return ret;
 }
+
