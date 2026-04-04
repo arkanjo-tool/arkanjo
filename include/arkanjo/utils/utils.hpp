@@ -209,6 +209,8 @@ std::uintmax_t folder_size(const fs::path& folder);
  * @note Uses 1024 as the multiplier between units
  */
 std::string format_size(std::uintmax_t bytes);
+
+void open_folder(const std::string& path);
 }; // namespace Utils
 
 struct Wrapped {

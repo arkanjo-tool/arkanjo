@@ -42,6 +42,7 @@ class SimilarFunctionFinder : public CommandBase<SimilarFunctionFinder> {
 
     Similarity_Table* similarity_table; ///< Source of similarity data
     std::string function_pattern;       ///< Function name pattern to match
+    bool open_folder;
     Path path;                          ///< Reference function path
 
     /**
@@ -78,7 +79,8 @@ class SimilarFunctionFinder : public CommandBase<SimilarFunctionFinder> {
 
   public:
     static constexpr CliOption options_[] = {
-        {"function_name", 0, PositionalArgument, " The tool will match the parameter with any function that has the `FUNCTION_NAME` as a substring."},
+        {"function_name", 0, PositionalArgument, "The tool will match the parameter with any function that has the `FUNCTION_NAME` as a substring."},
+        {"open", 0, NoArgument, ""},
         OPTION_END
     };
     COMMAND_DESCRIPTION("Search for functions using a substring match.")

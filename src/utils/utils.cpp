@@ -179,3 +179,13 @@ std::string Utils::format_size(std::uintmax_t bytes) {
     out << std::fixed << std::setprecision(2) << size << units[unit];
     return out.str();
 }
+
+void Utils::open_folder(const std::string& path) {
+#ifdef _WIN32
+    std::system(("explorer \"" + path + "\"").c_str());
+#elif __APPLE__
+    std::system(("open \"" + path + "\"").c_str());
+#else
+    std::system(("xdg-open \"" + path + "\"").c_str());
+#endif
+}

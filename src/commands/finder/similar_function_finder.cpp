@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include <arkanjo/formatter/format_manager.hpp>
+#include <arkanjo/commands/pre/preprocessor.hpp>
 #include "similar_function_finder.hpp"
 #include "similar_function_finder_entry.hpp"
 
@@ -50,6 +51,13 @@ void SimilarFunctionFinder::print_similar_functions() {
 
     fm::write(Utils::LIMITER_PRINT);
     print_reference_path();
+    if (open_folder) {
+        auto params = Preprocessor::read_current_run_params();
+        fs::path full_path = fs::path{params[0]} / fs::path{path.build_relative_path()};
+        fs::path dir_path = full_path.parent_path();
+        Utils::open_folder(dir_path);
+        return;
+    }
     print_similar_functions(similar_paths);
 }
 
@@ -59,6 +67,8 @@ SimilarFunctionFinder::SimilarFunctionFinder(Similarity_Table* _similarity_table
 }
 
 bool SimilarFunctionFinder::validate(const ParsedOptions& options) {
+    open_folder = options.args.count("open") > 0;
+
     if (options.extra_args.empty()) {
         throw CLIError("Similar Function Finder Command expect one parameter, but none was given");
         return false;

@@ -3,9 +3,6 @@
 #include <arkanjo/utils/utils.hpp>
 #include <arkanjo/base/config.hpp>
 
-#include <vector>
-#include <string>
-
 void Preprocessor::save_current_run_params(const fs::path& path) {
     std::vector<std::string> config_content;
 
@@ -19,4 +16,29 @@ void Preprocessor::save_current_run_params(const fs::path& path) {
     config_content.push_back(time_message);
 
     Utils::write_file_generic(Config::config().base_path / Config::config().name_container / CONFIG_PATH, config_content);
+}
+
+std::vector<std::string> Preprocessor::read_current_run_params() {
+    std::vector<std::string> content;
+    fs::path file_path = Config::config().base_path / Config::config().name_container / CONFIG_PATH;
+
+    std::ifstream infile(file_path);
+    if (!infile.is_open()) {
+        std::cerr << "Error: could not open " << file_path << "\n";
+        return content;
+    }
+
+    std::string line;
+    while (std::getline(infile, line)) {
+        if (line.rfind(PATH_MESSAGE, 0) == 0) {
+            line = line.substr(std::string(PATH_MESSAGE).size());
+        }
+        else if (line.rfind(TIME_MESSAGE, 0) == 0) {
+            line = line.substr(std::string(TIME_MESSAGE).size());
+        }
+
+        content.push_back(line);
+    }
+
+    return content;
 }
