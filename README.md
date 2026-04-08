@@ -1,4 +1,4 @@
-**Arkanjo** is a CLI tool designed to help developers find code duplication within 
+**ArKanjo** is a CLI tool designed to help developers find code duplication within 
 their codebases, specifically within the scope of functions.
 
 The current functionalities of the tool are:
@@ -23,7 +23,7 @@ If the threshold is set to **0.0**, everything is considered a duplication. If t
 to **100.0**, only completely equal functions are considered duplications. In its current state, 
 the tool provides good results with similarity thresholds around **90.0**.
 
-The Arkanjo tool uses the
+The ArKanjo tool uses the
 [Duplicate Code Detection Tool](https://github.com/platisd/duplicate-code-detection-tool) 
 as a subroutine to generate the similarity metrics.
 
