@@ -42,21 +42,21 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
       "similar to the found one is {count}. "
       "More info about them are listed below.";
     // User interaction messages
-    std::string PROJECT_PATH_MESSAGE = "Enter your project path:";                                  ///< Project path prompt
-    std::string MINIMUM_SIMILARITY_MESSAGE = "Enter minimum similarity desired on using the tool:"; ///< Similarity threshold prompt
+    static constexpr const char* PROJECT_PATH_MESSAGE = "Enter your project path:";                                  ///< Project path prompt
+    static constexpr const char* MINIMUM_SIMILARITY_MESSAGE = "Enter minimum similarity desired on using the tool:"; ///< Similarity threshold prompt
 
     // Processing stage messages
-    std::string INITIAL_MESSAGE = "Initiating Preprocessing";                                           ///< Initialization message
-    std::string BREAKER_MESSAGE = "Reading codebase... (this may take a while)";                        ///< Code analysis message
-    std::string DUPLICATION_MESSAGE = "Finding duplication in the codebase... (this may take a while)"; ///< Duplication detection message
-    std::string SAVING_MESSAGE = "Saving results...";                                                   ///< Results saving message
-    std::string END_MESSAGE = "Finished preprocessing";                                                 ///< Completion message
+    static constexpr const char* INITIAL_MESSAGE = "Initiating Preprocessing";                                           ///< Initialization message
+    static constexpr const char* BREAKER_MESSAGE = "Reading codebase... (this may take a while)";                        ///< Code analysis message
+    static constexpr const char* DUPLICATION_MESSAGE = "Finding duplication in the codebase... (this may take a while)"; ///< Duplication detection message
+    static constexpr const char* SAVING_MESSAGE = "Saving results...";                                                   ///< Results saving message
+    static constexpr const char* END_MESSAGE = "Finished preprocessing";                                                 ///< Completion message
 
     // Duplication finder selection messages
-    std::string MESSAGE_DUPLICATION_FINDER_TYPE_1 = "Enter the number of the duplication finder technique you want to use:";
-    std::string MESSAGE_DUPLICATION_FINDER_TYPE_2 = "1) NLP text similarity using gensim";
-    std::string MESSAGE_DUPLICATION_FINDER_TYPE_3 = "2) Count proportion of equal lines using diff command";
-    std::string INVALID_CODE_DUPLICATION_FINDER = "Valid options are '1' or '2' only. Stopping Program...";
+    static constexpr const char* MESSAGE_DUPLICATION_FINDER_TYPE_1 = "Enter the number of the duplication finder technique you want to use:";
+    static constexpr const char* MESSAGE_DUPLICATION_FINDER_TYPE_2 = "1) NLP text similarity using gensim";
+    static constexpr const char* MESSAGE_DUPLICATION_FINDER_TYPE_3 = "2) Count proportion of equal lines using diff command";
+    static constexpr const char* INVALID_CODE_DUPLICATION_FINDER = "Valid options are '1' or '2' only. Stopping Program...";
 
     /**
      * @brief Reads preprocessing parameters from user/config

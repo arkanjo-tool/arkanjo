@@ -67,8 +67,8 @@ struct Comparation {
  */
 class Parser {
   private:
-    std::string PROJECT_PATH_MESSAGE = "Enter your project path:";                                  ///< Project path prompt
-    std::string MINIMUM_SIMILARITY_MESSAGE = "Enter minimum similarity desired on using the tool:"; ///< Similarity threshold prompt
+    static constexpr const char*  PROJECT_PATH_MESSAGE = "Enter your project path:";                                  ///< Project path prompt
+    static constexpr const char*  MINIMUM_SIMILARITY_MESSAGE = "Enter minimum similarity desired on using the tool:"; ///< Similarity threshold prompt
 
     std::ofstream fout;          ///< Output file stream
     double similarity_cap; ///< Minimum similarity threshold
