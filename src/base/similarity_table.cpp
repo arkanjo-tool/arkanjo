@@ -1,5 +1,7 @@
 #include <arkanjo/base/similarity_table.hpp>
 
+#include <arkanjo/utils/utils.hpp>
+
 PathId Similarity_Table::find_id_path(const Path& path) {
     auto [it, inserted] = path_id.try_emplace(path, paths.size());
 

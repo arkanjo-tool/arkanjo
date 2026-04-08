@@ -1,5 +1,4 @@
 #include <arkanjo/base/config.hpp>
-#include <arkanjo/utils/utils.hpp>
 #include <iostream>
 #include <arkanjo/formatter/format_manager.hpp>
 

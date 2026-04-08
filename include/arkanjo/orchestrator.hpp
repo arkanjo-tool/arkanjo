@@ -16,7 +16,6 @@
 #include <arkanjo/base/path.hpp>
 
 #include <arkanjo/base/similarity_table.hpp>
-#include <arkanjo/utils/utils.hpp>
 
 #include <arkanjo/cli/parser_options.hpp>
 

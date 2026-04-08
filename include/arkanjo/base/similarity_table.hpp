@@ -21,7 +21,6 @@
 
 #include <arkanjo/base/function.hpp>
 #include <arkanjo/base/path.hpp>
-#include <arkanjo/utils/utils.hpp>
 #include <arkanjo/base/config.hpp>
 
 struct PathId {

@@ -19,7 +19,6 @@
 #include <arkanjo/base/function.hpp>
 #include <arkanjo/base/path.hpp>
 #include <arkanjo/base/similarity_table.hpp>
-#include <arkanjo/utils/utils.hpp>
 
 #include <arkanjo/cli/cli_error.hpp>
 #include <arkanjo/commands/command_base.hpp>

@@ -2,8 +2,6 @@
 #include "random_selector.hpp"
 #include "random_selector_entry.hpp"
 
-#include <arkanjo/utils/utils.hpp>
-
 using fm = FormatterManager;
 
 bool RandomSelector::is_valid_pair(std::tuple<double, Path, Path> path_pair) {
