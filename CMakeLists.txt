@@ -73,6 +73,11 @@ target_link_libraries(arkanjo-preprocessor PRIVATE core_base core_utils core_com
 
 add_library(project_options INTERFACE)
 
+target_include_directories(project_options
+    SYSTEM INTERFACE
+    third-party
+)
+
 set(THIRD_PARTY_BUILD_DIR
     "${CMAKE_BINARY_DIR}/third-party"
 )
