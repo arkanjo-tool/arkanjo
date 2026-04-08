@@ -42,6 +42,11 @@ class Config {
     fs::path base_path{"tmp/arkanjo"}; ///< Default base path for temporary files
     fs::path third_party_dir{"third-party"}; ///< Directory containing third-party dependencies
     fs::path name_container{"default"}; ///< Name of the cache container
+
+    fs::path source_path{"source"}; ///< Source subdirectory name
+    fs::path header_path{"header"}; ///< Header subdirectory name
+    fs::path info_path{"info"}; ///< Info subdirectory name
+
     config::Theme theme{config::Theme::Dark}; ///< Current terminal theme
     
     /**

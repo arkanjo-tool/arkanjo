@@ -2,6 +2,7 @@
 #include <arkanjo/base/path.hpp>
 
 #include <iostream>
+#include <arkanjo/base/config.hpp>
 
 std::vector<std::string> Path::split_path(const fs::path& path) {
     std::vector<std::string> parts;
@@ -18,7 +19,7 @@ size_t Path::find_position_start_relative_path() const {
     size_t sz = tokens.size();
     size_t ret = sz;
     for (size_t i = 1; i < sz - 1; i++) {
-        if (tokens[i - 1] == BASE_INIT_STRING && tokens[i + 1] == SOURCE_STRING) {
+        if (tokens[i - 1] == BASE_INIT_STRING && tokens[i + 1] == Config::config().source_path) {
             ret = i + 2;
         }
     }
@@ -55,15 +56,15 @@ std::string Path::build_base_path(const std::string& base) const {
 }
 
 std::string Path::build_source_path() const {
-    return build_base_path(SOURCE_STRING);
+    return build_base_path(Config::config().source_path);
 }
 
 std::string Path::build_header_path() const {
-    return build_base_path(HEADER_STRING);
+    return build_base_path(Config::config().header_path);
 }
 
 std::string Path::build_info_path() const {
-    std::string ret = build_base_path(INFO_STRING);
+    std::string ret = build_base_path(Config::config().info_path);
     if (ret == "") {
         return "";
     }

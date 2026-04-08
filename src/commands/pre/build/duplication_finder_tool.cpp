@@ -1,5 +1,6 @@
 #include <arkanjo/formatter/format_manager.hpp>
 #include "duplication_finder_tool.hpp"
+#include <arkanjo/base/config.hpp>
 
 using fm = FormatterManager;
 
@@ -14,7 +15,7 @@ void DuplicationFinderTool::execute() {
     std::string command_tool = "python3 -W ignore ";
     command_tool += Config::config().third_party_dir;
     command_tool += "/duplicate-code-detection-tool/duplicate_code_detection.py -d ";
-    command_tool += base_path / "source";
+    command_tool += base_path / Config::config().source_path;
 
     fm::write(SAVING_MESSAGE);
 

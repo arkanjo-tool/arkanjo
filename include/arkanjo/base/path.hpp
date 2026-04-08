@@ -30,9 +30,6 @@ class Path {
 
     static constexpr const char* JSON_EXTENSION = ".json"; ///< Extension for JSON metadata files
     static constexpr const char* BASE_INIT_STRING = "arkanjo"; ///< Base directory name
-    static constexpr const char* SOURCE_STRING = "source"; ///< Source subdirectory name
-    static constexpr const char* HEADER_STRING = "header"; ///< Header subdirectory name
-    static constexpr const char* INFO_STRING = "info";     ///< Info subdirectory name
     static constexpr char BAR = '/';                       ///< Path separator character
 
     std::vector<std::string> tokens;          ///< Path components

@@ -37,10 +37,6 @@ enum PROGRAMMING_LANGUAGE {
     JAVA ///< Java programming language
 };
 
-const string SOURCE_PATH = "source"; ///< Directory name for source files
-const string HEADER_PATH = "header"; ///< Directory name for header files
-const string INFO_PATH = "info";     ///< Directory name for metadata files
-
 /**
  * @brief Extracts file extension from path
  * @param file_path Path to the file
