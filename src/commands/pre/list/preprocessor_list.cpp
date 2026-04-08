@@ -1,5 +1,7 @@
 #include "preprocessor_list.hpp"
 
+#include <arkanjo/base/config.hpp>
+
 void PreprocessorList::print_containers(std::vector<ContainerInfo>& containers) {
     size_t color_offset = no_color ? 0 :10;
     std::cout << std::left

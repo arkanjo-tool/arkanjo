@@ -11,9 +11,7 @@
 #pragma once
 
 #include "function_breaker_util.hpp"
-#include <arkanjo/utils/utils.hpp>
 #include <array>
-#include <cassert>
 #include <set>
 #include <string>
 #include <tuple>
@@ -34,8 +32,8 @@ class FunctionBreakerC {
     const bool IGNORE_EMPTY_FUNCTIONS = true;               ///< Whether to skip empty function bodies
     const bool ALLOW_STRUCTS = false;                       ///< Whether to process struct definitions
 
-    vector<string> file_content;     ///< Original file content
-    vector<vector<bool>> mask_valid; ///< Mask for valid code positions
+    std::vector<std::string> file_content;     ///< Original file content
+    std::vector<std::vector<bool>> mask_valid; ///< Mask for valid code positions
 
     /**
      * @brief Checks if position contains a preprocessor define
@@ -50,25 +48,25 @@ class FunctionBreakerC {
      * @param mask Reference to validity mask to modify
      * @note Only reliable for compilable code
      */
-    void filter_mask_commentaries_and_defines(vector<vector<bool>>& mask);
+    void filter_mask_commentaries_and_defines(std::vector<std::vector<bool>>& mask);
 
     /**
      * @brief Builds mask of valid code positions
      * @return vector<vector<bool>> 2D mask of valid code
      */
-    vector<vector<bool>> build_mask_valid_code();
+    std::vector<std::vector<bool>> build_mask_valid_code();
 
     /**
      * @brief Finds all bracket pairs with depth information
      * @return set<array<int,5>> Bracket pairs with {start_line, start_col, end_line, end_col, depth}
      */
-    set<array<int, 5>> find_start_end_and_depth_of_brackets();
+    std::set<std::array<int, 5>> find_start_end_and_depth_of_brackets();
 
     /**
      * @brief Finds bracket pairs at function-relevant depth
      * @return set<array<int,4>> Bracket pairs with {start_line, start_col, end_line, end_col}
      */
-    set<array<int, 4>> find_start_end_of_brackets_of_given_depth();
+    std::set<std::array<int, 4>> find_start_end_of_brackets_of_given_depth();
 
     /**
      * @brief Extracts function body content
@@ -78,7 +76,7 @@ class FunctionBreakerC {
      * @param end_column End column of function
      * @return vector<string> Function body content
      */
-    vector<string> build_function_content(int start_number_line, int start_column, int end_number_line, int end_column);
+    std::vector<std::string> build_function_content(int start_number_line, int start_column, int end_number_line, int end_column);
 
     /**
      * @brief Advances pointer past parenthesized expressions
@@ -94,7 +92,7 @@ class FunctionBreakerC {
      * @param start_column Function start column
      * @return tuple<string,int,vector<string>> Function name, declaration line, and header lines
      */
-    tuple<string, int, vector<string>> extract_header_related_information(int start_line, int start_column);
+    std::tuple<std::string, int, std::vector<std::string>> extract_header_related_information(int start_line, int start_column);
 
     /**
      * @brief Checks if function body is empty

@@ -22,12 +22,11 @@
 #include "function_breaker_c.hpp"
 #include "function_breaker_java.hpp"
 #include "function_breaker_util.hpp"
-#include <arkanjo/utils/utils.hpp>
 #include <string>
 #include <vector>
 #include <filesystem>
+
 namespace fs = std::filesystem;
-using namespace std;
 
 /**
  * @brief Main function extraction processor
@@ -43,9 +42,9 @@ using namespace std;
  *   creates example/a.c and example/b.c in tmp/ directory
  */
 class FunctionBreaker {
-    const vector<string> C_EXTENSIONS = {"c", "h"};               ///< Valid C/C++ file extensions
-    const vector<string> JAVA_EXTENSIONS = {"java"};              ///< Valid Java file extensions
-    const vector<string> ALLOWED_EXTENSIONS = {"c", "h", "java"}; ///< All supported extensions
+    const std::vector<std::string> C_EXTENSIONS = {"c", "h"};               ///< Valid C/C++ file extensions
+    const std::vector<std::string> JAVA_EXTENSIONS = {"java"};              ///< Valid Java file extensions
+    const std::vector<std::string> ALLOWED_EXTENSIONS = {"c", "h", "java"}; ///< All supported extensions
 
     /**
      * @brief Checks if extension is for C/C++ files

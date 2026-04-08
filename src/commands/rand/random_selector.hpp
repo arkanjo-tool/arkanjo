@@ -14,7 +14,6 @@
 
 #include <arkanjo/base/path.hpp>
 #include <arkanjo/base/similarity_table.hpp>
-#include <arkanjo/utils/utils.hpp>
 #include <random>
 #include <string>
 #include <tuple>
@@ -22,7 +21,6 @@
 
 #include <arkanjo/cli/cli_error.hpp>
 #include <arkanjo/commands/command_base.hpp>
-using namespace std;
 
 /**
  * @brief Random pair selector for similar code segments
@@ -41,33 +39,33 @@ class RandomSelector : public CommandBase<RandomSelector> {
     double maximum_quantity;            ///< Maximum number of pairs to show
 
     const int seed = 123456789;  ///< Fixed random seed for reproducibility
-    mt19937 rng = mt19937(seed); ///< Mersenne Twister random generator
+    std::mt19937 rng = std::mt19937(seed); ///< Mersenne Twister random generator
 
     /**
      * @brief Checks if pair falls within configured thresholds
      * @param path_pair Tuple of similarity and paths
      * @return bool True if pair meets criteria
      */
-    bool is_valid_pair(tuple<double, Path, Path> path_pair);
+    bool is_valid_pair(std::tuple<double, Path, Path> path_pair);
 
     /**
      * @brief Gets all pairs within similarity thresholds
      * @return vector<tuple<double,Path,Path>> Filtered pairs
      */
-    vector<tuple<double, Path, Path>> get_similarity_pairs_filtered();
+    std::vector<std::tuple<double, Path, Path>> get_similarity_pairs_filtered();
 
     /**
      * @brief Performs random selection from pairs
      * @param path_pairs Full set of candidate pairs
      * @return vector<tuple<double,Path,Path>> Randomly selected subset
      */
-    vector<tuple<double, Path, Path>> make_random_selection(vector<tuple<double, Path, Path>> path_pairs);
+    std::vector<std::tuple<double, Path, Path>> make_random_selection(std::vector<std::tuple<double, Path, Path>> path_pairs);
 
     /**
      * @brief Prints all selected path pairs
      * @param path_pairs Pairs to display
      */
-    void print_path_pairs(vector<tuple<double, Path, Path>> path_pairs);
+    void print_path_pairs(std::vector<std::tuple<double, Path, Path>> path_pairs);
 
   public:
     static constexpr CliOption options_[] = {

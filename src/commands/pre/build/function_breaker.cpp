@@ -11,6 +11,7 @@ even if the bracket sequence is in a commentary
 */
 
 #include "function_breaker.hpp"
+#include <cassert>
 
 bool FunctionBreaker::is_c_extension(const std::string& extension) {
     for (auto c_extension : C_EXTENSIONS) {
@@ -40,7 +41,7 @@ bool FunctionBreaker::is_allowed_extension(const std::string& extension) {
 }
 
 void FunctionBreaker::file_breaker(const fs::path& file_path, const fs::path& folder_path) {
-    string extension = extract_extension(file_path);
+    std::string extension = extract_extension(file_path);
 
     if (!is_allowed_extension(extension)) {
         return;

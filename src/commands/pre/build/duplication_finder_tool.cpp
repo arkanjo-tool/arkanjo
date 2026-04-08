@@ -2,6 +2,8 @@
 #include "duplication_finder_tool.hpp"
 #include <arkanjo/base/config.hpp>
 
+#include <iostream>
+
 using fm = FormatterManager;
 
 DuplicationFinderTool::DuplicationFinderTool(const fs::path& base_path_, double similarity_) {
@@ -21,7 +23,7 @@ void DuplicationFinderTool::execute() {
 
     FILE* pipe = popen(command_tool.c_str(), "r");
     if (!pipe) {
-        cerr << "Error executing the tool.\n";
+        std::cerr << "Error executing the tool.\n";
         return;
     }
 

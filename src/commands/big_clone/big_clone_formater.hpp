@@ -10,19 +10,13 @@
 
 #pragma once
 
-#include <cassert>
-#include <iomanip>
-#include <iostream>
 #include <string>
 #include <tuple>
 
-#include <arkanjo/base/function.hpp>
 #include <arkanjo/base/path.hpp>
 #include <arkanjo/base/similarity_table.hpp>
 
 #include <arkanjo/commands/command_base.hpp>
-
-using namespace std;
 
 /**
  * @brief Formats clone detection results for BigCloneBench evaluation
@@ -42,14 +36,14 @@ class BigCloneFormater : public CommandBase<BigCloneFormater> {
      * @param relative_path Path string to format
      * @return string Path with separators converted to commas
      */
-    string format_relative_path(string relative_path);
+    std::string format_relative_path(std::string relative_path);
 
     /**
      * @brief Builds complete formatted path string with line numbers
      * @param path Path object to format
      * @return string Formatted path in "path,decl,start,end" format
      */
-    string build_path_formated_string(Path path);
+    std::string build_path_formated_string(Path path);
 
     /**
      * @brief Processes and outputs a similar path pair

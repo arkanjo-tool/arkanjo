@@ -16,17 +16,12 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
-#include <arkanjo/base/config.hpp>
-#include <arkanjo/utils/utils.hpp>
-
-using namespace std;
-
 /**
  * @brief Structure representing a line of source code
  */
 struct Line_content {
     int line_number; ///< Line number in the original file
-    string content;  ///< Text content of the line
+    std::string content;  ///< Text content of the line
 };
 
 /**
@@ -42,7 +37,7 @@ enum PROGRAMMING_LANGUAGE {
  * @param file_path Path to the file
  * @return string File extension
  */
-string extract_extension(const fs::path& file_path);
+std::string extract_extension(const fs::path& file_path);
 
 /**
  * @brief Builds source file path for a function
@@ -50,7 +45,7 @@ string extract_extension(const fs::path& file_path);
  * @param function_name Name of the function
  * @return string Full path for the source file
  */
-fs::path build_source_path(const fs::path& relative_path, const string& function_name);
+fs::path build_source_path(const fs::path& relative_path, const std::string& function_name);
 
 /**
  * @brief Builds header file path for a function
@@ -58,7 +53,7 @@ fs::path build_source_path(const fs::path& relative_path, const string& function
  * @param function_name Name of the function
  * @return string Full path for the header file
  */
-fs::path build_header_path(const fs::path& relative_path, const string& function_name);
+fs::path build_header_path(const fs::path& relative_path, const std::string& function_name);
 
 /**
  * @brief Builds info file path for a function
@@ -66,7 +61,7 @@ fs::path build_header_path(const fs::path& relative_path, const string& function
  * @param function_name Name of the function
  * @return string Full path for the info file
  */
-fs::path build_info_path(const fs::path& relative_path, const string& function_name);
+fs::path build_info_path(const fs::path& relative_path, const std::string& function_name);
 
 /**
  * @brief Creates source file for a function
@@ -77,8 +72,8 @@ fs::path build_info_path(const fs::path& relative_path, const string& function_n
  * @param function_content Vector of strings containing the function body
  */
 void create_source_file(int start_number_line, int end_number_line,
-    const fs::path& relative_path, const string& function_name,
-    const vector<string>& function_content);
+    const fs::path& relative_path, const std::string& function_name,
+    const std::vector<std::string>& function_content);
 
 /**
  * @brief Creates header file for a function
@@ -86,8 +81,8 @@ void create_source_file(int start_number_line, int end_number_line,
  * @param function_name Name of the function
  * @param header_content Vector of strings containing the header content
  */
-void create_header_file(const fs::path& relative_path, const string& function_name,
-    const vector<string>& header_content);
+void create_header_file(const fs::path& relative_path, const std::string& function_name,
+    const std::vector<std::string>& header_content);
 
 /**
  * @brief Creates JSON metadata file for a function
@@ -99,4 +94,4 @@ void create_header_file(const fs::path& relative_path, const string& function_na
  */
 void create_info_file(int line_declaration, int start_number_line,
     int end_number_line, const fs::path& relative_path,
-    const string& function_name);
+    const std::string& function_name);

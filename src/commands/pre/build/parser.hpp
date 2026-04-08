@@ -14,13 +14,11 @@
 
 #include <algorithm>
 #include <fstream>
-#include <iomanip>
 #include <set>
 #include <string>
 #include <vector>
 #include <filesystem>
 namespace fs = std::filesystem;
-using namespace std;
 
 /**
  * @brief Structure representing a code comparison result
@@ -29,8 +27,8 @@ using namespace std;
  * with comparison operators for sorting and deduplication.
  */
 struct Comparation {
-    string path1;      ///< Path to first code file being compared
-    string path2;      ///< Path to second code file being compared
+    std::string path1;      ///< Path to first code file being compared
+    std::string path2;      ///< Path to second code file being compared
     double similarity; ///< Similarity score between the files (0-100)
 
     /**
@@ -44,7 +42,7 @@ struct Comparation {
      * @param _path2 Second file path
      * @param _sim Similarity score
      */
-    Comparation(string _path1, string _path2, double _sim);
+    Comparation(std::string _path1, std::string _path2, double _sim);
 
     /**
      * @brief Comparison operator for sorting
@@ -69,10 +67,10 @@ struct Comparation {
  */
 class Parser {
   private:
-    string PROJECT_PATH_MESSAGE = "Enter your project path:";                                  ///< Project path prompt
-    string MINIMUM_SIMILARITY_MESSAGE = "Enter minimum similarity desired on using the tool:"; ///< Similarity threshold prompt
+    std::string PROJECT_PATH_MESSAGE = "Enter your project path:";                                  ///< Project path prompt
+    std::string MINIMUM_SIMILARITY_MESSAGE = "Enter minimum similarity desired on using the tool:"; ///< Similarity threshold prompt
 
-    ofstream fout;          ///< Output file stream
+    std::ofstream fout;          ///< Output file stream
     double similarity_cap; ///< Minimum similarity threshold
     std::set<Comparation> comparations;
 
@@ -81,7 +79,7 @@ class Parser {
      * @param line Input line to parse
      * @return vector<string> Tokenized line components
      */
-    vector<string> parser_line(const string& line);
+    std::vector<std::string> parser_line(const std::string& line);
 
     /**
      * @brief Checks if string represents a valid file path
@@ -102,7 +100,7 @@ class Parser {
      * @param tokens Tokenized line components
      * @param comparations Set to store parsed comparisons
      */
-    void parser_block_stream(const std::string& path, const std::vector<std::string>& tokens, set<Comparation>& comparations);
+    void parser_block_stream(const std::string& path, const std::vector<std::string>& tokens, std::set<Comparation>& comparations);
 
   public:
     /**

@@ -11,7 +11,6 @@
 #pragma once
 
 #include "function_breaker_util.hpp"
-#include <arkanjo/utils/utils.hpp>
 #include <array>
 #include <set>
 #include <string>
@@ -38,7 +37,7 @@ class FunctionBreakerJava {
      * @param brackets_content Processed bracket content
      * @return set<array<int,3>> Bracket pairs with {start_pos, end_pos, depth}
      */
-    set<array<int, 3>> find_start_end_and_depth_of_brackets(const vector<string>& brackets_content);
+    std::set<std::array<int, 3>> find_start_end_and_depth_of_brackets(const std::vector<std::string>& brackets_content);
 
     /**
      * @brief Finds bracket pairs at method-relevant depth
@@ -46,7 +45,7 @@ class FunctionBreakerJava {
      * @param depth Target depth to match
      * @return set<pair<int,int>> Bracket pairs with {start_pos, end_pos}
      */
-    set<pair<int, int>> find_start_end_of_brackets_of_given_depth(vector<string> brackets_content, int depth);
+    std::set<std::pair<int, int>> find_start_end_of_brackets_of_given_depth(std::vector<std::string> brackets_content, int depth);
 
     /**
      * @brief Finds first open bracket position in string
@@ -54,14 +53,14 @@ class FunctionBreakerJava {
      * @return int Position of first '{' or -1 if not found
      */
     // TODO: Refactor, refactor this
-    int find_position_first_open_bracket(const string& s);
+    int find_position_first_open_bracket(const std::string& s);
 
     /**
      * @brief Extracts last token from string
      * @param s String to process
      * @return string Last token (space-separated)
      */
-    string extract_last_token_of_string(const string& s);
+    std::string extract_last_token_of_string(const std::string& s);
 
     /**
      * @brief Creates Line_content object
@@ -69,7 +68,7 @@ class FunctionBreakerJava {
      * @param content Line content
      * @return Line_content Structured line information
      */
-    Line_content build_line_code(int line_number, const string& content);
+    Line_content build_line_code(int line_number, const std::string& content);
 
     /**
      * @brief Gets lines preceding method body
@@ -78,35 +77,35 @@ class FunctionBreakerJava {
      * @param pos_bracket Bracket position
      * @return vector<Line_content> Preceding lines of method declaration
      */
-    vector<Line_content> get_lines_before_body_function(const vector<string>& file_content, int line_start_body_function, int pos_bracket);
+    std::vector<Line_content> get_lines_before_body_function(const std::vector<std::string>& file_content, int line_start_body_function, int pos_bracket);
 
     /**
      * @brief Removes parenthesized content at scope end
      * @param code Lines to process
      * @return vector<Line_content> Cleaned lines
      */
-    vector<Line_content> remove_parenteses_at_the_end_of_the_scope(vector<Line_content> code);
+    std::vector<Line_content> remove_parenteses_at_the_end_of_the_scope(std::vector<Line_content> code);
 
     /**
      * @brief Removes content until finding closing parenthesis
      * @param code Lines to process
      * @return vector<Line_content> Trimmed lines
      */
-    vector<Line_content> remove_content_until_find_parenteses_at_the_end(vector<Line_content> code);
+    std::vector<Line_content> remove_content_until_find_parenteses_at_the_end(std::vector<Line_content> code);
 
     /**
      * @brief Removes C-style parameter declarations
      * @param code Lines to process
      * @return vector<Line_content> Cleaned declaration lines
      */
-    vector<Line_content> remove_parameters_of_declaration_c(vector<Line_content> code);
+    std::vector<Line_content> remove_parameters_of_declaration_c(std::vector<Line_content> code);
 
     /**
      * @brief Removes Java-style parameter declarations
      * @param code Lines to process
      * @return vector<Line_content> Cleaned declaration lines
      */
-    vector<Line_content> remove_parameters_of_declaration_java(vector<Line_content> code);
+    std::vector<Line_content> remove_parameters_of_declaration_java(std::vector<Line_content> code);
 
     /**
      * @brief Removes parameters based on language
@@ -114,7 +113,7 @@ class FunctionBreakerJava {
      * @param programming_language Language variant (C/JAVA)
      * @return vector<Line_content> Cleaned declaration lines
      */
-    vector<Line_content> remove_parameters_of_declaration(vector<Line_content> code, PROGRAMMING_LANGUAGE programming_language);
+    std::vector<Line_content> remove_parameters_of_declaration(std::vector<Line_content> code, PROGRAMMING_LANGUAGE programming_language);
 
     /**
      * @brief Extracts method name and declaration line
@@ -123,7 +122,7 @@ class FunctionBreakerJava {
      * @param programming_language Language variant
      * @return pair<string,int> Method name and declaration line number
      */
-    pair<string, int> extract_function_name_and_line_from_declaration(const vector<string>& file_content, int line_start_body_function, PROGRAMMING_LANGUAGE programming_language);
+    std::pair<std::string, int> extract_function_name_and_line_from_declaration(const std::vector<std::string>& file_content, int line_start_body_function, PROGRAMMING_LANGUAGE programming_language);
 
     /**
      * @brief Builds method body content
@@ -132,7 +131,7 @@ class FunctionBreakerJava {
      * @param file_content Full file content
      * @return vector<string> Method body lines
      */
-    vector<string> build_function_content(int start_number_line, int end_number_line, const vector<string>& file_content);
+    std::vector<std::string> build_function_content(int start_number_line, int end_number_line, const std::vector<std::string>& file_content);
 
     /**
      * @brief Builds method header content
@@ -143,7 +142,7 @@ class FunctionBreakerJava {
      * @param file_content Full file content
      * @return vector<string> Header content lines
      */
-    vector<string> build_header_content(int start_number_line, int line_declaration, const fs::path& relative_path, const string& function_name, const vector<string>& file_content);
+    std::vector<std::string> build_header_content(int start_number_line, int line_declaration, const fs::path& relative_path, const std::string& function_name, const std::vector<std::string>& file_content);
 
     /**
      * @brief Checks if method body is empty
@@ -152,7 +151,7 @@ class FunctionBreakerJava {
      * @param file_content Full file content
      * @return bool True if method body is empty
      */
-    bool is_body_function_empty(int start_number_line, int end_number_line, const vector<string>& file_content);
+    bool is_body_function_empty(int start_number_line, int end_number_line, const std::vector<std::string>& file_content);
 
     /**
      * @brief Processes an individual method
@@ -162,7 +161,7 @@ class FunctionBreakerJava {
      * @param file_content Full file content
      * @param programming_language Language variant
      */
-    void process_function(int start_number_line, int end_number_line, const fs::path& relative_path, const vector<string>& file_content, PROGRAMMING_LANGUAGE programming_language);
+    void process_function(int start_number_line, int end_number_line, const fs::path& relative_path, const std::vector<std::string>& file_content, PROGRAMMING_LANGUAGE programming_language);
 
     /**
      * @brief Constructs full file path from components

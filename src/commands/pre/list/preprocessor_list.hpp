@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include <arkanjo/base/config.hpp>
 #include <arkanjo/commands/command_base.hpp>
 namespace fs = std::filesystem;
 

@@ -1,10 +1,12 @@
 #include "function_breaker_java.hpp"
 
-set<array<int, 3>> FunctionBreakerJava::find_start_end_and_depth_of_brackets(const vector<string>& brackets_content) {
-    set<array<int, 3>> start_ends;
+#include <arkanjo/utils/utils.hpp>
+
+std::set<std::array<int, 3>> FunctionBreakerJava::find_start_end_and_depth_of_brackets(const std::vector<std::string>& brackets_content) {
+    std::set<std::array<int, 3>> start_ends;
     int open_brackets = 0;
 
-    vector<int> not_processed_open_brackets;
+    std::vector<int> not_processed_open_brackets;
     auto process_open = [&](int line_number) {
         open_brackets++;
         not_processed_open_brackets.push_back(line_number);
@@ -35,9 +37,9 @@ set<array<int, 3>> FunctionBreakerJava::find_start_end_and_depth_of_brackets(con
     return start_ends;
 }
 
-set<pair<int, int>> FunctionBreakerJava::find_start_end_of_brackets_of_given_depth(vector<string> brackets_content, int depth) {
-    set<pair<int, int>> ret;
-    set<array<int, 3>> bracket_pairs = find_start_end_and_depth_of_brackets(brackets_content);
+std::set<std::pair<int, int>> FunctionBreakerJava::find_start_end_of_brackets_of_given_depth(std::vector<std::string> brackets_content, int depth) {
+    std::set<std::pair<int, int>> ret;
+    std::set<std::array<int, 3>> bracket_pairs = find_start_end_and_depth_of_brackets(brackets_content);
     for (auto [start, end, dep] : bracket_pairs) {
         if (dep == depth) {
             ret.insert({start, end});
@@ -46,7 +48,7 @@ set<pair<int, int>> FunctionBreakerJava::find_start_end_of_brackets_of_given_dep
     return ret;
 }
 
-int FunctionBreakerJava::find_position_first_open_bracket(const string& s) {
+int FunctionBreakerJava::find_position_first_open_bracket(const std::string& s) {
     for (size_t i = 0; i < s.size(); i++) {
         char c = s[i];
         if (c == '{') {
@@ -56,9 +58,9 @@ int FunctionBreakerJava::find_position_first_open_bracket(const string& s) {
     return -1;
 }
 
-string FunctionBreakerJava::extract_last_token_of_string(const string& s) {
-    vector<string> tokens;
-    string cur_token = "";
+std::string FunctionBreakerJava::extract_last_token_of_string(const std::string& s) {
+    std::vector<std::string> tokens;
+    std::string cur_token = "";
     for (size_t i = 0; i < s.size(); i++) {
         char c = s[i];
         if (Utils::is_empty_char(c) || Utils::is_special_char(c)) {
@@ -80,15 +82,15 @@ string FunctionBreakerJava::extract_last_token_of_string(const string& s) {
     return tokens.back();
 }
 
-Line_content FunctionBreakerJava::build_line_code(int line_number, const string& content) {
+Line_content FunctionBreakerJava::build_line_code(int line_number, const std::string& content) {
     Line_content ret;
     ret.line_number = line_number;
     ret.content = content;
     return ret;
 }
 
-vector<Line_content> FunctionBreakerJava::get_lines_before_body_function(const vector<string>& file_content, int line_start_body_function, int pos_bracket) {
-    vector<Line_content> ret;
+std::vector<Line_content> FunctionBreakerJava::get_lines_before_body_function(const std::vector<std::string>& file_content, int line_start_body_function, int pos_bracket) {
+    std::vector<Line_content> ret;
     Line_content line_bracket = build_line_code(line_start_body_function, file_content[line_start_body_function]);
     // remove everything after {
     while (int(line_bracket.content.size()) > pos_bracket) {
@@ -96,7 +98,7 @@ vector<Line_content> FunctionBreakerJava::get_lines_before_body_function(const v
     }
     ret.push_back(line_bracket);
 
-    int until = max(0, line_start_body_function - NUMBER_OF_LINES_BEFORE_FOR_FUNCTION_NAME);
+    int until = std::max(0, line_start_body_function - NUMBER_OF_LINES_BEFORE_FOR_FUNCTION_NAME);
     for (int i = line_start_body_function - 1; i >= until; i--) {
         ret.push_back(build_line_code(i, file_content[i]));
     }
@@ -117,14 +119,14 @@ vector<Line_content> FunctionBreakerJava::get_lines_before_body_function(const v
     return ret;
 }
 
-vector<Line_content> FunctionBreakerJava::remove_parenteses_at_the_end_of_the_scope(vector<Line_content> code) {
+std::vector<Line_content> FunctionBreakerJava::remove_parenteses_at_the_end_of_the_scope(std::vector<Line_content> code) {
     if (code.empty() || code.back().content.back() != ')') {
         return code;
     }
     int count_close_parenteses = 0;
 
     while (!code.empty()) {
-        string content = code.back().content;
+        std::string content = code.back().content;
         while (!content.empty()) {
             if (content.back() == ')') {
                 count_close_parenteses++;
@@ -146,9 +148,9 @@ vector<Line_content> FunctionBreakerJava::remove_parenteses_at_the_end_of_the_sc
     return code;
 }
 
-vector<Line_content> FunctionBreakerJava::remove_content_until_find_parenteses_at_the_end(vector<Line_content> code) {
+std::vector<Line_content> FunctionBreakerJava::remove_content_until_find_parenteses_at_the_end(std::vector<Line_content> code) {
     while (!code.empty()) {
-        string content = code.back().content;
+        std::string content = code.back().content;
         while (!content.empty()) {
             if (content.back() == ')') {
                 break;
@@ -165,7 +167,7 @@ vector<Line_content> FunctionBreakerJava::remove_content_until_find_parenteses_a
     return code;
 }
 
-vector<Line_content> FunctionBreakerJava::remove_parameters_of_declaration_c(vector<Line_content> code) {
+std::vector<Line_content> FunctionBreakerJava::remove_parameters_of_declaration_c(std::vector<Line_content> code) {
     if (!ALLOW_STRUCTS) {
         auto ret = remove_content_until_find_parenteses_at_the_end(code);
         return remove_parenteses_at_the_end_of_the_scope(ret);
@@ -173,12 +175,12 @@ vector<Line_content> FunctionBreakerJava::remove_parameters_of_declaration_c(vec
     return remove_parenteses_at_the_end_of_the_scope(code);
 }
 
-vector<Line_content> FunctionBreakerJava::remove_parameters_of_declaration_java(vector<Line_content> code) {
+std::vector<Line_content> FunctionBreakerJava::remove_parameters_of_declaration_java(std::vector<Line_content> code) {
     auto ret = remove_content_until_find_parenteses_at_the_end(code);
     return remove_parenteses_at_the_end_of_the_scope(ret);
 }
 
-vector<Line_content> FunctionBreakerJava::remove_parameters_of_declaration(vector<Line_content> code, PROGRAMMING_LANGUAGE programming_language) {
+std::vector<Line_content> FunctionBreakerJava::remove_parameters_of_declaration(std::vector<Line_content> code, PROGRAMMING_LANGUAGE programming_language) {
     if (programming_language == C) {
         return remove_parameters_of_declaration_c(code);
     }
@@ -188,22 +190,22 @@ vector<Line_content> FunctionBreakerJava::remove_parameters_of_declaration(vecto
     return code;
 }
 
-pair<string, int> FunctionBreakerJava::extract_function_name_and_line_from_declaration(const vector<string>& file_content, int line_start_body_function, PROGRAMMING_LANGUAGE programming_language) {
+std::pair<std::string, int> FunctionBreakerJava::extract_function_name_and_line_from_declaration(const std::vector<std::string>& file_content, int line_start_body_function, PROGRAMMING_LANGUAGE programming_language) {
     int pos = find_position_first_open_bracket(file_content[line_start_body_function]);
-    vector<Line_content> code_before_bracket = get_lines_before_body_function(file_content, line_start_body_function, pos);
-    vector<Line_content> code = remove_parameters_of_declaration(code_before_bracket, programming_language);
+    std::vector<Line_content> code_before_bracket = get_lines_before_body_function(file_content, line_start_body_function, pos);
+    std::vector<Line_content> code = remove_parameters_of_declaration(code_before_bracket, programming_language);
     if (code.empty()) {
-        return make_pair("", -1);
+        return std::make_pair("", -1);
     }
-    string ret = extract_last_token_of_string(code.back().content);
+    std::string ret = extract_last_token_of_string(code.back().content);
     return {ret, code.back().line_number};
 }
 
-vector<string> FunctionBreakerJava::build_function_content(int start_number_line, int end_number_line, const vector<string>& file_content) {
-    string first_line = file_content[start_number_line];
+std::vector<std::string> FunctionBreakerJava::build_function_content(int start_number_line, int end_number_line, const std::vector<std::string>& file_content) {
+    std::string first_line = file_content[start_number_line];
     int to_remove = find_position_first_open_bracket(first_line);
 
-    vector<string> function_content;
+    std::vector<std::string> function_content;
     reverse(first_line.begin(), first_line.end());
     for (int i = 0; i < to_remove; i++) {
         first_line.pop_back();
@@ -216,13 +218,13 @@ vector<string> FunctionBreakerJava::build_function_content(int start_number_line
     return function_content;
 }
 
-vector<string> FunctionBreakerJava::build_header_content(int start_number_line, int line_declaration, const fs::path& relative_path, const string& function_name, const vector<string>& file_content) {
-    vector<string> function_content;
+std::vector<std::string> FunctionBreakerJava::build_header_content(int start_number_line, int line_declaration, const fs::path& relative_path, const std::string& function_name, const std::vector<std::string>& file_content) {
+    std::vector<std::string> function_content;
     for (int i = line_declaration; i < start_number_line; i++) {
         function_content.push_back(file_content[i]);
     }
 
-    string first_line = file_content[start_number_line];
+    std::string first_line = file_content[start_number_line];
     int to_keep = find_position_first_open_bracket(first_line);
     while (int(first_line.size()) > to_keep) {
         first_line.pop_back();
@@ -231,8 +233,8 @@ vector<string> FunctionBreakerJava::build_header_content(int start_number_line, 
     return function_content;
 }
 
-bool FunctionBreakerJava::is_body_function_empty(int start_number_line, int end_number_line, const vector<string>& file_content) {
-    vector<string> function_content = build_function_content(start_number_line, end_number_line, file_content);
+bool FunctionBreakerJava::is_body_function_empty(int start_number_line, int end_number_line, const std::vector<std::string>& file_content) {
+    std::vector<std::string> function_content = build_function_content(start_number_line, end_number_line, file_content);
     int count_not_empty_char = 0;
     for (auto line : function_content) {
         for (auto c : line) {
@@ -245,8 +247,8 @@ bool FunctionBreakerJava::is_body_function_empty(int start_number_line, int end_
     return is_empty;
 }
 
-void FunctionBreakerJava::process_function(int start_number_line, int end_number_line, const fs::path& relative_path, const vector<string>& file_content, PROGRAMMING_LANGUAGE programming_language) {
-    string first_line = file_content[start_number_line];
+void FunctionBreakerJava::process_function(int start_number_line, int end_number_line, const fs::path& relative_path, const std::vector<std::string>& file_content, PROGRAMMING_LANGUAGE programming_language) {
+    std::string first_line = file_content[start_number_line];
     auto [function_name, line_declaration] = extract_function_name_and_line_from_declaration(file_content, start_number_line, programming_language);
     if (function_name.empty()) {
         return;
@@ -257,8 +259,8 @@ void FunctionBreakerJava::process_function(int start_number_line, int end_number
         }
     }
 
-    vector<string> function_content = build_function_content(start_number_line, end_number_line, file_content);
-    vector<string> header_content = build_header_content(start_number_line, line_declaration, relative_path, function_name, file_content);
+    std::vector<std::string> function_content = build_function_content(start_number_line, end_number_line, file_content);
+    std::vector<std::string> header_content = build_header_content(start_number_line, line_declaration, relative_path, function_name, file_content);
 
     create_source_file(start_number_line, end_number_line, relative_path, function_name, function_content);
     create_header_file(relative_path, function_name, header_content);
@@ -271,8 +273,8 @@ fs::path FunctionBreakerJava::file_path_from_folder_path(const fs::path& file_pa
 
 void FunctionBreakerJava::file_breaker_java(const fs::path& file_path, const fs::path& folder_path) {
     fs::path relative_path = file_path_from_folder_path(file_path, folder_path);
-    vector<string> file_content = Utils::read_file_generic(file_path);
-    set<pair<int, int>> start_end_of_functions = find_start_end_of_brackets_of_given_depth(file_content, JAVA_RELEVANT_DEPTH);
+    std::vector<std::string> file_content = Utils::read_file_generic(file_path);
+    std::set<std::pair<int, int>> start_end_of_functions = find_start_end_of_brackets_of_given_depth(file_content, JAVA_RELEVANT_DEPTH);
 
     for (auto [start_line, end_line] : start_end_of_functions) {
         process_function(start_line, end_line, relative_path, file_content, JAVA);

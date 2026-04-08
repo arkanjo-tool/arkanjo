@@ -1,8 +1,9 @@
 #include "parser.hpp"
+#include <iomanip>
 
-Comparation::Comparation(string _path1, string _path2, double _sim) {
+Comparation::Comparation(std::string _path1, std::string _path2, double _sim) {
     if (_path1 > _path2)
-        swap(_path1, _path2);
+        std::swap(_path1, _path2);
     path1 = _path1;
     path2 = _path2;
     similarity = _sim;
@@ -22,9 +23,9 @@ bool Comparation::operator==(const Comparation& com) const {
     return path1 == com.path1 && path2 == com.path2;
 }
 
-vector<string> Parser::parser_line(const string& line) {
-    string at = "";
-    vector<string> ret;
+std::vector<std::string> Parser::parser_line(const std::string& line) {
+    std::string at = "";
+    std::vector<std::string> ret;
     for (auto c : line) {
         if (c <= 20 || c == ' ') { // an space on non-printable char
             if (!at.empty())
@@ -69,7 +70,7 @@ double Parser::retrive_similarity(const std::string& s) {
     }
 }
 
-void Parser::parser_block_stream(const std::string& path, const std::vector<std::string>& tokens, set<Comparation>& comparations) {
+void Parser::parser_block_stream(const std::string& path, const std::vector<std::string>& tokens, std::set<Comparation>& comparations) {
     if (tokens.size() < 2)
         return;
 
@@ -119,7 +120,7 @@ void Parser::exec_from_stream(FILE* pipe) {
     fout << comparations.size() << '\n';
     for (const auto& com : comparations) {
         fout << com.path1 << ' ' << com.path2 << ' ';
-        fout << fixed << setprecision(2) << com.similarity << '\n';
+        fout << std::fixed << std::setprecision(2) << com.similarity << '\n';
     }
 }
 

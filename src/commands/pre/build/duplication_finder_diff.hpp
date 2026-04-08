@@ -12,12 +12,11 @@
 
 #pragma once
 
-#include <arkanjo/utils/utils.hpp>
 #include <string>
 #include <tuple>
 #include <vector>
 #include <filesystem>
-using namespace std;
+
 namespace fs = std::filesystem;
 
 /**
@@ -29,7 +28,7 @@ namespace fs = std::filesystem;
  */
 class DuplicationFinderDiff {
   private:
-    string SAVING_MESSAGE = "Saving results..."; ///< Status message for saving output
+    std::string SAVING_MESSAGE = "Saving results..."; ///< Status message for saving output
 
     fs::path base_path;  ///< Root path of the codebase to analyze
     double similarity; ///< Similarity threshold for considering duplicates
@@ -39,21 +38,21 @@ class DuplicationFinderDiff {
      * @param folder_path Root path to search from
      * @return vector<string> List of file paths found
      */
-    vector<string> find_files(const fs::path& folder_path);
+    std::vector<std::string> find_files(const fs::path& folder_path);
 
     /**
      * @brief Checks if a line is empty/whitespace
      * @param line Line to check
      * @return bool True if line is empty
      */
-    bool is_empty_line(string line);
+    bool is_empty_line(std::string line);
 
     /**
      * @brief Removes blank lines from file content
      * @param content Original file content
      * @return vector<string> Content without blank lines
      */
-    vector<string> remove_blank_lines(vector<string> content);
+    std::vector<std::string> remove_blank_lines(std::vector<std::string> content);
 
     /**
      * @brief Compares two files for exact equality
@@ -61,7 +60,7 @@ class DuplicationFinderDiff {
      * @param content2 Second file's content
      * @return bool True if files are identical
      */
-    bool is_equal_files(vector<string> content1, vector<string> content2);
+    bool is_equal_files(std::vector<std::string> content1, std::vector<std::string> content2);
 
     /**
      * @brief Calculates similarity between two files
@@ -69,20 +68,20 @@ class DuplicationFinderDiff {
      * @param path2 Path to second file
      * @return double Similarity score (0-100)
      */
-    double find_similarity(string path1, string path2);
+    double find_similarity(std::string path1, std::string path2);
 
     /**
      * @brief Finds all similar file pairs above threshold
      * @param file_paths List of files to compare
      * @return vector<tuple<double,string,string>> Similar pairs with scores
      */
-    vector<tuple<double, string, string>> find_similar_pairs(vector<string>& file_paths);
+    std::vector<std::tuple<double, std::string, std::string>> find_similar_pairs(std::vector<std::string>& file_paths);
 
     /**
      * @brief Saves duplication results to output
      * @param file_duplication_pairs Pairs to save
      */
-    void save_duplications(vector<tuple<double, string, string>>& file_duplication_pairs);
+    void save_duplications(std::vector<std::tuple<double, std::string, std::string>>& file_duplication_pairs);
 
   public:
     /**

@@ -2,9 +2,11 @@
 #include "random_selector.hpp"
 #include "random_selector_entry.hpp"
 
+#include <arkanjo/utils/utils.hpp>
+
 using fm = FormatterManager;
 
-bool RandomSelector::is_valid_pair(tuple<double, Path, Path> path_pair) {
+bool RandomSelector::is_valid_pair(std::tuple<double, Path, Path> path_pair) {
     auto [similarity, path1, path2] = path_pair;
     if (similarity < minimum_similarity)
         return false;
@@ -13,9 +15,9 @@ bool RandomSelector::is_valid_pair(tuple<double, Path, Path> path_pair) {
     return true;
 }
 
-vector<tuple<double, Path, Path>> RandomSelector::get_similarity_pairs_filtered() {
+std::vector<std::tuple<double, Path, Path>> RandomSelector::get_similarity_pairs_filtered() {
     auto path_pairs = similarity_table->get_all_path_pairs_and_similarity_sorted_by_similarity();
-    vector<tuple<double, Path, Path>> ret;
+    std::vector<std::tuple<double, Path, Path>> ret;
     for (auto path_pair : path_pairs) {
         if (is_valid_pair(path_pair)) {
             ret.push_back(path_pair);
@@ -24,7 +26,7 @@ vector<tuple<double, Path, Path>> RandomSelector::get_similarity_pairs_filtered(
     return ret;
 }
 
-vector<tuple<double, Path, Path>> RandomSelector::make_random_selection(vector<tuple<double, Path, Path>> path_pairs) {
+std::vector<std::tuple<double, Path, Path>> RandomSelector::make_random_selection(std::vector<std::tuple<double, Path, Path>> path_pairs) {
     shuffle(path_pairs.begin(), path_pairs.end(), rng);
     while (int(path_pairs.size()) > maximum_quantity) {
         path_pairs.pop_back();
@@ -32,7 +34,7 @@ vector<tuple<double, Path, Path>> RandomSelector::make_random_selection(vector<t
     return path_pairs;
 }
 
-void RandomSelector::print_path_pairs(vector<tuple<double, Path, Path>> path_pairs) {
+void RandomSelector::print_path_pairs(std::vector<std::tuple<double, Path, Path>> path_pairs) {
     std::vector<RandomSelectorEntry> vector_entry = {};
     for (const auto& [similarity, path1, path2] : path_pairs) {
         vector_entry.push_back(RandomSelectorEntry{

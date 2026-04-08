@@ -16,13 +16,12 @@
 #include "duplication_finder_tool.hpp"
 #include "function_breaker.hpp"
 #include "parser.hpp"
-#include <arkanjo/base/config.hpp>
 #include <arkanjo/commands/pre/preprocessor.hpp>
 #include <arkanjo/commands/command_base.hpp>
 #include <string>
 #include <tuple>
 #include <filesystem>
-using namespace std;
+
 namespace fs = std::filesystem;
 
 /**
@@ -43,21 +42,21 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
       "similar to the found one is {count}. "
       "More info about them are listed below.";
     // User interaction messages
-    string PROJECT_PATH_MESSAGE = "Enter your project path:";                                  ///< Project path prompt
-    string MINIMUM_SIMILARITY_MESSAGE = "Enter minimum similarity desired on using the tool:"; ///< Similarity threshold prompt
+    std::string PROJECT_PATH_MESSAGE = "Enter your project path:";                                  ///< Project path prompt
+    std::string MINIMUM_SIMILARITY_MESSAGE = "Enter minimum similarity desired on using the tool:"; ///< Similarity threshold prompt
 
     // Processing stage messages
-    string INITIAL_MESSAGE = "Initiating Preprocessing";                                           ///< Initialization message
-    string BREAKER_MESSAGE = "Reading codebase... (this may take a while)";                        ///< Code analysis message
-    string DUPLICATION_MESSAGE = "Finding duplication in the codebase... (this may take a while)"; ///< Duplication detection message
-    string SAVING_MESSAGE = "Saving results...";                                                   ///< Results saving message
-    string END_MESSAGE = "Finished preprocessing";                                                 ///< Completion message
+    std::string INITIAL_MESSAGE = "Initiating Preprocessing";                                           ///< Initialization message
+    std::string BREAKER_MESSAGE = "Reading codebase... (this may take a while)";                        ///< Code analysis message
+    std::string DUPLICATION_MESSAGE = "Finding duplication in the codebase... (this may take a while)"; ///< Duplication detection message
+    std::string SAVING_MESSAGE = "Saving results...";                                                   ///< Results saving message
+    std::string END_MESSAGE = "Finished preprocessing";                                                 ///< Completion message
 
     // Duplication finder selection messages
-    string MESSAGE_DUPLICATION_FINDER_TYPE_1 = "Enter the number of the duplication finder technique you want to use:";
-    string MESSAGE_DUPLICATION_FINDER_TYPE_2 = "1) NLP text similarity using gensim";
-    string MESSAGE_DUPLICATION_FINDER_TYPE_3 = "2) Count proportion of equal lines using diff command";
-    string INVALID_CODE_DUPLICATION_FINDER = "Valid options are '1' or '2' only. Stopping Program...";
+    std::string MESSAGE_DUPLICATION_FINDER_TYPE_1 = "Enter the number of the duplication finder technique you want to use:";
+    std::string MESSAGE_DUPLICATION_FINDER_TYPE_2 = "1) NLP text similarity using gensim";
+    std::string MESSAGE_DUPLICATION_FINDER_TYPE_3 = "2) Count proportion of equal lines using diff command";
+    std::string INVALID_CODE_DUPLICATION_FINDER = "Valid options are '1' or '2' only. Stopping Program...";
 
     /**
      * @brief Reads preprocessing parameters from user/config
@@ -66,7 +65,7 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
      *         - Similarity threshold
      *         - Duplication finder selection flag
      */
-    tuple<string, double, bool> read_parameters();
+    std::tuple<std::string, double, bool> read_parameters();
 
     /**
      * @brief Executes full preprocessing pipeline

@@ -3,21 +3,22 @@
 #include <iomanip>
 #include <iostream>
 
+#include <arkanjo/base/config.hpp>
 #include <arkanjo/formatter/format_manager.hpp>
 
 using fm = FormatterManager;
 
-tuple<string, double, bool> PreprocessorBuild::read_parameters() {
+std::tuple<std::string, double, bool> PreprocessorBuild::read_parameters() {
     fm::write(INITIAL_MESSAGE);
-    string similarity_message;
+    std::string similarity_message;
 
     fm::write(PROJECT_PATH_MESSAGE);
-    string path_str;
-    cin >> path_str;
+    std::string path_str;
+    std::cin >> path_str;
     fs::path path(path_str);
 
     fm::write(MINIMUM_SIMILARITY_MESSAGE);
-    cin >> similarity_message;
+    std::cin >> similarity_message;
     double similarity = stod(similarity_message);
 
     bool use_duplication_finder_by_tool = false;
@@ -27,7 +28,7 @@ tuple<string, double, bool> PreprocessorBuild::read_parameters() {
         fm::write(MESSAGE_DUPLICATION_FINDER_TYPE_2);
         fm::write(MESSAGE_DUPLICATION_FINDER_TYPE_3);
         int x;
-        cin >> x;
+        std::cin >> x;
         if (x == 1) {
             use_duplication_finder_by_tool = true;
         } else if (x == 2) {

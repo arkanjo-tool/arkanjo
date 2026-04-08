@@ -14,7 +14,6 @@
 #include <arkanjo/orchestrator.hpp>
 #include <arkanjo/commands/command.hpp>
 #include <arkanjo/formatter/format_manager.hpp>
-using namespace std;
 
 int main(int argc, char* argv[]) {
     auto& cfg = Config::config();
