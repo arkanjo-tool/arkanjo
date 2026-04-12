@@ -11,7 +11,7 @@ The current functionalities of the tool are:
 
 Some other commands were used for the creator's master's degree, but they are not relevant to end-users.
 
-The tool currently supports the C programming language and also supports Java with some limitations.
+The tool currently supports only the languages provided by the Tree-sitter API; these must be explicitly added to the `config.json` file.
 
 # Similarity
 
