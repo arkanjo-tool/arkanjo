@@ -26,13 +26,24 @@ target_include_directories(core_utils PUBLIC ${ARKANJO_INCLUDE_DIRS})
 target_link_libraries(core_utils PUBLIC core_base)
 
 #
+file(GLOB_RECURSE CORE_PARSER_SOURCES
+    src/parser/*.cpp
+)
+add_library(core_parser ${CORE_PARSER_SOURCES})
+target_include_directories(core_parser
+    PUBLIC ${ARKANJO_INCLUDE_DIRS}
+)
+target_sources(core_parser PRIVATE ${GENERATED_FILE})
+target_link_libraries(core_parser PUBLIC ${PARSER_LIBS} tree_sitter_core)
+
+#
 file(GLOB_RECURSE CORE_COMMANDS_SOURCES
     src/commands/*.cpp
 )
 add_library(core_commands ${CORE_COMMANDS_SOURCES})
 target_sources(core_commands PRIVATE ${GENERATED_FILE})
 target_include_directories(core_commands PUBLIC ${ARKANJO_INCLUDE_DIRS})
-target_link_libraries(core_commands PUBLIC core_base core_utils ${PARSER_LIBS} tree_sitter_core)
+target_link_libraries(core_commands PUBLIC core_base core_utils ${PARSER_LIBS} tree_sitter_core core_parser)
 
 #
 file(GLOB_RECURSE CORE_CLI_SOURCES
