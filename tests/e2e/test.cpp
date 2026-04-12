@@ -25,8 +25,8 @@ bool should_skip(string s) {
 }
 
 bool areEqualFile(string file1, string file2) {
-    vector<string> left = Utils::read_file_generic(file1);
-    vector<string> right = Utils::read_file_generic(file2);
+    vector<string> left = Utils::read_file_with_vector(file1);
+    vector<string> right = Utils::read_file_with_vector(file2);
 
     if (left.size() != right.size()) {
         return false;

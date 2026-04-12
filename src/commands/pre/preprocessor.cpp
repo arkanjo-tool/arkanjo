@@ -15,7 +15,7 @@ void Preprocessor::save_current_run_params(const fs::path& path) {
     config_content.push_back(path_message);
     config_content.push_back(time_message);
 
-    Utils::write_file_generic(Config::config().base_path / Config::config().name_container / CONFIG_PATH, config_content);
+    Utils::write_file_with_vector(Config::config().base_path / Config::config().name_container / CONFIG_PATH, config_content);
 }
 
 std::vector<std::string> Preprocessor::read_current_run_params() {

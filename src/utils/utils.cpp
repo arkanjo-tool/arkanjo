@@ -2,20 +2,33 @@
 
 #include <arkanjo/base/config.hpp>
 
-void Utils::ensure_file_is_open(const std::ifstream& file, const fs::path& file_name) {
+template <typename Stream>
+void Utils::ensure_file_is_open(const Stream& file, const fs::path& file_name) {
     if (!file.is_open()) {
-        std::cerr << "Attempted to open file: " << file_name << " ";
-        std::cerr << "but a Error ocurred. Check if the file exist." << "\n";
-        exit(0);
+        throw std::runtime_error("Attempted to open file: " + file_name.string() + " but a Error ocurred. Check if the file exist.");
     }
 }
 
-std::vector<std::string> Utils::read_file_generic(const fs::path& string_path) {
+std::string Utils::read_file(const fs::path& path) {
+    std::ifstream file(path);
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    return buffer.str();
+}
+
+void Utils::write_file(const fs::path& path, const std::string& content) {
+    fs::create_directories(path.parent_path());
+    std::ofstream file(path, std::ios::out | std::ios::trunc);
+    ensure_file_is_open(file, path);
+    file << content;
+}
+
+std::vector<std::string> Utils::read_file_with_vector(const fs::path& path) {
     std::ifstream filein;
     std::string line;
     std::vector<std::string> ret;
-    filein.open(string_path);
-    ensure_file_is_open(filein, string_path);
+    filein.open(path);
+    ensure_file_is_open(filein, path);
     while (getline(filein, line)) {
         ret.push_back(line);
     }
@@ -23,10 +36,10 @@ std::vector<std::string> Utils::read_file_generic(const fs::path& string_path) {
     return ret;
 }
 
-void Utils::write_file_generic(const fs::path& file_path, const std::vector<std::string>& content) {
+void Utils::write_file_with_vector(const fs::path& path, const std::vector<std::string>& content) {
     std::ofstream fileout;
-    fs::create_directories(file_path.parent_path());
-    fileout.open(file_path);
+    fs::create_directories(path.parent_path());
+    fileout.open(path);
 
     for (const auto& line : content) {
         fileout << line << '\n';

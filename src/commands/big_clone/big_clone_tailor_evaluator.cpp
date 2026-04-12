@@ -7,7 +7,7 @@
 
 void BigCloneTailorEvaluator::read_clone_labels() {
     count_of_samples_by_type = std::vector<int>(NUMBER_OF_TYPES);
-    std::vector<std::string> content = Utils::read_file_generic(CLONE_LABELS_FILE_PATH);
+    std::vector<std::string> content = Utils::read_file_with_vector(CLONE_LABELS_FILE_PATH);
     for (auto line : content) {
         std::vector<std::string> tokens = Utils::split_string(line, ',');
         if (int(tokens.size()) < 4) {
