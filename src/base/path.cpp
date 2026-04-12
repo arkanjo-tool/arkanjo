@@ -19,6 +19,7 @@ size_t Path::find_position_start_relative_path() const {
     size_t sz = tokens.size();
     size_t ret = sz;
     for (size_t i = 1; i < sz - 1; i++) {
+        // TODO: depending on configuration
         if (tokens[i - 1] == BASE_INIT_STRING && tokens[i + 1] == Config::config().source_path) {
             ret = i + 2;
         }

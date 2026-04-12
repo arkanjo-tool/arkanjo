@@ -12,27 +12,15 @@ std::string FunctionBreaker::extract_extension(const fs::path& file_path) {
 }
 
 fs::path FunctionBreaker::build_output_path(
-    OutputType type,
+    const fs::path type_path,
     const fs::path& relative_path,
     const std::string& function_name
 ) {
     auto& cfg = Config::config();
-    fs::path base = cfg.base_path / cfg.name_container;
-
-    switch (type) {
-        case OutputType::Source:
-            base /= cfg.source_path;
-            break;
-        case OutputType::Header:
-            base /= cfg.header_path;
-            break;
-        case OutputType::Info:
-            base /= cfg.info_path;
-            break;
-    }
+    fs::path base = cfg.base_path / cfg.name_container / type_path;
 
     std::string ext;
-    if (type == OutputType::Info) {
+    if (type_path == cfg.info_path) {
         ext = "json";
     } else {
         ext = extract_extension(relative_path);
@@ -42,12 +30,12 @@ fs::path FunctionBreaker::build_output_path(
 }
 
 void FunctionBreaker::write_output(
-    OutputType type,
+    const fs::path type_path,
     const fs::path& relative_path,
     const std::string& function_name,
     const std::string& content
 ) {
-    fs::path path = build_output_path(type, relative_path, function_name);
+    fs::path path = build_output_path(type_path, relative_path, function_name);
     Utils::write_file(path, content);
 }
 
@@ -78,10 +66,12 @@ void FunctionBreaker::file_breaker(const fs::path& file_path, const fs::path& fo
 
     std::string source_code = Utils::read_file(file_path);
 
-    TreeSitterParser::process_file(file_path, relative_path, source_code, [this, &relative_path](const ParsedFunction& fd, TSNode ast) {
-        write_output(OutputType::Source, relative_path, fd.function_name, fd.code + "\n");
-        write_output(OutputType::Header, relative_path, fd.function_name, fd.signature);
-        write_output(OutputType::Info, relative_path, fd.function_name,
+    TreeSitterParser::process_file(file_path, relative_path, source_code, [this, &relative_path](const ParsedFunction& fd, std::string tokens) {
+        auto& cfg = Config::config();
+
+        write_output(cfg.source_path, relative_path, fd.function_name, fd.code + "\n");
+        write_output(cfg.header_path, relative_path, fd.function_name, fd.signature);
+        write_output(cfg.info_path, relative_path, fd.function_name,
             create_info_json(fd.line_declaration, fd.start_number_line, fd.end_number_line, relative_path, fd.function_name));
     });
 }

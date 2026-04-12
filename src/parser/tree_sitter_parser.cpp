@@ -122,7 +122,7 @@ void TreeSitterParser::collect_functions(
     TSNode node, 
     const std::string& source, 
     const fs::path& relative_path,
-    std::function<void(const ParsedFunction&, TSNode)> callback
+    std::function<void(const ParsedFunction&, std::string)> callback
 ) {
     if (is_function_node(node)) {
         TSPoint start = ts_node_start_point(node);
@@ -142,9 +142,12 @@ void TreeSitterParser::collect_functions(
         std::string signature = get_full_signature(node, source);
         std::string code = source.substr(start_byte + signature.size(), end_byte - (start_byte + signature.size()));
 
+        FeatureExtractor extractor;
+        auto features = extractor.extract_features(node, source);
+
         callback({
             function_name, signature, code, start.row, body_start.row, end.row 
-        }, node);
+        }, features);
     }
 
     uint32_t count = ts_node_child_count(node);
@@ -162,7 +165,7 @@ void TreeSitterParser::process_file(
     const fs::path& file_path,
     const fs::path& relative_path,
     const std::string& source_code,
-    std::function<void(const ParsedFunction&, TSNode)> callback
+    std::function<void(const ParsedFunction&, std::string)> callback
 ) {
     auto lang_name = detect_language(file_path);
 

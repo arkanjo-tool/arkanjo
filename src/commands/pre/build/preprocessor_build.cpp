@@ -45,6 +45,8 @@ std::tuple<std::string, double, bool> PreprocessorBuild::read_parameters() {
 }
 
 void PreprocessorBuild::preprocess(const fs::path& path, double similarity, bool use_duplication_finder_by_tool) {
+    auto start = std::chrono::high_resolution_clock::now();
+
     fm::write(BREAKER_MESSAGE);
 
     fs::path base_path = Config::config().base_path / Config::config().name_container;
@@ -68,6 +70,17 @@ void PreprocessorBuild::preprocess(const fs::path& path, double similarity, bool
     Preprocessor::save_current_run_params(path);
 
     fm::write(END_MESSAGE);
+
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> duration = end - start;
+    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+
+    std::cout << "Execution time: "
+            << std::setfill('0') << std::setw(2) << (ms / 3600000) << ":"
+            << std::setw(2) << (ms / 60000 % 60) << ":"
+            << std::setw(2) << (ms / 1000 % 60) << "."
+            << std::setw(3) << (ms % 1000)
+            << "\n";
 }
 
 PreprocessorBuild::PreprocessorBuild() { }

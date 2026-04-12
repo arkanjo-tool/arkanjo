@@ -24,12 +24,6 @@
 
 namespace fs = std::filesystem;
 
-enum class OutputType {
-    Source,
-    Header,
-    Info
-};
-
 /**
  * @brief Main function extraction processor
  *
@@ -59,7 +53,7 @@ class FunctionBreaker {
      * @return Full path for the file
      */
 
-    fs::path build_output_path(OutputType type, const fs::path& relative_path, const std::string& function_name);
+    fs::path build_output_path(const fs::path type_path, const fs::path& relative_path, const std::string& function_name);
 
     /**
      * @brief Creates file for a function
@@ -68,7 +62,7 @@ class FunctionBreaker {
      * @param function_name Name of the function
      * @param content Vector of strings containing the content
      */
-    void write_output(OutputType type, const fs::path& relative_path, 
+    void write_output(const fs::path type_path, const fs::path& relative_path, 
         const std::string& function_name, const std::string& content);
 
     /**
