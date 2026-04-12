@@ -1,64 +1,98 @@
-/*
-This file intends to create a script to read a directory with
-code in c and extract every function/struct of every .c file as a new file
-
-Example of expected behaviour:
-There is a file example.c with functions a and b, will be create two new
-files: example/a.c and example/b.c
-
-TODO: Doesn't work correct if the file has an incorrect bracket sequence,
-even if the bracket sequence is in a commentary
-*/
-
 #include "function_breaker.hpp"
-#include <cassert>
+#include <iostream>
+#include <unordered_map>
+#include <arkanjo/utils/utils.hpp>
+#include <arkanjo/parser/tree_sitter_parser.hpp>
+#include <arkanjo/base/config.hpp>
 
-bool FunctionBreaker::is_c_extension(const std::string& extension) {
-    for (auto c_extension : C_EXTENSIONS) {
-        if (extension == c_extension) {
-            return true;
-        }
-    }
-    return false;
+std::string FunctionBreaker::extract_extension(const fs::path& file_path) {
+    std::string ext = file_path.extension().string();
+    if (!ext.empty() && ext[0] == '.') ext.erase(0, 1);
+    return ext;
 }
 
-bool FunctionBreaker::is_java_extension(const std::string& extension) {
-    for (auto java_extension : JAVA_EXTENSIONS) {
-        if (extension == java_extension) {
-            return true;
-        }
+fs::path FunctionBreaker::build_output_path(
+    OutputType type,
+    const fs::path& relative_path,
+    const std::string& function_name
+) {
+    auto& cfg = Config::config();
+    fs::path base = cfg.base_path / cfg.name_container;
+
+    switch (type) {
+        case OutputType::Source:
+            base /= cfg.source_path;
+            break;
+        case OutputType::Header:
+            base /= cfg.header_path;
+            break;
+        case OutputType::Info:
+            base /= cfg.info_path;
+            break;
     }
-    return false;
+
+    std::string ext;
+    if (type == OutputType::Info) {
+        ext = "json";
+    } else {
+        ext = extract_extension(relative_path);
+    }
+
+    return base / relative_path / (function_name + "." + ext);
 }
 
-bool FunctionBreaker::is_allowed_extension(const std::string& extension) {
-    for (auto allowed_extension : ALLOWED_EXTENSIONS) {
-        if (extension == allowed_extension) {
-            return true;
-        }
-    }
-    return false;
+void FunctionBreaker::write_output(
+    OutputType type,
+    const fs::path& relative_path,
+    const std::string& function_name,
+    const std::string& content
+) {
+    fs::path path = build_output_path(type, relative_path, function_name);
+    Utils::write_file(path, content);
 }
+
+std::string FunctionBreaker::create_info_json(
+    int line_declaration, int start_number_line,
+    int end_number_line, const fs::path& relative_path,
+    const std::string& function_name
+) {
+    return "{"
+        "\"file_name\":\"" + relative_path.string() + "\","
+        "\"function_name\":\"" + function_name + "\","
+        "\"line_declaration\":" + std::to_string(line_declaration) + ","
+        "\"start_number_line\":" + std::to_string(start_number_line) + ","
+        "\"end_number_line\":" + std::to_string(end_number_line) +
+    "}";
+}
+
 
 void FunctionBreaker::file_breaker(const fs::path& file_path, const fs::path& folder_path) {
-    std::string extension = extract_extension(file_path);
+    if (!fs::exists(file_path)) return;
 
-    if (!is_allowed_extension(extension)) {
+    fs::path relative_path;
+    try {
+        relative_path = fs::relative(file_path, folder_path);
+    } catch (...) {
         return;
     }
 
-    if (is_c_extension(extension)) {
-        FunctionBreakerC function_breaker_c(file_path, folder_path);
-    } else if (is_java_extension(extension)) {
-        FunctionBreakerJava function_breaker_java(file_path, folder_path);
-    } else {
-        assert(false && "NOT ALLOWED FILE PASSED");
-    }
+    std::string source_code = Utils::read_file(file_path);
+
+    TreeSitterParser::process_file(file_path, relative_path, source_code, [this, &relative_path](const ParsedFunction& fd, TSNode ast) {
+        write_output(OutputType::Source, relative_path, fd.function_name, fd.code + "\n");
+        write_output(OutputType::Header, relative_path, fd.function_name, fd.signature);
+        write_output(OutputType::Info, relative_path, fd.function_name,
+            create_info_json(fd.line_declaration, fd.start_number_line, fd.end_number_line, relative_path, fd.function_name));
+    });
 }
 
+// TODO: It's possible to add parallelism to this function.
 void FunctionBreaker::function_breaker(const fs::path& folder_path) {
     for (const auto& dirEntry : fs::recursive_directory_iterator(folder_path)) {
-        file_breaker(dirEntry.path(), folder_path);
+        if (!dirEntry.is_regular_file()) continue;
+
+        auto path = dirEntry.path();
+        file_breaker(path, folder_path);
     }
 }
 
