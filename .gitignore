@@ -34,7 +34,6 @@
 *.i*86
 *.x86_64
 *.hex
-parser
 filter
 function_breaker
 exec
@@ -43,7 +42,6 @@ preprocessor
 tmp
 test
 filter
-parser
 
 # Debug files
 *.dSYM/

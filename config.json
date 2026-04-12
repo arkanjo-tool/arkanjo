@@ -1,0 +1,7 @@
+{
+    "languages": ["c", "rust"],
+    "extensions": {
+        "c": [".c", ".h"],
+        "rust": [".rs"]
+    }
+}
