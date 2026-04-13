@@ -2,6 +2,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <arkanjo/utils/utils.hpp>
+#include <arkanjo/parser/feature_extractor.hpp>
 
 std::unordered_map<std::string, TSLanguage* (*)()> get_language_map();
 std::unordered_map<std::string, std::string> get_extension_map();
@@ -47,10 +48,7 @@ std::string extract_name_generic(TSNode node, const std::string& source) {
         if (!ts_node_is_null(name)) {
             std::string_view type = ts_node_type(name);
               if (type == "identifier") {
-                    return source.substr(
-                    ts_node_start_byte(name),
-                    ts_node_end_byte(name) - ts_node_start_byte(name)
-                );
+                return FeatureExtractor::get_node_text(name, source);
             }
 
             if (type == "qualified_identifier") {
@@ -79,38 +77,18 @@ std::string TreeSitterParser::get_function_name(TSNode func_node, const std::str
     return extract_name_generic(func_node, source);
 }
 
-bool is_function_node(TSNode node) {
-    std::string_view type = ts_node_type(node);
-
-    return
-        type == "function_definition" ||
-        type == "function_item" ||
-        type == "closure_expression" ||
-        type == "method_definition" ||
-        type == "method_declaration";
-}
-
-bool is_block_node(TSNode node) {
-    std::string_view type = ts_node_type(node);
-
-    return 
-        type == "block" ||
-        type == "block_expression" ||
-        type == "compound_statement";
-}
-
 TSNode TreeSitterParser::get_body(TSNode node) {
     TSNode body = ts_node_child_by_field_name(node, "body", strlen("body"));
 
     if (!ts_node_is_null(body))
         return body;
 
-    uint32_t n = ts_node_child_count(node);
+    uint32_t count = ts_node_child_count(node);
 
-    for (uint32_t i = 0; i < n; i++) {
+    for (uint32_t i = 0; i < count; i++) {
         TSNode child = ts_node_child(node, i);
-
-        if (is_block_node(child)) {
+        std::string_view type = ts_node_type(child);
+        if (FeatureExtractor::is_block_node(type)) {
             return child;
         }
     }
@@ -124,7 +102,8 @@ void TreeSitterParser::collect_functions(
     const fs::path& relative_path,
     std::function<void(const ParsedFunction&, std::string)> callback
 ) {
-    if (is_function_node(node)) {
+    std::string_view type = ts_node_type(node);
+    if (FeatureExtractor::is_function_node(type)) {
         TSPoint start = ts_node_start_point(node);
         TSPoint end = ts_node_end_point(node);
 
@@ -143,7 +122,7 @@ void TreeSitterParser::collect_functions(
         std::string code = source.substr(start_byte + signature.size(), end_byte - (start_byte + signature.size()));
 
         FeatureExtractor extractor;
-        auto features = extractor.extract_features(node, source);
+        auto features = extractor.extract_features(body, source);
 
         callback({
             function_name, signature, code, start.row, body_start.row, end.row 

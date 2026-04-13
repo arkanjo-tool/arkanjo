@@ -71,6 +71,7 @@ void FunctionBreaker::file_breaker(const fs::path& file_path, const fs::path& fo
 
         write_output(cfg.source_path, relative_path, fd.function_name, fd.code + "\n");
         write_output(cfg.header_path, relative_path, fd.function_name, fd.signature);
+        // write_output(cfg.combined_path, relative_path, fd.function_name, tokens);
         write_output(cfg.info_path, relative_path, fd.function_name,
             create_info_json(fd.line_declaration, fd.start_number_line, fd.end_number_line, relative_path, fd.function_name));
     });
