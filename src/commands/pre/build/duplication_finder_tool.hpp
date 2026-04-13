@@ -47,5 +47,5 @@ class DuplicationFinderTool {
      * including file scanning, similarity comparison, and result saving.
      */
     void execute();
-    void execute_by_feature(const std::string feature_name, const fs::path& path);
+    void execute_by_feature(const fs::path& path, const std::string feature_name = "");
 };

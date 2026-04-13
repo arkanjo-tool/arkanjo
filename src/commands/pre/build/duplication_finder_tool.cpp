@@ -11,7 +11,7 @@ DuplicationFinderTool::DuplicationFinderTool(const fs::path& base_path_, double 
     similarity = similarity_;
 }
 
-void DuplicationFinderTool::execute_by_feature(const std::string feature_name, const fs::path& path) {
+void DuplicationFinderTool::execute_by_feature(const fs::path& path, const std::string feature_name) {
     fs::path output_parsed =  base_path / "output_parsed.txt";
     if (!feature_name.empty())
         fs::path output_parsed = base_path / ("output_parsed" + feature_name + ".txt");
@@ -43,6 +43,6 @@ void DuplicationFinderTool::execute_by_feature(const std::string feature_name, c
 }
 
 void DuplicationFinderTool::execute() {
-    // execute_by_feature("combined", Config::config().combined_path);
-    execute_by_feature("source", Config::config().source_path);
+    // execute_by_feature(Config::config().combined_path);
+    execute_by_feature(Config::config().source_path);
 }
