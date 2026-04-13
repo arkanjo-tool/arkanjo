@@ -1,5 +1,6 @@
 #include "parser.hpp"
 #include <iomanip>
+#include <iostream>
 
 Comparation::Comparation(std::string _path1, std::string _path2, double _sim) {
     if (_path1 > _path2)
@@ -41,10 +42,6 @@ std::vector<std::string> Parser::parser_line(const std::string& line) {
     return ret;
 }
 
-bool Parser::is_an_file(const std::string& s) {
-    return !s.empty() && s[0] == '/';
-}
-
 void removeANSI_inplace(std::string& s) {
     size_t write = 0;
 
@@ -76,7 +73,7 @@ void Parser::parser_block_stream(const std::string& path, const std::vector<std:
 
     const std::string& path_comp = tokens[0];
 
-    if (!is_an_file(path_comp))
+    if (!fs::is_regular_file(path_comp))
         return;
 
     double similarity = retrive_similarity(tokens[1]);
@@ -103,7 +100,7 @@ void Parser::exec_from_stream(FILE* pipe) {
             auto tokens = parser_line(line);
             if (tokens.size() > 2) {
                 for (auto token : tokens) {
-                    if (is_an_file(token)) {
+                    if (fs::is_regular_file(token)) {
                         path = token;
                         break;
                     }

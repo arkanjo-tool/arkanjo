@@ -3,124 +3,53 @@
 
 #include <iostream>
 #include <arkanjo/base/config.hpp>
+#include <arkanjo/commands/pre/preprocessor.hpp>
 
-std::vector<std::string> Path::split_path(const fs::path& path) {
-    std::vector<std::string> parts;
-    for (const auto& part : path) {
-        std::string s = part.string();
-        if (!s.empty()) {
-            parts.push_back(s);
-        }
-    }
-    return parts;
+Path::Path(const fs::path& _path) {
+    resource_path = _path;
 }
 
-size_t Path::find_position_start_relative_path() const {
-    size_t sz = tokens.size();
-    size_t ret = sz;
-    for (size_t i = 1; i < sz - 1; i++) {
-        // TODO: depending on configuration
-        if (tokens[i - 1] == BASE_INIT_STRING && tokens[i + 1] == Config::config().source_path) {
-            ret = i + 2;
-        }
-    }
-    assert(ret != sz && "PATH NOT VALID FOR THE TOOL");
-    return ret;
+fs::path Path::build_source_path() const {
+    auto& cfg = Config::config();
+    return cfg.base_path / cfg.name_container / cfg.source_path / resource_path;
 }
 
 bool Path::is_empty() const {
-    return tokens.empty();
+    return resource_path.empty();
 }
 
-Path::Path(const fs::path& path) {
-    tokens = split_path(path);
-    position_start_relative_path = find_position_start_relative_path();
+fs::path Path::build_header_path() const {
+    auto& cfg = Config::config();
+    return cfg.base_path / cfg.name_container / cfg.header_path / resource_path;
 }
 
-std::string Path::build_string_path(const std::vector<std::string>& path_tokens) {
-    fs::path p;
-    for (const auto& token : path_tokens) {
-        p /= token;
-    }
-    return p.string();
+fs::path Path::build_info_path() const {
+    auto& cfg = Config::config();
+    fs::path p = cfg.base_path / cfg.name_container / cfg.info_path / resource_path;
+    p.replace_extension(JSON_EXTENSION);
+    return p;
 }
 
-std::string Path::build_base_path(const std::string& base) const {
-    if (is_empty()) {
-        return "";
-    }
-    std::vector<std::string> path = tokens;
-    size_t pos_change = position_start_relative_path - 1;
-    path[pos_change] = base;
-    std::string string_path = build_string_path(path);
-    return string_path;
-}
-
-std::string Path::build_source_path() const {
-    return build_base_path(Config::config().source_path);
-}
-
-std::string Path::build_header_path() const {
-    return build_base_path(Config::config().header_path);
-}
-
-std::string Path::build_info_path() const {
-    std::string ret = build_base_path(Config::config().info_path);
-    if (ret == "") {
-        return "";
-    }
-    ret = remove_extension(ret);
-    if (ret == "") {
-        return "";
-    }
-    ret += JSON_EXTENSION;
-    return ret;
-}
-
-std::vector<std::string> Path::get_tokens_from_relative_path() const {
-    std::vector<std::string> token_relative_path = tokens;
-    token_relative_path.pop_back();
-    size_t to_remove = position_start_relative_path;
-    reverse(token_relative_path.begin(), token_relative_path.end());
-    for (size_t i = 0; i < to_remove; i++) {
-        token_relative_path.pop_back();
-    }
-    reverse(token_relative_path.begin(), token_relative_path.end());
-    return token_relative_path;
-}
-
-std::string Path::remove_extension(std::string& token) {
-    while (!token.empty()) {
-        auto c = token.back();
-        token.pop_back();
-        if (c == '.') {
-            break;
-        }
-    }
-    return token;
-}
-
-std::string Path::build_relative_path() const {
-    if (is_empty()) {
-        return "";
-    }
-    std::vector<std::string> token_relative_path = get_tokens_from_relative_path();
-    std::string string_path = build_string_path(token_relative_path);
-    return string_path;
+fs::path Path::build_relative_path() const {
+    return resource_path.parent_path();
 }
 
 std::string Path::build_function_name() const {
-    if (is_empty()) {
-        return "";
-    }
-    std::string function_name = tokens.back();
-    function_name = remove_extension(function_name);
-    return function_name;
+    std::string filename = resource_path.stem().string();
+    return filename;
 }
 
 std::vector<std::string> Path::get_common_folders(const Path& path) const {
-    std::vector<std::string> tokens_relative_1 = get_tokens_from_relative_path();
-    std::vector<std::string> tokens_relative_2 = path.get_tokens_from_relative_path();
+    std::vector<std::string> tokens_relative_1;
+    std::vector<std::string> tokens_relative_2;
+
+    for (const auto& part : resource_path) {
+        tokens_relative_1.push_back(part.string());
+    }
+    for (const auto& part : path.resource_path) {
+        tokens_relative_2.push_back(part.string());
+    }
+
     size_t minimum_size_tokens = std::min(tokens_relative_1.size(), tokens_relative_2.size());
     std::vector<std::string> common_folders;
     for (size_t i = 0; i < minimum_size_tokens; i++) {
@@ -136,14 +65,14 @@ std::vector<std::string> Path::get_common_folders(const Path& path) const {
 }
 
 bool Path::operator<(const Path& path) const {
-    return tokens < path.tokens;
+    return resource_path < path.resource_path;
 }
 
 bool Path::contains_given_pattern(const std::string& pattern) const {
-    std::string relative_path_plus_function_name = build_relative_path() + BAR + build_function_name();
+    std::string relative_path_plus_function_name = build_relative_path() / build_function_name();
     return relative_path_plus_function_name.find(pattern) != std::string::npos;
 }
 
 std::string Path::format_path_message_in_pair() const {
-    return build_relative_path() + BETWEEN_RELATIVE_AND_FUNCTION_NAME + build_function_name();
+    return build_relative_path().string() + BETWEEN_RELATIVE_AND_FUNCTION_NAME + build_function_name();
 }
