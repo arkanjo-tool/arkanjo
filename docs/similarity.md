@@ -6,11 +6,11 @@ ArKanjo represents code duplication as a graph, implemented in the `Similarity_T
 
 We have $\mathcal{V}$, where it is defined by the set of all possible words (*tokens*).
 
-$$\mathcal{V}=\left\{w_1​,w_2​,\dots,w_n\right\}$$
+$$\mathcal{V}=\{w_1​,w_2​,\dots,w_n\}$$
 
 For each file $d$, we have a list of words.
 
-$$d=\left(\text{``}int\text{''}, \text{``}main\text{''}, \text{``}return\text{''}, \text{``}0\text{''}, \dots\right)$$
+$$d = \left(\text{"int"}, \text{"main"}, \text{"return"}, \text{"0"}, \dots\right)$$
 
 Each document becomes a counting vector:
 
