@@ -6,12 +6,12 @@
 
 void Function::read_content() {
     std::string source_path = path.build_source_path();
-    content = Utils::read_file_generic(source_path);
+    content = Utils::read_file_with_vector(source_path);
 }
 
 void Function::read_header() {
     std::string header_path = path.build_header_path();
-    header = Utils::read_file_generic(header_path);
+    header = Utils::read_file_with_vector(header_path);
 }
 void Function::read_info() {
     std::string info_path = path.build_info_path();

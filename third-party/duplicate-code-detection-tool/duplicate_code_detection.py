@@ -20,7 +20,7 @@ from enum import Enum
 from nltk.tokenize import word_tokenize
 from collections import OrderedDict
 
-source_code_file_extensions = ["h", "c", "cpp", "cc", "java", "py", "cs"]
+source_code_file_extensions = ["h", "c", "cpp", "cc", "java", "py", "cs", "rs"]
 file_column_label = "File"
 file_loc_label = ",#LoC"
 similarity_column_label = "Similarity (%)"

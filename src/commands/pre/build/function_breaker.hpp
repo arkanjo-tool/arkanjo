@@ -12,19 +12,15 @@
  * Example of expected behaviour:
  * There is a file example.c with functions a and b, will be create two new
  * files: example/a.c and example/b.c
- *
- * TODO: Doesn't work correct if the file has an incorrect bracket sequence,
- * even if the bracket sequence is in a commentary
  */
 
 #pragma once
 
-#include "function_breaker_c.hpp"
-#include "function_breaker_java.hpp"
-#include "function_breaker_util.hpp"
 #include <string>
 #include <vector>
 #include <filesystem>
+
+#include <tree_sitter/api.h>
 
 namespace fs = std::filesystem;
 
@@ -42,30 +38,44 @@ namespace fs = std::filesystem;
  *   creates example/a.c and example/b.c in tmp/ directory
  */
 class FunctionBreaker {
-    const std::vector<std::string> C_EXTENSIONS = {"c", "h"};               ///< Valid C/C++ file extensions
-    const std::vector<std::string> JAVA_EXTENSIONS = {"java"};              ///< Valid Java file extensions
-    const std::vector<std::string> ALLOWED_EXTENSIONS = {"c", "h", "java"}; ///< All supported extensions
+    /**
+     * @brief Extracts file extension from path
+     * @param file_path Path to the file
+     * @return string File extension
+     */
+    std::string extract_extension(const fs::path& file_path);
 
     /**
-     * @brief Checks if extension is for C/C++ files
-     * @param extension File extension to check
-     * @return bool True if extension is for C/C++
+     * @brief Builds file path for a function
+     * @param type Output type
+     * @param relative_path Relative path of the original file
+     * @param function_name Name of the function
+     * @return Full path for the file
      */
-    bool is_c_extension(const std::string& extension);
+
+    fs::path build_output_path(const fs::path type_path, const fs::path& relative_path, const std::string& function_name);
 
     /**
-     * @brief Checks if extension is for Java files
-     * @param extension File extension to check
-     * @return bool True if extension is for Java
+     * @brief Creates file for a function
+     * @param type Output type
+     * @param relative_path Relative path of the original file
+     * @param function_name Name of the function
+     * @param content Vector of strings containing the content
      */
-    bool is_java_extension(const std::string& extension);
+    void write_output(const fs::path type_path, const fs::path& relative_path, 
+        const std::string& function_name, const std::string& content);
 
     /**
-     * @brief Checks if extension is supported
-     * @param extension File extension to check
-     * @return bool True if extension is supported
+     * @brief Creates JSON metadata file for a function
+     * @param line_declaration Line number where function is declared
+     * @param start_number_line Starting line number of function body
+     * @param end_number_line Ending line number of function body
+     * @param relative_path Relative path of the original file
+     * @param function_name Name of the function
      */
-    bool is_allowed_extension(const std::string& extension);
+    std::string create_info_json(int line_declaration, int start_number_line,
+      int end_number_line, const fs::path& relative_path,
+      const std::string& function_name);
 
     /**
      * @brief Processes individual source file

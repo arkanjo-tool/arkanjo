@@ -58,8 +58,8 @@ bool DuplicationFinderDiff::is_equal_files(std::vector<std::string> content1, st
 }
 
 double DuplicationFinderDiff::find_similarity(std::string path1, std::string path2) {
-    std::vector<std::string> content1 = Utils::read_file_generic(path1);
-    std::vector<std::string> content2 = Utils::read_file_generic(path2);
+    std::vector<std::string> content1 = Utils::read_file_with_vector(path1);
+    std::vector<std::string> content2 = Utils::read_file_with_vector(path2);
 
     content1 = remove_blank_lines(content1);
     content2 = remove_blank_lines(content2);
@@ -76,7 +76,7 @@ double DuplicationFinderDiff::find_similarity(std::string path1, std::string pat
     std::string command = "diff " + path1 + " " + path2 + " -c > " + output_file.string() + " 2>&1";
     system(command.c_str());
 
-    std::vector<std::string> content = Utils::read_file_generic(output_file);
+    std::vector<std::string> content = Utils::read_file_with_vector(output_file);
 
     size_t number_lines = content.size();
 

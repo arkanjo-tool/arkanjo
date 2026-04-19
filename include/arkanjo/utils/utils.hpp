@@ -130,21 +130,36 @@ enum COLOR {
  * @param file Reference to the input file stream to check
  * @param file_name Name/path of the file being opened (for error message)
  */
-void ensure_file_is_open(const std::ifstream& file, const fs::path& file_name);
+template <typename Stream>
+void ensure_file_is_open(const Stream& file, const fs::path& file_name);
 
 /**
- * @brief Reads a file line by line into a vector of strings
- * @param string_path Path to the file to read
- * @return vector<string> Contents of the file as a vector of strings
+ * @brief Reads a file into string
+ * @param path Path to the file to read
+ * @return string Contents of the file as a string
  */
-std::vector<std::string> read_file_generic(const fs::path& string_path);
+std::string read_file(const fs::path& path);
 
 /**
  * @brief Writes content to a file at specified path
- * @param file_path Path where file should be written
+ * @param path Path where file should be written
+ * @param content String to write
+ */
+void write_file(const fs::path& path, const std::string& content);
+
+/**
+ * @brief Reads a file line by line into a vector of strings
+ * @param path Path to the file to read
+ * @return vector<string> Contents of the file as a vector of strings
+ */
+std::vector<std::string> read_file_with_vector(const fs::path& path);
+
+/**
+ * @brief Writes content to a file at specified path
+ * @param path Path where file should be written
  * @param content Vector of strings to write (each element becomes a line)
  */
-void write_file_generic(const fs::path& file_path, const std::vector<std::string>& content);
+void write_file_with_vector(const fs::path& path, const std::vector<std::string>& content);
 
 /**
  * @brief Reads and parses a JSON file, uses nlohmann json library

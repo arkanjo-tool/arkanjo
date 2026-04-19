@@ -74,9 +74,9 @@ double Similarity_Table::get_similarity(const Path& path1, const Path& path2) {
         std::swap(id1, id2);
     }
     std::pair<PathId, PathId> aux = std::make_pair(id1, id2);
-    if (similarity_table.find(aux) != similarity_table.end()) {
-        return similarity_table[aux];
-    }
+    auto it = similarity_table.find(aux);
+    if (it != similarity_table.end())
+        return it->second;
     return MINIMUM_SIMILARITY;
 }
 
