@@ -2,19 +2,31 @@
 #include <cassert>
 #include <iomanip>
 #include <iostream>
+#include <optional>
 
 #include <arkanjo/base/config.hpp>
 #include <arkanjo/formatter/format_manager.hpp>
 
 using fm = FormatterManager;
 
-std::tuple<std::string, double, bool> PreprocessorBuild::read_parameters() {
+std::tuple<std::string, double, bool> PreprocessorBuild::read_parameters(const std::optional<ParsedOptions>& options) {
     fm::write(INITIAL_MESSAGE);
     std::string similarity_message;
-
-    fm::write(PROJECT_PATH_MESSAGE);
     std::string path_str;
-    std::cin >> path_str;
+
+    if (options && !options->extra_args.empty() && !options->extra_args[0].empty()) {
+        path_str = options->extra_args[0];
+
+        if (!fs::exists(path_str)) {
+            std::cout << ERROR_PATH_MESSAGE << "\n";
+            path_str.clear(); 
+        }
+    }
+
+    if (path_str.empty()) {
+        fm::write(PROJECT_PATH_MESSAGE);
+        std::cin >> path_str;
+    }
     fs::path path(path_str);
 
     fm::write(MINIMUM_SIMILARITY_MESSAGE);
@@ -88,7 +100,7 @@ PreprocessorBuild::PreprocessorBuild() { }
 PreprocessorBuild::PreprocessorBuild(bool force_preprocess) {
     fs::path base_path = Config::config().base_path / Config::config().name_container;
     if (force_preprocess || !std::filesystem::exists(base_path / CONFIG_PATH)) {
-        auto [path, similarity, use_duplication_finder_by_tool] = read_parameters();
+        auto [path, similarity, use_duplication_finder_by_tool] = read_parameters(std::nullopt);
         preprocess(path, similarity, use_duplication_finder_by_tool);
     }
 }
@@ -115,7 +127,7 @@ bool PreprocessorBuild::validate(const ParsedOptions& options) {
 
 bool PreprocessorBuild::run([[maybe_unused]] const ParsedOptions& options) {
     fs::path base_path = Config::config().base_path / Config::config().name_container;
-    auto [path, similarity, use_duplication_finder_by_tool] = read_parameters();
+    auto [path, similarity, use_duplication_finder_by_tool] = read_parameters(options);
     preprocess(path, similarity, use_duplication_finder_by_tool);
 
     return true;
