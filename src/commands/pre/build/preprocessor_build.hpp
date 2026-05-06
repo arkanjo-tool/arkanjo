@@ -51,6 +51,7 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
     static constexpr const char* DUPLICATION_MESSAGE = "Finding duplication in the codebase... (this may take a while)"; ///< Duplication detection message
     static constexpr const char* SAVING_MESSAGE = "Saving results...";                                                   ///< Results saving message
     static constexpr const char* END_MESSAGE = "Finished preprocessing";                                                 ///< Completion message
+    static constexpr const char* ERROR_PATH_MESSAGE = "Provided path does not exist.";                 ///< Error message for invalid paths
 
     // Duplication finder selection messages
     static constexpr const char* MESSAGE_DUPLICATION_FINDER_TYPE_1 = "Enter the number of the duplication finder technique you want to use:";
@@ -60,12 +61,13 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
 
     /**
      * @brief Reads preprocessing parameters from user/config
+     * @param options Parsed command line options. std::nullopt represents default behavior.
      * @return tuple<string,double,bool>
      *         - Project path
      *         - Similarity threshold
      *         - Duplication finder selection flag
      */
-    std::tuple<std::string, double, bool> read_parameters();
+    std::tuple<std::string, double, bool> read_parameters(const std::optional<ParsedOptions>& options);
 
     /**
      * @brief Executes full preprocessing pipeline
@@ -76,6 +78,10 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
     void preprocess(const fs::path& path, double similarity, bool use_duplication_finder_by_tool);
 
   public:
+    static constexpr CliOption options_[] = {
+      {"path", 0, PositionalArgument, "Project path to preprocess."},
+      OPTION_END
+    };
     PreprocessorBuild();
 
     /**
