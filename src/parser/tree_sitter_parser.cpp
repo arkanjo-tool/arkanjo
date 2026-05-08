@@ -99,6 +99,7 @@ void TreeSitterParser::collect_functions(
     TSNode node, 
     const std::string& source, 
     const fs::path& relative_path,
+    const std::shared_ptr<TSTree>& tree,
     std::function<void(const ParsedFunction&)> callback
 ) {
     std::string_view type = ts_node_type(node);
@@ -121,7 +122,9 @@ void TreeSitterParser::collect_functions(
         std::string code = source.substr(start_byte + signature.size(), end_byte - (start_byte + signature.size()));
 
         callback({
-            function_name, signature, code, start.row, body_start.row, end.row 
+            function_name, signature, 
+            code, start.row, body_start.row, end.row,
+            tree, body
         });
     }
 
@@ -131,6 +134,7 @@ void TreeSitterParser::collect_functions(
             ts_node_child(node, i),
             source,
             relative_path,
+            tree,
             callback
         );
     }
@@ -166,15 +170,16 @@ void TreeSitterParser::process_file(
         current_language = language;
     }
 
-    TSTree* tree = ts_parser_parse_string(
-        parser.get(),
-        nullptr,
-        source_code.c_str(),
-        source_code.size()
+    std::shared_ptr<TSTree> tree(
+        ts_parser_parse_string(
+            parser.get(),
+            nullptr,
+            source_code.c_str(),
+            source_code.size()
+        ),
+        ts_tree_delete
     );
-    TSNode root_node = ts_tree_root_node(tree);
+    TSNode root_node = ts_tree_root_node(tree.get());
 
-    collect_functions(root_node, source_code, relative_path, callback);
-
-    ts_tree_delete(tree);
+    collect_functions(root_node, source_code, relative_path, tree, callback);
 }

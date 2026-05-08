@@ -56,6 +56,9 @@ struct ParsedFunction {
    * Corresponds to the last line of the function body.
    */
   size_t end_number_line;
+
+  const std::shared_ptr<TSTree>& tree;
+  const TSNode& node;
 };
 
 class TreeSitterParser {
@@ -80,7 +83,8 @@ class TreeSitterParser {
     static TSNode get_body(TSNode node);
 
     static void collect_functions(
-        TSNode node, const std::string& source, const fs::path& relative_path, 
+        TSNode node, const std::string& source, const fs::path& relative_path,
+        const std::shared_ptr<TSTree>& tree,
         std::function<void(const ParsedFunction&)> callback);
 
   public:
