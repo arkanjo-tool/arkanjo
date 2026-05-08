@@ -81,12 +81,12 @@ class TreeSitterParser {
 
     static void collect_functions(
         TSNode node, const std::string& source, const fs::path& relative_path, 
-        std::function<void(const ParsedFunction&, std::string)> callback);
+        std::function<void(const ParsedFunction&)> callback);
 
   public:
     static void process_file(
       const fs::path& file_path, const fs::path& relative_path, const std::string& source_code, 
-      std::function<void(const ParsedFunction&, std::string)> callback);
+      std::function<void(const ParsedFunction&)> callback);
     
     explicit TreeSitterParser() = default;
 };
