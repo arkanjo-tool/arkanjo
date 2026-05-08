@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include <arkanjo/base/function.hpp>
+#include <arkanjo/base/function/function.hpp>
 #include <arkanjo/formatter/format_manager.hpp>
 #include <arkanjo/commands/pre/preprocessor.hpp>
 
