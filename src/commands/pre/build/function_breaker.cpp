@@ -4,6 +4,7 @@
 #include <arkanjo/utils/utils.hpp>
 #include <arkanjo/parser/tree_sitter_parser.hpp>
 #include <arkanjo/base/config.hpp>
+#include <arkanjo/base/features/source_feature.hpp>
 
 std::string FunctionBreaker::extract_extension(const fs::path& file_path) {
     std::string ext = file_path.extension().string();
@@ -54,7 +55,10 @@ std::string FunctionBreaker::create_info_json(
 }
 
 
-void FunctionBreaker::file_breaker(const fs::path& file_path, const fs::path& folder_path) {
+void FunctionBreaker::file_breaker(
+    const fs::path& file_path, const fs::path& folder_path,
+    std::vector<FunctionData>& output
+) {
     if (!fs::exists(file_path)) return;
 
     fs::path relative_path;
@@ -66,7 +70,17 @@ void FunctionBreaker::file_breaker(const fs::path& file_path, const fs::path& fo
 
     std::string source_code = Utils::read_file(file_path);
 
-    TreeSitterParser::process_file(file_path, relative_path, source_code, [this, &relative_path](const ParsedFunction& fd, std::string tokens) {
+    TreeSitterParser::process_file(file_path, relative_path, source_code, [&](const ParsedFunction& fd, std::string tokens) {
+        FunctionData function;
+        function.path = relative_path.string();
+        function.function_name = fd.function_name;
+
+        auto source = std::make_shared<SourceFeature>();
+        source->code = fd.code;
+        function.add_feature(source);
+
+        output.push_back(std::move(function));
+
         auto& cfg = Config::config();
 
         write_output(cfg.source_path, relative_path, fd.function_name, fd.code + "\n");
@@ -78,15 +92,15 @@ void FunctionBreaker::file_breaker(const fs::path& file_path, const fs::path& fo
 }
 
 // TODO: It's possible to add parallelism to this function.
-void FunctionBreaker::function_breaker(const fs::path& folder_path) {
+std::vector<FunctionData> FunctionBreaker::process(const fs::path& folder_path) {
+    std::vector<FunctionData> functions;
+
     for (const auto& dirEntry : fs::recursive_directory_iterator(folder_path)) {
         if (!dirEntry.is_regular_file()) continue;
 
         auto path = dirEntry.path();
-        file_breaker(path, folder_path);
+        file_breaker(path, folder_path, functions);
     }
-}
 
-FunctionBreaker::FunctionBreaker(const fs::path& folder_path) {
-    function_breaker(folder_path);
+    return functions;
 }

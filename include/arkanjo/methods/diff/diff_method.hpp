@@ -95,5 +95,5 @@ class DiffMethod : public IMethod {
     /**
      * @brief Executes the preprocessing pipeline
      */
-    void execute() override;
+    void execute(std::vector<FunctionData> functions) override;
 };

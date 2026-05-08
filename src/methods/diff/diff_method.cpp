@@ -2,6 +2,7 @@
 #include <arkanjo/methods/diff/diff_method.hpp>
 #include <arkanjo/base/config.hpp>
 #include <arkanjo/utils/utils.hpp>
+#include <arkanjo/base/features/source_feature.hpp>
 
 using fm = FormatterManager;
 
@@ -138,8 +139,20 @@ void DiffMethod::save_duplications(std::vector<std::tuple<double, std::string, s
     fout.close();
 }
 
-void DiffMethod::execute() {
-    std::vector<std::string> file_paths = find_files(base_path / Config::config().source_path);
+void DiffMethod::execute(std::vector<FunctionData> functions) {
+    fs::path base = base_path / source_feature_path;
+    for (const auto& fn : functions) {
+        auto source = fn.get_feature<SourceFeature>();
+        if (!source)
+            continue;
+
+        fs::path relative(fn.path);
+        std::string filename = fn.function_name + relative.extension().string();
+        fs::path path = base / relative / filename;
+        Utils::write_file(path, source->code + "\n");
+    }
+
+    std::vector<std::string> file_paths = find_files(base);
 
     std::vector<std::tuple<double, std::string, std::string>> file_duplication_pairs = find_similar_pairs(file_paths);
 

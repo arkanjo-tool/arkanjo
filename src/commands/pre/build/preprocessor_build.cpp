@@ -67,7 +67,8 @@ void PreprocessorBuild::preprocess(const fs::path& path, double similarity, bool
         fs::remove_all(base_path);
     }
 
-    FunctionBreaker function_breaker(path);
+    FunctionBreaker function_breaker;
+    auto functions = function_breaker.process(path);
 
     fm::write(DUPLICATION_MESSAGE);
 
@@ -77,7 +78,7 @@ void PreprocessorBuild::preprocess(const fs::path& path, double similarity, bool
     } else {
         method = std::make_unique<DiffMethod>(base_path, similarity);
     }
-    method->execute();
+    method->execute(functions);
 
     Preprocessor::save_current_run_params(path);
 
