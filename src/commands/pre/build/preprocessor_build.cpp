@@ -9,7 +9,7 @@
 
 using fm = FormatterManager;
 
-std::tuple<std::string, double, bool> PreprocessorBuild::read_parameters(const std::optional<ParsedOptions>& options) {
+std::tuple<std::string, double, size_t> PreprocessorBuild::read_parameters(const std::optional<ParsedOptions>& options) {
     fm::write(INITIAL_MESSAGE);
     std::string similarity_message;
     std::string path_str;
@@ -33,30 +33,30 @@ std::tuple<std::string, double, bool> PreprocessorBuild::read_parameters(const s
     std::cin >> similarity_message;
     double similarity = stod(similarity_message);
 
-    bool use_duplication_finder_by_tool = false;
+    size_t use_duplication_finder_index = 0;
 
     while (true) {
-        fm::write(MESSAGE_DUPLICATION_FINDER_TYPE_1);
-        fm::write(MESSAGE_DUPLICATION_FINDER_TYPE_2);
-        fm::write(MESSAGE_DUPLICATION_FINDER_TYPE_3);
-        int x;
-        std::cin >> x;
-        if (x == 1) {
-            use_duplication_finder_by_tool = true;
-        } else if (x == 2) {
-            use_duplication_finder_by_tool = false;
-        } else {
-            std::cerr << INVALID_CODE_DUPLICATION_FINDER << '\n';
-            exit(0);
-            continue;
+        fm::write(MESSAGE_DUPLICATION_FINDER_TYPE);
+        for (size_t i = 0; i < MethodsType.size(); ++i) {
+            std::cout << i + 1 << ") " << MethodsType[i].description << '\n';
+        }
+
+        std::cin >> use_duplication_finder_index;
+
+        if (
+            use_duplication_finder_index == 0 ||
+            use_duplication_finder_index > MethodsType.size()
+        ) {
+            throw CLIError(INVALID_CODE_DUPLICATION_FINDER);
         }
         break;
     }
+    --use_duplication_finder_index;
 
-    return {path, similarity, use_duplication_finder_by_tool};
+    return {path, similarity, use_duplication_finder_index};
 }
 
-void PreprocessorBuild::preprocess(const fs::path& path, double similarity, bool use_duplication_finder_by_tool) {
+void PreprocessorBuild::preprocess(const fs::path& path, double similarity, size_t use_duplication_finder_index) {
     auto start = std::chrono::high_resolution_clock::now();
 
     fm::write(BREAKER_MESSAGE);
@@ -72,12 +72,7 @@ void PreprocessorBuild::preprocess(const fs::path& path, double similarity, bool
 
     fm::write(DUPLICATION_MESSAGE);
 
-    std::unique_ptr<IMethod> method;
-    if (use_duplication_finder_by_tool) {
-        method = std::make_unique<ToolMethod>(base_path, similarity);
-    } else {
-        method = std::make_unique<DiffMethod>(base_path, similarity);
-    }
+    auto method = MethodsType[use_duplication_finder_index].create(base_path, similarity);
     method->execute(functions);
 
     Preprocessor::save_current_run_params(path);
@@ -101,8 +96,8 @@ PreprocessorBuild::PreprocessorBuild() { }
 PreprocessorBuild::PreprocessorBuild(bool force_preprocess) {
     fs::path base_path = Config::config().base_path / Config::config().name_container;
     if (force_preprocess || !std::filesystem::exists(base_path / CONFIG_PATH)) {
-        auto [path, similarity, use_duplication_finder_by_tool] = read_parameters(std::nullopt);
-        preprocess(path, similarity, use_duplication_finder_by_tool);
+        auto [path, similarity, use_duplication_finder_index] = read_parameters(std::nullopt);
+        preprocess(path, similarity, use_duplication_finder_index);
     }
 }
 
@@ -128,8 +123,8 @@ bool PreprocessorBuild::validate(const ParsedOptions& options) {
 
 bool PreprocessorBuild::run([[maybe_unused]] const ParsedOptions& options) {
     fs::path base_path = Config::config().base_path / Config::config().name_container;
-    auto [path, similarity, use_duplication_finder_by_tool] = read_parameters(options);
-    preprocess(path, similarity, use_duplication_finder_by_tool);
+    auto [path, similarity, use_duplication_finder_index] = read_parameters(options);
+    preprocess(path, similarity, use_duplication_finder_index);
 
     return true;
 }
