@@ -1,5 +1,5 @@
 /**
- * @file duplication_finder_diff.hpp
+ * @file diff_method.hpp
  * @brief Code duplication preprocessing system
  *
  * Implements the heavy preprocessing stage that analyzes the codebase
@@ -16,6 +16,7 @@
 #include <tuple>
 #include <vector>
 #include <filesystem>
+#include <arkanjo/methods/method.hpp>
 
 namespace fs = std::filesystem;
 
@@ -26,7 +27,7 @@ namespace fs = std::filesystem;
  * potential code duplications, creating a foundation for fast similarity
  * queries during the main operation phase.
  */
-class DuplicationFinderDiff {
+class DiffMethod : public IMethod {
   private:
     static constexpr const char* SAVING_MESSAGE = "Saving results..."; ///< Status message for saving output
 
@@ -89,10 +90,10 @@ class DuplicationFinderDiff {
      * @param base_path_ Root path of codebase
      * @param similarity_ Similarity threshold (0-100)
      */
-    DuplicationFinderDiff(const fs::path& base_path_, double similarity_);
+    DiffMethod(const fs::path& base_path_, double similarity_);
 
     /**
      * @brief Executes the preprocessing pipeline
      */
-    void execute();
+    void execute() override;
 };

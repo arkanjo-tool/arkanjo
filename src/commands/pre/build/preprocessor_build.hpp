@@ -12,10 +12,10 @@
 
 #pragma once
 
-#include "duplication_finder_diff.hpp"
-#include "duplication_finder_tool.hpp"
+#include <arkanjo/methods/diff/diff_method.hpp>
+#include <arkanjo/methods/tool/tool_method.hpp>
+
 #include "function_breaker.hpp"
-#include "parser.hpp"
 #include <arkanjo/commands/pre/preprocessor.hpp>
 #include <arkanjo/commands/command_base.hpp>
 #include <string>

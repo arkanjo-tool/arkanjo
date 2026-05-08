@@ -1,17 +1,17 @@
+#include <arkanjo/methods/tool/tool_method.hpp>
 #include <arkanjo/formatter/format_manager.hpp>
-#include "duplication_finder_tool.hpp"
 #include <arkanjo/base/config.hpp>
 
 #include <iostream>
 
 using fm = FormatterManager;
 
-DuplicationFinderTool::DuplicationFinderTool(const fs::path& base_path_, double similarity_) {
+ToolMethod::ToolMethod(const fs::path& base_path_, double similarity_) {
     base_path = base_path_;
     similarity = similarity_;
 }
 
-void DuplicationFinderTool::execute_by_feature(const fs::path& path, const std::string feature_name) {
+void ToolMethod::execute_by_feature(const fs::path& path, const std::string feature_name) {
     fs::path output_parsed =  base_path / "output_parsed.txt";
     if (!feature_name.empty())
         fs::path output_parsed = base_path / ("output_parsed" + feature_name + ".txt");
@@ -42,7 +42,7 @@ void DuplicationFinderTool::execute_by_feature(const fs::path& path, const std::
     pclose(pipe);
 }
 
-void DuplicationFinderTool::execute() {
+void ToolMethod::execute() {
     // execute_by_feature(Config::config().combined_path);
     execute_by_feature(Config::config().source_path);
 }

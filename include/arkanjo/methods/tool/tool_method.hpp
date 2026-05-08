@@ -1,5 +1,5 @@
 /**
- * @file duplication_finder_tool.hpp
+ * @file tool_method.hpp
  * @brief Main duplication detection tool interface
  *
  * Provides the primary interface for the code duplication detection tool,
@@ -13,9 +13,10 @@
 
 #pragma once
 
-#include "parser.hpp"
 #include <string>
 #include <filesystem>
+#include <arkanjo/methods/tool/parser.hpp>
+#include <arkanjo/methods/method.hpp>
 namespace fs = std::filesystem;
 
 /**
@@ -25,7 +26,7 @@ namespace fs = std::filesystem;
  * to identify and catalog potential code duplications, creating the foundation
  * for efficient similarity queries during the tool's operation phase.
  */
-class DuplicationFinderTool {
+class ToolMethod : public IMethod {
   private:
     static constexpr const char* SAVING_MESSAGE = "Saving results..."; ///< Status message displayed when saving analysis results
 
@@ -38,7 +39,7 @@ class DuplicationFinderTool {
      * @param base_path_ Root path of the codebase to analyze
      * @param similarity_ Minimum similarity threshold (0-100) to consider as duplicate
      */
-    DuplicationFinderTool(const fs::path& base_path_, double similarity_);
+    ToolMethod(const fs::path& base_path_, double similarity_);
 
     /**
      * @brief Executes the full duplication analysis pipeline
@@ -46,6 +47,7 @@ class DuplicationFinderTool {
      * Performs the complete preprocessing and analysis of the codebase,
      * including file scanning, similarity comparison, and result saving.
      */
-    void execute();
     void execute_by_feature(const fs::path& path, const std::string feature_name = "");
+
+    void execute();
 };
