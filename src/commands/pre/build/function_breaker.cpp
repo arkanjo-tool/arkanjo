@@ -70,7 +70,7 @@ void FunctionBreaker::file_breaker(
 
     std::string source_code = Utils::read_file(file_path);
 
-    TreeSitterParser::process_file(file_path, relative_path, source_code, [&](const ParsedFunction& fd, std::string tokens) {
+    TreeSitterParser::process_file(file_path, relative_path, source_code, [&](const ParsedFunction& fd) {
         FunctionData function;
         function.path = relative_path.string();
         function.function_name = fd.function_name;

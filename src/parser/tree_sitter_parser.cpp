@@ -2,7 +2,6 @@
 #include <iostream>
 #include <unordered_map>
 #include <arkanjo/utils/utils.hpp>
-#include <arkanjo/parser/feature_extractor.hpp>
 
 std::unordered_map<std::string, TSLanguage* (*)()> get_language_map();
 std::unordered_map<std::string, std::string> get_extension_map();
@@ -100,7 +99,7 @@ void TreeSitterParser::collect_functions(
     TSNode node, 
     const std::string& source, 
     const fs::path& relative_path,
-    std::function<void(const ParsedFunction&, std::string)> callback
+    std::function<void(const ParsedFunction&)> callback
 ) {
     std::string_view type = ts_node_type(node);
     if (FeatureExtractor::is_function_node(type)) {
@@ -121,12 +120,9 @@ void TreeSitterParser::collect_functions(
         std::string signature = get_full_signature(node, source);
         std::string code = source.substr(start_byte + signature.size(), end_byte - (start_byte + signature.size()));
 
-        FeatureExtractor extractor;
-        auto features = extractor.extract_features(body, source);
-
         callback({
             function_name, signature, code, start.row, body_start.row, end.row 
-        }, features);
+        });
     }
 
     uint32_t count = ts_node_child_count(node);
@@ -144,7 +140,7 @@ void TreeSitterParser::process_file(
     const fs::path& file_path,
     const fs::path& relative_path,
     const std::string& source_code,
-    std::function<void(const ParsedFunction&, std::string)> callback
+    std::function<void(const ParsedFunction&)> callback
 ) {
     auto lang_name = detect_language(file_path);
 

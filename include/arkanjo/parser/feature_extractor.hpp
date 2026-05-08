@@ -33,14 +33,10 @@ class FeatureExtractor {
         "string_literal"
     };
 
-    void walk(TSNode node, Features& features, const std::string& source);
-
 public:
     static bool is_lexical_node(std::string_view type);
     static bool is_block_node(std::string_view type);
     static bool is_function_node(std::string_view type);
 
     static std::string get_node_text(TSNode node, const std::string& source);
-
-    std::string extract_features(TSNode root, const std::string& source);
 };
