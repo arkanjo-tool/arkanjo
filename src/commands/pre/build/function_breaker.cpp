@@ -58,7 +58,7 @@ std::string FunctionBreaker::create_info_json(
 
 void FunctionBreaker::file_breaker(
     const fs::path& file_path, const fs::path& folder_path,
-    std::vector<FunctionData>& output
+    std::function<void(const FunctionData&)> on_function
 ) {
     if (!fs::exists(file_path)) return;
 
@@ -71,23 +71,12 @@ void FunctionBreaker::file_breaker(
 
     std::string source_code = Utils::read_file(file_path);
 
-    TreeSitterParser::process_file(file_path, relative_path, source_code, [&](const ParsedFunction& fd) {
-        FunctionData function;
-        function.path = relative_path.string();
-        function.function_name = fd.function_name;
+    TreeSitterParser::process_file(file_path, relative_path, source_code, [&](const FunctionData& function) {
+        auto source = function.get_feature<SourceFeature>();
+        auto metadata = function.get_feature<MetadataFeature>();
 
-        auto source = std::make_shared<SourceFeature>();
-        source->code = fd.code;
-        function.add_feature(source);
-
-        auto metadata = std::make_shared<MetadataFeature>();
-        metadata->signature = fd.signature;
-        metadata->line_declaration = fd.line_declaration;
-        metadata->start_number_line = fd.start_number_line;
-        metadata->end_number_line = fd.end_number_line;
-        function.add_feature(metadata);
-
-        output.push_back(std::move(function));
+        if (on_function)
+            on_function(function);
 
         auto& cfg = Config::config();
 
@@ -99,15 +88,14 @@ void FunctionBreaker::file_breaker(
 }
 
 // TODO: It's possible to add parallelism to this function.
-std::vector<FunctionData> FunctionBreaker::process(const fs::path& folder_path) {
-    std::vector<FunctionData> functions;
-
+void FunctionBreaker::process(
+    const fs::path& folder_path, 
+    std::function<void(const FunctionData&)> on_function
+) {
     for (const auto& dirEntry : fs::recursive_directory_iterator(folder_path)) {
         if (!dirEntry.is_regular_file()) continue;
 
         auto path = dirEntry.path();
-        file_breaker(path, folder_path, functions);
+        file_breaker(path, folder_path, on_function);
     }
-
-    return functions;
 }

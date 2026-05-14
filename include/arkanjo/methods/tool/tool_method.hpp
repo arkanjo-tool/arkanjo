@@ -49,5 +49,7 @@ class ToolMethod : public IMethod {
      */
     void execute_by_feature(const fs::path& path, const std::string feature_name = "");
 
-    void execute(std::vector<FunctionData> functions);
+    void on_function(const FunctionData& fd) override;
+
+    void execute() override;
 };

@@ -66,14 +66,17 @@ void PreprocessorBuild::preprocess(const fs::path& path, double similarity, size
     if (fs::exists(base_path)) {
         fs::remove_all(base_path);
     }
+    
+    auto method = MethodsType[use_duplication_finder_index].create(base_path, similarity);
 
     FunctionBreaker function_breaker;
-    auto functions = function_breaker.process(path);
+    function_breaker.process(path, [&method](const FunctionData& fd) {
+        method->on_function(fd);
+    });
 
     fm::write(DUPLICATION_MESSAGE);
 
-    auto method = MethodsType[use_duplication_finder_index].create(base_path, similarity);
-    method->execute(functions);
+    method->execute();
 
     Preprocessor::save_current_run_params(path);
 

@@ -21,5 +21,7 @@ public:
      */
     virtual void save_duplications(std::vector<DuplicationEntry>&) {}
 
-    virtual void execute(std::vector<FunctionData> functions) = 0;
+    virtual void on_function(const FunctionData& fd) = 0;
+
+    virtual void execute() = 0;
 };

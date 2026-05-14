@@ -139,18 +139,21 @@ void DiffMethod::save_duplications(std::vector<DuplicationEntry>& file_duplicati
     fout.close();
 }
 
-void DiffMethod::execute(std::vector<FunctionData> functions) {
+void DiffMethod::on_function(const FunctionData& fd) {
     fs::path base = base_path / source_feature_path;
-    for (const auto& fn : functions) {
-        auto source = fn.get_feature<SourceFeature>();
-        if (!source)
-            continue;
 
-        fs::path relative(fn.path);
-        std::string filename = fn.function_name + relative.extension().string();
-        fs::path path = base / relative / filename;
-        Utils::write_file(path, source->code + "\n");
-    }
+    auto source = fd.get_feature<SourceFeature>();
+    if (!source)
+        return;
+
+    fs::path relative(fd.path);
+    std::string filename = fd.function_name + relative.extension().string();
+    fs::path path = base / relative / filename;
+    Utils::write_file(path, source->code + "\n");
+}
+
+void DiffMethod::execute() {
+    fs::path base = base_path / source_feature_path;
 
     std::vector<std::string> file_paths = find_files(base);
 

@@ -19,6 +19,7 @@
 #include <string>
 #include <vector>
 #include <filesystem>
+#include <functional>
 
 #include <tree_sitter/api.h>
 
@@ -86,14 +87,16 @@ class FunctionBreaker {
      */
     void file_breaker(
       const fs::path& file_path, const fs::path& folder_path,
-      std::vector<FunctionData>& output);
+      std::function<void(const FunctionData&)> on_function);
 
     public:
     /**
      * @brief Processes all files in directory
      * @param folder_path Directory path to process
      */
-    std::vector<FunctionData> process(const fs::path& folder_path);
+    void process(
+      const fs::path& folder_path,
+      std::function<void(const FunctionData&)> on_function);
 
     /**
      * @brief Constructs function breaker and processes directory

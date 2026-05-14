@@ -43,19 +43,21 @@ void ToolMethod::execute_by_feature(const fs::path& folder_path, const std::stri
     pclose(pipe);
 }
 
-void ToolMethod::execute(std::vector<FunctionData> functions) {
+void ToolMethod::on_function(const FunctionData& fd) {
     fs::path base = base_path / source_feature_path;
-    for (const auto& fn : functions) {
-        auto source = fn.get_feature<SourceFeature>();
-        if (!source)
-            continue;
 
-        fs::path relative(fn.path);
-        std::string filename = fn.function_name + relative.extension().string();
-        fs::path path = base / relative / filename;
-        Utils::write_file(path, source->code + "\n");
-    }
+    auto source = fd.get_feature<SourceFeature>();
+    if (!source)
+        return;
 
-    // execute_by_feature(Config::config().combined_path);
+    fs::path relative(fd.path);
+    std::string filename = fd.function_name + relative.extension().string();
+    fs::path path = base / relative / filename;
+    Utils::write_file(path, source->code + "\n");
+}
+
+void ToolMethod::execute() {
+    fs::path base = base_path / source_feature_path;
+
     execute_by_feature(base);
 }

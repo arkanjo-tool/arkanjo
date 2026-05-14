@@ -92,8 +92,10 @@ class DiffMethod : public IMethod {
      */
     DiffMethod(const fs::path& base_path_, double similarity_);
 
+    void on_function(const FunctionData& fd) override;
+
     /**
      * @brief Executes the preprocessing pipeline
      */
-    void execute(std::vector<FunctionData> functions) override;
+    void execute() override;
 };
