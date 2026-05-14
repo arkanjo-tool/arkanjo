@@ -14,6 +14,7 @@
 
 #include <arkanjo/methods/diff/diff_method.hpp>
 #include <arkanjo/methods/tool/tool_method.hpp>
+#include <arkanjo/methods/ast/ast_method.hpp>
 
 #include "function_breaker.hpp"
 #include <arkanjo/commands/pre/preprocessor.hpp>
@@ -78,6 +79,12 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
           return std::make_unique<DiffMethod>(base_path, similarity);
         },
         "Count proportion of equal lines using diff command"
+      },
+      {
+        [](const std::string& base_path, float similarity) {
+          return std::make_unique<ASTMethod>(base_path, similarity);
+        },
+        "Compare linearized structural sequences extracted from Tree-sitter ASTs"
       }
     };
 

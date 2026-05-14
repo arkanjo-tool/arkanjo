@@ -5,6 +5,7 @@
 #include <arkanjo/parser/tree_sitter_parser.hpp>
 #include <arkanjo/base/config.hpp>
 #include <arkanjo/base/features/source_feature.hpp>
+#include <arkanjo/base/features/ast_feature.hpp>
 #include <arkanjo/base/features/metadata_feature.hpp>
 
 std::string FunctionBreaker::extract_extension(const fs::path& file_path) {

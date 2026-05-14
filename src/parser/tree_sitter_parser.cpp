@@ -2,6 +2,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <arkanjo/utils/utils.hpp>
+#include <arkanjo/base/features/ast_feature.hpp>
 #include <arkanjo/base/features/source_feature.hpp>
 #include <arkanjo/base/features/metadata_feature.hpp>
 
@@ -130,6 +131,11 @@ void TreeSitterParser::collect_functions(
         auto source = std::make_shared<SourceFeature>();
         source->code = code;
         function.add_feature(source);
+
+        auto ast = std::make_shared<ASTFeature>();
+        ast->tree = tree;
+        ast->root = body;
+        function.add_feature(ast);
 
         auto metadata = std::make_shared<MetadataFeature>();
         metadata->signature = signature;
