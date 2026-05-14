@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.19)
 project(arkanjo 
     LANGUAGES C CXX
 )
 
-option(ENABLE_WARNINGS "Enable compiler warnings" ON)
+option(ENABLE_WARNINGS "Enable compiler warnings" OFF)
 option(ENABLE_TESTS "Build tests" ON)
 
 set(CMAKE_CXX_STANDARD 17)
