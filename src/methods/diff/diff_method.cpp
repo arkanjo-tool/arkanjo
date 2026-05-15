@@ -1,11 +1,12 @@
 #include <arkanjo/formatter/format_manager.hpp>
-#include "duplication_finder_diff.hpp"
+#include <arkanjo/methods/diff/diff_method.hpp>
+#include <arkanjo/base/features/source_feature.hpp>
 #include <arkanjo/base/config.hpp>
 #include <arkanjo/utils/utils.hpp>
 
 using fm = FormatterManager;
 
-DuplicationFinderDiff::DuplicationFinderDiff(const fs::path& base_path_, double similarity_) {
+DiffMethod::DiffMethod(const fs::path& base_path_, double similarity_) {
     base_path = base_path_;
     similarity = similarity_;
 
@@ -14,7 +15,7 @@ DuplicationFinderDiff::DuplicationFinderDiff(const fs::path& base_path_, double 
     }
 }
 
-std::vector<std::string> DuplicationFinderDiff::find_files(const fs::path& folder_path) {
+std::vector<std::string> DiffMethod::find_files(const fs::path& folder_path) {
     std::vector<std::string> file_paths;
     for (const auto& dirEntry : std::filesystem::recursive_directory_iterator(folder_path)) {
         fs::path file_path = dirEntry.path();
@@ -25,7 +26,7 @@ std::vector<std::string> DuplicationFinderDiff::find_files(const fs::path& folde
     return file_paths;
 }
 
-bool DuplicationFinderDiff::is_empty_line(std::string line) {
+bool DiffMethod::is_empty_line(std::string line) {
     size_t line_size = line.size();
     bool is_empty = true;
     for (size_t i = 1; i < line_size; i++) {
@@ -34,7 +35,7 @@ bool DuplicationFinderDiff::is_empty_line(std::string line) {
     return is_empty;
 }
 
-std::vector<std::string> DuplicationFinderDiff::remove_blank_lines(std::vector<std::string> content) {
+std::vector<std::string> DiffMethod::remove_blank_lines(std::vector<std::string> content) {
     std::vector<std::string> ret;
     for (auto line : content) {
         if (!is_empty_line(line)) {
@@ -44,7 +45,7 @@ std::vector<std::string> DuplicationFinderDiff::remove_blank_lines(std::vector<s
     return ret;
 }
 
-bool DuplicationFinderDiff::is_equal_files(std::vector<std::string> content1, std::vector<std::string> content2) {
+bool DiffMethod::is_equal_files(std::vector<std::string> content1, std::vector<std::string> content2) {
     if (content1.size() != content2.size()) {
         return false;
     }
@@ -57,7 +58,7 @@ bool DuplicationFinderDiff::is_equal_files(std::vector<std::string> content1, st
     return true;
 }
 
-double DuplicationFinderDiff::find_similarity(std::string path1, std::string path2) {
+double DiffMethod::find_similarity(std::string path1, std::string path2) {
     std::vector<std::string> content1 = Utils::read_file_with_vector(path1);
     std::vector<std::string> content2 = Utils::read_file_with_vector(path2);
 
@@ -106,9 +107,9 @@ double DuplicationFinderDiff::find_similarity(std::string path1, std::string pat
     return similarity_metric;
 }
 
-std::vector<std::tuple<double, std::string, std::string>> DuplicationFinderDiff::find_similar_pairs(std::vector<std::string>& file_paths) {
+std::vector<DuplicationEntry> DiffMethod::find_similar_pairs(std::vector<std::string>& file_paths) {
     size_t number_files = file_paths.size();
-    std::vector<std::tuple<double, std::string, std::string>> ret;
+    std::vector<DuplicationEntry> ret;
     for (size_t i = 0; i < number_files; i++) {
         for (size_t j = 0; j < number_files; j++)
             if (i != j) {
@@ -124,7 +125,7 @@ std::vector<std::tuple<double, std::string, std::string>> DuplicationFinderDiff:
     return ret;
 }
 
-void DuplicationFinderDiff::save_duplications(std::vector<std::tuple<double, std::string, std::string>>& file_duplication_pairs) {
+void DiffMethod::save_duplications(std::vector<DuplicationEntry>& file_duplication_pairs) {
     std::string output_file_path = base_path / "output_parsed.txt";
 
     auto fout = std::ofstream(output_file_path);
@@ -138,10 +139,25 @@ void DuplicationFinderDiff::save_duplications(std::vector<std::tuple<double, std
     fout.close();
 }
 
-void DuplicationFinderDiff::execute() {
-    std::vector<std::string> file_paths = find_files(base_path / Config::config().source_path);
+void DiffMethod::on_function(const FunctionData& fd) {
+    fs::path base = base_path / source_feature_path;
 
-    std::vector<std::tuple<double, std::string, std::string>> file_duplication_pairs = find_similar_pairs(file_paths);
+    auto source = fd.get_feature<SourceFeature>();
+    if (!source)
+        return;
+
+    fs::path relative(fd.path);
+    std::string filename = fd.function_name + relative.extension().string();
+    fs::path path = base / relative / filename;
+    Utils::write_file(path, source->code + "\n");
+}
+
+void DiffMethod::execute() {
+    fs::path base = base_path / source_feature_path;
+
+    std::vector<std::string> file_paths = find_files(base);
+
+    std::vector<DuplicationEntry> file_duplication_pairs = find_similar_pairs(file_paths);
 
     fm::write(SAVING_MESSAGE);
 

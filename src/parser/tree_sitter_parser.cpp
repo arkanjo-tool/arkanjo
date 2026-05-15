@@ -2,7 +2,9 @@
 #include <iostream>
 #include <unordered_map>
 #include <arkanjo/utils/utils.hpp>
-#include <arkanjo/parser/feature_extractor.hpp>
+#include <arkanjo/base/features/ast_feature.hpp>
+#include <arkanjo/base/features/source_feature.hpp>
+#include <arkanjo/base/features/metadata_feature.hpp>
 
 std::unordered_map<std::string, TSLanguage* (*)()> get_language_map();
 std::unordered_map<std::string, std::string> get_extension_map();
@@ -100,7 +102,8 @@ void TreeSitterParser::collect_functions(
     TSNode node, 
     const std::string& source, 
     const fs::path& relative_path,
-    std::function<void(const ParsedFunction&, std::string)> callback
+    const std::shared_ptr<TSTree>& tree,
+    std::function<void(const FunctionData&)> callback
 ) {
     std::string_view type = ts_node_type(node);
     if (FeatureExtractor::is_function_node(type)) {
@@ -121,12 +124,27 @@ void TreeSitterParser::collect_functions(
         std::string signature = get_full_signature(node, source);
         std::string code = source.substr(start_byte + signature.size(), end_byte - (start_byte + signature.size()));
 
-        FeatureExtractor extractor;
-        auto features = extractor.extract_features(body, source);
+        FunctionData function;
+        function.path = relative_path.string();
+        function.function_name = function_name;
 
-        callback({
-            function_name, signature, code, start.row, body_start.row, end.row 
-        }, features);
+        auto source = std::make_shared<SourceFeature>();
+        source->code = code;
+        function.add_feature(source);
+
+        auto ast = std::make_shared<ASTFeature>();
+        ast->tree = tree;
+        ast->root = body;
+        function.add_feature(ast);
+
+        auto metadata = std::make_shared<MetadataFeature>();
+        metadata->signature = signature;
+        metadata->line_declaration = start.row;
+        metadata->start_number_line = body_start.row;
+        metadata->end_number_line = end.row;
+        function.add_feature(metadata);
+
+        callback(function);
     }
 
     uint32_t count = ts_node_child_count(node);
@@ -135,6 +153,7 @@ void TreeSitterParser::collect_functions(
             ts_node_child(node, i),
             source,
             relative_path,
+            tree,
             callback
         );
     }
@@ -144,7 +163,7 @@ void TreeSitterParser::process_file(
     const fs::path& file_path,
     const fs::path& relative_path,
     const std::string& source_code,
-    std::function<void(const ParsedFunction&, std::string)> callback
+    std::function<void(const FunctionData&)> callback
 ) {
     auto lang_name = detect_language(file_path);
 
@@ -170,15 +189,18 @@ void TreeSitterParser::process_file(
         current_language = language;
     }
 
-    TSTree* tree = ts_parser_parse_string(
-        parser.get(),
-        nullptr,
-        source_code.c_str(),
-        source_code.size()
+    std::shared_ptr<TSTree> tree(
+        ts_parser_parse_string(
+            parser.get(),
+            nullptr,
+            source_code.c_str(),
+            source_code.size()
+        ),
+        ts_tree_delete
     );
-    TSNode root_node = ts_tree_root_node(tree);
+    TSNode root_node = ts_tree_root_node(tree.get());
 
-    collect_functions(root_node, source_code, relative_path, callback);
+    collect_functions(root_node, source_code, relative_path, tree, callback);
 
-    ts_tree_delete(tree);
+    tree.reset();
 }

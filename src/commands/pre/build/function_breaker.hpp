@@ -19,8 +19,11 @@
 #include <string>
 #include <vector>
 #include <filesystem>
+#include <functional>
 
 #include <tree_sitter/api.h>
+
+#include <arkanjo/base/function/function_data.hpp>
 
 namespace fs = std::filesystem;
 
@@ -82,18 +85,22 @@ class FunctionBreaker {
      * @param file_path Path to source file
      * @param folder_path Containing directory path
      */
-    void file_breaker(const fs::path& file_path, const fs::path& folder_path);
+    void file_breaker(
+      const fs::path& file_path, const fs::path& folder_path,
+      std::function<void(const FunctionData&)> on_function);
 
+    public:
     /**
      * @brief Processes all files in directory
      * @param folder_path Directory path to process
      */
-    void function_breaker(const fs::path& folder_path);
+    void process(
+      const fs::path& folder_path,
+      std::function<void(const FunctionData&)> on_function);
 
-  public:
     /**
      * @brief Constructs function breaker and processes directory
      * @param folder_path Directory containing source files to process
      */
-    FunctionBreaker(const fs::path& folder_path);
+    FunctionBreaker() = default;
 };

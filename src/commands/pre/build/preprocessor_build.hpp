@@ -12,10 +12,11 @@
 
 #pragma once
 
-#include "duplication_finder_diff.hpp"
-#include "duplication_finder_tool.hpp"
+#include <arkanjo/methods/diff/diff_method.hpp>
+#include <arkanjo/methods/tool/tool_method.hpp>
+#include <arkanjo/methods/ast/ast_method.hpp>
+
 #include "function_breaker.hpp"
-#include "parser.hpp"
 #include <arkanjo/commands/pre/preprocessor.hpp>
 #include <arkanjo/commands/command_base.hpp>
 #include <string>
@@ -23,6 +24,15 @@
 #include <filesystem>
 
 namespace fs = std::filesystem;
+
+using MethodFactory = std::function<std::unique_ptr<IMethod>(
+  const std::string&, float
+)>;
+
+struct MethodInfo {
+  MethodFactory create;
+  std::string_view description;
+};
 
 /**
  * @brief Codebase preprocessing orchestrator
@@ -54,10 +64,29 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
     static constexpr const char* ERROR_PATH_MESSAGE = "Provided path does not exist.";                 ///< Error message for invalid paths
 
     // Duplication finder selection messages
-    static constexpr const char* MESSAGE_DUPLICATION_FINDER_TYPE_1 = "Enter the number of the duplication finder technique you want to use:";
-    static constexpr const char* MESSAGE_DUPLICATION_FINDER_TYPE_2 = "1) NLP text similarity using gensim";
-    static constexpr const char* MESSAGE_DUPLICATION_FINDER_TYPE_3 = "2) Count proportion of equal lines using diff command";
-    static constexpr const char* INVALID_CODE_DUPLICATION_FINDER = "Valid options are '1' or '2' only. Stopping Program...";
+    static constexpr const char* MESSAGE_DUPLICATION_FINDER_TYPE = "Enter the number of the duplication finder technique you want to use:";
+    static constexpr const char* INVALID_CODE_DUPLICATION_FINDER = "Invalid option entered. Stopping Program...";
+
+    const std::vector<MethodInfo> MethodsType = {
+      {
+        [](const std::string& base_path, float similarity) {
+          return std::make_unique<ToolMethod>(base_path, similarity);
+        },
+        "NLP text similarity using gensim"
+      },
+      {
+        [](const std::string& base_path, float similarity) {
+          return std::make_unique<DiffMethod>(base_path, similarity);
+        },
+        "Count proportion of equal lines using diff command"
+      },
+      {
+        [](const std::string& base_path, float similarity) {
+          return std::make_unique<ASTMethod>(base_path, similarity);
+        },
+        "Compare linearized structural sequences extracted from Tree-sitter ASTs"
+      }
+    };
 
     /**
      * @brief Reads preprocessing parameters from user/config
@@ -67,15 +96,15 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
      *         - Similarity threshold
      *         - Duplication finder selection flag
      */
-    std::tuple<std::string, double, bool> read_parameters(const std::optional<ParsedOptions>& options);
+    std::tuple<std::string, double, size_t> read_parameters(const std::optional<ParsedOptions>& options);
 
     /**
      * @brief Executes full preprocessing pipeline
      * @param path Project path to process
      * @param similarity Similarity threshold
-     * @param use_duplication_finder_by_tool Flag to select duplication detection method
+     * @param use_duplication_finder_index Flag to select duplication detection method
      */
-    void preprocess(const fs::path& path, double similarity, bool use_duplication_finder_by_tool);
+    void preprocess(const fs::path& path, double similarity, size_t use_duplication_finder_index);
 
   public:
     static constexpr CliOption options_[] = {

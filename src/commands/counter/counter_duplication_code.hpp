@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include <arkanjo/base/function.hpp>
+#include <arkanjo/base/function/function.hpp>
 #include <arkanjo/base/path.hpp>
 #include <arkanjo/base/similarity_table.hpp>
 #include <arkanjo/commands/command_base.hpp>

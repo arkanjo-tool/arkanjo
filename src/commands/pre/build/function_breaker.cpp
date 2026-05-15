@@ -4,6 +4,9 @@
 #include <arkanjo/utils/utils.hpp>
 #include <arkanjo/parser/tree_sitter_parser.hpp>
 #include <arkanjo/base/config.hpp>
+#include <arkanjo/base/features/source_feature.hpp>
+#include <arkanjo/base/features/ast_feature.hpp>
+#include <arkanjo/base/features/metadata_feature.hpp>
 
 std::string FunctionBreaker::extract_extension(const fs::path& file_path) {
     std::string ext = file_path.extension().string();
@@ -54,7 +57,10 @@ std::string FunctionBreaker::create_info_json(
 }
 
 
-void FunctionBreaker::file_breaker(const fs::path& file_path, const fs::path& folder_path) {
+void FunctionBreaker::file_breaker(
+    const fs::path& file_path, const fs::path& folder_path,
+    std::function<void(const FunctionData&)> on_function
+) {
     if (!fs::exists(file_path)) return;
 
     fs::path relative_path;
@@ -66,27 +72,31 @@ void FunctionBreaker::file_breaker(const fs::path& file_path, const fs::path& fo
 
     std::string source_code = Utils::read_file(file_path);
 
-    TreeSitterParser::process_file(file_path, relative_path, source_code, [this, &relative_path](const ParsedFunction& fd, std::string tokens) {
+    TreeSitterParser::process_file(file_path, relative_path, source_code, [&](const FunctionData& function) {
+        auto source = function.get_feature<SourceFeature>();
+        auto metadata = function.get_feature<MetadataFeature>();
+
+        if (on_function)
+            on_function(function);
+
         auto& cfg = Config::config();
 
-        write_output(cfg.source_path, relative_path, fd.function_name, fd.code + "\n");
-        write_output(cfg.header_path, relative_path, fd.function_name, fd.signature);
-        // write_output(cfg.combined_path, relative_path, fd.function_name, tokens);
-        write_output(cfg.info_path, relative_path, fd.function_name,
-            create_info_json(fd.line_declaration, fd.start_number_line, fd.end_number_line, relative_path, fd.function_name));
+        write_output(cfg.source_path, relative_path, function.function_name, source->code + "\n");
+        write_output(cfg.header_path, relative_path, function.function_name, metadata->signature);
+        write_output(cfg.info_path, relative_path, function.function_name,
+            create_info_json(metadata->line_declaration, metadata->start_number_line, metadata->end_number_line, relative_path, function.function_name));
     });
 }
 
 // TODO: It's possible to add parallelism to this function.
-void FunctionBreaker::function_breaker(const fs::path& folder_path) {
+void FunctionBreaker::process(
+    const fs::path& folder_path, 
+    std::function<void(const FunctionData&)> on_function
+) {
     for (const auto& dirEntry : fs::recursive_directory_iterator(folder_path)) {
         if (!dirEntry.is_regular_file()) continue;
 
         auto path = dirEntry.path();
-        file_breaker(path, folder_path);
+        file_breaker(path, folder_path, on_function);
     }
-}
-
-FunctionBreaker::FunctionBreaker(const fs::path& folder_path) {
-    function_breaker(folder_path);
 }
