@@ -131,6 +131,11 @@ int GitDiffFunction::print_diff_line(const git_diff_delta* /*delta*/, const git_
             break;
     }
 
+    /* 
+        TODO: Perhaps should be a good idea use << operator instead of write, 
+        but for that we need to handle the string termination character, 
+        since content is not guaranteed to be null-terminated. 
+    */
     data->output->write(output_line.data(), output_line.size());
     return 0;
 }
