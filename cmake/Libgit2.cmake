@@ -28,3 +28,15 @@ function(setup_libgit2)
 endfunction()
 
 setup_libgit2()
+
+
+# macOS needs explicit iconv linkage for libgit2
+if(APPLE)
+    find_library(ICONV_LIBRARY iconv)
+
+    if(ICONV_LIBRARY)
+        message(STATUS "Found iconv: ${ICONV_LIBRARY}")
+    else()
+        message(FATAL_ERROR "iconv library not found")
+    endif()
+endif()

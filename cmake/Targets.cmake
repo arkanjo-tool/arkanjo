@@ -64,6 +64,7 @@ target_link_libraries(core_commands PUBLIC
     core_methods
     # ---libgit2 dependencies---
     libgit2 util xdiff llhttp pcre zlib
+    ${ICONV_LIBRARY}
 )
 
 #
