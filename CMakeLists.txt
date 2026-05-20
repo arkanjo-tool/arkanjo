@@ -3,6 +3,9 @@ project(arkanjo
     LANGUAGES C CXX
 )
 
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+
 option(ENABLE_WARNINGS "Enable compiler warnings" OFF)
 option(ENABLE_TESTS "Build tests" ON)
 
