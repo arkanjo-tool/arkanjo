@@ -43,8 +43,7 @@ file(GLOB_RECURSE CORE_METHODS_SOURCES
 add_library(core_methods ${CORE_METHODS_SOURCES})
 target_sources(core_methods PRIVATE ${GENERATED_FILE})
 target_include_directories(core_methods PUBLIC ${ARKANJO_INCLUDE_DIRS})
-target_link_libraries(core_methods PUBLIC core_base ${PARSER_LIBS} tree_sitter_core)
-
+target_link_libraries(core_methods PUBLIC core_base ${PARSER_LIBS} tree_sitter_core Threads::Threads)
 #
 file(GLOB_RECURSE CORE_COMMANDS_SOURCES
     src/commands/*.cpp
