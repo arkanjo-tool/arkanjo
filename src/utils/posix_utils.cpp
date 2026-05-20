@@ -42,38 +42,52 @@ std::tuple<int, int, int> UtilsOSDependable::parse_terminal_color_response(const
 }
 
 std::string UtilsOSDependable::capture_terminal_response() {
+    int tty = open("/dev/tty", O_RDWR);
+    if (tty < 0)
+        return "";
+
     termios oldt, newt;
-    tcgetattr(STDIN_FILENO, &oldt);
+    tcgetattr(tty, &oldt);
+
     newt = oldt;
     newt.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
 
-    int oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
-    fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
+    tcsetattr(tty, TCSANOW, &newt);
 
-    std::cout << "\033]11;?\033\\";
-    std::cout.flush();
+    int oldf = fcntl(tty, F_GETFL, 0);
+    fcntl(tty, F_SETFL, oldf | O_NONBLOCK);
+
+    // OSC 11 query (background color)
+    write(tty, "\033]11;?\033\\", 8);
 
     std::string response;
     char ch;
-    timeval tv;
-    tv.tv_sec = 0;
-    tv.tv_usec = 100000; // 100ms timeout
 
     fd_set readfds;
-    FD_ZERO(&readfds);
-    FD_SET(STDIN_FILENO, &readfds);
+    timeval tv{};
 
-    while (select(STDIN_FILENO + 1, &readfds, NULL, NULL, &tv) > 0) {
-        if (read(STDIN_FILENO, &ch, 1) > 0) {
+    while (true) {
+        FD_ZERO(&readfds);
+        FD_SET(tty, &readfds);
+
+        tv.tv_sec = 0;
+        tv.tv_usec = 100000; // 100ms timeout
+
+        int ret = select(tty + 1, &readfds, nullptr, nullptr, &tv);
+
+        if (ret <= 0)
+            break;
+
+        if (read(tty, &ch, 1) > 0) {
             response += ch;
         } else {
             break;
         }
     }
 
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-    fcntl(STDIN_FILENO, F_SETFL, oldf);
+    tcsetattr(tty, TCSANOW, &oldt);
+    fcntl(tty, F_SETFL, oldf);
+    close(tty);
 
     return response;
 }
