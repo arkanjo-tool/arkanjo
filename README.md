@@ -56,7 +56,7 @@ The tool has only been tested on **Ubuntu** operating systems. An installation g
 
 # How to install
 
-Run the following commands in the terminal to install the dependencies:
+Run the following commands in the terminal to install the optional Python dependencies required only for the NLP text similarity method using gensim:
 
 ```sh
 pip3 install --user nltk
@@ -75,14 +75,19 @@ cd arkanjo
 Build the binary:
 
 ```sh
-mkdir build
-cd build
+mkdir build && cd build
 
 cmake ..
 cmake --build .
 ```
 
 The binaries will be generated in the `build/` directory.
+
+Optionally, install the binaries using:
+
+```sh
+cmake --install .
+```
 
 # How to Run
 
