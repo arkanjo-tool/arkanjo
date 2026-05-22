@@ -4,6 +4,17 @@ ArKanjo represents code duplication as a graph, implemented in the `Similarity_T
 
 ## Overview of similarity calculations
 
+The following TF-IDF and cosine similarity model applies specifically to
+
+1. NLP text similarity using gensim
+
+Other duplication detection methods may use different feature extraction and similarity techniques internally. However, the final representation remains conceptually similar across all methods:
+- functions are represented as graph nodes
+- similarity relationships are represented as weighted edges
+- edge weights represent similarity scores between functions
+
+## Method 1: NLP text similarity using gensim
+
 We have $\mathcal{V}$, where it is defined by the set of all possible words (*tokens*).
 
 $$\mathcal{V}=\{w_1​,w_2​,\dots,w_n\}$$
