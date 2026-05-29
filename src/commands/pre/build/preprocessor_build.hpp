@@ -28,7 +28,8 @@
 namespace fs = std::filesystem;
 
 using MethodFactory = std::function<std::unique_ptr<IMethod>(
-  const std::string&, float, std::optional<int>, std::optional<int>
+  const std::string&, float, std::optional<int>, std::optional<int>,
+  std::optional<std::string>
 )>;
 
 struct MethodInfo {
@@ -75,29 +76,33 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
     const std::vector<MethodInfo> MethodsType = {
       {
         [](const std::string& base_path, float similarity,
-           std::optional<int> /*max_seq_length*/, std::optional<int> /*batch_size*/) {
+           std::optional<int> /*max_seq_length*/, std::optional<int> /*batch_size*/,
+           std::optional<std::string> /*model*/) {
           return std::make_unique<ToolMethod>(base_path, similarity);
         },
         "NLP text similarity using gensim"
       },
       {
         [](const std::string& base_path, float similarity,
-           std::optional<int> /*max_seq_length*/, std::optional<int> /*batch_size*/) {
+           std::optional<int> /*max_seq_length*/, std::optional<int> /*batch_size*/,
+           std::optional<std::string> /*model*/) {
           return std::make_unique<DiffMethod>(base_path, similarity);
         },
         "Count proportion of equal lines using diff command"
       },
       {
         [](const std::string& base_path, float similarity,
-           std::optional<int> /*max_seq_length*/, std::optional<int> /*batch_size*/) {
+           std::optional<int> /*max_seq_length*/, std::optional<int> /*batch_size*/,
+           std::optional<std::string> /*model*/) {
           return std::make_unique<ASTMethod>(base_path, similarity);
         },
         "Compare linearized structural sequences extracted from Tree-sitter ASTs"
       },
       {
         [](const std::string& base_path, float similarity,
-           std::optional<int> max_seq_length, std::optional<int> batch_size) {
-          return std::make_unique<LLMMethod>(base_path, similarity, max_seq_length, batch_size);
+           std::optional<int> max_seq_length, std::optional<int> batch_size,
+           std::optional<std::string> model) {
+          return std::make_unique<LLMMethod>(base_path, similarity, max_seq_length, batch_size, model);
         },
         "Semantic similarity using Hugging Face embeddings (jinaai/jina-embeddings-v2-base-code)"
       }
@@ -112,8 +117,10 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
      *         - Duplication finder selection index
      *         - Optional LLM max sequence length override
      *         - Optional LLM batch size override
+     *         - Optional LLM model name override
      */
-    std::tuple<std::string, double, size_t, std::optional<int>, std::optional<int>>
+    std::tuple<std::string, double, size_t, std::optional<int>, std::optional<int>,
+               std::optional<std::string>>
     read_parameters(const std::optional<ParsedOptions>& options);
 
     /**
@@ -123,10 +130,12 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
      * @param use_duplication_finder_index Flag to select duplication detection method
      * @param llm_max_seq_length Optional LLM max sequence length override (ignored by non-LLM methods)
      * @param llm_batch_size Optional LLM batch size override (ignored by non-LLM methods)
+     * @param llm_model Optional LLM model name override (ignored by non-LLM methods)
      */
     void preprocess(const fs::path& path, double similarity, size_t use_duplication_finder_index,
                     std::optional<int> llm_max_seq_length = std::nullopt,
-                    std::optional<int> llm_batch_size = std::nullopt);
+                    std::optional<int> llm_batch_size = std::nullopt,
+                    std::optional<std::string> llm_model = std::nullopt);
 
   public:
     static constexpr CliOption options_[] = {
@@ -140,6 +149,10 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
       {"llm-batch-size", 0, RequiredArgument,
         "Override the LLM detector's embedding batch size. Lower this on "
         "machines with less RAM. Only used by the LLM duplication finder; "
+        "ignored by other methods."},
+      {"llm-model", 0, RequiredArgument,
+        "Override the LLM detector's embedding model (Hugging Face "
+        "sentence-transformers id). Only used by the LLM duplication finder; "
         "ignored by other methods."},
       OPTION_END
     };

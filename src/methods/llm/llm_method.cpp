@@ -15,11 +15,13 @@ using fm = FormatterManager;
 
 LLMMethod::LLMMethod(const fs::path& base_path_, double similarity_,
                      std::optional<int> max_seq_length_,
-                     std::optional<int> batch_size_) {
+                     std::optional<int> batch_size_,
+                     std::optional<std::string> model_) {
     base_path = base_path_;
     similarity = similarity_;
     max_seq_length = max_seq_length_;
     batch_size = batch_size_;
+    model = model_;
 
     if (similarity < 0) {
         std::cerr << "SIMILARITY SHOULD BE GREATER OR EQUAL 0 TO USE DUPLICATION FINDER BY LLM EMBEDDINGS";
@@ -41,6 +43,11 @@ std::string LLMMethod::build_command(const fs::path& source_dir) const {
     if (batch_size) {
         command += " --batch-size ";
         command += std::to_string(*batch_size);
+    }
+    if (model) {
+        command += " --model '";
+        command += *model;
+        command += "'";
     }
     return command;
 }

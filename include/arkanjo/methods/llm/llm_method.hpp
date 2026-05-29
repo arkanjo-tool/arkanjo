@@ -39,6 +39,7 @@ class LLMMethod : public IMethod {
     double similarity; ///< Similarity threshold for considering duplicates (0-100)
     std::optional<int> max_seq_length; ///< Override for the Python script's --max-seq-length (nullopt = use script default)
     std::optional<int> batch_size;     ///< Override for the Python script's --batch-size (nullopt = use script default)
+    std::optional<std::string> model;  ///< Override for the Python script's --model (nullopt = use script default)
 
     /**
      * @brief Builds the command that runs the Python embedding script.
@@ -75,10 +76,12 @@ class LLMMethod : public IMethod {
      * @param similarity_ Minimum similarity threshold (0-100) to consider as duplicate.
      * @param max_seq_length_ Optional override for the embedding script's max sequence length.
      * @param batch_size_ Optional override for the embedding script's batch size.
+     * @param model_ Optional override for the embedding model name (Hugging Face id).
      */
     LLMMethod(const fs::path& base_path_, double similarity_,
               std::optional<int> max_seq_length_ = std::nullopt,
-              std::optional<int> batch_size_ = std::nullopt);
+              std::optional<int> batch_size_ = std::nullopt,
+              std::optional<std::string> model_ = std::nullopt);
 
     void on_function(const FunctionData& fd) override;
 
