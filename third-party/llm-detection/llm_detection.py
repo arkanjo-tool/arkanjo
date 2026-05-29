@@ -61,12 +61,12 @@ def read_function_bodies(file_paths):
     return bodies
 
 
-def compute_embeddings(bodies, max_seq_length, batch_size):
+def compute_embeddings(bodies, max_seq_length, batch_size, model_name):
     import numpy as np
     from sentence_transformers import SentenceTransformer
 
-    log(f"Loading model {MODEL_NAME} (first run downloads weights)...")
-    model = SentenceTransformer(MODEL_NAME, trust_remote_code=True)
+    log(f"Loading model {model_name} (first run downloads weights)...")
+    model = SentenceTransformer(model_name, trust_remote_code=True)
     model.max_seq_length = max_seq_length
 
     log(f"Embedding {len(bodies)} function bodies "
@@ -135,6 +135,15 @@ def main():
             f"machines with less RAM. Default: {DEFAULT_BATCH_SIZE}."
         ),
     )
+    parser.add_argument(
+        "--model",
+        type=str,
+        default=MODEL_NAME,
+        help=(
+            "Hugging Face sentence-transformers model used to embed function "
+            f"bodies. Default: {MODEL_NAME}."
+        ),
+    )
     args = parser.parse_args()
 
     file_paths = find_function_files(args.source_dir)
@@ -143,7 +152,7 @@ def main():
         return 0
 
     bodies = read_function_bodies(file_paths)
-    embeddings = compute_embeddings(bodies, args.max_seq_length, args.batch_size)
+    embeddings = compute_embeddings(bodies, args.max_seq_length, args.batch_size, args.model)
 
     # Emit paths relative to the source dir (e.g. "file.c/function.c"). The query
     # side treats each path as a resource path resolved against the source/info/
