@@ -37,10 +37,21 @@ class TreeSitterParser {
         const std::shared_ptr<TSTree>& tree,
         std::function<void(const FunctionData&)> callback);
 
+    // Detects the language from the file extension and parses the source code.
+    // Returns nullptr when the language is not supported.
+    static std::shared_ptr<TSTree> parse_source(
+        const fs::path& file_path, const std::string& source_code);
+
   public:
     static void process_file(
-      const fs::path& file_path, const fs::path& relative_path, const std::string& source_code, 
+      const fs::path& file_path, const fs::path& relative_path, const std::string& source_code,
       std::function<void(const FunctionData&)> callback);
-    
+
+    // Emits a single FunctionData representing the whole file as one unit,
+    // so files can be compared against each other (file granularity).
+    static void process_file_as_unit(
+      const fs::path& file_path, const fs::path& relative_path, const std::string& source_code,
+      std::function<void(const FunctionData&)> callback);
+
     explicit TreeSitterParser() = default;
 };

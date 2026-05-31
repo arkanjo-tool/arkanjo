@@ -159,21 +159,19 @@ void TreeSitterParser::collect_functions(
     }
 }
 
-void TreeSitterParser::process_file(
+std::shared_ptr<TSTree> TreeSitterParser::parse_source(
     const fs::path& file_path,
-    const fs::path& relative_path,
-    const std::string& source_code,
-    std::function<void(const FunctionData&)> callback
+    const std::string& source_code
 ) {
     auto lang_name = detect_language(file_path);
 
-    if (lang_name.empty()) return;
+    if (lang_name.empty()) return nullptr;
 
     static auto language_map = get_language_map();
     auto it = language_map.find(lang_name);
     if (it == language_map.end()) {
         std::cerr << "Language not found: " << lang_name << "\n";
-        return;
+        return nullptr;
     }
     TSLanguage* language = it->second();
 
@@ -184,12 +182,12 @@ void TreeSitterParser::process_file(
     );
     if (current_language != language) {
         if (!ts_parser_set_language(parser.get(), language)) {
-            return;
+            return nullptr;
         }
         current_language = language;
     }
 
-    std::shared_ptr<TSTree> tree(
+    return std::shared_ptr<TSTree>(
         ts_parser_parse_string(
             parser.get(),
             nullptr,
@@ -198,9 +196,57 @@ void TreeSitterParser::process_file(
         ),
         ts_tree_delete
     );
+}
+
+void TreeSitterParser::process_file(
+    const fs::path& file_path,
+    const fs::path& relative_path,
+    const std::string& source_code,
+    std::function<void(const FunctionData&)> callback
+) {
+    std::shared_ptr<TSTree> tree = parse_source(file_path, source_code);
+    if (!tree) return;
+
     TSNode root_node = ts_tree_root_node(tree.get());
 
     collect_functions(root_node, source_code, relative_path, tree, callback);
+
+    tree.reset();
+}
+
+void TreeSitterParser::process_file_as_unit(
+    const fs::path& file_path,
+    const fs::path& relative_path,
+    const std::string& source_code,
+    std::function<void(const FunctionData&)> callback
+) {
+    std::shared_ptr<TSTree> tree = parse_source(file_path, source_code);
+    if (!tree) return;
+
+    TSNode root_node = ts_tree_root_node(tree.get());
+    TSPoint end = ts_node_end_point(root_node);
+
+    FunctionData function;
+    function.path = relative_path.string();
+    function.function_name = relative_path.stem().string();
+
+    auto source = std::make_shared<SourceFeature>();
+    source->code = source_code;
+    function.add_feature(source);
+
+    auto ast = std::make_shared<ASTFeature>();
+    ast->tree = tree;
+    ast->root = root_node;
+    function.add_feature(ast);
+
+    auto metadata = std::make_shared<MetadataFeature>();
+    metadata->signature = "";
+    metadata->line_declaration = 0;
+    metadata->start_number_line = 0;
+    metadata->end_number_line = end.row;
+    function.add_feature(metadata);
+
+    callback(function);
 
     tree.reset();
 }
