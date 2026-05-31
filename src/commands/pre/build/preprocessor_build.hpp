@@ -120,7 +120,7 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
      *         - Optional LLM model name override
      */
     std::tuple<std::string, double, size_t, std::optional<int>, std::optional<int>,
-               std::optional<std::string>>
+               std::optional<std::string>, Granularity>
     read_parameters(const std::optional<ParsedOptions>& options);
 
     /**
@@ -135,7 +135,8 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
     void preprocess(const fs::path& path, double similarity, size_t use_duplication_finder_index,
                     std::optional<int> llm_max_seq_length = std::nullopt,
                     std::optional<int> llm_batch_size = std::nullopt,
-                    std::optional<std::string> llm_model = std::nullopt);
+                    std::optional<std::string> llm_model = std::nullopt,
+                    Granularity granularity = Granularity::Function);
 
   public:
     static constexpr CliOption options_[] = {
@@ -154,6 +155,10 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
         "Override the LLM detector's embedding model (Hugging Face "
         "sentence-transformers id). Only used by the LLM duplication finder; "
         "ignored by other methods."},
+      {"granularity", 0, RequiredArgument,
+        "Comparison granularity: 'function' (default) compares individual "
+        "functions; 'file' keeps each file whole and compares files against "
+        "each other. Applies to every duplication finder method."},
       OPTION_END
     };
     PreprocessorBuild();
