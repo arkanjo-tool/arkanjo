@@ -42,6 +42,7 @@ class SimilarityExplorer : public CommandBase<SimilarityExplorer> {
         {"both-match", 'b', NoArgument, "Enable both-pattern matching. By default, the pattern only needs to match one function."},
         {"sort", 's', NoArgument, "Sort results by number of duplicated lines. By default, results are sorted by the similarity metric."},
         {"cluster", 'c', NoArgument, "Print results with cluster relationships from the similarity table."},
+        {"template", 't', RequiredArgument, "Output format template used to render each result entry."},
         OPTION_END
     };
     COMMAND_DESCRIPTION(
@@ -82,6 +83,7 @@ class SimilarityExplorer : public CommandBase<SimilarityExplorer> {
     bool sorted_by_number_of_duplicated_code;          ///< Whether to sort by line count
     bool use_clusters;                                 ///< Whether clusters be printed
     int processed_results = INITIAL_PROCESSED_RESULTS; ///< Counter for processed results
+    std::string template_processed_results_output = TEMPLATE_PROCESSED_RESULTS;
 
     /**
      * @brief Determines number of pairs to show
