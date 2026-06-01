@@ -89,14 +89,20 @@ void FunctionBreaker::file_breaker(
 }
 
 // TODO: It's possible to add parallelism to this function.
-void FunctionBreaker::process(
+int FunctionBreaker::process(
     const fs::path& folder_path, 
     std::function<void(const FunctionData&)> on_function
 ) {
+    int size_files = 0;
+
     for (const auto& dirEntry : fs::recursive_directory_iterator(folder_path)) {
         if (!dirEntry.is_regular_file()) continue;
 
         auto path = dirEntry.path();
         file_breaker(path, folder_path, on_function);
+
+        size_files++;
     }
+
+    return size_files;
 }

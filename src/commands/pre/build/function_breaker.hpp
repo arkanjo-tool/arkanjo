@@ -94,7 +94,7 @@ class FunctionBreaker {
      * @brief Processes all files in directory
      * @param folder_path Directory path to process
      */
-    void process(
+    int process(
       const fs::path& folder_path,
       std::function<void(const FunctionData&)> on_function);
 
