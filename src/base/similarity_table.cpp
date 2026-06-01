@@ -106,9 +106,9 @@ std::vector<Path> Similarity_Table::get_similar_path_to_the_reference(const Path
 
 std::vector<std::tuple<double, Path, Path>> Similarity_Table::get_all_path_pairs_and_similarity_sorted_by_similarity() {
     std::vector<std::tuple<double, Path, Path>> similar_path_pairs;
-    for (auto [ids, similarity] : similarity_table) {
-        Path path1 = paths[ids.first];
-        Path path2 = paths[ids.second];
+    for (const auto& [ids, similarity] : similarity_table) {
+        const Path& path1 = paths[ids.first];
+        const Path& path2 = paths[ids.second];
         if (is_similar(path1, path2)) {
             similar_path_pairs.push_back({similarity, path1, path2});
         }
@@ -120,7 +120,7 @@ std::vector<std::tuple<double, Path, Path>> Similarity_Table::get_all_path_pairs
 std::vector<std::pair<Path, Path>> Similarity_Table::get_all_similar_path_pairs_sorted_by_similarity() {
     auto similar_path_pairs = get_all_path_pairs_and_similarity_sorted_by_similarity();
     std::vector<std::pair<Path, Path>> ret;
-    for (auto [similarity, path1, path2] : similar_path_pairs) {
+    for (const auto& [similarity, path1, path2] : similar_path_pairs) {
         ret.push_back({path1, path2});
     }
     return ret;
@@ -128,7 +128,7 @@ std::vector<std::pair<Path, Path>> Similarity_Table::get_all_similar_path_pairs_
 
 std::vector<std::tuple<int, Path, Path>> Similarity_Table::sort_pairs_by_line_number(const std::vector<std::pair<Path, Path>>& similar_path_pairs) const {
     std::vector<std::tuple<int, Path, Path>> similar_path_pairs_with_number_of_lines;
-    for (auto [path1, path2] : similar_path_pairs) {
+    for (const auto& [path1, path2] : similar_path_pairs) {
         Function function(path1);
         function.load();
         std::tuple<int, Path, Path> aux = {function.number_of_lines(), path1, path2};
@@ -152,7 +152,7 @@ std::vector<std::pair<Path, Path>> Similarity_Table::get_all_similar_path_pairs_
         sort_pairs_by_line_number(similar_path_pairs);
 
     std::vector<std::pair<Path, Path>> ret;
-    for (auto [line_number, path1, path2] : similar_path_pairs_with_number_of_lines) {
+    for (const auto& [line_number, path1, path2] : similar_path_pairs_with_number_of_lines) {
         ret.push_back({path1, path2});
     }
 
