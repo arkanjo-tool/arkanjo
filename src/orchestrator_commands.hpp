@@ -2,7 +2,6 @@
 
 #include <arkanjo/orchestrator.hpp>
 
-#include "commands/big_clone/big_clone_formater.hpp"
 #include "commands/big_clone/big_clone_tailor_evaluator.hpp"
 #include "commands/counter/counter_duplication_code.hpp"
 #include "commands/counter/counter_duplication_code_trie.hpp"
@@ -25,7 +24,6 @@ namespace OrchestratorCommands {
             {{"duplication", "du"}, [&]() { return std::make_unique<CounterDuplicationCode>(&table); }},
             {{"function", "fu"}, [&]() { return std::make_unique<SimilarFunctionFinder>(&table); }},
             {{"random"}, [&]() { return std::make_unique<RandomSelector>(&table); }},
-            {{"bigclone-formater"}, [&]() { return std::make_unique<BigCloneFormater>(&table); }},
             {{"bigclone-evaluator"}, [&]() { return std::make_unique<BigCloneTailorEvaluator>(&table); }},
             {{"git-diff"}, [&]() { return std::make_unique<GitDiffFunction>(&table); }},
             {{"help"}, [&]() { return std::make_unique<Help>(commands); }},
