@@ -80,6 +80,10 @@ double Similarity_Table::get_similarity(const Path& path1, const Path& path2) {
     return MINIMUM_SIMILARITY;
 }
 
+const Path& Similarity_Table::get_path(PathId id) const {
+    return paths[id];
+}
+
 bool Similarity_Table::is_above_threshold(double similarity) const {
     return similarity_threshold <= similarity + EPS_ERROR_MARGIN;
 }
@@ -104,59 +108,44 @@ std::vector<Path> Similarity_Table::get_similar_path_to_the_reference(const Path
     return ret;
 }
 
-std::vector<std::tuple<double, Path, Path>> Similarity_Table::get_all_path_pairs_and_similarity_sorted_by_similarity() {
-    std::vector<std::tuple<double, Path, Path>> similar_path_pairs;
+std::vector<SimilarPair> Similarity_Table::get_all_similar_pairs() {
+    std::vector<SimilarPair> similar_pairs;
     for (const auto& [ids, similarity] : similarity_table) {
         const Path& path1 = paths[ids.first];
         const Path& path2 = paths[ids.second];
-        if (is_similar(path1, path2)) {
-            similar_path_pairs.push_back({similarity, path1, path2});
-        }
-    }
-    sort(similar_path_pairs.rbegin(), similar_path_pairs.rend());
-    return similar_path_pairs;
-}
 
-std::vector<std::pair<Path, Path>> Similarity_Table::get_all_similar_path_pairs_sorted_by_similarity() {
-    auto similar_path_pairs = get_all_path_pairs_and_similarity_sorted_by_similarity();
-    std::vector<std::pair<Path, Path>> ret;
-    for (const auto& [similarity, path1, path2] : similar_path_pairs) {
-        ret.push_back({path1, path2});
-    }
-    return ret;
-}
+        if (!is_similar(path1, path2))
+            continue;
 
-std::vector<std::tuple<int, Path, Path>> Similarity_Table::sort_pairs_by_line_number(const std::vector<std::pair<Path, Path>>& similar_path_pairs) const {
-    std::vector<std::tuple<int, Path, Path>> similar_path_pairs_with_number_of_lines;
-    for (const auto& [path1, path2] : similar_path_pairs) {
         Function function(path1);
         function.load();
-        std::tuple<int, Path, Path> aux = {function.number_of_lines(), path1, path2};
-        similar_path_pairs_with_number_of_lines.push_back(aux);
-    }
-    std::sort(
-        similar_path_pairs_with_number_of_lines.begin(),
-        similar_path_pairs_with_number_of_lines.end(),
-        [&](std::tuple<int, Path, Path> pair1, std::tuple<int, Path, Path> pair2) {
-            int number_lines1 = std::get<0>(pair1);
-            int number_lines2 = std::get<0>(pair2);
-            return number_lines1 > number_lines2;
+
+        similar_pairs.push_back({
+            similarity, 
+            function.number_of_lines(), 
+            ids.first, 
+            ids.second
         });
-    return similar_path_pairs_with_number_of_lines;
+    }
+    return similar_pairs;
 }
 
-std::vector<std::pair<Path, Path>> Similarity_Table::get_all_similar_path_pairs_sorted_by_line_number() {
-    std::vector<std::pair<Path, Path>> similar_path_pairs = get_all_similar_path_pairs_sorted_by_similarity();
+void Similarity_Table::sort_pairs_by_similarity(std::vector<SimilarPair>& similar_pairs) const {
+    std::sort(
+        similar_pairs.begin(),
+        similar_pairs.end(),
+        [](const SimilarPair& pair1, const SimilarPair& pair2) {
+            return pair1.similarity > pair2.similarity;
+        });
+}
 
-    std::vector<std::tuple<int, Path, Path>> similar_path_pairs_with_number_of_lines =
-        sort_pairs_by_line_number(similar_path_pairs);
-
-    std::vector<std::pair<Path, Path>> ret;
-    for (const auto& [line_number, path1, path2] : similar_path_pairs_with_number_of_lines) {
-        ret.push_back({path1, path2});
-    }
-
-    return ret;
+void Similarity_Table::sort_pairs_by_line_number(std::vector<SimilarPair>& similar_pairs) const {
+    std::sort(
+        similar_pairs.begin(),
+        similar_pairs.end(),
+        [](const SimilarPair& pair1, const SimilarPair& pair2) {
+            return pair1.number_lines > pair2.number_lines;
+        });
 }
 
 int Similarity_Table::get_number_lines_in_pair(const Path& path1, const Path& path2) {

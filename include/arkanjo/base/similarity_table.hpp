@@ -43,6 +43,13 @@ struct PathId {
   operator int() const { return value; }
 };
 
+struct SimilarPair {
+  double similarity;
+  int number_lines = 0;
+  PathId id1;
+  PathId id2;
+};
+
 /**
  * {
  * 1: [{ key, weight }, { key, weight }]
@@ -147,13 +154,6 @@ class Similarity_Table {
      */
     bool is_above_threshold(double similarity) const;
 
-    /**
-     * @brief Sorts path pairs by line count
-     * @param similar_path_pairs Pairs to sort
-     * @return Sorted pairs with line counts
-     */
-    std::vector<std::tuple<int, Path, Path>> sort_pairs_by_line_number(const std::vector<std::pair<Path, Path>>& similar_path_pairs) const;
-
   public:
     /**
      * @brief Constructs with custom similarity threshold
@@ -182,6 +182,8 @@ class Similarity_Table {
      */
     double get_similarity(const Path& path1, const Path& path2);
 
+    const Path& get_path(PathId id) const;
+
     /**
      * @brief Checks if two paths are similar
      * @param path1 First path to compare
@@ -207,21 +209,23 @@ class Similarity_Table {
 
     /**
      * @brief Gets all similar path pairs with scores, sorted
-     * @return vector<tuple<double,Path,Path>> Similar pairs with scores
+     * @return vector<SimilarPair> Similar pairs with scores
      */
-    std::vector<std::tuple<double, Path, Path>> get_all_path_pairs_and_similarity_sorted_by_similarity();
+    std::vector<SimilarPair> get_all_similar_pairs();
 
     /**
-     * @brief Gets all similar path pairs, sorted by similarity
-     * @return vector<pair<Path,Path>> Similar path pairs
+     * @brief Sorts path pairs by line count
+     * @param similar_path_pairs Pairs to sort
+     * @return Sorted pairs with line counts
      */
-    std::vector<std::pair<Path, Path>> get_all_similar_path_pairs_sorted_by_similarity();
+    void sort_pairs_by_line_number(std::vector<SimilarPair>& similar_pairs) const;
 
     /**
-     * @brief Gets all similar path pairs, sorted by line count
-     * @return vector<pair<Path,Path>> Similar path pairs
+     * @brief Sorts path pairs by similarity
+     * @param similar_path_pairs Pairs to sort
+     * @return Sorted pairs with similarity
      */
-    std::vector<std::pair<Path, Path>> get_all_similar_path_pairs_sorted_by_line_number();
+    void sort_pairs_by_similarity(std::vector<SimilarPair>& similar_pairs) const;
 
     /**
      * @brief Generate clusters of similar functions using DFS on the similarity graph.

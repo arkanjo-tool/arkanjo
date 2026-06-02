@@ -68,9 +68,12 @@ SimilarityExplorerEntry SimilarityExplorer::process_similar_path_pair(const Path
     };
 }
 
-int SimilarityExplorer::find_number_pair_found(const std::vector<std::pair<Path, Path>>& similar_path_pairs) const {
+int SimilarityExplorer::find_number_pair_found(const std::vector<SimilarPair>& similar_path_pairs) const {
     int count = 0;
-    for (const auto& [path1, path2] : similar_path_pairs) {
+    for (const auto& similar_pair : similar_path_pairs) {
+        const Path& path1 = similarity_table->get_path(similar_pair.id1);
+        const Path& path2 = similarity_table->get_path(similar_pair.id2);
+
         if (match_pattern(path1, path2)) {
             count++;
         }
@@ -78,12 +81,12 @@ int SimilarityExplorer::find_number_pair_found(const std::vector<std::pair<Path,
     return count;
 }
 
-std::vector<std::pair<Path, Path>> SimilarityExplorer::build_similar_path_pairs() {
-    std::vector<std::pair<Path, Path>> similar_path_pairs;
+std::vector<SimilarPair> SimilarityExplorer::build_similar_path_pairs() {
+    std::vector<SimilarPair> similar_path_pairs = similarity_table->get_all_similar_pairs();
     if (sorted_by_number_of_duplicated_code) {
-        similar_path_pairs = similarity_table->get_all_similar_path_pairs_sorted_by_line_number();
+        similarity_table->sort_pairs_by_line_number(similar_path_pairs);
     } else {
-        similar_path_pairs = similarity_table->get_all_similar_path_pairs_sorted_by_similarity();
+        similarity_table->sort_pairs_by_similarity(similar_path_pairs);
     }
     return similar_path_pairs;
 }
@@ -125,7 +128,10 @@ void SimilarityExplorer::explorer_clusters() {
 }
 
 void SimilarityExplorer::explorer() {
-    std::vector<std::pair<Path, Path>> similar_path_pairs = build_similar_path_pairs();
+    auto start = std::chrono::high_resolution_clock::now();
+
+    auto similar_path_pairs = build_similar_path_pairs();
+
     int number_pair_found = find_number_pair_found(similar_path_pairs);
     int number_pairs_show = find_number_pairs_show(number_pair_found);
 
@@ -135,7 +141,10 @@ void SimilarityExplorer::explorer() {
     fm::write(Utils::LIMITER_PRINT);
 
     std::vector<SimilarityExplorerEntry> vector_entry = {};
-    for (const auto& [path1, path2] : similar_path_pairs) {
+    for (const auto& similar_pair : similar_path_pairs) {
+        const Path& path1 = similarity_table->get_path(similar_pair.id1);
+        const Path& path2 = similarity_table->get_path(similar_pair.id2);
+
         auto entry = process_similar_path_pair(path1, path2);
         if (entry.duplicated_lines < 0) continue;
         vector_entry.push_back(entry);

@@ -36,15 +36,16 @@ int BigCloneTailorEvaluator::path_to_id(Path path) {
 }
 
 std::vector<std::tuple<double, int, int>> BigCloneTailorEvaluator::similar_path_pairs_formated_with_id() {
-    auto similar_path_pairs = similarity_table->get_all_path_pairs_and_similarity_sorted_by_similarity();
+    auto similar_path_pairs = similarity_table->get_all_similar_pairs();
+    similarity_table->sort_pairs_by_similarity(similar_path_pairs);
     std::vector<std::tuple<double, int, int>> ret;
-    for (auto [similarity, path0, path1] : similar_path_pairs) {
-        int id0 = path_to_id(path0);
-        int id1 = path_to_id(path1);
-        if (id0 > id1) {
-            std::swap(id0, id1);
+    for (const auto& similar_pair : similar_path_pairs) {
+        auto id1 = similar_pair.id1;
+        auto id2 = similar_pair.id2;
+        if (id1 > id2) {
+            std::swap(id1, id2);
         }
-        ret.push_back({similarity, id0, id1});
+        ret.push_back({similar_pair.similarity, id1, id2});
     }
     return ret;
 }

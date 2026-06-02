@@ -119,13 +119,13 @@ class SimilarityExplorer : public CommandBase<SimilarityExplorer> {
      * @param similar_path_pairs Pairs to check
      * @return int Number of matching pairs
      */
-    int find_number_pair_found(const std::vector<std::pair<Path, Path>>& similar_path_pairs) const;
+    int find_number_pair_found(const std::vector<SimilarPair>& similar_path_pairs) const;
 
     /**
      * @brief Builds filtered path pairs
-     * @return vector<pair<Path,Path>> Filtered and sorted pairs
+     * @return vector<SimilarPair> Filtered and sorted pairs
      */
-    std::vector<std::pair<Path, Path>> build_similar_path_pairs();
+    std::vector<SimilarPair> build_similar_path_pairs();
 
     /**
      * @brief Display clusters of similar functions.

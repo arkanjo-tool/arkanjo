@@ -4,18 +4,18 @@
 
 using fm = FormatterManager;
 
-bool RandomSelector::is_valid_pair(std::tuple<double, Path, Path> path_pair) {
-    auto [similarity, path1, path2] = path_pair;
-    if (similarity < minimum_similarity)
+bool RandomSelector::is_valid_pair(SimilarPair path_pair) {
+    if (path_pair.similarity < minimum_similarity)
         return false;
-    if (similarity > maximum_similarity)
+    if (path_pair.similarity > maximum_similarity)
         return false;
     return true;
 }
 
-std::vector<std::tuple<double, Path, Path>> RandomSelector::get_similarity_pairs_filtered() {
-    auto path_pairs = similarity_table->get_all_path_pairs_and_similarity_sorted_by_similarity();
-    std::vector<std::tuple<double, Path, Path>> ret;
+std::vector<SimilarPair> RandomSelector::get_similarity_pairs_filtered() {
+    auto path_pairs = similarity_table->get_all_similar_pairs();
+    similarity_table->sort_pairs_by_similarity(path_pairs);
+    std::vector<SimilarPair> ret;
     for (auto path_pair : path_pairs) {
         if (is_valid_pair(path_pair)) {
             ret.push_back(path_pair);
@@ -24,7 +24,7 @@ std::vector<std::tuple<double, Path, Path>> RandomSelector::get_similarity_pairs
     return ret;
 }
 
-std::vector<std::tuple<double, Path, Path>> RandomSelector::make_random_selection(std::vector<std::tuple<double, Path, Path>> path_pairs) {
+std::vector<SimilarPair> RandomSelector::make_random_selection(std::vector<SimilarPair> path_pairs) {
     shuffle(path_pairs.begin(), path_pairs.end(), rng);
     while (int(path_pairs.size()) > maximum_quantity) {
         path_pairs.pop_back();
@@ -32,13 +32,16 @@ std::vector<std::tuple<double, Path, Path>> RandomSelector::make_random_selectio
     return path_pairs;
 }
 
-void RandomSelector::print_path_pairs(std::vector<std::tuple<double, Path, Path>> path_pairs) {
+void RandomSelector::print_path_pairs(std::vector<SimilarPair> path_pairs) {
     std::vector<RandomSelectorEntry> vector_entry = {};
-    for (const auto& [similarity, path1, path2] : path_pairs) {
+    for (const auto& path_pair : path_pairs) {
+        const Path& path1 = similarity_table->get_path(path_pair.id1);
+        const Path& path2 = similarity_table->get_path(path_pair.id2);
+
         vector_entry.push_back(RandomSelectorEntry{
             path1.format_path_message_in_pair(),
             path2.format_path_message_in_pair(),
-            similarity
+            path_pair.similarity
         });
     }
     if (vector_entry.size() <= 0) return;

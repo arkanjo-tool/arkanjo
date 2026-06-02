@@ -16,7 +16,6 @@
 #include <arkanjo/base/similarity_table.hpp>
 #include <random>
 #include <string>
-#include <tuple>
 #include <vector>
 
 #include <arkanjo/cli/cli_error.hpp>
@@ -46,26 +45,26 @@ class RandomSelector : public CommandBase<RandomSelector> {
      * @param path_pair Tuple of similarity and paths
      * @return bool True if pair meets criteria
      */
-    bool is_valid_pair(std::tuple<double, Path, Path> path_pair);
+    bool is_valid_pair(SimilarPair path_pair);
 
     /**
      * @brief Gets all pairs within similarity thresholds
-     * @return vector<tuple<double,Path,Path>> Filtered pairs
+     * @return vector<SimilarPair> Filtered pairs
      */
-    std::vector<std::tuple<double, Path, Path>> get_similarity_pairs_filtered();
+    std::vector<SimilarPair> get_similarity_pairs_filtered();
 
     /**
      * @brief Performs random selection from pairs
      * @param path_pairs Full set of candidate pairs
-     * @return vector<tuple<double,Path,Path>> Randomly selected subset
+     * @return vector<SimilarPair> Randomly selected subset
      */
-    std::vector<std::tuple<double, Path, Path>> make_random_selection(std::vector<std::tuple<double, Path, Path>> path_pairs);
+    std::vector<SimilarPair> make_random_selection(std::vector<SimilarPair> path_pairs);
 
     /**
      * @brief Prints all selected path pairs
      * @param path_pairs Pairs to display
      */
-    void print_path_pairs(std::vector<std::tuple<double, Path, Path>> path_pairs);
+    void print_path_pairs(std::vector<SimilarPair> path_pairs);
 
   public:
     static constexpr CliOption options_[] = {
