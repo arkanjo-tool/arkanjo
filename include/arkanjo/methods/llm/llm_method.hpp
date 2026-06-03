@@ -6,9 +6,6 @@
  * function bodies using Hugging Face embeddings (model:
  * jinaai/jina-embeddings-v2-base-code), delegating the embedding and pairwise
  * comparison to a Python helper script located in the third-party folder.
- *
- * Defines the preprocessor/setup step of the tool, where we do a heavy
- * preprocessing of the input codebase to enable fast query response later.
  */
 
 #pragma once
@@ -33,10 +30,10 @@ namespace fs = std::filesystem;
  */
 class LLMMethod : public IMethod {
   private:
-    static constexpr const char* SAVING_MESSAGE = "Saving results..."; ///< Status message for saving output
+    static constexpr const char* SAVING_MESSAGE = "Saving results...";
 
-    fs::path base_path;  ///< Root path of the codebase cache to analyze
-    double similarity; ///< Similarity threshold for considering duplicates (0-100)
+    fs::path base_path;
+    double similarity;
     std::optional<int> max_seq_length; ///< Override for the Python script's --max-seq-length (nullopt = use script default)
     std::optional<int> batch_size;     ///< Override for the Python script's --batch-size (nullopt = use script default)
     std::optional<std::string> model;  ///< Override for the Python script's --model (nullopt = use script default)
