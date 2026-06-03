@@ -53,7 +53,6 @@ std::string LLMMethod::build_command(const fs::path& source_dir) const {
 }
 
 bool LLMMethod::parse_line(const std::string& line, DuplicationEntry& entry) const {
-    // Expected line format: path1 \t path2 \t similarity
     std::vector<std::string> tokens = Utils::split_string(line, '\t');
     if (tokens.size() != 3) {
         return false;

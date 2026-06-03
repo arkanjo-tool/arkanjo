@@ -1,34 +1,14 @@
 #!/usr/bin/env python3
-"""LLM-embedding based code duplication detector for arkanjo.
-
-Reads every materialized function body under --source-dir, embeds each one with a
-Hugging Face model (jinaai/jina-embeddings-v2-base-code) through the
-sentence-transformers library, computes the pairwise cosine similarity scaled to
-a 0-100 range, and prints the pairs whose similarity is greater than or equal to
---min-similarity.
-
-Output (stdout) format, one pair per line:
-
-    <path1>\t<path2>\t<similarity>
-
-All progress / diagnostic messages are written to stderr so that stdout remains a
-clean, machine-readable stream consumed by the C++ side.
-
-The embedding model is intentionally a single constant: swapping it for another
-sentence-transformers compatible model only requires editing MODEL_NAME below.
-"""
 
 import argparse
 import os
 import sys
 
-# Change this single constant to use a different embedding model.
 MODEL_NAME = "jinaai/jina-embeddings-v2-base-code"
 
-# Cap the token sequence length. jina-v2 accepts up to 8192 tokens, but attention
-# memory is O(seq_len^2): a single very long function body can otherwise try to
-# allocate tens of GB. 1024 tokens is enough to characterize a function for
-# similarity, and longer bodies are simply truncated.
+# Cap the token sequence length. jina-v2 accepts up to 8192 tokens, but 
+# a single very long function body can try to
+# allocate tens of GB. Longer bodies will be  truncated.
 DEFAULT_MAX_SEQ_LENGTH = 1024
 
 # Conservative batch size to keep peak memory bounded on large codebases.
@@ -71,8 +51,7 @@ def compute_embeddings(bodies, max_seq_length, batch_size, model_name):
 
     log(f"Embedding {len(bodies)} function bodies "
         f"(max_seq_length={max_seq_length}, batch_size={batch_size})...")
-    # Batched call; normalize so cosine similarity is a plain dot product. The
-    # progress bar goes to stderr, keeping stdout a clean machine-readable stream.
+
     embeddings = model.encode(
         bodies,
         normalize_embeddings=True,
@@ -83,8 +62,6 @@ def compute_embeddings(bodies, max_seq_length, batch_size, model_name):
 
 
 def emit_similar_pairs(file_paths, embeddings, min_similarity):
-    # Embeddings are already L2-normalized, so the cosine similarity matrix is
-    # just the Gram matrix.
     similarity_matrix = embeddings @ embeddings.T
     count = len(file_paths)
 
@@ -154,9 +131,6 @@ def main():
     bodies = read_function_bodies(file_paths)
     embeddings = compute_embeddings(bodies, args.max_seq_length, args.batch_size, args.model)
 
-    # Emit paths relative to the source dir (e.g. "file.c/function.c"). The query
-    # side treats each path as a resource path resolved against the source/info/
-    # header cache roots, so absolute paths would not resolve.
     relative_paths = [os.path.relpath(p, args.source_dir) for p in file_paths]
     emit_similar_pairs(relative_paths, embeddings, args.min_similarity)
     return 0
