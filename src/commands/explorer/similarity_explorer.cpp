@@ -130,10 +130,19 @@ void SimilarityExplorer::explorer_clusters() {
 void SimilarityExplorer::explorer() {
     auto start = std::chrono::high_resolution_clock::now();
 
+    if (mode_verbose)
+        fm::write("Building pairs of similar paths...");
+
     auto similar_path_pairs = build_similar_path_pairs();
+
+    if (mode_verbose)
+        fm::write("Finding pair of numbers found and show...");
 
     int number_pair_found = find_number_pair_found(similar_path_pairs);
     int number_pairs_show = find_number_pairs_show(number_pair_found);
+
+    if (mode_verbose)
+        fm::time("Execution time build similar path pairs:", start);
 
     fm::write(TEMPLATE_INITIAL_TEXT, SimilarityExplorerInitialMessage{
         number_pair_found, number_pairs_show
