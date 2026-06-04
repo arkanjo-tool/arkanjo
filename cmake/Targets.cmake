@@ -51,8 +51,33 @@ file(GLOB_RECURSE CORE_COMMANDS_SOURCES
 )
 add_library(core_commands ${CORE_COMMANDS_SOURCES})
 target_sources(core_commands PRIVATE ${GENERATED_FILE})
-target_include_directories(core_commands PUBLIC ${ARKANJO_INCLUDE_DIRS})
-target_link_libraries(core_commands PUBLIC core_base core_utils ${PARSER_LIBS} tree_sitter_core core_parser core_methods)
+
+if(ARKANJO_LIBGIT2_SYSTEM)
+    set(ARKANJO_LIBGIT2_LIBS git2)
+else()
+    set(ARKANJO_LIBGIT2_LIBS
+        libgit2
+        util
+        xdiff
+        llhttp
+        pcre
+        zlib
+    )
+endif()
+target_include_directories(core_commands PUBLIC
+    ${ARKANJO_INCLUDE_DIRS}
+    ${libgit2_SOURCE_DIR}/include
+)
+target_link_libraries(core_commands PUBLIC 
+    core_base 
+    core_utils 
+    ${PARSER_LIBS} 
+    tree_sitter_core 
+    core_parser 
+    core_methods
+    ${ARKANJO_LIBGIT2_LIBS}
+    ${ICONV_LIBRARY}
+)
 
 #
 file(GLOB_RECURSE CORE_CLI_SOURCES
