@@ -41,9 +41,6 @@ bool GitDiffFunction::run(const ParsedOptions& options) {
     Path first_path = choose_single_path(first_candidates, options.extra_args[0]);
     Path second_path = choose_single_path(second_candidates, options.extra_args[1]);
 
-    std::cout << "Comparing functions: '" << first_path.build_function_name() << "' and '"
-              << second_path.build_function_name() << "'\n";
-
     if (!similarity_table->is_similar(first_path, second_path)) {
         std::cerr << "The selected functions are not flagged as duplicates in the similarity table.\n";
         return false;
@@ -100,6 +97,42 @@ std::string GitDiffFunction::build_text_from_lines(const std::vector<std::string
     return output;
 }
 
+int GitDiffFunction::print_diff_file(const git_diff_delta* delta, float, void* payload) {
+    auto* data = static_cast<DiffOutputPayload*>(payload);
+
+    if (!data->output)
+        return 0;
+
+    std::string old_file = "--- a/";
+    old_file += delta->old_file.path;
+    old_file += "\n";
+
+    std::string new_file = "+++ b/";
+    new_file += delta->new_file.path;
+    new_file += "\n";
+
+    data->output->write(old_file.data(), old_file.size());
+    data->output->write(new_file.data(), new_file.size());
+
+    return 0;
+}
+
+int GitDiffFunction::print_diff_hunk(const git_diff_delta*,const git_diff_hunk* hunk,void* payload) {
+    auto* data = static_cast<DiffOutputPayload*>(payload);
+
+    if (!data->output)
+        return 0;
+
+    auto formatter = FormatterManager::get_formatter();
+
+    std::string header(hunk->header, hunk->header_len);
+    header = formatter->colorize(header, Utils::COLOR::MAGENTA);
+
+    data->output->write(header.data(), header.size());
+
+    return 0;
+}
+
 int GitDiffFunction::print_diff_line(const git_diff_delta* /*delta*/, const git_diff_hunk* /*hunk*/, const git_diff_line* line, void* payload) {
     auto* data = static_cast<DiffOutputPayload*>(payload);
     data->printed = true;
@@ -121,10 +154,6 @@ int GitDiffFunction::print_diff_line(const git_diff_delta* /*delta*/, const git_
             break;
         case GIT_DIFF_LINE_CONTEXT:
             output_line = std::string(" ") + content;
-            break;
-        case GIT_DIFF_LINE_FILE_HDR:
-        case GIT_DIFF_LINE_HUNK_HDR:
-            output_line = formatter->colorize(content, Utils::COLOR::CYAN);
             break;
         default:
             output_line = content;
@@ -153,19 +182,14 @@ bool GitDiffFunction::diff_functions(const Path& first, const Path& second) cons
 
     git_diff_options diff_options = GIT_DIFF_OPTIONS_INIT;
 
-    std::string old_as_path = "a/" + first.build_function_name();
-    std::string new_as_path = "b/" + second.build_function_name();
-    diff_options.old_prefix = old_as_path.c_str();
-    diff_options.new_prefix = new_as_path.c_str();
-
     DiffOutputPayload payload{&std::cout, false};
     int error = git_diff_buffers(
         first_text.c_str(), first_text.size(), first.build_function_name().c_str(),
         second_text.c_str(), second_text.size(), second.build_function_name().c_str(),
         &diff_options,
+        &GitDiffFunction::print_diff_file,
         nullptr,
-        nullptr,
-        nullptr,
+        &GitDiffFunction::print_diff_hunk,
         &GitDiffFunction::print_diff_line,
         &payload
     );

@@ -38,6 +38,8 @@ class GitDiffFunction : public CommandBase<GitDiffFunction> {
     const std::string format_pattern(const std::string& pattern) const;
     Path choose_single_path(const std::vector<Path>& candidates, const std::string& pattern) const;
     bool diff_functions(const Path& first, const Path& second) const;
+    static int print_diff_file(const git_diff_delta* delta, float, void* payload);
+    static int print_diff_hunk(const git_diff_delta*,const git_diff_hunk* hunk,void* payload);
     static int print_diff_line(const git_diff_delta* delta,
                                const git_diff_hunk* hunk,
                                const git_diff_line* line,
