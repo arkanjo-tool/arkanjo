@@ -1,7 +1,25 @@
 include(FetchContent)
+option(ARKANJO_USE_SYSTEM_LIBGIT2
+    "Use system-installed libgit2 if available"
+    ON
+)
 
 function(setup_libgit2)
-    message(STATUS "Configuring libgit2 via FetchContent...")
+
+    if(ARKANJO_USE_SYSTEM_LIBGIT2)
+        find_package(libgit2 CONFIG QUIET)
+
+        if(libgit2_FOUND)
+            message(STATUS "Using system-installed libgit2")
+
+            set(ARKANJO_LIBGIT2_TARGET git2 PARENT_SCOPE)
+            set(ARKANJO_LIBGIT2_SYSTEM TRUE PARENT_SCOPE)
+
+            return()
+        endif()
+    endif()
+
+    message(STATUS "System libgit2 not found, using FetchContent")
 
     FetchContent_Declare(
         libgit2
@@ -20,11 +38,13 @@ function(setup_libgit2)
 
     FetchContent_MakeAvailable(libgit2)
 
-    if(TARGET libgit2)
-        message(STATUS "libgit2 target successfully configured!")
-    else()
-        message(FATAL_ERROR "Failed to configure libgit2: 'libgit2' target NOT found.")
+    if(NOT TARGET libgit2)
+        message(FATAL_ERROR "Failed to configure libgit2")
     endif()
+
+    set(ARKANJO_LIBGIT2_TARGET libgit2 PARENT_SCOPE)
+    set(ARKANJO_LIBGIT2_SYSTEM FALSE PARENT_SCOPE)
+
 endfunction()
 
 setup_libgit2()
