@@ -9,14 +9,9 @@
 
 using fm = FormatterManager;
 
-struct ZSNode {
-    std::string type;
-    std::vector<ZSNode> children;
-};
-
-ZSNode from_tsnode(TSNode node) {
+ZSNode ASTMethod::from_tsnode(TSNode node) {
     ZSNode out;
-    out.type = ts_node_type(node);
+    out.symbol = ts_node_symbol(node);
 
     uint32_t count = ts_node_named_child_count(node);
 
@@ -38,9 +33,10 @@ int build_postorder(const ZSNode& node, PostOrderTree& tree) {
         }
     }
 
+    // node type
     int id = tree.labels.size();
 
-    tree.labels.push_back(node.type);
+    tree.labels.push_back(node.symbol);
 
     if (leftmost == -1) {
         leftmost = id;

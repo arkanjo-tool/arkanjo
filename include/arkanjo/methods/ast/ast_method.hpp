@@ -4,16 +4,33 @@
 
 #pragma once
 
-#include <string>
-#include <tuple>
+#include <arkanjo/methods/method.hpp>
+
 #include <vector>
 #include <filesystem>
-#include <arkanjo/methods/method.hpp>
+#include <tree_sitter/api.h>
 
 namespace fs = std::filesystem;
 
+struct ZSNode {
+  TSSymbol symbol;
+  std::vector<ZSNode> children;
+};
+
 struct PostOrderTree {
-  std::vector<std::string> labels;
+  /**
+   * Tree-sitter grammar symbol for each node.
+   */
+  std::vector<TSSymbol> labels;
+
+  /**
+   * Left-most descendant index for each node.
+   *
+   * Stored for future compatibility with Zhang-Shasha style tree edit distance
+   * algorithms.
+   *
+   * Currently not used by the similarity computation.
+   */
   std::vector<int> lmd;
 
   fs::path path;
@@ -27,6 +44,8 @@ class ASTMethod : public IMethod {
     double similarity; ///< Similarity threshold for considering duplicates
 
     std::vector<PostOrderTree> processed;
+
+    ZSNode from_tsnode(TSNode node);
 
     /**
      * @brief Computes the edit distance between two post-order trees.
