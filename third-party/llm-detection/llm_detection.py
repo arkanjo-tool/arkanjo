@@ -67,9 +67,7 @@ def emit_similar_pairs(file_paths, embeddings, min_similarity):
 
     out = sys.stdout
     for i in range(count):
-        for j in range(count):
-            if i == j:
-                continue
+        for j in range(i + 1, count):
             cosine = float(similarity_matrix[i][j])
             # Clamp before scaling to guard against floating-point drift.
             cosine = max(-1.0, min(1.0, cosine))

@@ -104,7 +104,7 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
            std::optional<std::string> model) {
           return std::make_unique<LLMMethod>(base_path, similarity, max_seq_length, batch_size, model);
         },
-        "Semantic similarity using Hugging Face embeddings (jinaai/jina-embeddings-v2-base-code)"
+        "Embedding-based similarity using a code language model"
       }
     };
 
