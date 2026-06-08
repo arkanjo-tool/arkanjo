@@ -8,6 +8,9 @@
 
 #include <vector>
 #include <filesystem>
+#include <fstream>
+#include <mutex>
+#include <atomic>
 #include <tree_sitter/api.h>
 
 namespace fs = std::filesystem;
@@ -44,6 +47,13 @@ class ASTMethod : public IMethod {
     double similarity; ///< Similarity threshold for considering duplicates
 
     std::vector<PostOrderTree> processed;
+
+    std::ofstream output_file;
+
+    std::mutex processed_mutex;
+    std::mutex output_mutex;
+
+    std::atomic<size_t> total_matches{0};
 
     ZSNode from_tsnode(TSNode node);
 
@@ -105,17 +115,20 @@ class ASTMethod : public IMethod {
      *
      * @return Vector containing detected similar tree pairs.
      */
-    std::vector<DuplicationEntry> compare_range(
+    void compare_range(
       const std::vector<PostOrderTree>& processed,
-      size_t begin, size_t end
+      size_t begin, size_t end,
+      std::vector<DuplicationEntry>& local
     );
 
     void save_duplications(std::vector<DuplicationEntry>& file_duplication_pairs) override;
+    void flush_duplications(std::vector<DuplicationEntry>& local);
+    void header_duplications();
   public:
     /**
      * @brief Constructs preprocessor with configuration
      * @param base_path_ Root path of codebase
-     * @param similarity_ Similarity threshold (0-100)
+     * @param similarity_ Similarity threshold (0.0-100.0)
      */
     ASTMethod(const fs::path& base_path_, double similarity_);
 

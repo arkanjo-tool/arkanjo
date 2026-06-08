@@ -95,25 +95,39 @@ ASTMethod::ASTMethod(const fs::path& base_path_, double similarity_) {
 }
 
 void ASTMethod::save_duplications(std::vector<DuplicationEntry>& file_duplication_pairs) {
-    std::string output_file_path = base_path / "output_parsed.txt";
-
-    auto fout = std::ofstream(output_file_path);
-
-    fout << file_duplication_pairs.size() << '\n';
     for (const auto& [similarity, path1, path2] : file_duplication_pairs) {
-        fout << path1 << ' ' << path2 << ' ';
-        fout << std::fixed << std::setprecision(2) << similarity << '\n';
+        output_file << path1 << ' ' << path2 << ' ';
+        output_file << std::fixed << std::setprecision(2) << similarity << '\n';
     }
-
-    fout.close();
 }
 
-std::vector<DuplicationEntry> ASTMethod::compare_range(
-    const std::vector<PostOrderTree>& processed,
-    size_t begin, size_t end
-) {
-    std::vector<DuplicationEntry> local;
+void ASTMethod::header_duplications() {
+    std::string output_file_path = base_path / "output_parsed.tmp";
 
+    output_file.open(
+        output_file_path,
+        std::ios::out | std::ios::trunc
+    );
+}
+
+void ASTMethod::flush_duplications(std::vector<DuplicationEntry>& local) {
+    if (local.empty())
+        return;
+
+    std::lock_guard<std::mutex> lock(output_mutex);
+
+    save_duplications(local);
+
+    total_matches.fetch_add(local.size(), std::memory_order_relaxed);
+
+    local.clear();
+}
+
+void ASTMethod::compare_range(
+    const std::vector<PostOrderTree>& processed,
+    size_t begin, size_t end,
+    std::vector<DuplicationEntry>& local
+) {
     for (size_t i = begin; i < end; i++) {
         for (size_t j = i + 1; j < processed.size(); j++) {
             double sim = similarity_score(processed[i], processed[j]) * 100.0;
@@ -122,8 +136,6 @@ std::vector<DuplicationEntry> ASTMethod::compare_range(
                 local.push_back({sim, processed[i].path, processed[j].path});
         }
     }
-
-    return local;
 }
 
 void ASTMethod::on_function(const FunctionData& fd) {
@@ -141,7 +153,10 @@ void ASTMethod::on_function(const FunctionData& fd) {
 
     p.path = path / filename;
 
-    processed.push_back(p);
+    {
+        std::lock_guard<std::mutex> lock(processed_mutex);
+        processed.push_back(p);
+    }
 }
 
 void ASTMethod::execute() {
@@ -151,29 +166,48 @@ void ASTMethod::execute() {
     size_t n = processed.size();
     size_t chunk = (n + threads - 1) / threads;
 
+    constexpr size_t block_size = 4;
+    constexpr size_t flush_size = 10000;
+    std::atomic<size_t> next{0};
     std::vector<std::thread> workers;
-    std::vector<std::vector<DuplicationEntry>> results(threads);
+
+    header_duplications();
 
     for (size_t t = 0; t < threads; t++) {
-        size_t begin = t * chunk;
-        size_t end = std::min(begin + chunk, n);
+        workers.emplace_back([&]() {
+            std::vector<DuplicationEntry> local;
+            local.reserve(flush_size);
 
-        if (begin >= end)
-            break;
+            while (true) {
+                size_t begin = next.fetch_add(block_size);
+                if (begin >= processed.size()) break;
 
-        workers.emplace_back([&, t, begin, end]() {
-            results[t] = compare_range(processed, begin, end);
+                size_t end = std::min(begin + block_size, processed.size());
+
+                compare_range(processed, begin, end, local);
+
+                if (local.size() >= flush_size)
+                    flush_duplications(local);
+            }
+
+            flush_duplications(local);
         });
     }
 
     for (auto& w : workers)
         w.join();
 
-    std::vector<DuplicationEntry> duplications;
+    output_file.flush();
+    output_file.close();
 
-    for (auto& r : results) {
-        duplications.insert(duplications.end(), r.begin(), r.end());
-    }
+    std::ifstream tmp(base_path / "output_parsed.tmp");
+    std::ofstream final(base_path / "output_parsed.txt");
 
-    save_duplications(duplications);
+    final << total_matches.load() << '\n';
+    final << tmp.rdbuf();
+
+    tmp.close();
+    final.close();
+
+    fs::remove(base_path / "output_parsed.tmp");
 }
