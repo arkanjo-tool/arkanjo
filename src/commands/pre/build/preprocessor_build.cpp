@@ -106,10 +106,10 @@ void PreprocessorBuild::preprocess(const fs::path& path, double similarity, size
             fm::write("Removed existing container folder");
     }
 
-    auto start_breaker = std::chrono::high_resolution_clock::now();
     auto method = MethodsType[use_duplication_finder_index].create(
         base_path, similarity, llm_max_seq_length, llm_batch_size, llm_model);
 
+    auto start_breaker = std::chrono::high_resolution_clock::now();
     FunctionBreaker function_breaker;
     auto size_files = function_breaker.process(path, [&method](const FunctionData& fd) {
         method->on_function(fd);
