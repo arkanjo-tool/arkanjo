@@ -116,7 +116,6 @@ int FunctionBreaker::process(
 
         auto path = dirEntry.path();
         file_breaker(path, folder_path, on_function, granularity);
-
         size_files++;
     }
 
