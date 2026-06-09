@@ -1,11 +1,11 @@
-# `llm` detection method (Hugging Face embeddings)
+# Embedding-based detection method
 
 A function-level code duplication detector that measures *semantic* similarity
 between function bodies. Instead of comparing tokens or lines, it embeds each
-function with a Hugging Face model (`jinaai/jina-embeddings-v2-base-code`) and
-computes the pairwise cosine similarity, scaled to a 0-100 range. This lets it
-flag functions that do the same thing even when names, formatting, or syntax
-differ.
+function with a Hugging Face embedding model
+(default `jinaai/jina-embeddings-v2-base-code`) and computes the pairwise cosine
+similarity, scaled to a 0-100 range. This lets it flag functions that do the
+same thing even when names, formatting, or syntax differ.
 
 It is one of the four interchangeable detection techniques offered by the
 preprocessor (selected as option `4`): same input and output format as the
