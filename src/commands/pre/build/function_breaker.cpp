@@ -59,7 +59,8 @@ std::string FunctionBreaker::create_info_json(
 
 void FunctionBreaker::file_breaker(
     const fs::path& file_path, const fs::path& folder_path,
-    std::function<void(const FunctionData&)> on_function
+    std::function<void(const FunctionData&)> on_function,
+    int minimum_lines
 ) {
     if (!fs::exists(file_path)) return;
 
@@ -76,6 +77,10 @@ void FunctionBreaker::file_breaker(
         auto source = function.get_feature<SourceFeature>();
         auto metadata = function.get_feature<MetadataFeature>();
 
+        if (metadata->end_number_line - metadata->start_number_line <= minimum_lines) {
+            return;
+        }
+
         if (on_function)
             on_function(function);
 
@@ -91,7 +96,8 @@ void FunctionBreaker::file_breaker(
 // TODO: It's possible to add parallelism to this function.
 int FunctionBreaker::process(
     const fs::path& folder_path, 
-    std::function<void(const FunctionData&)> on_function
+    std::function<void(const FunctionData&)> on_function,
+    int minimum_lines
 ) {
     int size_files = 0;
 

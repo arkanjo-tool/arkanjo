@@ -75,7 +75,7 @@ void PreprocessorBuild::preprocess(const fs::path& path, double similarity, size
     FunctionBreaker function_breaker;
     auto size_files = function_breaker.process(path, [&method](const FunctionData& fd) {
         method->on_function(fd);
-    });
+    }, minimum_lines);
 
     if (mode_verbose) {
         fm::write("\tFound " + std::to_string(size_files) + " files");
@@ -122,6 +122,18 @@ bool PreprocessorBuild::validate(const ParsedOptions& options) {
     if (it_json != options.args.end()) {
         throw CLIError("--json is not supported in this command.");
         return false;
+    }
+    auto it_minimum_lines = options.args.find("minimum-lines");
+    if (it_minimum_lines != options.args.end()) {
+        try {
+            minimum_lines = std::stoi(it_minimum_lines->second);
+        } catch (const std::invalid_argument&) {
+            throw CLIError("--minimum-lines must be a valid number (passing " + it_minimum_lines->second + ")");
+            return false;
+        } catch (const std::out_of_range&) {
+            throw CLIError("--minimum-lines outside the permitted range");
+            return false;
+        }
     }
     return true;
 }

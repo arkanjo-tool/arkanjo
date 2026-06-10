@@ -68,6 +68,7 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
     static constexpr const char* INVALID_CODE_DUPLICATION_FINDER = "Invalid option entered. Stopping Program...";
 
     bool mode_verbose = false; ///< Detailed execution information
+    int minimum_lines = 0;     ///< Minimum clone size in original lines
 
     const std::vector<MethodInfo> MethodsType = {
       {
@@ -112,6 +113,7 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
     static constexpr CliOption options_[] = {
       {"verbose", 0, NoArgument, "Enable verbose output"},
       {"path", 0, PositionalArgument, "Project path to preprocess."},
+      {"minimum-lines", 0, RequiredArgument, "Minimum clone size in original lines."},
       OPTION_END
     };
     PreprocessorBuild();

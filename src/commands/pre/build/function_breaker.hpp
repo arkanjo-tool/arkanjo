@@ -87,7 +87,8 @@ class FunctionBreaker {
      */
     void file_breaker(
       const fs::path& file_path, const fs::path& folder_path,
-      std::function<void(const FunctionData&)> on_function);
+      std::function<void(const FunctionData&)> on_function,
+      int minimum_lines = 0);
 
     public:
     /**
@@ -96,7 +97,8 @@ class FunctionBreaker {
      */
     int process(
       const fs::path& folder_path,
-      std::function<void(const FunctionData&)> on_function);
+      std::function<void(const FunctionData&)> on_function,
+      int minimum_lines = 0);
 
     /**
      * @brief Constructs function breaker and processes directory
