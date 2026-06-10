@@ -1,7 +1,8 @@
 {
-    "languages": ["c", "rust"],
+    "languages": ["c", "rust", "cpp"],
     "extensions": {
         "c": [".c", ".h"],
-        "rust": [".rs"]
+        "rust": [".rs"],
+        "cpp": [".cpp", ".cc", ".cxx", ".hpp", ".hh", ".hxx"]
     }
 }

@@ -15,10 +15,12 @@
 #include <arkanjo/methods/diff/diff_method.hpp>
 #include <arkanjo/methods/tool/tool_method.hpp>
 #include <arkanjo/methods/ast/ast_method.hpp>
+#include <arkanjo/methods/llm/llm_method.hpp>
 
 #include "function_breaker.hpp"
 #include <arkanjo/commands/pre/preprocessor.hpp>
 #include <arkanjo/commands/command_base.hpp>
+#include <optional>
 #include <string>
 #include <tuple>
 #include <filesystem>
@@ -26,7 +28,8 @@
 namespace fs = std::filesystem;
 
 using MethodFactory = std::function<std::unique_ptr<IMethod>(
-  const std::string&, float
+  const std::string&, float, std::optional<int>, std::optional<int>,
+  std::optional<std::string>
 )>;
 
 struct MethodInfo {
@@ -72,48 +75,90 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
 
     const std::vector<MethodInfo> MethodsType = {
       {
-        [](const std::string& base_path, float similarity) {
+        [](const std::string& base_path, float similarity,
+           std::optional<int> /*max_seq_length*/, std::optional<int> /*batch_size*/,
+           std::optional<std::string> /*model*/) {
           return std::make_unique<ToolMethod>(base_path, similarity);
         },
         "NLP text similarity using gensim"
       },
       {
-        [](const std::string& base_path, float similarity) {
+        [](const std::string& base_path, float similarity,
+           std::optional<int> /*max_seq_length*/, std::optional<int> /*batch_size*/,
+           std::optional<std::string> /*model*/) {
           return std::make_unique<DiffMethod>(base_path, similarity);
         },
         "Count proportion of equal lines using diff command"
       },
       {
-        [](const std::string& base_path, float similarity) {
+        [](const std::string& base_path, float similarity,
+           std::optional<int> /*max_seq_length*/, std::optional<int> /*batch_size*/,
+           std::optional<std::string> /*model*/) {
           return std::make_unique<ASTMethod>(base_path, similarity);
         },
         "Compare linearized structural sequences extracted from Tree-sitter ASTs"
+      },
+      {
+        [](const std::string& base_path, float similarity,
+           std::optional<int> max_seq_length, std::optional<int> batch_size,
+           std::optional<std::string> model) {
+          return std::make_unique<LLMMethod>(base_path, similarity, max_seq_length, batch_size, model);
+        },
+        "Embedding-based similarity using a code language model"
       }
     };
 
     /**
      * @brief Reads preprocessing parameters from user/config
      * @param options Parsed command line options. std::nullopt represents default behavior.
-     * @return tuple<string,double,bool>
+     * @return tuple
      *         - Project path
      *         - Similarity threshold
-     *         - Duplication finder selection flag
+     *         - Duplication finder selection index
+     *         - Optional LLM max sequence length override
+     *         - Optional LLM batch size override
+     *         - Optional LLM model name override
      */
-    std::tuple<std::string, double, size_t> read_parameters(const std::optional<ParsedOptions>& options);
+    std::tuple<std::string, double, size_t, std::optional<int>, std::optional<int>,
+               std::optional<std::string>, Granularity>
+    read_parameters(const std::optional<ParsedOptions>& options);
 
     /**
      * @brief Executes full preprocessing pipeline
      * @param path Project path to process
      * @param similarity Similarity threshold
      * @param use_duplication_finder_index Flag to select duplication detection method
+     * @param llm_max_seq_length Optional LLM max sequence length override (ignored by non-LLM methods)
+     * @param llm_batch_size Optional LLM batch size override (ignored by non-LLM methods)
+     * @param llm_model Optional LLM model name override (ignored by non-LLM methods)
      */
-    void preprocess(const fs::path& path, double similarity, size_t use_duplication_finder_index);
+    void preprocess(const fs::path& path, double similarity, size_t use_duplication_finder_index,
+                    std::optional<int> llm_max_seq_length = std::nullopt,
+                    std::optional<int> llm_batch_size = std::nullopt,
+                    std::optional<std::string> llm_model = std::nullopt,
+                    Granularity granularity = Granularity::Function);
 
   public:
     static constexpr CliOption options_[] = {
       {"verbose", 0, NoArgument, "Enable verbose output"},
       {"path", 0, PositionalArgument, "Project path to preprocess."},
       {"minimum-lines", 0, RequiredArgument, "Minimum clone size in original lines."},
+      {"llm-max-seq-length", 0, RequiredArgument,
+        "Override the LLM detector's max token sequence length per function "
+        "(longer bodies are truncated). Only used by the LLM duplication "
+        "finder; ignored by other methods."},
+      {"llm-batch-size", 0, RequiredArgument,
+        "Override the LLM detector's embedding batch size. Lower this on "
+        "machines with less RAM. Only used by the LLM duplication finder; "
+        "ignored by other methods."},
+      {"llm-model", 0, RequiredArgument,
+        "Override the LLM detector's embedding model (Hugging Face "
+        "sentence-transformers id). Only used by the LLM duplication finder; "
+        "ignored by other methods."},
+      {"granularity", 0, RequiredArgument,
+        "Comparison granularity: 'function' (default) compares individual "
+        "functions; 'file' keeps each file whole and compares files against "
+        "each other. Applies to every duplication finder method."},
       OPTION_END
     };
     PreprocessorBuild();

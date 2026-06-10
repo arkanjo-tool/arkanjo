@@ -93,3 +93,4 @@ _deps
 CMakeUserPresets.json
 
 .cache
+__pycache__/

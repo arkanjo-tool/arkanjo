@@ -1,0 +1,4 @@
+sentence-transformers>=2.7
+transformers>=4.41,<5
+numpy>=1.24
+einops>=0.7
