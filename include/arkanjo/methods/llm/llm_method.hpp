@@ -34,9 +34,9 @@ class LLMMethod : public IMethod {
 
     fs::path base_path;
     double similarity;
-    std::optional<int> max_seq_length; ///< Override for the Python script's --max-seq-length (nullopt = use script default)
-    std::optional<int> batch_size;     ///< Override for the Python script's --batch-size (nullopt = use script default)
-    std::optional<std::string> model;  ///< Override for the Python script's --model (nullopt = use script default)
+    std::optional<int> max_seq_length;
+    std::optional<int> batch_size;
+    std::optional<std::string> model;
 
     /**
      * @brief Builds the command that runs the Python embedding script.
