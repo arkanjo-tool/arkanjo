@@ -105,7 +105,7 @@ int FunctionBreaker::process(
         if (!dirEntry.is_regular_file()) continue;
 
         auto path = dirEntry.path();
-        file_breaker(path, folder_path, on_function);
+        file_breaker(path, folder_path, on_function, minimum_lines);
 
         size_files++;
     }
