@@ -22,6 +22,7 @@ bool PreprocessorClean::run([[maybe_unused]] const ParsedOptions& options) {
             std::cout << "Cache directory does not exist, nothing to clean.\n";
         }
     } catch (const std::exception& e) {
+        // Use CLIError to ensure consistent error reporting across the CLI
         throw CLIError("Error while cleaning cache: " + std::string(e.what()));
     }
 
