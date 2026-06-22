@@ -1,0 +1,11 @@
+[project]
+name = "ArKanjo"
+dynamic = ["version"]
+dependencies = []
+
+[project.optional-dependencies]
+benchmark = [
+    "tqdm",
+    "datasets",
+    "JayDeBeApi",
+]
