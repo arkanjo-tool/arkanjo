@@ -111,5 +111,7 @@ add_custom_target(copy_third_party ALL
         ${THIRD_PARTY_BUILD_DIR}
 )
 
+include(${CMAKE_CURRENT_LIST_DIR}/targets/PythonCommands.cmake)
+
 add_dependencies(arkanjo copy_third_party)
 add_dependencies(arkanjo-preprocessor copy_third_party)
