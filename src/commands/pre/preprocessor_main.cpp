@@ -1,19 +1,18 @@
 // As preprocessor is, in the moment, separated from orchestrator
 // we define a main function to use it.
-
-#include "build/preprocessor_build.hpp"
-#include "list/preprocessor_list.hpp"
 #include "../help/help.hpp"
+#include "build/preprocessor_build.hpp"
+#include "clean/preprocessor_clean.hpp"
+#include "list/preprocessor_list.hpp"
+#include <arkanjo/commands/command.hpp>
+#include <arkanjo/formatter/format_manager.hpp>
+#include <arkanjo/orchestrator.hpp>
+#include <arkanjo/orchestrator_helper.hpp>
 #include <cassert>
 #include <filesystem>
 #include <iomanip>
 #include <iostream>
 #include <string>
-
-#include <arkanjo/orchestrator_helper.hpp>
-#include <arkanjo/orchestrator.hpp>
-#include <arkanjo/commands/command.hpp>
-#include <arkanjo/formatter/format_manager.hpp>
 
 int main(int argc, char* argv[]) {
     auto& cfg = Config::config();
@@ -24,14 +23,14 @@ int main(int argc, char* argv[]) {
     Context ctx;
 
     ctx.command_name = (argc > 1) ? argv[1] : OrchestratorHelper::DEFAULT_COMMAND;
-    
+
     ctx.argc = argc;
     ctx.argv = argv;
 
     static const std::vector<std::pair<std::vector<std::string>, CommandsRegistry::CommandFactory>> internal_commands = {
         {{"build"}, [&]() { return std::make_unique<PreprocessorBuild>(); }},
-        {{"list", "ls"}, [&]() { return std::make_unique<PreprocessorList>(); }}
-    };
+        {{"list", "ls"}, [&]() { return std::make_unique<PreprocessorList>(); }},
+        {{"clean"}, [&]() { return std::make_unique<PreprocessorClean>(); }}};
 
     std::unique_ptr<ICommand> command;
     orchestrator.add_step(OrchestratorHelper::setup_command_step(command, internal_commands));
