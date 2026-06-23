@@ -50,7 +50,12 @@ int main(int argc, char* argv[]) {
     orchestrator.add_step(collector.make_parse_step(argc, argv));
     orchestrator.add_step(OrchestratorHelper::formatter_step);
 
-    orchestrator.add_step([&orchestrator, &command, &collector](Context&) {
+    orchestrator.add_step([&orchestrator, &command, &collector](Context& ctx) {
+        auto it_name = ctx.options.args.find("name");
+        if (it_name != ctx.options.args.end()) {
+            Config::config().name_container = it_name->second;
+        }
+
         orchestrator.add_step(OrchestratorHelper::command_run_step(std::move(command), collector));
 
         return true;
