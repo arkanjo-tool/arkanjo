@@ -71,9 +71,11 @@ $$\text{sim}(d_1,d_2)=\frac{\vec{d}_1\cdot\vec{d}_2}{\lvert\lvert\vec{d}_1\rvert
 - Weight: similarity score ($0.0$ - $1.0$)
 
 ```
-A ----0.9---- B
- \           /
-  +--0.85---C
+A ------0.9------ B
+ \               /
+  \            0.15
+   \           /
+    +--0.85---C
 ```
 
 - The graph is undirected
