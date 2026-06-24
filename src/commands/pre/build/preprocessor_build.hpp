@@ -99,7 +99,7 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
      *         - Similarity threshold
      *         - Duplication finder selection flag
      */
-    std::tuple<std::string, double, size_t> read_parameters(const std::optional<ParsedOptions>& options);
+    std::tuple<std::string, double, size_t, Granularity> read_parameters(const std::optional<ParsedOptions>& options);
 
     /**
      * @brief Executes full preprocessing pipeline
@@ -107,13 +107,18 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
      * @param similarity Similarity threshold
      * @param use_duplication_finder_index Flag to select duplication detection method
      */
-    void preprocess(const fs::path& path, double similarity, size_t use_duplication_finder_index);
+    void preprocess(const fs::path& path, double similarity, size_t use_duplication_finder_index,
+                    Granularity granularity = Granularity::Function);
 
   public:
     static constexpr CliOption options_[] = {
       {"verbose", 0, NoArgument, "Enable verbose output"},
       {"path", 0, PositionalArgument, "Project path to preprocess."},
       {"minimum-lines", 0, RequiredArgument, "Minimum clone size in original lines."},
+      {"granularity", 0, RequiredArgument,
+        "Comparison granularity: 'function' (default) compares individual "
+        "functions; 'file' keeps each file whole and compares files against "
+        "each other. Applies to every duplication finder method."},
       OPTION_END
     };
     PreprocessorBuild();

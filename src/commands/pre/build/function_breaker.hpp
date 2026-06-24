@@ -28,6 +28,18 @@
 namespace fs = std::filesystem;
 
 /**
+ * @brief Comparison granularity used when breaking the codebase.
+ *
+ * - Function: each function becomes an independent unit (default behaviour).
+ * - File: each whole file becomes a single unit, so files are compared
+ *   against each other instead of function by function.
+ */
+enum class Granularity {
+    Function,
+    File
+};
+
+/**
  * @brief Main function extraction processor
  *
  * Analyzes source code directories (C/C++/Java) and extracts each function
@@ -88,17 +100,21 @@ class FunctionBreaker {
     void file_breaker(
       const fs::path& file_path, const fs::path& folder_path,
       std::function<void(const FunctionData&)> on_function,
+      Granularity granularity = Granularity::Function,
       int minimum_lines = 0);
 
     public:
     /**
      * @brief Processes all files in directory
      * @param folder_path Directory path to process
+     * @param on_function Callback invoked for every extracted unit
+     * @param granularity Whether to break the codebase by function or by file
      */
     int process(
       const fs::path& folder_path,
       std::function<void(const FunctionData&)> on_function,
-      int minimum_lines = 0);
+      int minimum_lines = 0,
+      Granularity granularity = Granularity::Function);
 
     /**
      * @brief Constructs function breaker and processes directory

@@ -8,7 +8,7 @@
 
 using fm = FormatterManager;
 
-std::tuple<std::string, double, size_t> PreprocessorBuild::read_parameters(const std::optional<ParsedOptions>& options) {
+std::tuple<std::string, double, size_t, Granularity> PreprocessorBuild::read_parameters(const std::optional<ParsedOptions>& options) {
     fm::write(INITIAL_MESSAGE);
     std::string similarity_message;
     std::string path_str;
@@ -52,10 +52,26 @@ std::tuple<std::string, double, size_t> PreprocessorBuild::read_parameters(const
     }
     --use_duplication_finder_index;
 
-    return {path, similarity, use_duplication_finder_index};
+    Granularity granularity = Granularity::Function;
+    if (options) {
+        auto it = options->args.find("granularity");
+        if (it != options->args.end()) {
+            if (it->second == "file") {
+                granularity = Granularity::File;
+            } else if (it->second == "function" || it->second.empty()) {
+                granularity = Granularity::Function;
+            } else {
+                throw CLIError("Invalid --granularity value: '" + it->second +
+                               "'. Use 'function' (default) or 'file'.");
+            }
+        }
+    }
+
+    return {path, similarity, use_duplication_finder_index, granularity};
 }
 
-void PreprocessorBuild::preprocess(const fs::path& path, double similarity, size_t use_duplication_finder_index) {
+void PreprocessorBuild::preprocess(const fs::path& path, double similarity, size_t use_duplication_finder_index,
+                                   Granularity granularity) {
     auto start = std::chrono::high_resolution_clock::now();
 
     fm::write(BREAKER_MESSAGE);
@@ -75,7 +91,7 @@ void PreprocessorBuild::preprocess(const fs::path& path, double similarity, size
     FunctionBreaker function_breaker;
     auto size_files = function_breaker.process(path, [&method](const FunctionData& fd) {
         method->on_function(fd);
-    }, minimum_lines);
+    }, minimum_lines, granularity);
 
     if (mode_verbose) {
         fm::write("\tFound " + std::to_string(size_files) + " files");
@@ -101,8 +117,8 @@ PreprocessorBuild::PreprocessorBuild() { }
 PreprocessorBuild::PreprocessorBuild(bool force_preprocess) {
     fs::path base_path = Config::config().base_path / Config::config().name_container;
     if (force_preprocess || !std::filesystem::exists(base_path / CONFIG_PATH)) {
-        auto [path, similarity, use_duplication_finder_index] = read_parameters(std::nullopt);
-        preprocess(path, similarity, use_duplication_finder_index);
+        auto [path, similarity, use_duplication_finder_index, granularity] = read_parameters(std::nullopt);
+        preprocess(path, similarity, use_duplication_finder_index, granularity);
     }
 }
 
@@ -138,8 +154,8 @@ bool PreprocessorBuild::run([[maybe_unused]] const ParsedOptions& options) {
     mode_verbose = options.args.count("verbose") > 0;
 
     fs::path base_path = Config::config().base_path / Config::config().name_container;
-    auto [path, similarity, use_duplication_finder_index] = read_parameters(options);
-    preprocess(path, similarity, use_duplication_finder_index);
+    auto [path, similarity, use_duplication_finder_index, granularity] = read_parameters(options);
+    preprocess(path, similarity, use_duplication_finder_index, granularity);
 
     return true;
 }
