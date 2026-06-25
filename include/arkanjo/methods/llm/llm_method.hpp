@@ -34,9 +34,7 @@ class LLMMethod : public IMethod {
 
     fs::path base_path;
     double similarity;
-    std::optional<int> max_seq_length;
-    std::optional<int> batch_size;
-    std::optional<std::string> model;
+    std::vector<std::string> pass_through_args;
 
     /**
      * @brief Builds the command that runs the Python embedding script.
@@ -71,14 +69,11 @@ class LLMMethod : public IMethod {
      * @brief Constructs the LLM detector.
      * @param base_path_ Root path of the codebase cache.
      * @param similarity_ Minimum similarity threshold (0-100) to consider as duplicate.
-     * @param max_seq_length_ Optional override for the embedding script's max sequence length.
-     * @param batch_size_ Optional override for the embedding script's batch size.
-     * @param model_ Optional override for the embedding model name (Hugging Face id).
+     * @param pass_through_args_ Raw arguments forwarded to the embedding script
+     *         (e.g. --max-seq-length, --batch-size, --model).
      */
     LLMMethod(const fs::path& base_path_, double similarity_,
-              std::optional<int> max_seq_length_ = std::nullopt,
-              std::optional<int> batch_size_ = std::nullopt,
-              std::optional<std::string> model_ = std::nullopt);
+              std::vector<std::string> pass_through_args_ = {});
 
     void on_function(const FunctionData& fd) override;
 
