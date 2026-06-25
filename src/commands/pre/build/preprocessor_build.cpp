@@ -141,10 +141,6 @@ PreprocessorBuild::PreprocessorBuild(bool force_preprocess, const fs::path& path
 }
 
 bool PreprocessorBuild::validate(const ParsedOptions& options) {
-    auto it_name = options.args.find("name");
-    if (it_name != options.args.end()) {
-        Config::config().name_container = it_name->second;
-    }
     auto it_json = options.args.find("json");
     if (it_json != options.args.end()) {
         throw CLIError("--json is not supported in this command.");

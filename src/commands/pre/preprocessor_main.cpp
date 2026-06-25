@@ -4,6 +4,7 @@
 #include "build/preprocessor_build.hpp"
 #include "list/preprocessor_list.hpp"
 #include "../help/help.hpp"
+#include "clean/preprocessor_clean.hpp"
 #include <cassert>
 #include <filesystem>
 #include <iomanip>
@@ -30,7 +31,8 @@ int main(int argc, char* argv[]) {
 
     static const std::vector<std::pair<std::vector<std::string>, CommandsRegistry::CommandFactory>> internal_commands = {
         {{"build"}, [&]() { return std::make_unique<PreprocessorBuild>(); }},
-        {{"list", "ls"}, [&]() { return std::make_unique<PreprocessorList>(); }}
+        {{"list", "ls"}, [&]() { return std::make_unique<PreprocessorList>(); }},
+        {{"clean"}, [&]() { return std::make_unique<PreprocessorClean>(); }}
     };
 
     std::unique_ptr<ICommand> command;
@@ -50,7 +52,12 @@ int main(int argc, char* argv[]) {
     orchestrator.add_step(collector.make_parse_step(argc, argv));
     orchestrator.add_step(OrchestratorHelper::formatter_step);
 
-    orchestrator.add_step([&orchestrator, &command, &collector](Context&) {
+    orchestrator.add_step([&orchestrator, &command, &collector](Context& ctx) {
+        auto it_name = ctx.options.args.find("name");
+        if (it_name != ctx.options.args.end()) {
+            Config::config().name_container = it_name->second;
+        }
+
         orchestrator.add_step(OrchestratorHelper::command_run_step(std::move(command), collector));
 
         return true;

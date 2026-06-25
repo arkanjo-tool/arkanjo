@@ -107,15 +107,13 @@ int FunctionBreaker::process(
     int minimum_lines,
     Granularity granularity
 ) {
-    (void)minimum_lines;
-
     int size_files = 0;
 
     for (const auto& dirEntry : fs::recursive_directory_iterator(folder_path)) {
         if (!dirEntry.is_regular_file()) continue;
 
         auto path = dirEntry.path();
-        file_breaker(path, folder_path, on_function, granularity);
+        file_breaker(path, folder_path, on_function, granularity, minimum_lines);
         size_files++;
     }
 
