@@ -11,7 +11,15 @@
 #include <arkanjo/commands/command_base.hpp>
 
 class PreprocessorClean : public CommandBase<PreprocessorClean> {
+
+    bool clean_all = false;
+
 public:
+    static constexpr CliOption options_[] = {
+        {"all", 0, NoArgument, "Remove all cached preprocess profiles."},
+        OPTION_END
+    };
+    
     PreprocessorClean() = default;
 
     COMMAND_DESCRIPTION("Removes the application cache directory.")
