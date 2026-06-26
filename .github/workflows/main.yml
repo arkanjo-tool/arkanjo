@@ -33,14 +33,23 @@ jobs:
       with:
         doxyfile-path: "./Doxyfile"
         working-directory: "."
-    
-    - name: Setup Pages
-      uses: actions/configure-pages@v5
 
-    - name: Upload Artifact
+    - name: Upload Pages artifact
       uses: actions/upload-pages-artifact@v4
       with:
-        path: 'docs/doxygen/html'
+        path: docs/doxygen/html
+
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+
+    steps:
+    - name: Setup Pages
+      uses: actions/configure-pages@v5
 
     - name: Deploy to GitHub Pages
       id: deployment
