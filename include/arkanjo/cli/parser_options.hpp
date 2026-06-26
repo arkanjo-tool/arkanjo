@@ -37,6 +37,10 @@ struct ParsedOptions {
 
     /**
      * @brief List of extra arguments that are not options.
+     *
+     * Includes everything after a `--` separator: getopt stops option parsing
+     * at `--`, so those tokens are kept unchanged here and can be forwarded
+     * directly to a method-specific backend. 
      */
     std::vector<std::string> extra_args;
 };

@@ -8,17 +8,21 @@
 
 using fm = FormatterManager;
 
-std::tuple<std::string, double, size_t, Granularity> PreprocessorBuild::read_parameters(const std::optional<ParsedOptions>& options) {
+std::tuple<std::string, double, size_t, std::vector<std::string>, Granularity>
+PreprocessorBuild::read_parameters(const std::optional<ParsedOptions>& options) {
     fm::write(INITIAL_MESSAGE);
     std::string similarity_message;
     std::string path_str;
 
-    if (options && !options->extra_args.empty() && !options->extra_args[0].empty()) {
-        path_str = options->extra_args[0];
+    if (options) {
+        auto it_path = options->args.find("path");
+        if (it_path != options->args.end() && !it_path->second.empty()) {
+            path_str = it_path->second;
 
-        if (!fs::exists(path_str)) {
-            std::cout << ERROR_PATH_MESSAGE << "\n";
-            path_str.clear(); 
+            if (!fs::exists(path_str)) {
+                std::cout << ERROR_PATH_MESSAGE << "\n";
+                path_str.clear();
+            }
         }
     }
 
@@ -52,8 +56,11 @@ std::tuple<std::string, double, size_t, Granularity> PreprocessorBuild::read_par
     }
     --use_duplication_finder_index;
 
+    std::vector<std::string> pass_through_args;
     Granularity granularity = Granularity::Function;
     if (options) {
+        pass_through_args = options->extra_args;
+
         auto it = options->args.find("granularity");
         if (it != options->args.end()) {
             if (it->second == "file") {
@@ -67,10 +74,11 @@ std::tuple<std::string, double, size_t, Granularity> PreprocessorBuild::read_par
         }
     }
 
-    return {path, similarity, use_duplication_finder_index, granularity};
+    return {path, similarity, use_duplication_finder_index, pass_through_args, granularity};
 }
 
 void PreprocessorBuild::preprocess(const fs::path& path, double similarity, size_t use_duplication_finder_index,
+                                   const std::vector<std::string>& pass_through_args,
                                    Granularity granularity) {
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -86,7 +94,8 @@ void PreprocessorBuild::preprocess(const fs::path& path, double similarity, size
     }
 
     auto start_breaker = std::chrono::high_resolution_clock::now();
-    auto method = MethodsType[use_duplication_finder_index].create(base_path, similarity);
+    auto method = MethodsType[use_duplication_finder_index].create(
+        base_path, similarity, pass_through_args);
 
     FunctionBreaker function_breaker;
     auto size_files = function_breaker.process(path, [&method](const FunctionData& fd) {
@@ -117,8 +126,10 @@ PreprocessorBuild::PreprocessorBuild() { }
 PreprocessorBuild::PreprocessorBuild(bool force_preprocess) {
     fs::path base_path = Config::config().base_path / Config::config().name_container;
     if (force_preprocess || !std::filesystem::exists(base_path / CONFIG_PATH)) {
-        auto [path, similarity, use_duplication_finder_index, granularity] = read_parameters(std::nullopt);
-        preprocess(path, similarity, use_duplication_finder_index, granularity);
+        auto [path, similarity, use_duplication_finder_index,
+              pass_through_args, granularity] = read_parameters(std::nullopt);
+        preprocess(path, similarity, use_duplication_finder_index,
+                   pass_through_args, granularity);
     }
 }
 
@@ -154,8 +165,10 @@ bool PreprocessorBuild::run([[maybe_unused]] const ParsedOptions& options) {
     mode_verbose = options.args.count("verbose") > 0;
 
     fs::path base_path = Config::config().base_path / Config::config().name_container;
-    auto [path, similarity, use_duplication_finder_index, granularity] = read_parameters(options);
-    preprocess(path, similarity, use_duplication_finder_index, granularity);
+    auto [path, similarity, use_duplication_finder_index,
+          pass_through_args, granularity] = read_parameters(options);
+    preprocess(path, similarity, use_duplication_finder_index,
+               pass_through_args, granularity);
 
     return true;
 }

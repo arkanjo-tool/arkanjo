@@ -26,7 +26,7 @@
 namespace fs = std::filesystem;
 
 using MethodFactory = std::function<std::unique_ptr<IMethod>(
-  const std::string&, float
+  const std::string&, float, const std::vector<std::string>&
 )>;
 
 struct MethodInfo {
@@ -72,19 +72,22 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
 
     const std::vector<MethodInfo> MethodsType = {
       {
-        [](const std::string& base_path, float similarity) {
+        [](const std::string& base_path, float similarity,
+           const std::vector<std::string>&) {
           return std::make_unique<ToolMethod>(base_path, similarity);
         },
         "NLP text similarity using gensim"
       },
       {
-        [](const std::string& base_path, float similarity) {
+        [](const std::string& base_path, float similarity,
+           const std::vector<std::string>&) {
           return std::make_unique<DiffMethod>(base_path, similarity);
         },
         "Count proportion of equal lines using diff command"
       },
       {
-        [](const std::string& base_path, float similarity) {
+        [](const std::string& base_path, float similarity,
+           const std::vector<std::string>&) {
           return std::make_unique<ASTMethod>(base_path, similarity);
         },
         "Compare linearized structural sequences extracted from Tree-sitter ASTs"
@@ -97,23 +100,29 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
      * @return tuple<string,double,bool>
      *         - Project path
      *         - Similarity threshold
-     *         - Duplication finder selection flag
+     *         - Duplication finder selection index
+     *         - Pass-through arguments forwarded to the selected method's backend
+     *         - Comparison granularity
      */
-    std::tuple<std::string, double, size_t, Granularity> read_parameters(const std::optional<ParsedOptions>& options);
+    std::tuple<std::string, double, size_t, std::vector<std::string>, Granularity>
+    read_parameters(const std::optional<ParsedOptions>& options);
 
     /**
      * @brief Executes full preprocessing pipeline
      * @param path Project path to process
      * @param similarity Similarity threshold
      * @param use_duplication_finder_index Flag to select duplication detection method
+     * @param pass_through_args Raw arguments forwarded to the selected method's
+     *        backend (everything after `--`); ignored by methods that take none
      */
     void preprocess(const fs::path& path, double similarity, size_t use_duplication_finder_index,
+                    const std::vector<std::string>& pass_through_args = {},
                     Granularity granularity = Granularity::Function);
 
   public:
     static constexpr CliOption options_[] = {
       {"verbose", 0, NoArgument, "Enable verbose output"},
-      {"path", 0, PositionalArgument, "Project path to preprocess."},
+      {"path", 0, RequiredArgument, "Project path to preprocess."},
       {"minimum-lines", 0, RequiredArgument, "Minimum clone size in original lines."},
       {"granularity", 0, RequiredArgument,
         "Comparison granularity: 'function' (default) compares individual "
