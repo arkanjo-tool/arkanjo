@@ -3,6 +3,7 @@
 
 #include "build/preprocessor_build.hpp"
 #include "list/preprocessor_list.hpp"
+#include "path/preprocessor_path.hpp"
 #include "../help/help.hpp"
 #include "clean/preprocessor_clean.hpp"
 #include <cassert>
@@ -32,7 +33,8 @@ int main(int argc, char* argv[]) {
     static const std::vector<std::pair<std::vector<std::string>, CommandsRegistry::CommandFactory>> internal_commands = {
         {{"build"}, [&]() { return std::make_unique<PreprocessorBuild>(); }},
         {{"list", "ls"}, [&]() { return std::make_unique<PreprocessorList>(); }},
-        {{"clean"}, [&]() { return std::make_unique<PreprocessorClean>(); }}
+        {{"clean"}, [&]() { return std::make_unique<PreprocessorClean>(); }},
+        {{"path"}, [&]() { return std::make_unique<PreprocessorPath>(); }},
     };
 
     std::unique_ptr<ICommand> command;
