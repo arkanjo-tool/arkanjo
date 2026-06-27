@@ -22,6 +22,11 @@ int main(int argc, char* argv[]) {
     ctx.argc = argc;
     ctx.argv = argv;
 
+    if (ctx.command_name == "preprocessor" && argc > 2 && std::string(argv[2]) == "path") {
+        std::cout << cfg.base_path.string() << "\n";
+        return 0;
+    }
+
     std::unique_ptr<ICommand> command;
     auto internal_commands = OrchestratorCommands::create_internal_commands(similarity_table);
     orchestrator.add_step(OrchestratorHelper::setup_command_step(command, internal_commands));

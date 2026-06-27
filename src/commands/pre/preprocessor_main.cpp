@@ -29,6 +29,11 @@ int main(int argc, char* argv[]) {
     ctx.argc = argc;
     ctx.argv = argv;
 
+    if (ctx.command_name == "path") {
+        std::cout << cfg.base_path.string() << "\n";
+        return 0;
+    }
+
     static const std::vector<std::pair<std::vector<std::string>, CommandsRegistry::CommandFactory>> internal_commands = {
         {{"build"}, [&]() { return std::make_unique<PreprocessorBuild>(); }},
         {{"list", "ls"}, [&]() { return std::make_unique<PreprocessorList>(); }},
