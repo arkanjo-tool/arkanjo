@@ -1,0 +1,6 @@
+sentence-transformers>=2.7
+# transformers 5.x removed symbols (e.g. find_pruneable_heads_and_indices) that
+# the jina-embeddings-v2 custom code relies on; pin to the 4.x series.
+transformers>=4.41,<5
+numpy>=1.24
+einops>=0.7
