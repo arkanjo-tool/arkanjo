@@ -8,11 +8,11 @@ namespace fs = std::filesystem;
 
 class Preprocessor {
 private:
-    static constexpr const char* PATH_MESSAGE = "path of the current preprocess: "; ///< Current processing path display
-    static constexpr const char* TIME_MESSAGE = "Finished time: ";                  ///< Timing information prefix
+    static constexpr const char* PATH_KEY = "path";
+    static constexpr const char* TIME_KEY = "finished_time";
 
 protected:
-    static constexpr const char* CONFIG_PATH = "config.txt";                        ///< Configuration file path
+    static constexpr const char* CONFIG_PATH = "config.json";
 
 public:
     /**
