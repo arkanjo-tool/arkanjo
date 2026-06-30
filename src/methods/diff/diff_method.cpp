@@ -159,6 +159,11 @@ void DiffMethod::execute() {
 
     std::vector<DuplicationEntry> file_duplication_pairs = find_similar_pairs(file_paths);
 
+    for (auto& [sim, path1, path2] : file_duplication_pairs) {
+        path1 = fs::relative(path1, base).string();
+        path2 = fs::relative(path2, base).string();
+    }
+
     fm::write(SAVING_MESSAGE);
 
     save_duplications(file_duplication_pairs);
