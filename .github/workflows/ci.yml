@@ -53,7 +53,12 @@ jobs:
     - name: Build
       run: cmake --build build --config ${{ matrix.build_type }} --target install
 
-    - name: Run E2E tests
+    - name: Run C++ E2E tests
+      run: |
+        source venv/bin/activate || call venv\Scripts\activate
+        ./build/arkanjo-test
+
+    - name: Run CLI integration tests
       run: |
         source venv/bin/activate || call venv\Scripts\activate
         echo -e "tests/e2e/codebase\n0.9\n1" | arkanjo preprocessor build
