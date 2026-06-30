@@ -43,7 +43,8 @@ class SimilarityExplorer : public CommandBase<SimilarityExplorer> {
         {"sort", 's', NoArgument, "Sort results by number of duplicated lines. By default, results are sorted by the similarity metric."},
         {"cluster", 'c', NoArgument, "Print results with cluster relationships from the similarity table."},
         {"verbose", 0, NoArgument, "Enable verbose output"},
-        {"template", 't', RequiredArgument, "Output format template used to render each result entry."},
+        {"template", 't', RequiredArgument, "Output format template for each result entry. Run --template-help to see available variables and an example."},
+        {"template-help", 0, NoArgument, "Show available template variables and style modifiers for --template."},
         OPTION_END
     };
     COMMAND_DESCRIPTION(
@@ -128,6 +129,11 @@ class SimilarityExplorer : public CommandBase<SimilarityExplorer> {
      * @return vector<SimilarPair> Filtered and sorted pairs
      */
     std::vector<SimilarPair> build_similar_path_pairs();
+
+    /**
+     * @brief Prints all available template variables and style modifiers to stdout.
+     */
+    static void print_template_variables();
 
     /**
      * @brief Display clusters of similar functions.

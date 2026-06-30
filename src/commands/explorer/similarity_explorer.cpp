@@ -191,7 +191,33 @@ bool SimilarityExplorer::validate(const ParsedOptions& options) {
     return true;
 }
 
+void SimilarityExplorer::print_template_variables() {
+    std::cout << "Template variables for --template:\n\n";
+    std::cout << "  {path_a}           Relative path and function name, e.g. src/dir::my_func\n";
+    std::cout << "  {path_b}           Relative path and function name for function B\n";
+    std::cout << "  {dir_a}            Parent directory of function A's file\n";
+    std::cout << "  {dir_b}            Parent directory of function B's file\n";
+    std::cout << "  {filename_a}       Filename of function A\n";
+    std::cout << "  {filename_b}       Filename of function B\n";
+    std::cout << "  {func_a}           Function name A\n";
+    std::cout << "  {func_b}           Function name B\n";
+    std::cout << "  {start_a}          Start line of function A\n";
+    std::cout << "  {start_b}          Start line of function B\n";
+    std::cout << "  {end_a}            End line of function A\n";
+    std::cout << "  {end_b}            End line of function B\n";
+    std::cout << "  {duplicated_lines} Line count of the duplicate\n";
+    std::cout << "\nStyle modifiers (append as {variable:modifier}):\n\n";
+    std::cout << "  file, function, number, bold, warning, row_even, row_odd\n";
+    std::cout << "\nExample:\n";
+    std::cout << "  arkanjo explorer --template \"{func_a:function} ~ {func_b:function} ({duplicated_lines:number} lines)\"\n";
+}
+
 bool SimilarityExplorer::run(const ParsedOptions& options) {
+    if (options.args.count("template-help")) {
+        print_template_variables();
+        return true;
+    }
+
     auto it_pattern = options.args.find("pattern");
     if (it_pattern != options.args.end()) {
         pattern_to_match = it_pattern->second;
