@@ -3,7 +3,10 @@
 #include <arkanjo/formatter/format_manager.hpp>
 
 void Config::setTestConfig() {
-    base_path = "tests/e2e/current/tmp/arkanjo";
+    fs::path cwd = fs::current_path();
+
+    base_path = cwd / "tests/e2e/current/tmp/arkanjo";
+    third_party_dir = cwd / "third-party";
 }
 
 void Config::setDefaultConfig() {
