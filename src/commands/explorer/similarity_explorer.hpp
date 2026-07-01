@@ -44,7 +44,7 @@ class SimilarityExplorer : public CommandBase<SimilarityExplorer> {
         {"cluster", 'c', NoArgument, "Print results with cluster relationships from the similarity table."},
         {"verbose", 0, NoArgument, "Enable verbose output"},
         {"template", 't', RequiredArgument, "Output format template for each result entry. Run --template-help to see available variables and an example."},
-        {"template-help", 0, NoArgument, "Show available template variables and style modifiers for --template."},
+        {"template-help", 0, NoArgument, "Show available template variables for --template."},
         OPTION_END
     };
     COMMAND_DESCRIPTION(
@@ -131,7 +131,7 @@ class SimilarityExplorer : public CommandBase<SimilarityExplorer> {
     std::vector<SimilarPair> build_similar_path_pairs();
 
     /**
-     * @brief Prints all available template variables and style modifiers to stdout.
+     * @brief Prints all available template variables for --template.
      */
     static void print_template_variables();
 
