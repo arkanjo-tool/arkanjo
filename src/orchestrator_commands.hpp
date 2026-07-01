@@ -10,6 +10,7 @@
 #include "commands/help/help.hpp"
 #include "commands/rand/random_selector.hpp"
 #include "commands/git/git_diff_function.hpp"
+#include "commands/pre/path/preprocessor_path.hpp"
 
 namespace OrchestratorCommands {
     static constexpr const char* DEFAULT_COMMAND = "help";
@@ -27,7 +28,7 @@ namespace OrchestratorCommands {
             {{"bigclone-evaluator"}, [&]() { return std::make_unique<BigCloneTailorEvaluator>(&table); }},
             {{"git-diff"}, [&]() { return std::make_unique<GitDiffFunction>(&table); }},
             {{"help"}, [&]() { return std::make_unique<Help>(commands); }},
-            {{"preprocessor"}, [&]() { return nullptr; }}
+            {{"preprocessor"}, [&]() { return std::make_unique<PreprocessorPath>(); }}
         };
 
         return commands;

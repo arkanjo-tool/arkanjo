@@ -11,7 +11,7 @@
 int main(int argc, char* argv[]) {
     auto& cfg = Config::config();
     cfg.setDefaultConfig();
-
+    
     Orchestrator orchestrator;
     Context ctx;
 
@@ -21,11 +21,6 @@ int main(int argc, char* argv[]) {
 
     ctx.argc = argc;
     ctx.argv = argv;
-
-    if (ctx.command_name == "preprocessor" && argc > 2 && std::string(argv[2]) == "path") {
-        std::cout << cfg.base_path.string() << "\n";
-        return 0;
-    }
 
     std::unique_ptr<ICommand> command;
     auto internal_commands = OrchestratorCommands::create_internal_commands(similarity_table);
@@ -52,12 +47,14 @@ int main(int argc, char* argv[]) {
             Config::config().name_container = it_name->second;
         }
         
-        if (ctx.command_name != "help" && ctx.options.args.count("help") == 0) {
+        if (ctx.command_name != "help" && ctx.command_name != "preprocessor" && ctx.options.args.count("help") == 0) {
             orchestrator.add_step([](Context& ctx) {
                 bool force_pre = ctx.options.args.count("preprocessor") > 0;
                 PreprocessorBuild pre(force_pre);
                 return true;
             });
+
+            
             orchestrator.add_step(OrchestratorHelper::similarity_step(similarity_table));
         }
 
