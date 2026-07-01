@@ -1,5 +1,4 @@
 #include "../src/commands/pre/build/preprocessor_build.hpp"
-#include <algorithm>
 #include <arkanjo/base/config.hpp>
 #include <arkanjo/utils/utils.hpp>
 #include <filesystem>
@@ -7,15 +6,15 @@
 #include <string>
 #include <vector>
 
-using namespace std;
+namespace fs = std::filesystem;
 
-const string EXPECTED_DIR = "tests/e2e/expected";
-const string CURRENT_DIR = "tests/e2e/current";
-const string CODEBASE_DIR = "tests/e2e/codebase";
+const fs::path EXPECTED_DIR = "tests/e2e/expected/tmp";
+const fs::path CURRENT_DIR = "tests/e2e/current/tmp/arkanjo/default";
+const fs::path CODEBASE_DIR = "tests/e2e/codebase";
 
-vector<string> skip_check_list = {"/tmp/arkanjo/source", "/tmp/arkanjo/info", "/tmp/arkanjo/header", "/tmp/arkanjo/config.json", "/tmp/arkanjo/output_tool.txt", "/tmp/arkanjo/output_parsed.txt", ".gitkeep"};
+std::vector<std::string> skip_check_list = {"config.json", ".gitkeep"};
 
-bool should_skip(string s) {
+bool should_skip(std::string s) {
     for (auto x : skip_check_list) {
         if (x == s) {
             return true;
@@ -24,82 +23,149 @@ bool should_skip(string s) {
     return false;
 }
 
-bool areEqualFile(string file1, string file2) {
-    vector<string> left = Utils::read_file_with_vector(file1);
-    vector<string> right = Utils::read_file_with_vector(file2);
+// Special comparison for output_parsed.txt because the last column
+// (similarity) is a floating-point value and is not guaranteed to be bitwise
+// deterministic across platforms. We compare only structural fields and allow
+// a small epsilon for the metric.
+bool are_equal_output_parsed(const std::vector<std::string>& left, const std::vector<std::string>& right) {
+    constexpr double EPS = 0.01;
 
-    if (left.size() != right.size()) {
-        return false;
-    }
+    for (size_t i = 0; i < left.size(); ++i) {
+        auto lp = left[i].find_last_of(' ');
+        auto rp = right[i].find_last_of(' ');
 
-    int sz = left.size();
+        if (lp == std::string::npos || rp == std::string::npos) {
+            if (left[i] == right[i])
+                continue;
 
-    for (int i = 0; i < sz; i++) {
-        if (left[i] != right[i]) {
             return false;
+        }
+
+        if (left[i].substr(0, lp) != right[i].substr(0, rp))
+            return false;
+
+        double a = std::stod(left[i].substr(lp + 1));
+        double b = std::stod(right[i].substr(rp + 1));
+
+        double diff = std::abs(a - b);
+
+        if (diff >= EPS)
+            return false;
+
+        if (diff > 0.0) {
+            std::cerr << "similarity differs within EPS (ignored) at line "
+                      << i + 1 << ": " << a << " vs " << b << "\n";
         }
     }
 
     return true;
 }
 
-string remove_prefix(const string& path, const string& prefix) {
-    if (path.find(prefix) == 0) return path.substr(prefix.size());
-    return path;
+bool are_equal_file(const fs::path& file1, const fs::path& file2) {
+    auto left = Utils::read_file_with_vector(file1);
+    auto right = Utils::read_file_with_vector(file2);
+
+    if (left.size() != right.size())
+        return false;
+
+    const bool is_output_parsed = file1.filename() == "output_parsed.txt";
+
+    if (is_output_parsed) {
+        bool res = are_equal_output_parsed(left, right);
+        return res;
+    }
+    
+    return left == right;
 }
 
-void Test() {
-    vector<string> expected_files;
-    vector<string> current_files;
+std::map<fs::path, fs::path> collect(const fs::path& root) {
+    std::map<fs::path, fs::path> files;
 
-    for (const auto& dirEntry : std::filesystem::recursive_directory_iterator(EXPECTED_DIR)) {
-        string file_path = dirEntry.path().string();
-        expected_files.push_back(file_path);
-    }
-    for (const auto& dirEntry : std::filesystem::recursive_directory_iterator(CURRENT_DIR)) {
-        string file_path = dirEntry.path().string();
-        current_files.push_back(file_path);
-    }
-
-    sort(expected_files.begin(), expected_files.end());
-    sort(current_files.begin(), current_files.end());
-
-    int ite = min((int)expected_files.size(), (int)current_files.size());
-
-    for (int i = 0; i < ite; i++) {
-        string expected_file = expected_files[i];
-        string current_file = current_files[i];
-
-        string expected_without_prefix = remove_prefix(expected_file, EXPECTED_DIR);
-        string current_without_prefix = remove_prefix(current_file, CURRENT_DIR);
-
-        if (should_skip(current_without_prefix)) {
+    for (const auto& entry : fs::recursive_directory_iterator(root)) {
+        if (!entry.is_regular_file())
             continue;
+
+        auto relative = fs::relative(entry.path(), root);
+
+        if (should_skip(relative))
+            continue;
+
+        files.emplace(relative, entry.path());
+    }
+
+    return files;
+}
+
+bool Test() {
+    auto expected_files = collect(EXPECTED_DIR);
+    auto current_files = collect(CURRENT_DIR);
+
+    for (const auto& [rel, expected_file] : expected_files) {
+        auto it = current_files.find(rel);
+
+        if (it == current_files.end()) {
+            std::cout << "TEST FAILED" << '\n';
+            std::cout << "Expected file with name " << expected_file << " but does not exist" << '\n';
+            return false;
         }
 
-        if (expected_without_prefix != current_without_prefix) {
-            if (expected_without_prefix < current_without_prefix) {
-                cout << "TEST FAILED" << '\n';
-                cout << "Expected file with name " << expected_file << " but does not exist" << '\n';
-                return;
-            } else {
-                cout << "TEST FAILED" << '\n';
-                cout << "Unexpected file with name " << current_file << " found" << '\n';
-                return;
+        if (!are_equal_file(expected_file, it->second)) {
+            std::cout << "TEST FAILED" << '\n';
+            std::cout << "File " << expected_file << " does not have the expected content" << '\n';
+
+            auto left = Utils::read_file_with_vector(expected_file);
+            auto right = Utils::read_file_with_vector(it->second);
+
+            for (size_t i = 0; i < std::min(left.size(), right.size()); ++i) {
+                if (left[i] != right[i]) {
+                    std::cout << "Difference at line " << i + 1 << '\n';
+                    std::cout << "Expected: " << std::quoted(left[i]) << '\n';
+                    std::cout << "Actual:   " << std::quoted(right[i]) << '\n';
+                    break;
+                }
             }
-        }
 
-        if (!areEqualFile(expected_file, current_file)) {
-            cout << "TEST FAILED" << '\n';
-            cout << "File " << expected_file << " does not have the expected content" << '\n';
-            return;
+            if (left.size() != right.size()) {
+                std::cout << "Different number of lines\n";
+            }
+
+            return false;
         }
     }
-    cout << "TEST PASSED" << '\n';
+
+    for (const auto& [relative_path, _] : current_files) {
+        if (expected_files.find(relative_path) == expected_files.end()) {
+            std::cout << "TEST FAILED" << '\n';
+            std::cout << "Unexpected file with name " << relative_path << " found" << '\n';
+            return false;
+        }
+    }
+    std::cout << "TEST PASSED" << '\n';
+
+    return true;
+}
+
+bool is_project_root() {
+    return fs::exists("build/arkanjo-test") &&
+           fs::exists("tests") &&
+           fs::exists("src");
 }
 
 int main(void) {
+    if (!is_project_root()) {
+        std::cerr
+            << "Error: tests must be run from the project root.\n"
+            << "Run:\n"
+            << "    ./build/arkanjo-test\n";
+
+        return EXIT_FAILURE;
+    }
+
     Config::config().setTestConfig();
+
     PreprocessorBuild(true, CODEBASE_DIR, 0);
-    Test();
+
+    return Test() 
+        ? EXIT_SUCCESS
+        : EXIT_FAILURE;
 }
