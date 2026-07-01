@@ -1,0 +1,93 @@
+name: Real-world report
+description: Report a finding discovered while analyzing a real-world project with ArKanjo.
+labels:
+  - real-world
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this!
+
+        This template is intended for findings from real-world open source projects.
+        Please provide enough information for the analysis to be reproduced.
+
+  - type: input
+    id: project
+    attributes:
+      label: Project
+      description: Name of the analyzed project.
+      placeholder: Linux kernel, Git, QEMU, PostgreSQL, ...
+    validations:
+      required: true
+
+  - type: input
+    id: project_revision
+    attributes:
+      label: Project version or commit
+      description: Release, tag, or commit SHA.
+      placeholder: v6.16, v2.51.0, a1b2c3d...
+    validations:
+      required: true
+
+  - type: input
+    id: arkanjo_version
+    attributes:
+      label: ArKanjo version
+      description: Release or commit SHA.
+      placeholder: v0.4.0, d4e5f6...
+    validations:
+      required: true
+
+  - type: input
+    id: arkanjo_method
+    attributes:
+      label: ArKanjo Method
+      description: Name, Short name, or Index
+      placeholder: gensim, ast, ...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - False positive
+        - False negative
+        - Crash
+        - Performance issue
+        - Bug in analyzed project
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Briefly describe what happened.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How to reproduce
+      description: Include the command line, options, configuration, or any other steps required to reproduce the result.
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: output
+    attributes:
+      label: Relevant output
+      description: Paste the relevant diagnostics, logs, or stack traces.
+      render: text
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Anything else that may help understand or reproduce the finding.
