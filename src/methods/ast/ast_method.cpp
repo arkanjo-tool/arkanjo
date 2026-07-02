@@ -133,7 +133,7 @@ void ASTMethod::compare_range(
             double sim = similarity_score(processed[i], processed[j]) * 100.0;
 
             if (sim >= similarity)
-                local.push_back({sim, processed[i].path, processed[j].path});
+                local.push_back({sim, processed[i].path.string(), processed[j].path.string()});
         }
     }
 }
