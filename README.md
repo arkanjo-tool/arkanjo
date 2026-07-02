@@ -50,10 +50,6 @@ Key findings from interactions with maintainers:
 
 These findings challenge the strict application of the DRY principle in large-scale systems.
 
-# Requirements
-
-The tool has only been tested on **Ubuntu** operating systems. An installation guide could be included.
-
 # How to install
 
 Download the source code:
