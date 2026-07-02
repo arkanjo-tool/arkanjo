@@ -11,7 +11,41 @@
 #define ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004
 #endif
 
-std::tuple<int, int, int> UtilsOSDependable::parse_terminal_color_response() {
+std::tuple<int, int, int> UtilsOSDependable::parse_terminal_color_response(const std::string& response) {
+    // Parse RGB from response
+    size_t start = response.find("rgb:");
+    if (start == std::string::npos)
+        return {0,0,0};
+    start += 4;
+
+    size_t end = response.find("/", start);
+    if (end == std::string::npos)
+        return {0,0,0};
+    std::string rStr = response.substr(start, end - start);
+
+    start = end + 1;
+    end = response.find("/", start);
+    if (end == std::string::npos)
+        return {0,0,0};
+    std::string gStr = response.substr(start, end - start);
+
+    start = end + 1;
+    end = response.find("\x1b", start);
+    if (end == std::string::npos)
+        return {0,0,0};
+    std::string bStr = response.substr(start, end - start);
+
+    try {
+        auto r = std::stoi(rStr, nullptr, 16) / 256;
+        auto g = std::stoi(gStr, nullptr, 16) / 256;
+        auto b = std::stoi(bStr, nullptr, 16) / 256;
+        return {r, g, b};
+    } catch (...) {
+        return {0, 0, 0};
+    }
+}
+
+std::string UtilsOSDependable::capture_terminal_response() {
     HANDLE hInput = GetStdHandle(STD_INPUT_HANDLE);
     HANDLE hOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -50,41 +84,12 @@ std::tuple<int, int, int> UtilsOSDependable::parse_terminal_color_response() {
     SetConsoleMode(hInput, originalInMode);
     SetConsoleMode(hOutput, originalOutMode);
 
-    // Parse RGB from response
-    size_t start = response.find("rgb:");
-    if (start == std::string::npos)
-        return {0,0,0};
-    start += 4;
-
-    size_t end = response.find("/", start);
-    if (end == std::string::npos)
-        return {0,0,0};
-    std::string rStr = response.substr(start, end - start);
-
-    start = end + 1;
-    end = response.find("/", start);
-    if (end == std::string::npos)
-        return {0,0,0};
-    std::string gStr = response.substr(start, end - start);
-
-    start = end + 1;
-    end = response.find("\x1b", start);
-    if (end == std::string::npos)
-        return {0,0,0};
-    std::string bStr = response.substr(start, end - start);
-
-    try {
-        auto r = std::stoi(rStr, nullptr, 16) / 256;
-        auto g = std::stoi(gStr, nullptr, 16) / 256;
-        auto b = std::stoi(bStr, nullptr, 16) / 256;
-        return {r, g, b};
-    } catch (...) {
-        return {0, 0, 0};
-    }
+    return response;
 }
 
 float UtilsOSDependable::get_terminal_bg_color_luminance() {
-    auto [r, g, b] = parse_terminal_color_response();
+    std::string color_str = capture_terminal_response();
+    auto [r, g, b] = parse_terminal_color_response(color_str);
     float luminance = 0.2126 * (r / 255.0) + 0.7152 * (g / 255.0) + 0.0722 * (b / 255.0);
 
     return luminance;
