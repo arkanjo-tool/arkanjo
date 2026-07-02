@@ -1,3 +1,5 @@
+\page developer-guide Developer Guide
+
 # Similarity Model
 
 ArKanjo represents code duplication as a graph, implemented in the `Similarity_Table` class.

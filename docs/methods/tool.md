@@ -1,3 +1,5 @@
+\page method Method
+
 # NLP text similarity using gensim
 
 A function-level duplication detector that uses classical NLP techniques to compute semantic similarity between code functions.

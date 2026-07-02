@@ -1,3 +1,5 @@
+\page method Method
+
 # Embedding-based detection method
 
 A function-level code duplication detector that measures *semantic* similarity

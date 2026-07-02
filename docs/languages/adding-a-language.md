@@ -1,3 +1,5 @@
+\page languages Languages
+
 # Adding a Language
 
 ArKanjo uses Tree-sitter to parse source code. The languages that should be recognized are configured in `config.json`.

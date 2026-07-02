@@ -1,3 +1,5 @@
+\page developer-guide Developer Guide
+
 # Architecture
 
 ArKanjo follows a two-stage architecture designed to scale for large codebases:

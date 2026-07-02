@@ -1,3 +1,5 @@
+\page developer-guide Developer Guide
+
 # Testing
 
 ArKanjo currently provides an end-to-end (E2E) test suite that verifies the generated output against the expected results.
