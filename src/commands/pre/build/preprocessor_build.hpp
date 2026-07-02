@@ -32,6 +32,8 @@ using MethodFactory = std::function<std::unique_ptr<IMethod>(
 )>;
 
 struct MethodInfo {
+  size_t id;
+  std::string_view name;
   MethodFactory create;
   std::string_view description;
 };
@@ -74,6 +76,8 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
 
     const std::vector<MethodInfo> MethodsType = {
       {
+        1,
+        "gensim",
         [](const std::string& base_path, float similarity,
            const std::vector<std::string>&) {
           return std::make_unique<ToolMethod>(base_path, similarity);
@@ -81,6 +85,8 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
         "NLP text similarity using gensim"
       },
       {
+        2,
+        "diff",
         [](const std::string& base_path, float similarity,
            const std::vector<std::string>&) {
           return std::make_unique<DiffMethod>(base_path, similarity);
@@ -88,6 +94,8 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
         "Count proportion of equal lines using diff command"
       },
       {
+        3,
+        "tree-sitter",
         [](const std::string& base_path, float similarity,
            const std::vector<std::string>&) {
           return std::make_unique<ASTMethod>(base_path, similarity);
@@ -95,6 +103,8 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
         "Compare linearized structural sequences extracted from Tree-sitter ASTs"
       },
       {
+        4,
+        "language-model",
         [](const std::string& base_path, float similarity,
            const std::vector<std::string>& pass_through_args) {
           return std::make_unique<LLMMethod>(base_path, similarity, pass_through_args);
@@ -137,6 +147,8 @@ class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBu
         "Comparison granularity: 'function' (default) compares individual "
         "functions; 'file' keeps each file whole and compares files against "
         "each other. Applies to every duplication finder method."},
+      {"method", 0, RequiredArgument,
+        "Duplication finder method: 1|gensim, 2|diff, 3|tree-sitter, 4|language-model."},
       OPTION_END
     };
     PreprocessorBuild();
