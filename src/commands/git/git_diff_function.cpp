@@ -42,7 +42,12 @@ bool GitDiffFunction::run(const ParsedOptions& options) {
     Path second_path = choose_single_path(second_candidates, options.extra_args[1]);
 
     if (!similarity_table->is_similar(first_path, second_path)) {
-        std::cerr << "The selected functions are not flagged as duplicates in the similarity table.\n";
+        auto similarity =similarity_table->get_threshold_similarity();
+
+        std::ostringstream ss;
+        ss << std::fixed << std::setprecision(2) << similarity;
+
+        throw CLIError("The selected functions are not flagged as duplicates in the similarity table (similarity: " + ss.str() + ").");
         return false;
     }
 

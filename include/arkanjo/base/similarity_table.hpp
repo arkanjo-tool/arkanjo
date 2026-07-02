@@ -182,6 +182,12 @@ class Similarity_Table {
      */
     double get_similarity(const Path& path1, const Path& path2);
 
+    /**
+     * @brief Gets the similarity threshold.
+     * @return double Similarity threshold value.
+     */
+    double get_threshold_similarity() const;
+
     const Path& get_path(PathId id) const;
 
     /**
