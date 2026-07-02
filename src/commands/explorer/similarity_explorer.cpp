@@ -5,7 +5,6 @@ The code filter every file that has the pattern as a substring, so be carefull w
 */
 
 #include <algorithm>
-#include <iostream>
 #include <utility>
 
 #include <arkanjo/formatter/format_manager.hpp>
@@ -189,7 +188,27 @@ bool SimilarityExplorer::validate(const ParsedOptions& options) {
     return true;
 }
 
+void SimilarityExplorer::print_template_variables() {
+    SimilarityExplorerEntry entry = {};
+    json j;
+    to_json(j, entry);
+
+    fm::write(BOLD("Available variables for --template:"));
+    for (const auto& [k, _] : j.items()) {
+        fm::write("  {" + k + "}");
+    }
+
+    fm::write("");
+    fm::write(BOLD("Example:"));
+    fm::write("  arkanjo explorer --template \"{func_a:function} ~ {func_b:function} ({duplicated_lines:number} lines)\"\n");
+}
+
 bool SimilarityExplorer::run(const ParsedOptions& options) {
+    if (options.args.count("template-help")) {
+        print_template_variables();
+        return true;
+    }
+
     auto it_pattern = options.args.find("pattern");
     if (it_pattern != options.args.end()) {
         pattern_to_match = it_pattern->second;
