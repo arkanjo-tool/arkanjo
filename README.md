@@ -69,7 +69,7 @@ The binaries will be generated in the `build/` directory.
 Optionally, install the binaries using:
 
 ```sh
-cmake --install .
+cmake --install . [--prefix ~/.local]
 ```
 
 ## Methods
