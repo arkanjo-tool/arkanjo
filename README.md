@@ -56,15 +56,6 @@ The tool has only been tested on **Ubuntu** operating systems. An installation g
 
 # How to install
 
-Run the following commands in the terminal to install the optional Python dependencies required only for the NLP text similarity method using gensim:
-
-```sh
-pip3 install --user nltk
-pip3 install --user gensim
-pip3 install --user astor
-python3 -m nltk.downloader punkt
-```
-
 Download the source code:
 
 ```sh
@@ -88,6 +79,14 @@ Optionally, install the binaries using:
 ```sh
 cmake --install .
 ```
+
+## Methods
+
+ArKanjo supports multiple code duplication detection methods.
+
+See the documentation for details:
+
+- [Methods documentation](docs/methods/)
 
 # How to Run
 
