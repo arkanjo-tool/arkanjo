@@ -23,11 +23,7 @@ If the threshold is set to **0.0**, everything is considered a duplication. If t
 to **100.0**, only completely equal functions are considered duplications. In its current state, 
 the tool provides good results with similarity thresholds around **90.0**.
 
-The ArKanjo tool uses the
-[Duplicate Code Detection Tool](https://github.com/platisd/duplicate-code-detection-tool) 
-as a subroutine to generate the similarity metrics.
-
-For more details about the similarity model, see [`docs/similarity.md`](docs/similarity.md).
+For more details about the similarity model, see [**Similarity Model**](docs/developer-guide/similarity-model.md).
 
 # Insights from the Linux Kernel
 
