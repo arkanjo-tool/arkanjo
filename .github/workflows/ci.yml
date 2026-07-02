@@ -19,33 +19,14 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v6
 
-    - name: Install dependencies on Ubuntu
-      if: matrix.os == 'ubuntu-latest'
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y python3-venv cmake build-essential
-        python3 -m venv venv
+    - name: Setup environment
+      uses: ./.github/actions/setup-env
 
-    - name: Install dependencies on macOS
-      if: matrix.os == 'macos-latest'
+    - name: Install Python dependencies
       run: |
-        brew install python@3.11 cmake
-        echo "/opt/homebrew/opt/python@3.11/bin" >> $GITHUB_PATH
-        python3.11 -m venv venv
-
-    - name: Install dependencies on Windows
-      if: matrix.os == 'windows-latest'
-      run: |
-        choco install python cmake -y
-        py -3 -m venv venv
-
-    - name: Setup Python virtual environment
-      run: |
-        source venv/bin/activate || call venv\Scripts\activate
         python -m pip install --upgrade pip
-        python -m pip install nltk gensim astor
-        python -m nltk.downloader punkt
-        python -m nltk.downloader punkt_tab
+        python -m pip install -r third-party/duplicate-code-detection-tool/requirements.txt
+        python -m nltk.downloader punkt punkt_tab
 
     - name: Configure CMake
       run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DCMAKE_INSTALL_PREFIX=$HOME/.local

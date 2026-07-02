@@ -1,0 +1,24 @@
+name: "Setup Python Environment"
+description: "Creates venv, installs dependencies and configures PATH"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+
+    - name: Create venv
+      shell: bash
+      run: python -m venv venv
+
+    - name: Add venv to PATH (Linux/macOS)
+      if: runner.os != 'Windows'
+      shell: bash
+      run: echo "$GITHUB_WORKSPACE/venv/bin" >> $GITHUB_PATH
+
+    - name: Add venv to PATH (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: echo "${{ github.workspace }}\venv\Scripts" >> $env:GITHUB_PATH
