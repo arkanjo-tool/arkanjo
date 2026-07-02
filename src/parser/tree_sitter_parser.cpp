@@ -17,7 +17,7 @@ bool TreeSitterParser::is_function_empty(TSNode body) {
     return n == 0;
 }
 
-std::string TreeSitterParser::detect_language(const std::string& path) {
+std::string TreeSitterParser::detect_language(const fs::path& path) {
     static auto ext_map = get_extension_map();
 
     std::string ext = fs::path(path).extension().string();

@@ -5,16 +5,16 @@
 #include <arkanjo/commands/pre/preprocessor.hpp>
 
 void Function::read_content() {
-    std::string source_path = path.build_source_path();
+    fs::path source_path = path.build_source_path();
     content = Utils::read_file_with_vector(source_path);
 }
 
 void Function::read_header() {
-    std::string header_path = path.build_header_path();
+    fs::path header_path = path.build_header_path();
     header = Utils::read_file_with_vector(header_path);
 }
 void Function::read_info() {
-    std::string info_path = path.build_info_path();
+    fs::path info_path = path.build_info_path();
     json info = Utils::read_json(info_path);
     line_declaration = info.value(LINE_DECLARATION_JSON, -1);
     start_number_line = info.value(START_NUMBER_LINE_JSON, -1);
@@ -66,8 +66,8 @@ void Function::print_basic_info() {
     auto params = Preprocessor::read_current_run_params();
 
     std::string function_message = FUNCTION_PREFIX_PRINT + path.build_function_name();
-    std::string relative_path = fs::path{params[0]} / fs::path{path.build_relative_path()};
-    std::string relative_message = RELATIVE_PATH_PRINT + relative_path;
+    fs::path relative_path = fs::path{params[0]} / fs::path{path.build_relative_path()};
+    std::string relative_message = RELATIVE_PATH_PRINT + relative_path.string();
     std::string start_message = LINE_DECLARATION_PRINT + std::to_string(line_declaration + 1) + "-" + std::to_string(end_number_line + 1);
     std::string number_message = NUMBER_LINE_PRINT + std::to_string(number_of_lines());
 

@@ -102,7 +102,7 @@ void ASTMethod::save_duplications(std::vector<DuplicationEntry>& file_duplicatio
 }
 
 void ASTMethod::header_duplications() {
-    std::string output_file_path = base_path / "output_parsed.tmp";
+    fs::path output_file_path = base_path / "output_parsed.tmp";
 
     output_file.open(
         output_file_path,
