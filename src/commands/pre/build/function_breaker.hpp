@@ -24,6 +24,7 @@
 #include <tree_sitter/api.h>
 
 #include <arkanjo/base/function/function_data.hpp>
+#include <arkanjo/parser/tree_sitter_parser.hpp>
 
 namespace fs = std::filesystem;
 
@@ -100,6 +101,7 @@ class FunctionBreaker {
     void file_breaker(
       const fs::path& file_path, const fs::path& folder_path,
       std::function<void(const FunctionData&)> on_function,
+      SkipStats& stats,
       Granularity granularity = Granularity::Function,
       int minimum_lines = 0);
 
@@ -113,6 +115,7 @@ class FunctionBreaker {
     int process(
       const fs::path& folder_path,
       std::function<void(const FunctionData&)> on_function,
+      SkipStats& stats,
       int minimum_lines = 0,
       Granularity granularity = Granularity::Function);
 

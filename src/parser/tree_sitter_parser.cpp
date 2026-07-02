@@ -98,17 +98,48 @@ TSNode TreeSitterParser::get_body(TSNode node) {
     return TSNode{};
 }
 
+bool TreeSitterParser::should_ignore(TSNode node) {
+    size_t errors = 0;
+    size_t size = 0;
+
+    std::function<void(TSNode)> dfs = [&](TSNode n) {
+        size++;
+
+        if (ts_node_is_error(n))
+            errors++;
+
+        uint32_t child_count = ts_node_child_count(n);
+        for (uint32_t i = 0; i < child_count; i++)
+            dfs(ts_node_child(n, i));
+    };
+
+    dfs(node);
+
+    if (size == 0) return false;
+
+    double ratio = static_cast<double>(errors) / static_cast<double>(size);
+    int threshold = 1 + static_cast<int>(std::log2(size));
+
+    return (errors > threshold) || (ratio > 0.1);
+}
+
 void TreeSitterParser::collect_functions(
     TSNode node, 
     const std::string& source, 
     const fs::path& relative_path,
     const std::shared_ptr<TSTree>& tree,
-    std::function<void(const FunctionData&)> callback
+    std::function<void(const FunctionData&)> callback,
+    SkipStats& stats
 ) {
     std::string_view type = ts_node_type(node);
     if (FeatureExtractor::is_function_node(type)) {
         TSPoint start = ts_node_start_point(node);
         TSPoint end = ts_node_end_point(node);
+
+        if (TreeSitterParser::should_ignore(node)) {
+            stats.errors++;
+            return;
+        }
 
         TSNode body = get_body(node);
 
@@ -154,7 +185,8 @@ void TreeSitterParser::collect_functions(
             source,
             relative_path,
             tree,
-            callback
+            callback,
+            stats
         );
     }
 }
@@ -202,14 +234,15 @@ void TreeSitterParser::process_file(
     const fs::path& file_path,
     const fs::path& relative_path,
     const std::string& source_code,
-    std::function<void(const FunctionData&)> callback
+    std::function<void(const FunctionData&)> callback,
+    SkipStats& stats
 ) {
     std::shared_ptr<TSTree> tree = parse_source(file_path, source_code);
     if (!tree) return;
 
     TSNode root_node = ts_tree_root_node(tree.get());
 
-    collect_functions(root_node, source_code, relative_path, tree, callback);
+    collect_functions(root_node, source_code, relative_path, tree, callback, stats);
 
     tree.reset();
 }
@@ -218,7 +251,8 @@ void TreeSitterParser::process_file_as_unit(
     const fs::path& file_path,
     const fs::path& relative_path,
     const std::string& source_code,
-    std::function<void(const FunctionData&)> callback
+    std::function<void(const FunctionData&)> callback,
+    SkipStats& stats
 ) {
     std::shared_ptr<TSTree> tree = parse_source(file_path, source_code);
     if (!tree) return;

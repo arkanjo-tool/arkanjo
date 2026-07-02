@@ -133,13 +133,16 @@ void PreprocessorBuild::preprocess(const fs::path& path, double similarity, size
     auto method = MethodsType[use_duplication_finder_index].create(
         base_path, similarity, pass_through_args);
 
+    SkipStats stats = {};
+
     FunctionBreaker function_breaker;
     auto size_files = function_breaker.process(path, [&method](const FunctionData& fd) {
         method->on_function(fd);
-    }, minimum_lines, granularity);
+    }, stats, minimum_lines, granularity);
 
     if (mode_verbose) {
         fm::write("\tFound " + std::to_string(size_files) + " files");
+        fm::write("\tSkipped " + std::to_string(stats.errors) +" parser errors");
         fm::time("\tExecution time breaker:", start_breaker);
     }
 

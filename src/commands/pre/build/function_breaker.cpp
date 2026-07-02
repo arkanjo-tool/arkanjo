@@ -2,7 +2,6 @@
 #include <iostream>
 #include <unordered_map>
 #include <arkanjo/utils/utils.hpp>
-#include <arkanjo/parser/tree_sitter_parser.hpp>
 #include <arkanjo/base/config.hpp>
 #include <arkanjo/base/features/source_feature.hpp>
 #include <arkanjo/base/features/ast_feature.hpp>
@@ -60,6 +59,7 @@ std::string FunctionBreaker::create_info_json(
 void FunctionBreaker::file_breaker(
     const fs::path& file_path, const fs::path& folder_path,
     std::function<void(const FunctionData&)> on_function,
+    SkipStats& stats,
     Granularity granularity,
     int minimum_lines
 ) {
@@ -94,9 +94,9 @@ void FunctionBreaker::file_breaker(
     };
 
     if (granularity == Granularity::File) {
-        TreeSitterParser::process_file_as_unit(file_path, relative_path, source_code, handle_unit);
+        TreeSitterParser::process_file_as_unit(file_path, relative_path, source_code, handle_unit, stats);
     } else {
-        TreeSitterParser::process_file(file_path, relative_path, source_code, handle_unit);
+        TreeSitterParser::process_file(file_path, relative_path, source_code, handle_unit, stats);
     }
 }
 
@@ -104,6 +104,7 @@ void FunctionBreaker::file_breaker(
 int FunctionBreaker::process(
     const fs::path& folder_path,
     std::function<void(const FunctionData&)> on_function,
+    SkipStats& stats,
     int minimum_lines,
     Granularity granularity
 ) {
@@ -113,7 +114,7 @@ int FunctionBreaker::process(
         if (!dirEntry.is_regular_file()) continue;
 
         auto path = dirEntry.path();
-        file_breaker(path, folder_path, on_function, granularity, minimum_lines);
+        file_breaker(path, folder_path, on_function, stats, granularity, minimum_lines);
 
         size_files++;
     }
