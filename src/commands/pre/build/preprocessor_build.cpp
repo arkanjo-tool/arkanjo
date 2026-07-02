@@ -32,9 +32,18 @@ PreprocessorBuild::read_parameters(const std::optional<ParsedOptions>& options) 
     }
     fs::path path(path_str);
 
-    fm::write(MINIMUM_SIMILARITY_MESSAGE);
-    std::cin >> similarity_message;
-    double similarity = stod(similarity_message);
+    double similarity = 0.0;
+    if (options) {
+        auto it = options->args.find("similarity");
+        if (it != options->args.end() && !it->second.empty()) {
+            similarity = std::stod(it->second);
+        }
+    }
+    if (similarity == 0.0) {
+        fm::write(MINIMUM_SIMILARITY_MESSAGE);
+        std::cin >> similarity_message;
+        similarity = stod(similarity_message);
+    }
 
     size_t use_duplication_finder_index = 0;
 
