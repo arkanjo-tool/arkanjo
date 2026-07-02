@@ -13,9 +13,8 @@ The NLP dependencies are **not** installed by default.
 Install them using:
 
 ```sh
-pip3 install --user nltk
-pip3 install --user gensim
-pip3 install --user astor
+python3 -m pip install -r third-party/duplicate-code-detection-tool/requirements.txt
+
 python3 -m nltk.downloader punkt
 ```
 
