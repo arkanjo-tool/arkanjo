@@ -30,12 +30,6 @@ bool SimilarityExplorer::match_pattern(const Path& path1, const Path& path2) con
     return match1 || match2;
 }
 
-int SimilarityExplorer::find_number_lines(const Path& path1) {
-    Function function(path1);
-    function.load();
-    return function.number_of_lines();
-}
-
 SimilarityExplorerEntry SimilarityExplorer::process_similar_path_pair(const Path& path1, const Path& path2) {
     if (!match_pattern(path1, path2)) {
         return {};
@@ -109,12 +103,16 @@ void SimilarityExplorer::explorer_clusters() {
 
         std::vector<SimilarityExplorerEntry> entries{};
         for (const auto& path : info.paths) {
+            Function function(path);
+            function.load();
             entries.push_back({
                 path.format_path_message_in_pair(), "", 
                 path.build_relative_path().parent_path().string(), "",
                 path.build_relative_path().filename().string(), "",
                 path.build_function_name(), "",
-                find_number_lines(path)
+                function.get_scope_function_in_file()[0], 0,
+                function.get_scope_function_in_file()[2], 0,
+                function.number_of_lines()
             });
         }
 

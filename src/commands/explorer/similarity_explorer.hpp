@@ -103,13 +103,6 @@ class SimilarityExplorer : public CommandBase<SimilarityExplorer> {
     bool match_pattern(const Path& path1, const Path& path2) const;
 
     /**
-     * @brief Gets line count for a path
-     * @param path1 Path to check
-     * @return int Number of lines
-     */
-    static int find_number_lines(const Path& path1);
-
-    /**
      * @brief Processes a pair of similar paths
      * @param path1 First path in pair
      * @param path2 Second path in pair
