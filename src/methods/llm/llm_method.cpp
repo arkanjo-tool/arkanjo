@@ -86,9 +86,9 @@ std::vector<DuplicationEntry> LLMMethod::read_results(FILE* pipe) const {
 }
 
 void LLMMethod::save_duplications(std::vector<DuplicationEntry>& file_duplication_pairs) {
-    std::string output_file_path = base_path / "output_parsed.txt";
+    fs::path output_file_path = base_path / "output_parsed.txt";
 
-    auto fout = std::ofstream(output_file_path);
+    auto fout = std::ofstream(output_file_path.string());
 
     fout << file_duplication_pairs.size() << '\n';
     for (const auto& [similarity, path1, path2] : file_duplication_pairs) {

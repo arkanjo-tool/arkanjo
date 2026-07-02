@@ -69,8 +69,8 @@ bool Path::operator<(const Path& path) const {
 }
 
 bool Path::contains_given_pattern(const std::string& pattern) const {
-    std::string relative_path_plus_function_name = build_relative_path() / build_function_name();
-    return relative_path_plus_function_name.find(pattern) != std::string::npos;
+    fs::path relative_path_plus_function_name = build_relative_path() / build_function_name();
+    return relative_path_plus_function_name.string().find(pattern) != std::string::npos;
 }
 
 std::string Path::format_path_message_in_pair() const {

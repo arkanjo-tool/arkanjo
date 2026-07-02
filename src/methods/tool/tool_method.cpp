@@ -21,12 +21,12 @@ void ToolMethod::execute_by_feature(const fs::path& folder_path, const std::stri
     fs::current_path(folder_path);
 
     std::string command_tool = "python3 -W ignore ";
-    command_tool += Config::config().third_party_dir;
+    command_tool += Config::config().third_party_dir.string();
     command_tool += "/duplicate-code-detection-tool/duplicate_code_detection.py";
     command_tool += " --project-root-dir ";
-    command_tool += folder_path;
+    command_tool += folder_path.string();
     command_tool += " -d ";
-    command_tool += folder_path;
+    command_tool += folder_path.string();
 
     fm::write(SAVING_MESSAGE);
     
