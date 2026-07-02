@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
         {{"build"}, [&]() { return std::make_unique<PreprocessorBuild>(); }},
         {{"list", "ls"}, [&]() { return std::make_unique<PreprocessorList>(); }},
         {{"clean"}, [&]() { return std::make_unique<PreprocessorClean>(); }},
-        {{"path"}, [&]() { return std::make_unique<PreprocessorPath>(); }}
+        {{"path"}, [&]() { return std::make_unique<PreprocessorPath>(); }},
     };
 
     std::unique_ptr<ICommand> command;

@@ -28,7 +28,7 @@ namespace OrchestratorCommands {
             {{"bigclone-evaluator"}, [&]() { return std::make_unique<BigCloneTailorEvaluator>(&table); }},
             {{"git-diff"}, [&]() { return std::make_unique<GitDiffFunction>(&table); }},
             {{"help"}, [&]() { return std::make_unique<Help>(commands); }},
-            {{"preprocessor"}, [&]() { return std::make_unique<PreprocessorPath>(); }}
+            {{"preprocessor"}, [&]() { return nullptr; }},
         };
 
         return commands;
