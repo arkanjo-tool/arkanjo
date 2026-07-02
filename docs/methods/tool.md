@@ -22,45 +22,57 @@ python3 -m nltk.downloader punkt
 
 ## Notes
 
-We have $\mathcal{V}$, where it is defined by the set of all possible words (*tokens*).
+We have @f$\mathcal{V}@f$, where it is defined by the set of all possible words (*tokens*).
 
-$$\mathcal{V}=\{w_1​,w_2​,\dots,w_n\}$$
+@f[
+    \mathcal{V}=\{w_1​,w_2​,\dots,w_n\}
+@f]
 
-For each function $f$, we have a list of words.
+For each function @f$f@f$, we have a list of words.
 
-$$f = \left(\text{"int"}, \text{"main"}, \text{"return"}, \text{"0"}, \dots\right)$$
+@f[
+    f = \left(\text{"int"}, \text{"main"}, \text{"return"}, \text{"0"}, \dots\right)
+@f]
 
 Each function body becomes a counting vector:
 
-$$\text{BoW}(f)=(c_1​,c_2​,\dots,c_n​)$$
+@f[
+    \text{BoW}(f)=(c_1​,c_2​,\dots,c_n​)
+@f]
 
 where
 
-$$c_i​=\text{number of times that $w_i$ appears in $f$}$$
+@f[
+    c_i​=\text{number of times that $w_i$ appears in $f$}
+@f]
 
 and then we calculate the relative frequency of the word in the document
 
-$$\text{TF}(w,f)=\frac{\text{freq}(w,f)}{\sum_k\text{freq}(w_k,f)}$$
+@f[
+    \text{TF}(w,f)=\frac{\text{freq}(w,f)}{\sum_k\text{freq}(w_k,f)}
+@f]
 
 and Inverse Document Frequency for common words to be less impactful than rare words
 
-$$\text{IDF}(w)=\log\left(\frac{N}{\text{df}(w)}\right)$$
+@f[
+    \text{IDF}(w)=\log\left(\frac{N}{\text{df}(w)}\right)
+@f]
 
-$$N=\text{total number of functions}$$
-$$\text{df}(w)=\text{number of functions that contain $w$}$$
+@f[N=\text{total number of functions}@f]
+@f[\text{df}(w)=\text{number of functions that contain $w$}@f]
 
 concluding the result by the weight of each word as
 
-$$\text{TF-IDF}(w,f)=\text{TF}(w,f)\cdot\text{IDF}(w)$$
+@f[\text{TF-IDF}(w,f)=\text{TF}(w,f)\cdot\text{IDF}(w)@f]
 
-Each function body is represented as a vector $\vec{f}$ defined by
+Each function body is represented as a vector @f$\vec{f}@f$ defined by
 
-$$\vec{f}=(x_1,x_2,\dots,x_n)$$
-$$x_i=\text{TF-IDF}(w_i,f)$$
+@f[\vec{f}=(x_1,x_2,\dots,x_n)@f]
+@f[x_i=\text{TF-IDF}(w_i,f)@f]
 
 Finally, the calculation of similarity between two functions.
 
-$$\text{sim}(f_1,f_2)=\frac{\vec{f}_1\cdot\vec{f}_2}{\lvert\lvert\vec{f}_1\rvert\rvert\cdot\lvert\lvert\vec{f}_2\rvert\rvert}$$
+@f[\text{sim}(f_1,f_2)=\frac{\vec{f}_1\cdot\vec{f}_2}{||\vec{f}_1||\cdot||\vec{f}_2||}@f]
 
 ### Intuitions
 

@@ -8,7 +8,7 @@ ArKanjo represents code duplication as a graph, implemented in the `Similarity_T
 
 - Nodes: functions (identified by their path)
 - Edges: similarity between functions
-- Weight: similarity score ($0.0$ - $1.0$)
+- Weight: similarity score (@f$0.0@f$ - @f$1.0@f$)
 
 ```
 A ------0.9------ B
@@ -24,7 +24,9 @@ A ------0.9------ B
 
 Edges are considered during analysis only if:
 
-$$\text{similarity} \geq \text{threshold}$$
+@f[
+    \text{similarity} \geq \text{threshold}
+@f]
 
 ## Implementation
 

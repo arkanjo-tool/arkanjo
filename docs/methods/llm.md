@@ -52,7 +52,7 @@ arkanjo-preprocessor build --path <path> \
 
 ## Notes
 
-- **Cost is $O(n^2)$**: every function is compared against every other. The
+- **Cost is @f$O(n^2)@f$**: every function is compared against every other. The
   embedding step is vectorized, but the comparison matrix sets the cost ceiling
   on large codebases.
 - To switch the embedding model, either pass `-- --model NAME` or edit
