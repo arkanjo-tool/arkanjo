@@ -23,11 +23,7 @@ If the threshold is set to **0.0**, everything is considered a duplication. If t
 to **100.0**, only completely equal functions are considered duplications. In its current state, 
 the tool provides good results with similarity thresholds around **90.0**.
 
-The ArKanjo tool uses the
-[Duplicate Code Detection Tool](https://github.com/platisd/duplicate-code-detection-tool) 
-as a subroutine to generate the similarity metrics.
-
-For more details about the similarity model, see [`docs/similarity.md`](docs/similarity.md).
+For more details about the similarity model, see [**Similarity Model**](docs/developer-guide/similarity-model.md).
 
 # Insights from the Linux Kernel
 
@@ -50,20 +46,7 @@ Key findings from interactions with maintainers:
 
 These findings challenge the strict application of the DRY principle in large-scale systems.
 
-# Requirements
-
-The tool has only been tested on **Ubuntu** operating systems. An installation guide could be included.
-
 # How to install
-
-Run the following commands in the terminal to install the optional Python dependencies required only for the NLP text similarity method using gensim:
-
-```sh
-pip3 install --user nltk
-pip3 install --user gensim
-pip3 install --user astor
-python3 -m nltk.downloader punkt
-```
 
 Download the source code:
 
@@ -86,8 +69,16 @@ The binaries will be generated in the `build/` directory.
 Optionally, install the binaries using:
 
 ```sh
-cmake --install .
+cmake --install . [--prefix ~/.local]
 ```
+
+## Methods
+
+ArKanjo supports multiple code duplication detection methods.
+
+See the documentation for details:
+
+- [Methods documentation](docs/methods/)
 
 # How to Run
 

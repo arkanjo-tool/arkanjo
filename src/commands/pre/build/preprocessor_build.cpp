@@ -1,6 +1,7 @@
 #include "preprocessor_build.hpp"
 #include <cassert>
 #include <iostream>
+#include <algorithm>
 #include <optional>
 
 #include <arkanjo/base/config.hpp>
@@ -32,29 +33,64 @@ PreprocessorBuild::read_parameters(const std::optional<ParsedOptions>& options) 
     }
     fs::path path(path_str);
 
-    fm::write(MINIMUM_SIMILARITY_MESSAGE);
-    std::cin >> similarity_message;
-    double similarity = stod(similarity_message);
+    double similarity = 0.0;
+    if (options) {
+        auto it = options->args.find("similarity");
+        if (it != options->args.end() && !it->second.empty()) {
+            similarity = std::stod(it->second);
+        }
+    }
+    if (similarity == 0.0) {
+        fm::write(MINIMUM_SIMILARITY_MESSAGE);
+        std::cin >> similarity_message;
+        similarity = stod(similarity_message);
+    }
 
     size_t use_duplication_finder_index = 0;
+    bool method_from_option = false;
 
-    while (true) {
-        fm::write(MESSAGE_DUPLICATION_FINDER_TYPE);
-        for (size_t i = 0; i < MethodsType.size(); ++i) {
-            std::cout << i + 1 << ") " << MethodsType[i].description << '\n';
+    if (options) {
+        auto it = options->args.find("method");
+        if (it != options->args.end() && !it->second.empty()) {
+            const auto& val = it->second;
+            auto found = std::find_if(MethodsType.begin(), MethodsType.end(),
+                [&val](const MethodInfo& mi) {
+                    return std::to_string(mi.id) == val || mi.name == val;
+                });
+            if (found == MethodsType.end()) {
+                std::string valid_methods;
+                for (size_t i = 0; i < MethodsType.size(); ++i) {
+                    if (i > 0) valid_methods += ", ";
+                    valid_methods += std::to_string(MethodsType[i].id);
+                    valid_methods += "|";
+                    valid_methods += MethodsType[i].name;
+                }
+                throw CLIError(
+                    "Invalid --method value: '" + val +
+                    "'. Use " + valid_methods + ".");
+            }
+            use_duplication_finder_index = found->id - 1;
+            method_from_option = true;
         }
-
-        std::cin >> use_duplication_finder_index;
-
-        if (
-            use_duplication_finder_index == 0 ||
-            use_duplication_finder_index > MethodsType.size()
-        ) {
-            throw CLIError(INVALID_CODE_DUPLICATION_FINDER);
-        }
-        break;
     }
-    --use_duplication_finder_index;
+
+    if (!method_from_option) {
+        while (true) {
+            fm::write(MESSAGE_DUPLICATION_FINDER_TYPE);
+            for (size_t i = 0; i < MethodsType.size(); ++i) {
+                std::cout << i + 1 << ") " << MethodsType[i].description << '\n';
+            }
+            std::cin >> use_duplication_finder_index;
+            if (
+                use_duplication_finder_index == 0 ||
+                use_duplication_finder_index > MethodsType.size()
+            ) {
+                throw CLIError(INVALID_CODE_DUPLICATION_FINDER);
+            }
+            break;
+        }
+        --use_duplication_finder_index;
+    }
 
     std::vector<std::string> pass_through_args;
     Granularity granularity = Granularity::Function;

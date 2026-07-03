@@ -102,7 +102,7 @@ void ASTMethod::save_duplications(std::vector<DuplicationEntry>& file_duplicatio
 }
 
 void ASTMethod::header_duplications() {
-    std::string output_file_path = base_path / "output_parsed.tmp";
+    fs::path output_file_path = base_path / "output_parsed.tmp";
 
     output_file.open(
         output_file_path,
@@ -133,7 +133,7 @@ void ASTMethod::compare_range(
             double sim = similarity_score(processed[i], processed[j]) * 100.0;
 
             if (sim >= similarity)
-                local.push_back({sim, processed[i].path, processed[j].path});
+                local.push_back({sim, processed[i].path.string(), processed[j].path.string()});
         }
     }
 }

@@ -14,7 +14,7 @@ namespace fs = std::filesystem;
 class TreeSitterParser {
     static bool is_function_empty(TSNode body);
     
-    static std::string detect_language(const std::string& path);
+    static std::string detect_language(const fs::path& path);
 
     static std::string get_full_signature(TSNode func_node, const std::string& source);
 
