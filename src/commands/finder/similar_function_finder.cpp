@@ -56,7 +56,7 @@ void SimilarFunctionFinder::print_similar_functions() {
     fm::write(Utils::LIMITER_PRINT);
     if (open_folder) {
         auto params = Preprocessor::read_current_run_params();
-        fs::path full_path = fs::path{params[0]} / fs::path{path.build_relative_path()};
+        fs::path full_path = fs::path{params.path} / fs::path{path.build_relative_path()};
         fs::path dir_path = full_path.parent_path();
         Utils::open_folder(dir_path);
         return;

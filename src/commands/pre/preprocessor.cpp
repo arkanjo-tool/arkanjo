@@ -10,31 +10,26 @@ void Preprocessor::save_current_run_params(const fs::path& path) {
     if (!time_str.empty() && time_str.back() == '\n')
         time_str.pop_back();
 
-    json data = {{PATH_KEY, path.string()}, {TIME_KEY, time_str}};
+    json data = PreprocessRunParams{path.string(), time_str};
 
     fs::path config_path = Config::config().base_path / Config::config().name_container / CONFIG_PATH;
-    fs::create_directories(config_path.parent_path());
-    std::ofstream out(config_path);
-    out << data.dump(4) << '\n';
+    Utils::write_file(config_path, data.dump(4) + '\n');
 }
 
-std::vector<std::string> Preprocessor::read_current_run_params() {
-    std::vector<std::string> content;
+PreprocessRunParams Preprocessor::read_current_run_params() {
     fs::path file_path = Config::config().base_path / Config::config().name_container / CONFIG_PATH;
 
     std::ifstream infile(file_path);
     if (!infile.is_open()) {
         std::cerr << "Error: could not open " << file_path << "\n";
-        return content;
+        return {};
     }
 
     json data = json::parse(infile, nullptr, false);
     if (data.is_discarded()) {
         std::cerr << "Error: could not parse " << file_path << "\n";
-        return content;
+        return {};
     }
 
-    content.push_back(data.value(PATH_KEY, ""));
-    content.push_back(data.value(TIME_KEY, ""));
-    return content;
+    return data.get<PreprocessRunParams>();
 }
