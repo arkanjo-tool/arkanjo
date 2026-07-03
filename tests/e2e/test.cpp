@@ -12,7 +12,7 @@ const fs::path EXPECTED_DIR = "tests/e2e/expected/tmp";
 const fs::path CURRENT_DIR = "tests/e2e/current/tmp/arkanjo/default";
 const fs::path CODEBASE_DIR = "tests/e2e/codebase";
 
-std::vector<std::string> skip_check_list = {"config.txt", ".gitkeep"};
+std::vector<std::string> skip_check_list = {"config.json", ".gitkeep"};
 
 bool should_skip(std::string s) {
     for (auto x : skip_check_list) {

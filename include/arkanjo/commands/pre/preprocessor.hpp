@@ -1,18 +1,33 @@
 #pragma once
 
 #include <filesystem>
-#include <vector>
 #include <string>
+#include <nlohmann/json.hpp>
 
 namespace fs = std::filesystem;
 
-class Preprocessor {
-private:
-    static constexpr const char* PATH_MESSAGE = "path of the current preprocess: "; ///< Current processing path display
-    static constexpr const char* TIME_MESSAGE = "Finished time: ";                  ///< Timing information prefix
+using json = nlohmann::json;
 
+struct PreprocessRunParams {
+    fs::path path;             ///< Path of the current preprocess
+    std::string finished_time; ///< Timing information for when preprocessing finished
+};
+
+inline void to_json(json& j, const PreprocessRunParams& d) {
+    j = {
+        {"path", d.path.string()},
+        {"finished_time", d.finished_time},
+    };
+}
+
+inline void from_json(const json& j, PreprocessRunParams& d) {
+    d.path = j.value("path", "");
+    d.finished_time = j.value("finished_time", "");
+}
+
+class Preprocessor {
 protected:
-    static constexpr const char* CONFIG_PATH = "config.txt";                        ///< Configuration file path
+    static constexpr const char* CONFIG_PATH = "config.json"; ///< Configuration file path
 
 public:
     /**
@@ -24,5 +39,5 @@ public:
     /**
      * @brief read preprocessing parameters runs
      */
-    static std::vector<std::string> read_current_run_params();
+    static PreprocessRunParams read_current_run_params();
 };
