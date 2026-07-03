@@ -5,11 +5,21 @@
 #include <string>
 #include <vector>
 
+/**
+ * @brief Collects CLI option definitions before parsing a command.
+ *
+ * The collector merges global and command-specific options into a single list
+ * that can be passed to the parser step in the orchestrator pipeline.
+ */
 class OptionsCollector {
   private:
-    std::vector<struct CliOption> merged_long_opts;
+    std::vector<struct CliOption> merged_long_opts; ///< Merged option definitions.
 
   public:
+    /**
+     * @brief Appends a null-terminated option array to the merged options.
+     * @param long_opts Pointer to a `CliOption` array terminated by `OPTION_END`.
+     */
     void add_options(const CliOption* long_opts) {
         if (long_opts != nullptr) {
             for (const CliOption* opt = long_opts; opt->long_name != nullptr; ++opt) {
@@ -18,6 +28,12 @@ class OptionsCollector {
         }
     }
 
+    /**
+     * @brief Builds an orchestrator step that parses CLI arguments.
+     * @param argc Number of process arguments.
+     * @param argv Raw process argument vector.
+     * @return Step that fills `Context::options` with parsed values.
+     */
     Step make_parse_step(int argc, char* argv[]) {
         return [=](Context& ctx) {
             merged_long_opts.push_back(OPTION_END);
@@ -29,6 +45,10 @@ class OptionsCollector {
         };
     }
 
+    /**
+     * @brief Returns the merged option definitions.
+     * @return Reference to the collected options.
+     */
     const std::vector<CliOption>& get_options() const {
         return merged_long_opts;
     }

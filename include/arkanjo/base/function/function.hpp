@@ -72,6 +72,9 @@ class Function {
      */
     explicit Function(const Path& _path);
 
+    /**
+     * @brief Loads source, header, and metadata for this function.
+     */
     void load();
 
     /**
@@ -100,5 +103,9 @@ class Function {
      */
     void print_basic_info();
 
+    /**
+     * @brief Prints the function source code to the console.
+     * @param no_numbers When true, omits line numbers from the output.
+     */
     void print_code(bool no_numbers = false);
 };

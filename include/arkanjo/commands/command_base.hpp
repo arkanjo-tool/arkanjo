@@ -6,22 +6,42 @@
 #include <arkanjo/base/config.hpp>
 #include <algorithm> 
 
+/**
+ * @brief Declares the command description override for a command class.
+ */
 #define COMMAND_DESCRIPTION(str)                       \
     std::string_view description() const override {    \
         static constexpr char description_str[] = str; \
         return description_str;                        \
     }
 
+/**
+ * @brief Detects whether a command type declares an `options_` member.
+ */
 template <typename, typename = std::void_t<>>
 struct has_options : std::false_type {};
 
+/**
+ * @brief Specialization used when the command type provides CLI options.
+ */
 template <typename T>
 struct has_options<T, std::void_t<decltype(T::options_)>> : std::true_type {};
 
+/**
+ * @brief Base implementation shared by CLI commands.
+ *
+ * The base class provides option discovery, help rendering, and help-aware
+ * command execution while leaving command-specific behavior to `Derived::run`.
+ */
 template <typename Derived>
 class CommandBase : public ICommand {
 
   public:
+    /**
+     * @brief Prints formatted help text for a command.
+     * @param command_name Name or alias used to invoke the command.
+     * @param collector Optional collector containing merged global and command options.
+     */
     virtual void print_help(const std::string command_name, const OptionsCollector* collector) const {
         constexpr int OPTION_WIDTH = 26;
 
@@ -94,6 +114,10 @@ class CommandBase : public ICommand {
         }
     }
 
+    /**
+     * @brief Returns the command-specific option definitions.
+     * @return Pointer to a null-terminated `CliOption` array, or `nullptr` when absent.
+     */
     const CliOption* options() const final {
         if constexpr (has_options<Derived>::value) {
             return Derived::options_;
@@ -102,6 +126,13 @@ class CommandBase : public ICommand {
         }
     }
 
+    /**
+     * @brief Runs the command or displays help when requested.
+     * @param command_name Name or alias used to invoke the command.
+     * @param options Parsed command options and arguments.
+     * @param collector Optional collector used for help output.
+     * @return True when help was displayed or the command completed successfully.
+     */
     bool do_run(const std::string command_name, const ParsedOptions& options, const OptionsCollector* collector = nullptr) override {
         if (options.args.count("help") > 0) {
             print_help(command_name, collector);

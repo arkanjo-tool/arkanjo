@@ -19,15 +19,23 @@
 
 #include <arkanjo/cli/parser_options.hpp>
 
+/**
+ * @brief Mutable state shared by orchestrator pipeline steps.
+ */
 struct Context {
-    std::string command_name;
-    ParsedOptions options;
-    std::vector<std::string> extra_args;
+    std::string command_name;        ///< Command name selected by the user.
+    ParsedOptions options;           ///< Parsed options for the current command.
+    std::vector<std::string> extra_args; ///< Arguments forwarded to external commands.
 
-    int argc;
-    char** argv;
+    int argc;   ///< Original process argument count.
+    char** argv; ///< Original process argument vector.
 };
 
+/**
+ * @brief Pipeline step that can inspect or update the command context.
+ *
+ * Steps return true to continue the pipeline and false to stop it.
+ */
 using Step = std::function<bool(Context&)>;
 /**
  * @brief Main command orchestrator
@@ -40,12 +48,23 @@ class Orchestrator {
     size_t current_step = 0;
 
   public:
+    /**
+     * @brief Adds a step to the end of the pipeline.
+     * @param step Step callback to execute.
+     */
     void add_step(Step step) { steps.push_back(step); }
 
+    /**
+     * @brief Skips all remaining pipeline steps.
+     */
     void skip() {
         current_step = steps.size();
     }
 
+    /**
+     * @brief Runs each pipeline step until completion or failure.
+     * @param ctx Context shared by all pipeline steps.
+     */
     void run_pipeline(Context& ctx) {
         for (current_step = 0; current_step < steps.size(); ++current_step) {
             if (!steps[current_step] || !steps[current_step](ctx)) {
