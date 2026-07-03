@@ -9,13 +9,13 @@ namespace fs = std::filesystem;
 using json = nlohmann::json;
 
 struct PreprocessRunParams {
-    std::string path;          ///< Path of the current preprocess
+    fs::path path;             ///< Path of the current preprocess
     std::string finished_time; ///< Timing information for when preprocessing finished
 };
 
 inline void to_json(json& j, const PreprocessRunParams& d) {
     j = {
-        {"path", d.path},
+        {"path", d.path.string()},
         {"finished_time", d.finished_time},
     };
 }

@@ -66,7 +66,7 @@ void Function::print_basic_info() {
     auto params = Preprocessor::read_current_run_params();
 
     std::string function_message = FUNCTION_PREFIX_PRINT + path.build_function_name();
-    fs::path relative_path = fs::path{params.path} / fs::path{path.build_relative_path()};
+    fs::path relative_path = params.path / fs::path{path.build_relative_path()};
     std::string relative_message = RELATIVE_PATH_PRINT + relative_path.string();
     std::string start_message = LINE_DECLARATION_PRINT + std::to_string(line_declaration + 1) + "-" + std::to_string(end_number_line + 1);
     std::string number_message = NUMBER_LINE_PRINT + std::to_string(number_of_lines());

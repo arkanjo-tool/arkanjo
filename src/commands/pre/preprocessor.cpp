@@ -10,7 +10,7 @@ void Preprocessor::save_current_run_params(const fs::path& path) {
     if (!time_str.empty() && time_str.back() == '\n')
         time_str.pop_back();
 
-    json data = PreprocessRunParams{path.string(), time_str};
+    json data = PreprocessRunParams{path, time_str};
 
     fs::path config_path = Config::config().base_path / Config::config().name_container / CONFIG_PATH;
     Utils::write_file(config_path, data.dump(4) + '\n');
