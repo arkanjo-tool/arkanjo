@@ -1,5 +1,16 @@
 cmake_minimum_required(VERSION 3.19)
+
+execute_process(
+    COMMAND git describe --tags --abbrev=0
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_TAG
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+string(REGEX REPLACE "^v" "" PROJECT_VERSION "${GIT_TAG}")
+
 project(arkanjo 
+    VERSION ${PROJECT_VERSION}
     LANGUAGES C CXX
 )
 
@@ -26,6 +37,7 @@ include(cmake/TreeSitter.cmake)
 include(cmake/Libgit2.cmake)
 include(cmake/CompilerOptions.cmake)
 include(cmake/Targets.cmake)
+include(cmake/Documentation.cmake)
 
 if(ENABLE_TESTS)
     enable_testing()
