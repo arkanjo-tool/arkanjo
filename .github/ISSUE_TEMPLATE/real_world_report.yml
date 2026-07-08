@@ -39,15 +39,6 @@ body:
     validations:
       required: true
 
-  - type: input
-    id: arkanjo_method
-    attributes:
-      label: ArKanjo Method
-      description: Name, Short name, or Index
-      placeholder: gensim, ast, ...
-    validations:
-      required: true
-
   - type: dropdown
     id: category
     attributes:
