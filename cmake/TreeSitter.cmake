@@ -1,3 +1,18 @@
+function(get_language_symbol LANG OUT_SYMBOL)
+    set(SYMBOL "tree_sitter_${LANG}")
+
+    string(JSON GRAMMAR_DIR ERROR_VARIABLE GRAMMAR_ERROR
+        GET "${CONFIG_JSON}" "grammar_dir" "${LANG}"
+    )
+
+    if(NOT GRAMMAR_ERROR)
+        string(REPLACE "/" "_" GRAMMAR_SYMBOL "${GRAMMAR_DIR}")
+        set(SYMBOL "tree_sitter_${GRAMMAR_SYMBOL}")
+    endif()
+
+    set(${OUT_SYMBOL} ${SYMBOL} PARENT_SCOPE)
+endfunction()
+
 function(setup_tree_sitter OUT_LIBS OUT_GENERATED_FILE)
 
     set(TS_DIR "${THIRD_PARTY_BUILD_DIR}/tree-sitter")
@@ -30,16 +45,27 @@ function(setup_tree_sitter OUT_LIBS OUT_GENERATED_FILE)
             execute_process(COMMAND git clone https://github.com/tree-sitter/tree-sitter-${LANG}.git ${PARSER_DIR})
         endif()
 
-        if(EXISTS "${PARSER_DIR}/src/parser.c")
-            set(PARSER_SOURCES ${PARSER_DIR}/src/parser.c)
+        set(GRAMMAR_DIR "${PARSER_DIR}")
 
-            if(EXISTS "${PARSER_DIR}/src/scanner.c")
-                list(APPEND PARSER_SOURCES ${PARSER_DIR}/src/scanner.c)
+        # Check if language has a custom grammar directory
+        string(JSON HAS_GRAMMAR_DIR ERROR_VARIABLE GRAMMAR_ERROR
+            GET "${CONFIG_JSON}" "grammar_dir" "${LANG}"
+        )
+
+        if(NOT GRAMMAR_ERROR)
+            set(GRAMMAR_DIR "${PARSER_DIR}/${HAS_GRAMMAR_DIR}")
+        endif()
+
+        if(EXISTS "${GRAMMAR_DIR}/src/parser.c")
+            set(PARSER_SOURCES ${GRAMMAR_DIR}/src/parser.c)
+
+            if(EXISTS "${GRAMMAR_DIR}/src/scanner.c")
+                list(APPEND PARSER_SOURCES ${GRAMMAR_DIR}/src/scanner.c)
             endif()
 
             add_library(tree_sitter_${LANG} STATIC ${PARSER_SOURCES})
 
-            target_include_directories(tree_sitter_${LANG} PRIVATE ${PARSER_DIR}/src)
+            target_include_directories(tree_sitter_${LANG} PRIVATE ${GRAMMAR_DIR}/src)
             list(APPEND PARSER_LIBS tree_sitter_${LANG})
         else()
             message(WARNING "Language parser ${LANG} not found or incomplete")
@@ -60,9 +86,12 @@ function(setup_tree_sitter OUT_LIBS OUT_GENERATED_FILE)
     # externs
     foreach(IDX RANGE ${STOP_INDEX})
         string(JSON LANG GET "${CONFIG_JSON}" "languages" ${IDX})
+
+        get_language_symbol(${LANG} LANG_SYMBOL)
+
         if(TARGET tree_sitter_${LANG})
             file(APPEND ${GENERATED_FILE}
-                "extern \"C\" TSLanguage *tree_sitter_${LANG}();\n")
+                "extern \"C\" TSLanguage *${LANG_SYMBOL}();\n")
         endif()
     endforeach()
 
@@ -71,9 +100,12 @@ function(setup_tree_sitter OUT_LIBS OUT_GENERATED_FILE)
 
     foreach(IDX RANGE ${STOP_INDEX})
         string(JSON LANG GET "${CONFIG_JSON}" "languages" ${IDX})
+
+        get_language_symbol(${LANG} LANG_SYMBOL)
+
         if(TARGET tree_sitter_${LANG})
             file(APPEND ${GENERATED_FILE}
-                "        {\"${LANG}\", tree_sitter_${LANG}},\n")
+                "        {\"${LANG}\", ${LANG_SYMBOL}},\n")
         endif()
     endforeach()
 

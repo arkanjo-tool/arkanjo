@@ -66,6 +66,54 @@ The `extensions` object maps each configured language to the file extensions tha
 }
 ```
 
+## Custom grammar directories
+
+Most Tree-sitter grammars use the default repository structure:
+
+```text
+tree-sitter-<language>/
+└── src/
+├── parser.c
+└── scanner.c
+```
+
+In this case, no additional configuration is needed.
+
+Some grammars, however, contain multiple grammars in the same repository or use a different directory layout. For these cases, `grammar_dir` can be used to specify where the grammar source files are located.
+
+Example:
+
+```json
+{
+    "languages": ["php"],
+    "extensions": {
+        "php": [".php"]
+    },
+    "grammar_dir": {
+        "php": "php_only"
+    }
+}
+```
+
+The path specified in `grammar_dir` is relative to the Tree-sitter repository directory.
+
+For example, `tree-sitter-php` contains more than one grammar:
+
+```text
+tree-sitter-php/
+├── php/
+│   └── src/
+│       ├── parser.c
+│       └── scanner.c
+└── php_only/
+    └── src/
+        ├── parser.c
+        └── scanner.c
+```
+
+\note
+This option should only be used when a grammar does not follow the default Tree-sitter layout.
+
 ## Reconfiguring the build
 
 After modifying `config.json`, rerun CMake from the build directory:
