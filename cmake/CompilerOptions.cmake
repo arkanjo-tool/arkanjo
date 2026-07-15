@@ -9,6 +9,7 @@ target_include_directories(project_options
 
 target_compile_definitions(project_options INTERFACE 
     THIRD_PARTY_DIR="${CMAKE_INSTALL_FULL_LIBDIR}/arkanjo/third-party"
+    PROJECT_VERSION=\"${PROJECT_VERSION}\"
     $<$<CONFIG:Debug>:DEBUG>
     $<$<CONFIG:Release>:NDEBUG>
 )

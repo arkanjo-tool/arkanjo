@@ -11,18 +11,21 @@ using json = nlohmann::json;
 struct PreprocessRunParams {
     fs::path path;             ///< Path of the current preprocess
     std::string finished_time; ///< Timing information for when preprocessing finished
+    std::string version;       ///< Version of the current preprocess 
 };
 
 inline void to_json(json& j, const PreprocessRunParams& d) {
     j = {
         {"path", d.path.string()},
         {"finished_time", d.finished_time},
+        {"version", d.version},
     };
 }
 
 inline void from_json(const json& j, PreprocessRunParams& d) {
     d.path = j.value("path", "");
     d.finished_time = j.value("finished_time", "");
+    d.version = j.value("version","");
 }
 
 class Preprocessor {
