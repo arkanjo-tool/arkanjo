@@ -7,10 +7,11 @@ void Preprocessor::save_current_run_params(const fs::path& path) {
     auto end = std::chrono::system_clock::now();
     std::time_t end_time = std::chrono::system_clock::to_time_t(end);
     std::string time_str(std::ctime(&end_time));
+    std::string version = PROJECT_VERSION;
     if (!time_str.empty() && time_str.back() == '\n')
         time_str.pop_back();
 
-    json data = PreprocessRunParams{path, time_str};
+    json data = PreprocessRunParams{path, time_str, version};
 
     fs::path config_path = Config::config().base_path / Config::config().name_container / CONFIG_PATH;
     Utils::write_file(config_path, data.dump(4) + '\n');
