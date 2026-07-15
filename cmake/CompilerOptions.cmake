@@ -14,6 +14,10 @@ target_compile_definitions(project_options INTERFACE
     $<$<CONFIG:Release>:NDEBUG>
 )
 
+if(NOT PROJECT_VERSION)
+    message(WARNING "PROJECT_VERSION is empty")
+endif()
+
 target_compile_options(project_options INTERFACE
     # MSVC
     $<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Debug>>:/Zi /Od>
