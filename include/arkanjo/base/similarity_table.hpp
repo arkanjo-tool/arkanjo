@@ -103,6 +103,13 @@ struct ClusterInfo {
  * @note The graph is undirected.
  */
 class Similarity_Table {
+
+  public:
+    enum class Cache_Compatibility {
+        Success,
+        Fail
+    };
+
   private:
     static constexpr const char* SIMILARITY_TABLE_FILE_NAME = "output_parsed.txt"; ///< Default similarity data file
     static constexpr const double DEFAULT_SIMILARITY = 100.00; ///< Default similarity threshold
@@ -145,7 +152,7 @@ class Similarity_Table {
     /**
      * @brief Initializes similarity table from file
      */
-    void init_similarity_table();
+    Cache_Compatibility init_similarity_table();
 
     /**
      * @brief Checks if similarity meets threshold
@@ -166,7 +173,7 @@ class Similarity_Table {
      */
     explicit Similarity_Table();
 
-    void load();
+    Cache_Compatibility load();
 
     /**
      * @brief Updates similarity threshold

@@ -43,4 +43,6 @@ public:
      * @brief read preprocessing parameters runs
      */
     static PreprocessRunParams read_current_run_params();
+
+    static bool is_cache_compatible(const std::string& cache_version);
 };

@@ -1,4 +1,5 @@
 #include <arkanjo/base/similarity_table.hpp>
+#include <arkanjo/commands/pre/preprocessor.hpp>
 
 #include <arkanjo/utils/utils.hpp>
 
@@ -38,7 +39,15 @@ void Similarity_Table::read_file_table(std::ifstream& table_file) {
     }
 }
 
-void Similarity_Table::init_similarity_table() {
+Similarity_Table::Cache_Compatibility Similarity_Table::init_similarity_table() {
+    auto res = Cache_Compatibility::Success;
+
+    auto params = Preprocessor::read_current_run_params();
+
+    if (!Preprocessor::is_cache_compatible(params.version)) {
+        res = Cache_Compatibility::Fail;
+    }
+
     std::ifstream table_file;
     const fs::path similarity_table_file_name = Config::config().base_path / Config::config().name_container / SIMILARITY_TABLE_FILE_NAME;
     table_file.open(similarity_table_file_name);
@@ -47,6 +56,7 @@ void Similarity_Table::init_similarity_table() {
     read_file_table(table_file);
 
     table_file.close();
+    return res;
 }
 
 Similarity_Table::Similarity_Table(double _similarity_threshold)
@@ -55,8 +65,8 @@ Similarity_Table::Similarity_Table(double _similarity_threshold)
 Similarity_Table::Similarity_Table()
     :  similarity_threshold{DEFAULT_SIMILARITY} { }
 
-void Similarity_Table::load() {
-    init_similarity_table();
+Similarity_Table::Cache_Compatibility Similarity_Table::load() {
+    return init_similarity_table();
 }
 
 void Similarity_Table::update_similarity(double new_similarity_threshold) {

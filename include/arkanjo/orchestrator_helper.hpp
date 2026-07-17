@@ -9,6 +9,7 @@
 #include <arkanjo/orchestrator.hpp>
 #include <arkanjo/commands/command.hpp>
 #include <arkanjo/commands/commands_registry.hpp>
+#include <arkanjo/commands/pre/preprocessor.hpp>
 
 namespace OrchestratorHelper {
 static constexpr const char* DEFAULT_COMMAND = "help";
@@ -64,7 +65,19 @@ inline bool formatter_step(Context& ctx) {
 
 inline Step similarity_step(Similarity_Table& table) {
     return [&table](Context& ctx) {
-        table.load();
+        auto result = table.load();
+        
+        if (result == Similarity_Table::Cache_Compatibility::Fail) {
+            auto params = Preprocessor::read_current_run_params();
+
+            FormatterManager::warn(
+            "Cache generated with Arkanjo v" +
+            (!params.version.empty() ? params.version : "?.?.?") +
+            " may be incompatible with the current version v" +
+            std::string(PROJECT_VERSION) +
+            ". Results may be inaccurate.");
+        }
+
         auto it = ctx.options.args.find("similarity");
         if (it != ctx.options.args.end()) {
             double sim = std::stod(ctx.options.args["similarity"]);
