@@ -34,3 +34,19 @@ PreprocessRunParams Preprocessor::read_current_run_params() {
 
     return data.get<PreprocessRunParams>();
 }
+
+constexpr int MAX_MINOR_VERSION_DIFF = 1;
+
+bool Preprocessor::is_cache_compatible(const std::string& cache_version) {
+    int current_major, current_minor, current_patch;
+    int cache_major, cache_minor, cache_patch;
+    char dot;
+
+    std::istringstream(PROJECT_VERSION)
+        >> current_major >> dot >> current_minor >> dot >> current_patch;
+
+    std::istringstream(cache_version)
+        >> cache_major >> dot >> cache_minor >> dot >> cache_patch;
+
+    return (current_major == cache_major && std::abs(current_minor - cache_minor) <= MAX_MINOR_VERSION_DIFF);
+}

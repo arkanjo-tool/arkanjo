@@ -1,4 +1,5 @@
 #include <arkanjo/base/similarity_table.hpp>
+#include <arkanjo/commands/pre/preprocessor.hpp>
 
 #include <arkanjo/utils/utils.hpp>
 
@@ -39,6 +40,18 @@ void Similarity_Table::read_file_table(std::ifstream& table_file) {
 }
 
 void Similarity_Table::init_similarity_table() {
+
+    auto params = Preprocessor::read_current_run_params();
+
+    if (!Preprocessor::is_cache_compatible(params.version)) {
+        FormatterManager::warn(
+            "Cache generated with Arkanjo v" + params.version +
+            " may be incompatible with the current version v" +
+            std::string(PROJECT_VERSION) +
+            ". Results may be inaccurate."
+        );
+    }
+
     std::ifstream table_file;
     const fs::path similarity_table_file_name = Config::config().base_path / Config::config().name_container / SIMILARITY_TABLE_FILE_NAME;
     table_file.open(similarity_table_file_name);
