@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <arkanjo/base/config.hpp>
-#include <arkanjo/commands/pre/preprocessor.hpp>
+#include <arkanjo/base/preprocess_state.hpp>
 
 Path::Path(const fs::path& _path) {
     resource_path = _path;

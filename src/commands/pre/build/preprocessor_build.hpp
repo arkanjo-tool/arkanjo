@@ -18,7 +18,7 @@
 #include <arkanjo/methods/llm/llm_method.hpp>
 
 #include "function_breaker.hpp"
-#include <arkanjo/commands/pre/preprocessor.hpp>
+#include <arkanjo/base/preprocess_state.hpp>
 #include <arkanjo/commands/command_base.hpp>
 #include <optional>
 #include <string>
@@ -49,7 +49,7 @@ struct MethodInfo {
  *
  * Creates the foundation for fast query responses during the main operation phase.
  */
-class PreprocessorBuild : public Preprocessor, public CommandBase<PreprocessorBuild> {
+class PreprocessorBuild : public Preprocess_State, public CommandBase<PreprocessorBuild> {
   private:
     static constexpr const char* TEMPLATE_COUNT =
       "The total number of functions that are "

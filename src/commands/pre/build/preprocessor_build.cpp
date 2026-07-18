@@ -153,7 +153,7 @@ void PreprocessorBuild::preprocess(const fs::path& path, double similarity, size
     if (mode_verbose)
         fm::time("\tExecution time duplication:", start_duplication);
 
-    Preprocessor::save_current_run_params(path);
+    Preprocess_State::save_current_run_params(path);
 
     fm::write(END_MESSAGE);
 

@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include <arkanjo/formatter/format_manager.hpp>
-#include <arkanjo/commands/pre/preprocessor.hpp>
+#include <arkanjo/base/preprocess_state.hpp>
 #include "similar_function_finder.hpp"
 #include "similar_function_finder_entry.hpp"
 
@@ -55,7 +55,7 @@ void SimilarFunctionFinder::print_similar_functions() {
     print_reference_path();
     fm::write(Utils::LIMITER_PRINT);
     if (open_folder) {
-        auto params = Preprocessor::read_current_run_params();
+        auto params = Preprocess_State::read_current_run_params();
         fs::path full_path = params.path / fs::path{path.build_relative_path()};
         fs::path dir_path = full_path.parent_path();
         Utils::open_folder(dir_path);

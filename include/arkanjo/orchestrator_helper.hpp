@@ -9,7 +9,7 @@
 #include <arkanjo/orchestrator.hpp>
 #include <arkanjo/commands/command.hpp>
 #include <arkanjo/commands/commands_registry.hpp>
-#include <arkanjo/commands/pre/preprocessor.hpp>
+#include <arkanjo/base/preprocess_state.hpp>
 
 namespace OrchestratorHelper {
 static constexpr const char* DEFAULT_COMMAND = "help";
@@ -68,7 +68,7 @@ inline Step similarity_step(Similarity_Table& table) {
         auto result = table.load();
         
         if (result == Similarity_Table::Cache_Compatibility::Fail) {
-            auto params = Preprocessor::read_current_run_params();
+            auto params = Preprocess_State::read_current_run_params();
 
             FormatterManager::warn(
             "Cache generated with Arkanjo v" +

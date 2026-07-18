@@ -1,5 +1,5 @@
 #include <arkanjo/base/similarity_table.hpp>
-#include <arkanjo/commands/pre/preprocessor.hpp>
+#include <arkanjo/base/preprocess_state.hpp>
 
 #include <arkanjo/utils/utils.hpp>
 
@@ -42,9 +42,9 @@ void Similarity_Table::read_file_table(std::ifstream& table_file) {
 Similarity_Table::Cache_Compatibility Similarity_Table::init_similarity_table() {
     auto res = Cache_Compatibility::Success;
 
-    auto params = Preprocessor::read_current_run_params();
+    auto params = Preprocess_State::read_current_run_params();
 
-    if (!Preprocessor::is_cache_compatible(params.version)) {
+    if (!Preprocess_State::is_cache_compatible(params.version)) {
         res = Cache_Compatibility::Fail;
     }
 
