@@ -4,7 +4,7 @@
 #include <arkanjo/base/path.hpp>
 
 #include <arkanjo/base/similarity_table.hpp>
-
+#include <arkanjo/base/preprocess_state.hpp>
 #include <arkanjo/cli/parser_options.hpp>
 #include <arkanjo/orchestrator.hpp>
 #include <arkanjo/commands/command.hpp>

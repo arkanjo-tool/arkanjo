@@ -130,7 +130,7 @@ std::vector<SimilarPair> Similarity_Table::get_all_similar_pairs() {
         if (!is_similar(path1, path2))
             continue;
 
-        clear function(path1);
+        Function function(path1);
         function.load();
 
         similar_pairs.push_back({
