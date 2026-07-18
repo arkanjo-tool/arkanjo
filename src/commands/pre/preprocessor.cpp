@@ -48,5 +48,5 @@ bool Preprocessor::is_cache_compatible(const std::string& cache_version) {
     std::istringstream(cache_version)
         >> cache_major >> dot >> cache_minor >> dot >> cache_patch;
 
-    return (current_major == cache_major && std::abs(current_minor - cache_minor) <= MAX_MINOR_VERSION_DIFF);
+    return (current_major == cache_major && current_minor == cache_minor);
 }
