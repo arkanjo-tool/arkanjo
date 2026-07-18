@@ -58,6 +58,26 @@ endif()
 install(TARGETS arkanjo arkanjo-preprocessor
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+if(UNIX)
+    install(CODE "
+        if(NOT EXISTS \"\$ENV{DESTDIR}${CMAKE_INSTALL_FULL_BINDIR}/ak\")
+            execute_process(
+                COMMAND \"${CMAKE_COMMAND}\" -E create_symlink
+                    arkanjo
+                    \"\$ENV{DESTDIR}${CMAKE_INSTALL_FULL_BINDIR}/ak\"
+                RESULT_VARIABLE result
+            )
+
+            if(NOT result EQUAL 0)
+                message(WARNING \"Failed to create ak symlink\")
+            endif()
+        else()
+            message(WARNING \"Skipping ak alias: file already exists\")
+        endif()
+    ")
+endif()
+
 #install(DIRECTORY include/
 #    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 #)
