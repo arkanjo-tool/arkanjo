@@ -28,7 +28,7 @@ inline void from_json(const json& j, PreprocessRunParams& d) {
     d.version = j.value("version","");
 }
 
-class Preprocessor {
+class Preprocess_State {
 protected:
     static constexpr const char* CONFIG_PATH = "config.json"; ///< Configuration file path
 

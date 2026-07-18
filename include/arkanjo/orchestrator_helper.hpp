@@ -64,7 +64,18 @@ inline bool formatter_step(Context& ctx) {
 
 inline Step similarity_step(Similarity_Table& table) {
     return [&table](Context& ctx) {
-        table.load();
+        auto result = table.load();
+        
+        if (result == Similarity_Table::Cache_Compatibility::Fail) {
+
+            auto params = Preprocess_State::read_current_run_params();
+
+            FormatterManager::warn(
+            "Cache generated with Arkanjo v" + params.version + " may be incompatible with the current version v" +
+            std::string(PROJECT_VERSION) +
+            ". Results may be inaccurate.");
+        }
+
         auto it = ctx.options.args.find("similarity");
         if (it != ctx.options.args.end()) {
             double sim = std::stod(ctx.options.args["similarity"]);

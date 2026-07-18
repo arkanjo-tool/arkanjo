@@ -2,7 +2,7 @@
 
 #include <arkanjo/base/function/function.hpp>
 #include <arkanjo/formatter/format_manager.hpp>
-#include <arkanjo/commands/pre/preprocessor.hpp>
+#include <arkanjo/base/preprocess_state.hpp>
 
 void Function::read_content() {
     fs::path source_path = path.build_source_path();
@@ -63,7 +63,7 @@ std::vector<std::string> Function::build_all_content() {
 }
 
 void Function::print_basic_info() {
-    auto params = Preprocessor::read_current_run_params();
+    auto params = Preprocess_State::read_current_run_params();
 
     std::string function_message = FUNCTION_PREFIX_PRINT + path.build_function_name();
     fs::path relative_path = params.path / fs::path{path.build_relative_path()};
