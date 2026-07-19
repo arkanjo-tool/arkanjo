@@ -74,7 +74,7 @@ inline Step similarity_step(Similarity_Table& table) {
             "Cache generated with Arkanjo v" +
             (!params.version.empty() ? params.version : "?.?.?") +
             " may be incompatible with the current version v" +
-            std::string(PROJECT_VERSION) +
+            std::string(Config::config().project_version) +
             ". Results may be inaccurate.");
         }
 

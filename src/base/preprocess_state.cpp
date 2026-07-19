@@ -6,7 +6,7 @@ void Preprocess_State::save_current_run_params(const fs::path& path, const fs::p
     auto end = std::chrono::system_clock::now();
     std::time_t end_time = std::chrono::system_clock::to_time_t(end);
     std::string time_str(std::ctime(&end_time));
-    std::string version = PROJECT_VERSION;
+    std::string version = Config::config().project_version;
     if (!time_str.empty() && time_str.back() == '\n')
         time_str.pop_back();
     auto size = Utils::folder_size(cache_path);
@@ -42,7 +42,7 @@ bool Preprocess_State::is_cache_compatible(const std::string& cache_version) {
     int cache_major, cache_minor, cache_patch;
     char dot;
 
-    std::istringstream(PROJECT_VERSION)
+    std::istringstream(Config::config().project_version)
         >> current_major >> dot >> current_minor >> dot >> current_patch;
 
     std::istringstream(cache_version)

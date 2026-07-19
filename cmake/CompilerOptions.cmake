@@ -9,14 +9,10 @@ target_include_directories(project_options
 
 target_compile_definitions(project_options INTERFACE 
     ARKANJO_THIRD_PARTY_DIR=${CMAKE_INSTALL_FULL_LIBDIR}/arkanjo/third-party
-    PROJECT_VERSION=\"${PROJECT_VERSION}\"
+    ARKANJO_PROJECT_VERSION=${ARKANJO_PROJECT_VERSION}
     $<$<CONFIG:Debug>:DEBUG>
     $<$<CONFIG:Release>:NDEBUG>
 )
-
-if(NOT PROJECT_VERSION)
-    message(WARNING "PROJECT_VERSION is empty")
-endif()
 
 target_compile_options(project_options INTERFACE
     # MSVC

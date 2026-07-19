@@ -46,6 +46,12 @@ void Config::setDefaultConfig() {
             : third_party_dir;
     });
 
+    project_version = CONFIG_VALUE(ARKANJO_PROJECT_VERSION, [this](auto v) -> std::filesystem::path {
+        return v.has_value()
+            ? *v
+            : project_version;
+    });
+
     validate();
 }
 

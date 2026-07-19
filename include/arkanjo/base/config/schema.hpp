@@ -16,6 +16,7 @@ namespace arkanjo {
     std::filesystem::path base_path = "tmp/arkanjo";       ///< Default base path for temporary files
     std::filesystem::path third_party_dir = "third-party"; ///< Directory containing third-party dependencies
     std::filesystem::path name_container = "default";      ///< Name of the cache container
+    std::string project_version;                           ///< Current project version
 
     std::filesystem::path source_path = "source";          ///< Source subdirectory name
     std::filesystem::path header_path = "header";          ///< Header subdirectory name
