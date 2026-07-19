@@ -1,6 +1,6 @@
 #include <arkanjo/methods/llm/llm_method.hpp>
 #include <arkanjo/formatter/format_manager.hpp>
-#include <arkanjo/base/config.hpp>
+#include <arkanjo/base/config/config.hpp>
 #include <arkanjo/base/features/source_feature.hpp>
 #include <arkanjo/utils/utils.hpp>
 

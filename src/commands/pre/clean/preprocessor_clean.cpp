@@ -1,5 +1,5 @@
 #include "preprocessor_clean.hpp"
-#include <arkanjo/base/config.hpp>
+#include <arkanjo/base/config/config.hpp>
 #include <arkanjo/cli/cli_error.hpp>
 #include <filesystem>
 #include <iostream>

@@ -1,5 +1,5 @@
 #include "preprocessor_path.hpp"
-#include <arkanjo/base/config.hpp>
+#include <arkanjo/base/config/config.hpp>
 
 PreprocessorPath::PreprocessorPath() { }
 

@@ -2,7 +2,7 @@
 #include <arkanjo/base/path.hpp>
 
 #include <iostream>
-#include <arkanjo/base/config.hpp>
+#include <arkanjo/base/config/config.hpp>
 #include <arkanjo/base/preprocess_state.hpp>
 
 Path::Path(const fs::path& _path) {

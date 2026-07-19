@@ -1,6 +1,6 @@
 #include "preprocessor_list.hpp"
 
-#include <arkanjo/base/config.hpp>
+#include <arkanjo/base/config/config.hpp>
 #include <arkanjo/base/preprocess_state.hpp>
 
 void PreprocessorList::print_containers(std::vector<ContainerInfo>& containers) {

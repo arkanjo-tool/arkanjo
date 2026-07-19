@@ -1,7 +1,7 @@
 #include <arkanjo/formatter/format_manager.hpp>
 #include <arkanjo/methods/diff/diff_method.hpp>
 #include <arkanjo/base/features/source_feature.hpp>
-#include <arkanjo/base/config.hpp>
+#include <arkanjo/base/config/config.hpp>
 #include <arkanjo/utils/utils.hpp>
 
 using fm = FormatterManager;

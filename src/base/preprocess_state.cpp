@@ -1,6 +1,6 @@
 #include <arkanjo/base/preprocess_state.hpp>
 #include <arkanjo/utils/utils.hpp>
-#include <arkanjo/base/config.hpp>
+#include <arkanjo/base/config/config.hpp>
 
 void Preprocess_State::save_current_run_params(const fs::path& path, const fs::path& cache_path) {
     auto end = std::chrono::system_clock::now();

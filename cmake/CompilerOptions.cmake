@@ -1,4 +1,4 @@
-set(THIRD_PARTY_DIR "" CACHE PATH "Override for third party directory")
+set(ARKANJO_THIRD_PARTY_DIR "" CACHE PATH "Override for third party directory")
 
 add_library(project_options INTERFACE)
 
@@ -8,7 +8,7 @@ target_include_directories(project_options
 )
 
 target_compile_definitions(project_options INTERFACE 
-    THIRD_PARTY_DIR="${CMAKE_INSTALL_FULL_LIBDIR}/arkanjo/third-party"
+    ARKANJO_THIRD_PARTY_DIR=${CMAKE_INSTALL_FULL_LIBDIR}/arkanjo/third-party
     PROJECT_VERSION=\"${PROJECT_VERSION}\"
     $<$<CONFIG:Debug>:DEBUG>
     $<$<CONFIG:Release>:NDEBUG>

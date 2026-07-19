@@ -2,7 +2,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <arkanjo/utils/utils.hpp>
-#include <arkanjo/base/config.hpp>
+#include <arkanjo/base/config/config.hpp>
 #include <arkanjo/base/features/source_feature.hpp>
 #include <arkanjo/base/features/ast_feature.hpp>
 #include <arkanjo/base/features/metadata_feature.hpp>

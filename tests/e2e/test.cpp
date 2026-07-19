@@ -1,5 +1,5 @@
 #include "../src/commands/pre/build/preprocessor_build.hpp"
-#include <arkanjo/base/config.hpp>
+#include <arkanjo/base/config/config.hpp>
 #include <arkanjo/utils/utils.hpp>
 #include <filesystem>
 #include <iostream>

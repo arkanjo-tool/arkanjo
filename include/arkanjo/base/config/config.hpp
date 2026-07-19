@@ -13,16 +13,7 @@
 
 #pragma once
 
-#include <string>
-#include <filesystem>
-
-#include <arkanjo/base/config_types.hpp>
-
-namespace fs = std::filesystem;
-
-#ifndef THIRD_PARTY_DIR
-  #define THIRD_PARTY_DIR "third-party"
-#endif
+#include <arkanjo/base/config/schema.hpp>
 
 /**
  * @brief Singleton configuration manager class
@@ -30,7 +21,15 @@ namespace fs = std::filesystem;
  * Manages application paths and runtime configuration settings.
  * Implements the singleton pattern to ensure single instance access.
  */
-class Config {
+class Config : public arkanjo::ConfigSchema {
+  private:
+    /**
+     * @brief Validates the current configuration.
+     *
+     * @throws std::runtime_error If validation fails.
+     */
+    void validate();
+
   protected:
     /**
      * @brief Protected constructor for singleton pattern
@@ -38,17 +37,6 @@ class Config {
     Config() = default;
 
   public:
-    std::string program_name{"arkanjo"}; ///< Name of the program
-    fs::path base_path{"tmp/arkanjo"}; ///< Default base path for temporary files
-    fs::path third_party_dir{"third-party"}; ///< Directory containing third-party dependencies
-    fs::path name_container{"default"}; ///< Name of the cache container
-
-    fs::path source_path{"source"}; ///< Source subdirectory name
-    // fs::path combined_path = fs::path("features") / "combined"; ///< Combined subdirectory name
-    fs::path header_path{"header"}; ///< Header subdirectory name
-    fs::path info_path{"info"}; ///< Info subdirectory name
-
-    config::Theme theme{config::Theme::Dark}; ///< Current terminal theme
     
     /**
      * @brief Deleted copy constructor
