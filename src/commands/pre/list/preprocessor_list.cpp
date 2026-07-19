@@ -49,7 +49,12 @@ bool PreprocessorList::run([[maybe_unused]] const ParsedOptions& options) {
             container.disk_usage = Utils::format_size(Utils::folder_size(entry.path()));
         }
 
-        container.extra = "";
+        auto version = !params.version.empty() ? "v" + params.version : "";
+        if (!Preprocess_State::is_cache_compatible(params.version)) {
+            version = RED(version);
+        }
+
+        container.extra = version;
         containers.push_back(container);
     }
 
