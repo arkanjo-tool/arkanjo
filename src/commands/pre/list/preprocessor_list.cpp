@@ -1,6 +1,7 @@
 #include "preprocessor_list.hpp"
 
 #include <arkanjo/base/config.hpp>
+#include <arkanjo/base/preprocess_state.hpp>
 
 void PreprocessorList::print_containers(std::vector<ContainerInfo>& containers) {
     size_t color_offset = no_color ? 0 :10;
@@ -37,8 +38,17 @@ bool PreprocessorList::run([[maybe_unused]] const ParsedOptions& options) {
 
         ContainerInfo container;
         container.name = entry.path().filename().string();
+
+        Config::config().name_container = container.name;
+        auto params = Preprocess_State::read_current_run_params();
+
         container.id = Utils::hash(container.name);
-        container.disk_usage = Utils::format_size(Utils::folder_size(entry.path())); 
+
+        container.disk_usage = Utils::format_size(params.size);
+        if (params.size <= 0) {
+            container.disk_usage = Utils::format_size(Utils::folder_size(entry.path()));
+        }
+
         container.extra = "";
         containers.push_back(container);
     }

@@ -2,15 +2,16 @@
 #include <arkanjo/utils/utils.hpp>
 #include <arkanjo/base/config.hpp>
 
-void Preprocess_State::save_current_run_params(const fs::path& path) {
+void Preprocess_State::save_current_run_params(const fs::path& path, const fs::path& cache_path) {
     auto end = std::chrono::system_clock::now();
     std::time_t end_time = std::chrono::system_clock::to_time_t(end);
     std::string time_str(std::ctime(&end_time));
     std::string version = PROJECT_VERSION;
     if (!time_str.empty() && time_str.back() == '\n')
         time_str.pop_back();
+    auto size = Utils::folder_size(cache_path);
 
-    json data = PreprocessRunParams{path, time_str, version};
+    json data = PreprocessRunParams{path, time_str, version, size};
 
     fs::path config_path = Config::config().base_path / Config::config().name_container / CONFIG_PATH;
     Utils::write_file(config_path, data.dump(4) + '\n');
