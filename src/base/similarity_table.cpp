@@ -144,8 +144,10 @@ std::vector<SimilarPair> Similarity_Table::get_all_similar_pairs() {
     return similar_pairs;
 }
 
+// TODO: Stable sort is currently used to preserve output compatibility.
+// Define an explicit ordering for ties and switch back to std::sort.
 void Similarity_Table::sort_pairs_by_similarity(std::vector<SimilarPair>& similar_pairs) const {
-    std::sort(
+    std::stable_sort(
         similar_pairs.begin(),
         similar_pairs.end(),
         [](const SimilarPair& pair1, const SimilarPair& pair2) {
@@ -154,7 +156,7 @@ void Similarity_Table::sort_pairs_by_similarity(std::vector<SimilarPair>& simila
 }
 
 void Similarity_Table::sort_pairs_by_line_number(std::vector<SimilarPair>& similar_pairs) const {
-    std::sort(
+    std::stable_sort(
         similar_pairs.begin(),
         similar_pairs.end(),
         [](const SimilarPair& pair1, const SimilarPair& pair2) {
