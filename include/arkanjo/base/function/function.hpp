@@ -47,6 +47,8 @@ class Function {
 
   private:
     Path path_;                        ///< Path object containing function location info
+    std::string name_;                 ///< Function name used as identifier
+
     std::vector<std::string> content_; ///< Function source code content
     std::vector<std::string> header_;  ///< Function header content
 
@@ -68,6 +70,12 @@ class Function {
     const Path& path() const;
 
     /**
+     * @brief Gets the function name
+     * @return Function name identifier
+     */
+    const std::string& name() const;
+
+    /**
      * @brief Gets the function location inside the source file.
      *
      * Contains declaration, begin, and end line numbers.
@@ -85,4 +93,12 @@ class Function {
      * @return Vector containing the merged header and source lines.
      */
     std::vector<std::string> build_all_content() const;
+
+    /**
+     * @brief Checks whether the function contains a pattern.
+     *
+     * @param Text pattern to search.
+     * @return if the pattern is found.
+     */
+    bool contains_given_pattern(const std::string& pattern) const;
 };

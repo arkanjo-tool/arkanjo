@@ -9,10 +9,12 @@ using fm = FormatterManager;
 
 void SimilarFunctionFinder::find_path_that_meets_pattern() {
     std::vector<Path> paths = similarity_table->get_path_list();
+    FunctionLoader loader;
     for (const auto& _path : paths) {
-        if (_path.contains_given_pattern(function_pattern)) {
+        auto function = loader.load(_path);
+
+        if (function.contains_given_pattern(function_pattern))
             path = _path;
-        }
     }
 }
 
@@ -55,7 +57,7 @@ void SimilarFunctionFinder::print_similar_functions() {
     fm::write(Utils::LIMITER_PRINT);
     if (open_folder) {
         auto params = Preprocess_State::read_current_run_params();
-        fs::path full_path = params.path / fs::path{path.build_relative_path()};
+        fs::path full_path = params.path / fs::path{path.relative_path()};
         fs::path dir_path = full_path.parent_path();
         Utils::open_folder(dir_path);
         return;
@@ -97,7 +99,7 @@ bool SimilarFunctionFinder::run(const ParsedOptions& options) {
 
     find_path_that_meets_pattern();
 
-    if (path.is_empty()) {
+    if (path.empty()) {
         print_empty_path_message();
         return true;
     }

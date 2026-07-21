@@ -26,7 +26,18 @@ class FunctionPrinter {
      */
     static void print_code(const Function& function, bool no_numbers = false);
 
+    /**
+     * @brief Formats path for display
+     *
+     * @param function Function to format.
+     *
+     * @return string Formatted path string
+     */
+    static std::string format_path_message_in_pair(const Function& function);
+
   private:
+    static constexpr const char* BETWEEN_RELATIVE_AND_FUNCTION_NAME =
+        "::"; ///< Separator for path formatting
     static constexpr const char* FUNCTION_PREFIX_PRINT =
         "Function: "; ///< Prefix for function name display
     static constexpr const char* RELATIVE_PATH_PRINT = "File: ";     ///< Prefix for path display

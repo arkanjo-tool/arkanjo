@@ -20,6 +20,17 @@ class FunctionLoader {
      */
     Function load(const Path& path);
 
+    /**
+     * @brief Loads function metadata from a path.
+     *
+     * Loads function information such as name, location, and path without
+     * loading source or header contents.
+     *
+     * @param Path identifying the function.
+     * @return Function containing metadata information.
+     */
+    Function load_metadata(const Path& path);
+
   private:
     static constexpr const char* LINE_DECLARATION_JSON =
         "line_declaration"; ///< JSON key for declaration line
