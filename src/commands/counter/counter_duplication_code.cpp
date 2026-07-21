@@ -12,12 +12,12 @@ bool CounterDuplicationCode::is_path_processed_path(Path path) {
 
 int CounterDuplicationCode::get_number_of_lines_in_path(const Path& path) {
     FunctionLoader loader;
-    auto function = loader.load(path);
+    auto function = loader.load_metadata(path);
     return function.scope_location().size();
 }
 
 void CounterDuplicationCode::register_code_duplication(const Path& path1, const Path& path2, int number_of_lines) {
-    std::vector<std::string> common_folder_path = path1.get_common_folders(path2);
+    std::vector<std::string> common_folder_path = path1.common_folders(path2);
     counter_duplication_code_trie.add_folder_duplication_code(common_folder_path, number_of_lines);
 }
 

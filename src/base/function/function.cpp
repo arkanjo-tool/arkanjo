@@ -6,6 +6,10 @@ const Path& Function::path() const {
     return path_;
 }
 
+const std::string& Function::name() const {
+    return name_;
+}
+
 Function::Function(const Path& _path)
     : path_(_path),
       location_{} {}
@@ -32,4 +36,10 @@ std::vector<std::string> Function::build_all_content() const {
         }
     }
     return ret;
+}
+
+bool Function::contains_given_pattern(const std::string& pattern) const {
+    fs::path relative_path_plus_function_name = path().relative_path() / name();
+
+    return relative_path_plus_function_name.string().find(pattern) != std::string::npos;
 }
