@@ -16,7 +16,6 @@
 #include <utility>
 #include <vector>
 
-#include <arkanjo/base/function/function.hpp>
 #include <arkanjo/base/path.hpp>
 #include <arkanjo/base/similarity_table.hpp>
 
