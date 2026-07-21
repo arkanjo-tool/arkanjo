@@ -5,9 +5,10 @@
 #include <iostream>
 #include <sstream>
 
-#include <arkanjo/formatter/format_manager.hpp>
-#include <arkanjo/base/function/function.hpp>
+#include <arkanjo/base/function/function_loader.hpp>
+#include <arkanjo/base/function/function_printer.hpp>
 #include <arkanjo/cli/cli_error.hpp>
+#include <arkanjo/formatter/format_manager.hpp>
 
 struct DiffOutputPayload {
     std::ostream* output;
@@ -56,10 +57,12 @@ bool GitDiffFunction::run(const ParsedOptions& options) {
 
 std::vector<Path> GitDiffFunction::find_matching_paths(const std::string& pattern) const {
     std::vector<Path> matches;
+    FunctionLoader loader;
     for (const auto& path : similarity_table->get_path_list()) {
-        if (path.contains_given_pattern(pattern)) {
+        auto function = loader.load_metadata(path);
+
+        if (function.contains_given_pattern(pattern))
             matches.push_back(path);
-        }
     }
     return matches;
 }
@@ -83,8 +86,10 @@ Path GitDiffFunction::choose_single_path(const std::vector<Path>& candidates, co
     if (candidates.size() > 1) {
         std::ostringstream message;
         message << "Multiple functions match the pattern '" << pattern << "':\n";
+        FunctionLoader loader;
         for (const auto& path : candidates) {
-            message << "  - " << path.format_path_message_in_pair() << "\n";
+            auto function = loader.load_metadata(path);
+            message << "  - " << FunctionPrinter::format_path_message_in_pair(function) << "\n";
         }
         message << "Please use a more specific function name pattern.";
         throw CLIError(message.str());
@@ -175,10 +180,9 @@ int GitDiffFunction::print_diff_line(const git_diff_delta* /*delta*/, const git_
 }
 
 bool GitDiffFunction::diff_functions(const Path& first, const Path& second) const {
-    Function first_function(first);
-    Function second_function(second);
-    first_function.load();
-    second_function.load();
+    FunctionLoader loader;
+    auto first_function = loader.load(first);
+    auto second_function = loader.load(second);
 
     std::string first_text = build_text_from_lines(first_function.build_all_content());
     std::string second_text = build_text_from_lines(second_function.build_all_content());
@@ -189,8 +193,12 @@ bool GitDiffFunction::diff_functions(const Path& first, const Path& second) cons
 
     DiffOutputPayload payload{&std::cout, false};
     int error = git_diff_buffers(
-        first_text.c_str(), first_text.size(), first.build_function_name().c_str(),
-        second_text.c_str(), second_text.size(), second.build_function_name().c_str(),
+        first_text.c_str(),
+        first_text.size(),
+        first_function.name().c_str(),
+        second_text.c_str(),
+        second_text.size(),
+        second_function.name().c_str(),
         &diff_options,
         &GitDiffFunction::print_diff_file,
         nullptr,

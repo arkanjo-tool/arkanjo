@@ -1,6 +1,8 @@
-#include <arkanjo/formatter/format_manager.hpp>
 #include "random_selector.hpp"
 #include "random_selector_entry.hpp"
+#include <arkanjo/base/function/function_loader.hpp>
+#include <arkanjo/base/function/function_printer.hpp>
+#include <arkanjo/formatter/format_manager.hpp>
 
 using fm = FormatterManager;
 
@@ -34,13 +36,17 @@ std::vector<SimilarPair> RandomSelector::make_random_selection(std::vector<Simil
 
 void RandomSelector::print_path_pairs(std::vector<SimilarPair> path_pairs) {
     std::vector<RandomSelectorEntry> vector_entry = {};
+    FunctionLoader loader;
     for (const auto& path_pair : path_pairs) {
         const Path& path1 = similarity_table->get_path(path_pair.id1);
         const Path& path2 = similarity_table->get_path(path_pair.id2);
 
+        auto function1 = loader.load_metadata(path1);
+        auto function2 = loader.load_metadata(path2);
+
         vector_entry.push_back(RandomSelectorEntry{
-            path1.format_path_message_in_pair(),
-            path2.format_path_message_in_pair(),
+            FunctionPrinter::format_path_message_in_pair(function1),
+            FunctionPrinter::format_path_message_in_pair(function2),
             path_pair.similarity
         });
     }

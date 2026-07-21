@@ -12,7 +12,8 @@
 
 #pragma once
 
-#include <arkanjo/base/function/function.hpp>
+#include <functional>
+
 #include <arkanjo/base/path.hpp>
 
 #include <arkanjo/base/similarity_table.hpp>

@@ -7,8 +7,10 @@ The code filter every file that has the pattern as a substring, so be carefull w
 #include <algorithm>
 #include <utility>
 
-#include <arkanjo/formatter/format_manager.hpp>
 #include "similarity_explorer.hpp"
+#include <arkanjo/base/function/function_loader.hpp>
+#include <arkanjo/base/function/function_printer.hpp>
+#include <arkanjo/formatter/format_manager.hpp>
 
 using fm = FormatterManager;
 
@@ -19,9 +21,9 @@ int SimilarityExplorer::find_number_pairs_show(int number_pair_found) const {
     return std::min(limit_on_results, number_pair_found);
 }
 
-bool SimilarityExplorer::match_pattern(const Path& path1, const Path& path2) const {
-    bool match1 = path1.contains_given_pattern(pattern_to_match);
-    bool match2 = path2.contains_given_pattern(pattern_to_match);
+bool SimilarityExplorer::match_pattern(const Function& function1, const Function& function2) const {
+    bool match1 = function1.contains_given_pattern(pattern_to_match);
+    bool match2 = function2.contains_given_pattern(pattern_to_match);
 
     if (both_path_need_to_match_pattern) {
         return match1 && match2;
@@ -30,46 +32,49 @@ bool SimilarityExplorer::match_pattern(const Path& path1, const Path& path2) con
 }
 
 SimilarityExplorerEntry SimilarityExplorer::process_similar_path_pair(const Path& path1, const Path& path2) {
-    if (!match_pattern(path1, path2)) {
+    FunctionLoader loader;
+    auto function1 = loader.load_metadata(path1);
+    auto location1 = function1.scope_location();
+
+    auto function2 = loader.load_metadata(path2);
+    auto location2 = function2.scope_location();
+
+    if (!match_pattern(function1, function2))
         return {};
-    }
     if (limit_on_results != UNLIMITED_RESULTS && processed_results >= limit_on_results) {
         return {};
     }
     processed_results++;
 
-    Function function1(path1);
-    function1.load();
-
-    Function function2(path2);
-    function2.load();
-
     return {
-        .path_a = path1.format_path_message_in_pair(),
-        .path_b = path2.format_path_message_in_pair(),
-        .dir_a = path1.build_relative_path().parent_path().string(),
-        .dir_b = path2.build_relative_path().parent_path().string(),
-        .filename_a = path1.build_relative_path().filename().string(),
-        .filename_b = path2.build_relative_path().filename().string(),
-        .func_a = path1.build_function_name(),
-        .func_b = path2.build_function_name(),
-        .start_a = function1.get_scope_function_in_file()[0],
-        .start_b = function2.get_scope_function_in_file()[0],
-        .end_a = function1.get_scope_function_in_file()[2],
-        .end_b = function2.get_scope_function_in_file()[2],
-        .duplicated_lines = function1.number_of_lines()
+        .path_a = FunctionPrinter::format_path_message_in_pair(function1),
+        .path_b = FunctionPrinter::format_path_message_in_pair(function2),
+        .dir_a = path1.relative_path().parent_path().string(),
+        .dir_b = path2.relative_path().parent_path().string(),
+        .filename_a = path1.relative_path().filename().string(),
+        .filename_b = path2.relative_path().filename().string(),
+        .func_a = function1.name(),
+        .func_b = function2.name(),
+        .start_a = location1.declaration,
+        .start_b = location2.declaration,
+        .end_a = location1.end,
+        .end_b = location2.end,
+        .duplicated_lines = location1.size()
     };
 }
 
 int SimilarityExplorer::find_number_pair_found(const std::vector<SimilarPair>& similar_path_pairs) const {
     int count = 0;
+    FunctionLoader loader;
     for (const auto& similar_pair : similar_path_pairs) {
         const Path& path1 = similarity_table->get_path(similar_pair.id1);
         const Path& path2 = similarity_table->get_path(similar_pair.id2);
 
-        if (match_pattern(path1, path2)) {
+        auto function1 = loader.load_metadata(path1);
+        auto function2 = loader.load_metadata(path2);
+
+        if (match_pattern(function1, function2))
             count++;
-        }
     }
     return count;
 }
@@ -101,17 +106,24 @@ void SimilarityExplorer::explorer_clusters() {
         fm::write(Utils::LIMITER_PRINT);
 
         std::vector<SimilarityExplorerEntry> entries{};
+        FunctionLoader loader;
         for (const auto& path : info.paths) {
-            Function function(path);
-            function.load();
+            auto function = loader.load_metadata(path);
+            auto location = function.scope_location();
             entries.push_back({
-                path.format_path_message_in_pair(), "", 
-                path.build_relative_path().parent_path().string(), "",
-                path.build_relative_path().filename().string(), "",
-                path.build_function_name(), "",
-                function.get_scope_function_in_file()[0], 0,
-                function.get_scope_function_in_file()[2], 0,
-                function.number_of_lines()
+                FunctionPrinter::format_path_message_in_pair(function),
+                "",
+                path.relative_path().parent_path().string(),
+                "",
+                path.relative_path().filename().string(),
+                "",
+                function.name(),
+                "",
+                location.declaration,
+                0,
+                location.end,
+                0,
+                location.size(),
             });
         }
 
@@ -152,7 +164,8 @@ void SimilarityExplorer::explorer() {
         const Path& path2 = similarity_table->get_path(similar_pair.id2);
 
         auto entry = process_similar_path_pair(path1, path2);
-        if (entry.duplicated_lines < 0) continue;
+        if (entry.duplicated_lines <= 0)
+            continue;
         vector_entry.push_back(entry);
     }
     fm::write(template_processed_results_output, vector_entry, Format::AUTO, [](size_t i) {

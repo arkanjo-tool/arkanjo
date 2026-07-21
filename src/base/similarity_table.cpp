@@ -1,5 +1,6 @@
-#include <arkanjo/base/similarity_table.hpp>
+#include <arkanjo/base/function/function_loader.hpp>
 #include <arkanjo/base/preprocess_state.hpp>
+#include <arkanjo/base/similarity_table.hpp>
 
 #include <arkanjo/utils/utils.hpp>
 
@@ -124,6 +125,7 @@ std::vector<Path> Similarity_Table::get_similar_path_to_the_reference(const Path
 
 std::vector<SimilarPair> Similarity_Table::get_all_similar_pairs() {
     std::vector<SimilarPair> similar_pairs;
+    FunctionLoader loader;
     for (const auto& [ids, similarity] : similarity_table) {
         const Path& path1 = paths[ids.first];
         const Path& path2 = paths[ids.second];
@@ -131,21 +133,22 @@ std::vector<SimilarPair> Similarity_Table::get_all_similar_pairs() {
         if (!is_similar(path1, path2))
             continue;
 
-        Function function(path1);
-        function.load();
+        auto function = loader.load(path1);
 
         similar_pairs.push_back({
-            similarity, 
-            function.number_of_lines(), 
-            ids.first, 
-            ids.second
+            similarity,
+            function.scope_location().size(),
+            ids.first,
+            ids.second,
         });
     }
     return similar_pairs;
 }
 
+// TODO: Stable sort is currently used to preserve output compatibility.
+// Define an explicit ordering for ties and switch back to std::sort.
 void Similarity_Table::sort_pairs_by_similarity(std::vector<SimilarPair>& similar_pairs) const {
-    std::sort(
+    std::stable_sort(
         similar_pairs.begin(),
         similar_pairs.end(),
         [](const SimilarPair& pair1, const SimilarPair& pair2) {
@@ -154,7 +157,7 @@ void Similarity_Table::sort_pairs_by_similarity(std::vector<SimilarPair>& simila
 }
 
 void Similarity_Table::sort_pairs_by_line_number(std::vector<SimilarPair>& similar_pairs) const {
-    std::sort(
+    std::stable_sort(
         similar_pairs.begin(),
         similar_pairs.end(),
         [](const SimilarPair& pair1, const SimilarPair& pair2) {
@@ -163,11 +166,10 @@ void Similarity_Table::sort_pairs_by_line_number(std::vector<SimilarPair>& simil
 }
 
 int Similarity_Table::get_number_lines_in_pair(const Path& path1, const Path& path2) {
-    Function f1(path1);
-    f1.load();
-    Function f2(path2);
-    f2.load();
-    return f1.number_of_lines() + f2.number_of_lines();
+    FunctionLoader loader;
+    auto f1 = loader.load(path1);
+    auto f2 = loader.load(path2);
+    return f1.scope_location().size() + f2.scope_location().size();
 }
 
 std::vector<Cluster> Similarity_Table::get_clusters() {
