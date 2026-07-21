@@ -26,7 +26,7 @@ void BigCloneTailorEvaluator::read_clone_labels() {
 }
 
 int BigCloneTailorEvaluator::path_to_id(Path path) {
-    std::string relative_path = path.build_relative_path();
+    std::string relative_path = path.relative_path();
     std::vector<std::string> tokens = Utils::split_string(relative_path, '/');
     std::string file_name = tokens.back();
     for (int i = 0; i < int(EXTENSION.size()); i++) {

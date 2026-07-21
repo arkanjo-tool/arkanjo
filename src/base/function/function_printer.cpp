@@ -7,8 +7,8 @@ void FunctionPrinter::print_basic_info(const Function& function) {
     auto params = Preprocess_State::read_current_run_params();
     auto location = function.scope_location();
 
-    std::string function_message = FUNCTION_PREFIX_PRINT + function.path().build_function_name();
-    fs::path relative_path = params.path / fs::path{function.path().build_relative_path()};
+    std::string function_message = FUNCTION_PREFIX_PRINT + function.name();
+    fs::path relative_path = params.path / fs::path{function.path().relative_path()};
     std::string relative_message = RELATIVE_PATH_PRINT + relative_path.string();
     std::string start_message = LINE_DECLARATION_PRINT + std::to_string(location.declaration + 1) +
         "-" + std::to_string(location.end + 1);
@@ -35,4 +35,10 @@ void FunctionPrinter::print_code(const Function& function, bool no_numbers) {
             std::cout << line << '\n';
         }
     }
+}
+
+std::string FunctionPrinter::format_path_message_in_pair(const Function& function) {
+    const auto& path = function.path();
+
+    return path.relative_path().string() + BETWEEN_RELATIVE_AND_FUNCTION_NAME + function.name();
 }

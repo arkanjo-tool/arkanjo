@@ -16,6 +16,7 @@
 #include <utility>
 #include <vector>
 
+#include <arkanjo/base/function/function.hpp>
 #include <arkanjo/base/path.hpp>
 #include <arkanjo/base/similarity_table.hpp>
 
@@ -100,7 +101,7 @@ class SimilarityExplorer : public CommandBase<SimilarityExplorer> {
      * @param path2 Second path to check
      * @return bool True if paths pass filter
      */
-    bool match_pattern(const Path& path1, const Path& path2) const;
+    bool match_pattern(const Function& function1, const Function& function2) const;
 
     /**
      * @brief Processes a pair of similar paths
