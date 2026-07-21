@@ -1,9 +1,9 @@
-#include <iostream>
-
-#include <arkanjo/formatter/format_manager.hpp>
-#include <arkanjo/base/preprocess_state.hpp>
 #include "similar_function_finder.hpp"
 #include "similar_function_finder_entry.hpp"
+#include <arkanjo/base/function/function_loader.hpp>
+#include <arkanjo/base/function/function_printer.hpp>
+#include <arkanjo/base/preprocess_state.hpp>
+#include <arkanjo/formatter/format_manager.hpp>
 
 using fm = FormatterManager;
 
@@ -23,15 +23,14 @@ void SimilarFunctionFinder::print_empty_path_message() const {
 }
 
 Function SimilarFunctionFinder::get_reference_function(const Path& path) const {
-    Function function(path);
-    function.load();
-    return function;
+    FunctionLoader loader;
+    return loader.load(path);
 }
 
 void SimilarFunctionFinder::print_reference_path() {
     fm::write(REFERENCE_PATH_MESSAGE);
     auto function = get_reference_function(path);
-    function.print_basic_info();
+    FunctionPrinter::print_basic_info(function);
 }
 
 void SimilarFunctionFinder::print_similar_functions(const std::vector<Path>& similar_paths) {
@@ -42,7 +41,7 @@ void SimilarFunctionFinder::print_similar_functions(const std::vector<Path>& sim
     for (const auto& similar_path : similar_paths) {
         auto function = get_reference_function(similar_path);
         fm::write(Utils::LIMITER_PRINT);
-        function.print_basic_info();
+        FunctionPrinter::print_basic_info(function);
         fm::write(Utils::LIMITER_PRINT);
         fm::write("");
     }
@@ -66,9 +65,9 @@ void SimilarFunctionFinder::print_similar_functions() {
 
 void SimilarFunctionFinder::handle_show_mode() {
     Function ref = get_reference_function(path);
-    ref.print_basic_info();
+    FunctionPrinter::print_basic_info(ref);
     fm::write("");
-    ref.print_code(no_numbers);
+    FunctionPrinter::print_code(ref, no_numbers);
 }
 
 SimilarFunctionFinder::SimilarFunctionFinder(Similarity_Table* _similarity_table) {

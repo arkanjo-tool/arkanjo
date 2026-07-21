@@ -5,9 +5,9 @@
 #include <iostream>
 #include <sstream>
 
-#include <arkanjo/formatter/format_manager.hpp>
-#include <arkanjo/base/function/function.hpp>
+#include <arkanjo/base/function/function_loader.hpp>
 #include <arkanjo/cli/cli_error.hpp>
+#include <arkanjo/formatter/format_manager.hpp>
 
 struct DiffOutputPayload {
     std::ostream* output;
@@ -175,10 +175,9 @@ int GitDiffFunction::print_diff_line(const git_diff_delta* /*delta*/, const git_
 }
 
 bool GitDiffFunction::diff_functions(const Path& first, const Path& second) const {
-    Function first_function(first);
-    Function second_function(second);
-    first_function.load();
-    second_function.load();
+    FunctionLoader loader;
+    auto first_function = loader.load(first);
+    auto second_function = loader.load(second);
 
     std::string first_text = build_text_from_lines(first_function.build_all_content());
     std::string second_text = build_text_from_lines(second_function.build_all_content());

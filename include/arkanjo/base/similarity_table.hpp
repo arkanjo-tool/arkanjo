@@ -19,7 +19,6 @@
 #include <utility>
 #include <vector>
 
-#include <arkanjo/base/function/function.hpp>
 #include <arkanjo/base/path.hpp>
 #include <arkanjo/base/config/config.hpp>
 
@@ -45,7 +44,7 @@ struct PathId {
 
 struct SimilarPair {
   double similarity;
-  int number_lines = 0;
+  uint32_t number_lines = 0;
   PathId id1;
   PathId id2;
 };

@@ -14,11 +14,11 @@ struct SimilarityExplorerEntry {
   std::string filename_b;
   std::string func_a;
   std::string func_b;
-  int start_a;
-  int start_b;
-  int end_a;
-  int end_b;
-  int duplicated_lines{-1};
+  uint32_t start_a;
+  uint32_t start_b;
+  uint32_t end_a;
+  uint32_t end_b;
+  uint32_t duplicated_lines{0};
 };
 
 inline void to_json(json& j, const SimilarityExplorerEntry& d) {
