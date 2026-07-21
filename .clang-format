@@ -1,7 +1,60 @@
+---
+Language: Cpp
+BasedOnStyle: LLVM
+
 IndentWidth: 4
+TabWidth: 4
 UseTab: Never
-TabWidth: 4 
+ColumnLimit: 100
+MaxEmptyLinesToKeep: 1
+SeparateDefinitionBlocks: Always
+
 PointerAlignment: Left
-ColumnLimit: 0
+
+RemoveBracesLLVM: true
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterFunction: false
+  AfterStruct: false
+  AfterClass: false
+  AfterControlStatement: false
+AllowShortBlocksOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: Empty
+
+AlignAfterOpenBracket: BlockIndent
+
 BinPackArguments: false
-AlignAfterOpenBracket: DontAlign
+BinPackParameters: false
+
+AllowAllParametersOfDeclarationOnNextLine: true
+AllowAllArgumentsOnNextLine: true
+BreakFunctionDefinitionParameters: false
+# Lowers the penalty to prefer breaking the line immediately after the opening (
+PenaltyBreakBeforeFirstCallParameter: 1
+
+AlwaysBreakAfterReturnType: None
+AlwaysBreakAfterDefinitionReturnType: None
+
+# High penalty to prevent the return type from being separated from the function
+# name
+PenaltyReturnTypeOnItsOwnLine: 10000 
+
+AlignOperands: DontAlign
+BreakBeforeTernaryOperators: true
+
+BreakInheritanceList: AfterColon
+PackConstructorInitializers: Never
+
+ReflowComments: false
+
+InsertNewlineAtEOF: true
+
+# TIPS FOR BETTER FORMATTING:
+#
+# 1. In lists, arrays, or initializer lists broken across multiple lines, 
+#    leave a trailing comma after the last element. This generates cleaner 
+#    diffs and makes version control history easier to track.
+#
+# 2. Consider introducing `using` aliases or intermediate variables to 
+#    break down excessively long lines. This prevents awkward line breaks 
+#    from the formatter and greatly improves overall code readability.
