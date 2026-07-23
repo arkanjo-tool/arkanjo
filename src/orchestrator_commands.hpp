@@ -28,7 +28,8 @@ namespace OrchestratorCommands {
             {{"git-diff"}, [&]() { return std::make_unique<GitDiffFunction>(&table); }},
             {{"version"}, [&]() { return std::make_unique<Version>(&table); }},
             {{"help"}, [&]() { return std::make_unique<Help>(commands); }},
-            {{"preprocessor"}, [&]() { return nullptr; }}
+            {{"preprocessor"}, [&]() { return nullptr; }},
+            {{"benchmark"}, [&]() { return nullptr; }},
         };
 
         return commands;
