@@ -1,6 +1,7 @@
 import argparse
 
 from .run import main__run, adapters
+from .inspect import main__inspect
 
 def main():
     parser = argparse.ArgumentParser(
@@ -40,6 +41,27 @@ def main():
     parser.add_argument(
         "--fast", action="store_true",
         help="Run a reduced benchmark suite (10%%)."
+    )
+
+    subparsers = parser.add_subparsers(dest="command")
+
+    inspect_parser = subparsers.add_parser(
+        "inspect",
+        help="Inspect benchmark results interactively.",
+        description=(
+            "Open an interactive interface to review benchmark results."
+        ),
+    )
+    inspect_parser.set_defaults(func=main__inspect)
+    inspect_parser.add_argument(
+        "file",
+        help="Path to the benchmark inspection file."
+    )
+
+    inspect_parser.add_argument(
+        "--result",
+        choices=["TP", "FP", "FN", "TN"],
+        help="Filter inspection results by classification outcome."
     )
 
     args = parser.parse_args()
