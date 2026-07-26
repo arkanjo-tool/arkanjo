@@ -102,6 +102,14 @@ class Path {
      */
     bool operator<(const Path& path) const;
 
+    /*
+     * @brief Path inequality comparison operator.
+     *
+     * @param path Other path to compare.
+     * @return True if the paths are different.
+     */
+    bool operator!=(const Path& path) const;
+
     /**
      * @brief Formats path for display
      * @return string Formatted path string

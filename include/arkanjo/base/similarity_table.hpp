@@ -205,6 +205,8 @@ class Similarity_Table {
      */
     bool is_similar(const Path& path1, const Path& path2);
 
+    void normalize_pair(PathId& id1, PathId& id2) const;
+
     /**
      * @brief Gets list of all known paths
      * @return vector<Path> All paths in table
@@ -225,6 +227,8 @@ class Similarity_Table {
      * @return vector<SimilarPair> Similar pairs with scores
      */
     std::vector<SimilarPair> get_all_similar_pairs();
+
+    bool compare_paths(const SimilarPair& a, const SimilarPair& b) const;
 
     /**
      * @brief Sorts path pairs by line count

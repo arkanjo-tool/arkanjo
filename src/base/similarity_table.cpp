@@ -3,6 +3,11 @@
 
 #include <arkanjo/utils/utils.hpp>
 
+void Similarity_Table::normalize_pair(PathId& id1, PathId& id2) const {
+    if (paths[id2] < paths[id1])
+        std::swap(id1, id2);
+}
+
 PathId Similarity_Table::find_id_path(const Path& path) {
     auto [it, inserted] = path_id.try_emplace(path, paths.size());
 
@@ -22,9 +27,7 @@ void Similarity_Table::read_comparation(std::ifstream& table_file) {
     PathId id1 = find_id_path(Path(string_path1));
     PathId id2 = find_id_path(Path(string_path2));
 
-    if (id1 > id2) {
-        std::swap(id1, id2);
-    }
+    normalize_pair(id1, id2);
 
     similarity_graph[id1].push_back(std::make_pair(id2, similarity));
     similarity_graph[id2].push_back(std::make_pair(id1, similarity));
@@ -80,9 +83,7 @@ double Similarity_Table::get_similarity(const Path& path1, const Path& path2) {
     if (id1 == id2) {
         return MAXIMUM_SIMILARITY;
     }
-    if (id1 > id2) {
-        std::swap(id1, id2);
-    }
+    normalize_pair(id1, id2);
     std::pair<PathId, PathId> aux = std::make_pair(id1, id2);
     auto it = similarity_table.find(aux);
     if (it != similarity_table.end())
@@ -144,12 +145,25 @@ std::vector<SimilarPair> Similarity_Table::get_all_similar_pairs() {
     return similar_pairs;
 }
 
+bool Similarity_Table::compare_paths(const SimilarPair& a, const SimilarPair& b) const {
+    if (paths[a.id1] != paths[b.id1])
+        return paths[a.id1] < paths[b.id1];
+
+    if (paths[a.id2] != paths[b.id2])
+        return paths[a.id2] < paths[b.id2];
+
+    return false;
+}
+
 void Similarity_Table::sort_pairs_by_similarity(std::vector<SimilarPair>& similar_pairs) const {
     std::sort(
         similar_pairs.begin(),
         similar_pairs.end(),
-        [](const SimilarPair& pair1, const SimilarPair& pair2) {
-            return pair1.similarity > pair2.similarity;
+        [this](const SimilarPair& a, const SimilarPair& b) {
+            if (a.similarity != b.similarity)
+                return a.similarity > b.similarity;
+
+            return compare_paths(a, b);
         });
 }
 
@@ -157,8 +171,11 @@ void Similarity_Table::sort_pairs_by_line_number(std::vector<SimilarPair>& simil
     std::sort(
         similar_pairs.begin(),
         similar_pairs.end(),
-        [](const SimilarPair& pair1, const SimilarPair& pair2) {
-            return pair1.number_lines > pair2.number_lines;
+        [this](const SimilarPair& a, const SimilarPair& b) {
+            if (a.number_lines != b.number_lines)
+                return a.number_lines > b.number_lines;
+
+            return compare_paths(a, b);
         });
 }
 

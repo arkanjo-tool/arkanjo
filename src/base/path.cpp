@@ -68,6 +68,10 @@ bool Path::operator<(const Path& path) const {
     return resource_path < path.resource_path;
 }
 
+bool Path::operator!=(const Path& path) const {
+    return resource_path != path.resource_path;
+}
+
 bool Path::contains_given_pattern(const std::string& pattern) const {
     fs::path relative_path_plus_function_name = build_relative_path() / build_function_name();
     return relative_path_plus_function_name.string().find(pattern) != std::string::npos;
