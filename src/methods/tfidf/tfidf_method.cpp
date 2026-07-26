@@ -1,4 +1,4 @@
-#include <arkanjo/methods/tool/tool_method.hpp>
+#include <arkanjo/methods/tfidf/tfidf_method.hpp>
 #include <arkanjo/formatter/format_manager.hpp>
 #include <arkanjo/base/config/config.hpp>
 #include <arkanjo/base/features/source_feature.hpp>
@@ -7,12 +7,12 @@
 
 using fm = FormatterManager;
 
-ToolMethod::ToolMethod(const fs::path& base_path_, double similarity_) {
+TfidfMethod::TfidfMethod(const fs::path& base_path_, double similarity_) {
     base_path = base_path_;
     similarity = similarity_;
 }
 
-void ToolMethod::execute_by_feature(const fs::path& folder_path, const std::string feature_name) {
+void TfidfMethod::execute_by_feature(const fs::path& folder_path, const std::string feature_name) {
     fs::path output_parsed =  base_path / "output_parsed.txt";
     if (!feature_name.empty())
         fs::path output_parsed = base_path / ("output_parsed" + feature_name + ".txt");
@@ -22,7 +22,7 @@ void ToolMethod::execute_by_feature(const fs::path& folder_path, const std::stri
 
     std::string command_tool = "python3 -W ignore ";
     command_tool += Config::config().third_party_dir.string();
-    command_tool += "/duplicate-code-detection-tool/duplicate_code_detection.py";
+    command_tool += "/tfidf/duplicate_code_detection.py";
     command_tool += " --project-root-dir ";
     command_tool += folder_path.string();
     command_tool += " -d ";
@@ -43,7 +43,7 @@ void ToolMethod::execute_by_feature(const fs::path& folder_path, const std::stri
     pclose(pipe);
 }
 
-void ToolMethod::on_function(const FunctionData& fd) {
+void TfidfMethod::on_function(const FunctionData& fd) {
     fs::path base = base_path / source_feature_path;
 
     auto source = fd.get_feature<SourceFeature>();
@@ -56,7 +56,7 @@ void ToolMethod::on_function(const FunctionData& fd) {
     Utils::write_file(path, source->code + "\n");
 }
 
-void ToolMethod::execute() {
+void TfidfMethod::execute() {
     fs::path base = base_path / source_feature_path;
 
     execute_by_feature(base);

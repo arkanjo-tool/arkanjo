@@ -58,8 +58,8 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-#Ignore duplicate-code-detection-tool from https://github.com/platisd/duplicate-code-detection-tool
-third-party/duplicate-code-detection-tool
+#Ignore gensim from https://github.com/platisd/duplicate-code-detection-tool
+#third-party/tfidf
 
 
 #Ignore BigCloneEval Tool

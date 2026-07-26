@@ -4,7 +4,7 @@
 # !/bin/bash
 # This script automatize the evaluation of BigCloneEval on this tool
 # Set the BigCloneEval repository correct on this folder before executing this script
-# Set the duplicate-code_detection-tool correct on this folder before executing this script
+# Set the tfidf/ correct on this folder before executing this script
 
 DIR="$(pwd)"
 RELATIVE="/BigCloneEval/ijadataset/bcb_reduced/"
@@ -37,7 +37,7 @@ do
 	sudo rm -r tmp
 	./breaker $path
 
-	sudo python3 -W ignore duplicate-code-detection-tool/duplicate_code_detection.py -d tmp/source > output_tool.txt
+	sudo python3 -W ignore tfidf/duplicate_code_detection.py -d tmp/source > output_tool.txt
 	./parser $similarity < output_tool.txt > output_parsed.txt
 
 	#Save the formated output

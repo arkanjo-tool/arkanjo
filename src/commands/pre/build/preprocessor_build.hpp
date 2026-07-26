@@ -13,7 +13,7 @@
 #pragma once
 
 #include <arkanjo/methods/diff/diff_method.hpp>
-#include <arkanjo/methods/tool/tool_method.hpp>
+#include <arkanjo/methods/tfidf/tfidf_method.hpp>
 #include <arkanjo/methods/ast/ast_method.hpp>
 #include <arkanjo/methods/llm/llm_method.hpp>
 
@@ -77,10 +77,10 @@ class PreprocessorBuild : public Preprocess_State, public CommandBase<Preprocess
     const std::vector<MethodInfo> MethodsType = {
       {
         1,
-        "gensim",
+        "tfidf",
         [](const std::string& base_path, float similarity,
            const std::vector<std::string>&) {
-          return std::make_unique<ToolMethod>(base_path, similarity);
+          return std::make_unique<TfidfMethod>(base_path, similarity);
         },
         "NLP text similarity using gensim"
       },
@@ -148,7 +148,7 @@ class PreprocessorBuild : public Preprocess_State, public CommandBase<Preprocess
         "functions; 'file' keeps each file whole and compares files against "
         "each other. Applies to every duplication finder method."},
       {"method", 0, RequiredArgument,
-        "Duplication finder method: 1|gensim, 2|diff, 3|tree-sitter, 4|language-model."},
+        "Duplication finder method: 1|tfidf, 2|diff, 3|tree-sitter, 4|language-model."},
       OPTION_END
     };
     PreprocessorBuild();

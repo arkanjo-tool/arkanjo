@@ -1,5 +1,5 @@
 /**
- * @file tool_method.hpp
+ * @file tfidf_method.hpp
  * @brief Main duplication detection tool interface
  *
  * Provides the primary interface for the code duplication detection tool,
@@ -15,7 +15,7 @@
 
 #include <string>
 #include <filesystem>
-#include <arkanjo/methods/tool/parser.hpp>
+#include <arkanjo/methods/tfidf/parser.hpp>
 #include <arkanjo/methods/method.hpp>
 namespace fs = std::filesystem;
 
@@ -26,7 +26,7 @@ namespace fs = std::filesystem;
  * to identify and catalog potential code duplications, creating the foundation
  * for efficient similarity queries during the tool's operation phase.
  */
-class ToolMethod : public IMethod {
+class TfidfMethod : public IMethod {
   private:
     static constexpr const char* SAVING_MESSAGE = "Saving results..."; ///< Status message displayed when saving analysis results
 
@@ -39,7 +39,7 @@ class ToolMethod : public IMethod {
      * @param base_path_ Root path of the codebase to analyze
      * @param similarity_ Minimum similarity threshold (0-100) to consider as duplicate
      */
-    ToolMethod(const fs::path& base_path_, double similarity_);
+    TfidfMethod(const fs::path& base_path_, double similarity_);
 
     /**
      * @brief Executes the full duplication analysis pipeline
