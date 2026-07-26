@@ -95,7 +95,7 @@ class PreprocessorBuild : public Preprocess_State, public CommandBase<Preprocess
       },
       {
         3,
-        "tree-sitter",
+        "ast",
         [](const std::string& base_path, float similarity,
            const std::vector<std::string>&) {
           return std::make_unique<ASTMethod>(base_path, similarity);
@@ -148,7 +148,7 @@ class PreprocessorBuild : public Preprocess_State, public CommandBase<Preprocess
         "functions; 'file' keeps each file whole and compares files against "
         "each other. Applies to every duplication finder method."},
       {"method", 0, RequiredArgument,
-        "Duplication finder method: 1|tfidf, 2|diff, 3|tree-sitter, 4|language-model."},
+        "Duplication finder method: 1|tfidf, 2|diff, 3|ast, 4|language-model."},
       OPTION_END
     };
     PreprocessorBuild();
