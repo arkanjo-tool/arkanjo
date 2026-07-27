@@ -55,13 +55,20 @@ git clone https://github.com/arkanjo-tool/arkanjo.git
 cd arkanjo
 ```
 
+Some similarity methods require additional Python dependencies.
+
+See the [**Methods**](#methods) section to check the requirements of the selected
+methods. If any of the enabled methods requires additional dependencies, run:
+
+```sh
+./scripts/bootstrap.sh
+```
+
 Build the binary:
 
 ```sh
-mkdir build && cd build
-
-cmake ..
-cmake --build .
+cmake -B build
+cmake --build build
 ```
 
 The binaries will be generated in the `build/` directory.
@@ -69,7 +76,7 @@ The binaries will be generated in the `build/` directory.
 Optionally, install the binaries using:
 
 ```sh
-cmake --install . [--prefix ~/.local]
+cmake --install build [--prefix ~/.local]
 ```
 
 ## Methods
@@ -78,7 +85,7 @@ ArKanjo supports multiple code duplication detection methods.
 
 See the documentation for details:
 
-- [Methods documentation](docs/methods/)
+- [**Methods documentation**](docs/methods/index.md)
 
 # How to Run
 
