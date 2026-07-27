@@ -16,7 +16,7 @@ Install them in the same `python3` interpreter that Arkanjo will call (watch out
 for virtualenvs):
 
 ```sh
-python3 -m pip install -r third-party/embedding/requirements.txt
+python3 -m pip install -r requirements/embedding.txt
 ```
 
 We recommend installing them inside a Python virtual environment (e.g. `venv`,

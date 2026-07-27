@@ -15,7 +15,7 @@ The NLP dependencies are **not** installed by default.
 Install them using:
 
 ```sh
-python3 -m pip install -r third-party/tfidf/requirements.txt
+python3 -m pip install -r requirements/tfidf.txt
 
 python3 -m nltk.downloader punkt
 ```
