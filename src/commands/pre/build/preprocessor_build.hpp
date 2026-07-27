@@ -15,7 +15,7 @@
 #include <arkanjo/methods/diff/diff_method.hpp>
 #include <arkanjo/methods/tfidf/tfidf_method.hpp>
 #include <arkanjo/methods/ast/ast_method.hpp>
-#include <arkanjo/methods/llm/llm_method.hpp>
+#include <arkanjo/methods/embedding/embedding_method.hpp>
 
 #include "function_breaker.hpp"
 #include <arkanjo/base/preprocess_state.hpp>
@@ -104,10 +104,10 @@ class PreprocessorBuild : public Preprocess_State, public CommandBase<Preprocess
       },
       {
         4,
-        "language-model",
+        "embedding",
         [](const std::string& base_path, float similarity,
            const std::vector<std::string>& pass_through_args) {
-          return std::make_unique<LLMMethod>(base_path, similarity, pass_through_args);
+          return std::make_unique<EmbeddingMethod>(base_path, similarity, pass_through_args);
         },
         "Embedding-based similarity using a code language model"
       }
@@ -148,7 +148,7 @@ class PreprocessorBuild : public Preprocess_State, public CommandBase<Preprocess
         "functions; 'file' keeps each file whole and compares files against "
         "each other. Applies to every duplication finder method."},
       {"method", 0, RequiredArgument,
-        "Duplication finder method: 1|tfidf, 2|diff, 3|ast, 4|language-model."},
+        "Duplication finder method: 1|tfidf, 2|diff, 3|ast, 4|embedding."},
       OPTION_END
     };
     PreprocessorBuild();

@@ -1,5 +1,5 @@
 /**
- * @file llm_method.hpp
+ * @file embedding_method.hpp
  * @brief LLM-embedding-based code duplication detection
  *
  * Implements a duplication detector that computes semantic similarity between
@@ -26,7 +26,7 @@ namespace fs = std::filesystem;
  * function with a Hugging Face model and prints the pairwise similarities, which
  * are parsed back into duplication entries.
  */
-class LLMMethod : public IMethod {
+class EmbeddingMethod : public IMethod {
   private:
     static constexpr const char* SAVING_MESSAGE = "Saving results...";
 
@@ -70,7 +70,7 @@ class LLMMethod : public IMethod {
      * @param pass_through_args_ Raw arguments forwarded to the embedding script
      *         (e.g. --max-seq-length, --batch-size, --model).
      */
-    LLMMethod(const fs::path& base_path_, double similarity_,
+    EmbeddingMethod(const fs::path& base_path_, double similarity_,
               std::vector<std::string> pass_through_args_ = {});
 
     void on_function(const FunctionData& fd) override;

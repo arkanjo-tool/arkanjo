@@ -16,7 +16,7 @@ Install them in the same `python3` interpreter that Arkanjo will call (watch out
 for virtualenvs):
 
 ```sh
-python3 -m pip install -r third-party/llm-detection/requirements.txt
+python3 -m pip install -r third-party/embedding/requirements.txt
 ```
 
 We recommend installing them inside a Python virtual environment (e.g. `venv`,
@@ -57,4 +57,4 @@ arkanjo-preprocessor build --path <path> \
   on large codebases.
 - To switch the embedding model, either pass `-- --model NAME` or edit
   the `MODEL_NAME` constant at the top of
-  `third-party/llm-detection/llm_detection.py`.
+  `third-party/embedding/llm_detection.py`.

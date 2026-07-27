@@ -1,4 +1,4 @@
-#include <arkanjo/methods/llm/llm_method.hpp>
+#include <arkanjo/methods/embedding/embedding_method.hpp>
 #include <arkanjo/formatter/format_manager.hpp>
 #include <arkanjo/base/config/config.hpp>
 #include <arkanjo/base/features/source_feature.hpp>
@@ -13,7 +13,7 @@
 
 using fm = FormatterManager;
 
-LLMMethod::LLMMethod(const fs::path& base_path_, double similarity_,
+EmbeddingMethod::EmbeddingMethod(const fs::path& base_path_, double similarity_,
                      std::vector<std::string> pass_through_args_) {
     base_path = base_path_;
     similarity = similarity_;
@@ -24,10 +24,10 @@ LLMMethod::LLMMethod(const fs::path& base_path_, double similarity_,
     }
 }
 
-std::string LLMMethod::build_command(const fs::path& source_dir) const {
+std::string EmbeddingMethod::build_command(const fs::path& source_dir) const {
     std::string command = "python3 -W ignore ";
     command += Config::config().third_party_dir.string();
-    command += "/llm-detection/llm_detection.py";
+    command += "/embedding/llm_detection.py";
     command += " --source-dir ";
     command += source_dir.string();
     command += " --min-similarity ";
@@ -46,7 +46,7 @@ std::string LLMMethod::build_command(const fs::path& source_dir) const {
     return command;
 }
 
-bool LLMMethod::parse_line(const std::string& line, DuplicationEntry& entry) const {
+bool EmbeddingMethod::parse_line(const std::string& line, DuplicationEntry& entry) const {
     std::vector<std::string> tokens = Utils::split_string(line, '\t');
     if (tokens.size() != 3) {
         return false;
@@ -61,7 +61,7 @@ bool LLMMethod::parse_line(const std::string& line, DuplicationEntry& entry) con
     return true;
 }
 
-std::vector<DuplicationEntry> LLMMethod::read_results(FILE* pipe) const {
+std::vector<DuplicationEntry> EmbeddingMethod::read_results(FILE* pipe) const {
     std::vector<DuplicationEntry> pairs;
     std::array<char, 4096> buffer{};
     std::string leftover;
@@ -85,7 +85,7 @@ std::vector<DuplicationEntry> LLMMethod::read_results(FILE* pipe) const {
     return pairs;
 }
 
-void LLMMethod::save_duplications(std::vector<DuplicationEntry>& file_duplication_pairs) {
+void EmbeddingMethod::save_duplications(std::vector<DuplicationEntry>& file_duplication_pairs) {
     fs::path output_file_path = base_path / "output_parsed.txt";
 
     auto fout = std::ofstream(output_file_path.string());
@@ -99,7 +99,7 @@ void LLMMethod::save_duplications(std::vector<DuplicationEntry>& file_duplicatio
     fout.close();
 }
 
-void LLMMethod::on_function(const FunctionData& fd) {
+void EmbeddingMethod::on_function(const FunctionData& fd) {
     fs::path base = base_path / source_feature_path;
 
     auto source = fd.get_feature<SourceFeature>();
@@ -112,7 +112,7 @@ void LLMMethod::on_function(const FunctionData& fd) {
     Utils::write_file(path, source->code + "\n");
 }
 
-void LLMMethod::execute() {
+void EmbeddingMethod::execute() {
     fs::path source_dir = base_path / source_feature_path;
 
     std::string command = build_command(source_dir);
