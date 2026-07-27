@@ -49,8 +49,8 @@ workflow:
         apt-get update
         apt-get install -y python3 python3-venv
       fi
-    - python3 -m venv venv
-    - export PATH="$CI_PROJECT_DIR/venv/bin:$PATH"
+    - python3 -m venv .venv
+    - export PATH="$CI_PROJECT_DIR/.venv/bin:$PATH"
     - python -m pip install --upgrade pip
   cache:
     paths:
@@ -95,10 +95,10 @@ test:
     - .python-environment
 
   script:
-    - export PATH="$CI_PROJECT_DIR/install/bin:$CI_PROJECT_DIR/venv/bin:$PATH"
+    - export PATH="$CI_PROJECT_DIR/install/bin:$CI_PROJECT_DIR/.venv/bin:$PATH"
 
     # Install Python dependencies
-    - python -m pip install -r requirements/tfidf.txt
+    - ./scripts/bootstrap.sh
     - python -m nltk.downloader punkt punkt_tab
 
     # Run C++ E2E tests
