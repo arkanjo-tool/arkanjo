@@ -37,6 +37,34 @@ target_sources(core_parser PRIVATE ${GENERATED_FILE})
 target_link_libraries(core_parser PUBLIC ${PARSER_LIBS} tree_sitter_core)
 
 #
+if(ARKANJO_LIBGIT2_SYSTEM)
+    set(ARKANJO_LIBGIT2_LIBS git2)
+else()
+    set(ARKANJO_LIBGIT2_LIBS
+        libgit2
+        util
+        xdiff
+        llhttp
+        pcre
+        zlib
+    )
+endif()
+
+file(GLOB_RECURSE CORE_GIT_SOURCES
+    src/git/*.cpp
+)
+
+add_library(core_git ${CORE_GIT_SOURCES})
+target_include_directories(core_git PUBLIC ${ARKANJO_INCLUDE_DIRS})
+
+target_include_directories(core_git PUBLIC
+    ${ARKANJO_INCLUDE_DIRS}
+    ${libgit2_SOURCE_DIR}/include
+)
+
+target_link_libraries(core_git PRIVATE core_base ${ARKANJO_LIBGIT2_LIBS} ${ICONV_LIBRARY})
+
+#
 file(GLOB_RECURSE CORE_METHODS_SOURCES
     src/methods/*.cpp
 )
@@ -52,22 +80,6 @@ file(GLOB_RECURSE CORE_COMMANDS_SOURCES
 add_library(core_commands ${CORE_COMMANDS_SOURCES})
 target_sources(core_commands PRIVATE ${GENERATED_FILE})
 
-if(ARKANJO_LIBGIT2_SYSTEM)
-    set(ARKANJO_LIBGIT2_LIBS git2)
-else()
-    set(ARKANJO_LIBGIT2_LIBS
-        libgit2
-        util
-        xdiff
-        llhttp
-        pcre
-        zlib
-    )
-endif()
-target_include_directories(core_commands PUBLIC
-    ${ARKANJO_INCLUDE_DIRS}
-    ${libgit2_SOURCE_DIR}/include
-)
 target_link_libraries(core_commands PUBLIC 
     core_base 
     core_utils 
@@ -75,8 +87,7 @@ target_link_libraries(core_commands PUBLIC
     tree_sitter_core 
     core_parser 
     core_methods
-    ${ARKANJO_LIBGIT2_LIBS}
-    ${ICONV_LIBRARY}
+    core_git
 )
 
 #
@@ -91,17 +102,18 @@ target_link_libraries(core_cli PUBLIC core_base core_utils)
 add_executable(arkanjo
     src/main.cpp
 )
-target_link_libraries(arkanjo PRIVATE core_base core_utils core_commands core_cli)
+target_link_libraries(arkanjo PRIVATE core_base core_utils core_commands core_cli core_git)
 
 add_executable(arkanjo-preprocessor
     src/commands/pre/preprocessor_main.cpp
 )
-target_link_libraries(arkanjo-preprocessor PRIVATE core_base core_utils core_commands core_cli)
+target_link_libraries(arkanjo-preprocessor PRIVATE core_base core_utils core_commands core_cli core_git)
 
 target_link_libraries(core_base PUBLIC project_options)
 target_link_libraries(core_utils PUBLIC project_options)
 target_link_libraries(core_commands PUBLIC project_options)
 target_link_libraries(core_cli PUBLIC project_options)
+target_link_libraries(core_git PRIVATE project_options)
 target_link_libraries(arkanjo PRIVATE project_options)
 target_link_libraries(arkanjo-preprocessor PRIVATE project_options)
 

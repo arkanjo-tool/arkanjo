@@ -1,19 +1,13 @@
 #include "git_diff_function.hpp"
 
-#include <git2.h>
-
 #include <iostream>
 #include <sstream>
 
 #include <arkanjo/base/function/function_loader.hpp>
 #include <arkanjo/base/function/function_printer.hpp>
+#include <arkanjo/git/text_diff.hpp>
 #include <arkanjo/cli/cli_error.hpp>
 #include <arkanjo/formatter/format_manager.hpp>
-
-struct DiffOutputPayload {
-    std::ostream* output;
-    bool printed;
-};
 
 GitDiffFunction::GitDiffFunction(Similarity_Table* _similarity_table)
     : similarity_table(_similarity_table) {}
@@ -102,78 +96,6 @@ std::string GitDiffFunction::build_text_from_lines(const std::vector<std::string
     return output;
 }
 
-int GitDiffFunction::print_diff_file(const git_diff_delta* delta, float, void* payload) {
-    auto* data = static_cast<DiffOutputPayload*>(payload);
-
-    if (!data->output)
-        return 0;
-
-    std::string old_file = "--- a/";
-    old_file += delta->old_file.path;
-    old_file += "\n";
-
-    std::string new_file = "+++ b/";
-    new_file += delta->new_file.path;
-    new_file += "\n";
-
-    data->output->write(old_file.data(), old_file.size());
-    data->output->write(new_file.data(), new_file.size());
-
-    return 0;
-}
-
-int GitDiffFunction::print_diff_hunk(const git_diff_delta*,const git_diff_hunk* hunk,void* payload) {
-    auto* data = static_cast<DiffOutputPayload*>(payload);
-
-    if (!data->output)
-        return 0;
-
-    auto formatter = FormatterManager::get_formatter();
-
-    std::string header(hunk->header, hunk->header_len);
-    header = formatter->colorize(header, Utils::COLOR::MAGENTA);
-
-    data->output->write(header.data(), header.size());
-
-    return 0;
-}
-
-int GitDiffFunction::print_diff_line(const git_diff_delta* /*delta*/, const git_diff_hunk* /*hunk*/, const git_diff_line* line, void* payload) {
-    auto* data = static_cast<DiffOutputPayload*>(payload);
-    data->printed = true;
-
-    if (!data->output || line->content_len <= 0) {
-        return 0;
-    }
-
-    auto formatter = FormatterManager::get_formatter();
-    std::string output_line;
-    std::string content(line->content, line->content_len);
-
-    switch (line->origin) {
-        case GIT_DIFF_LINE_ADDITION:
-            output_line = formatter->colorize("+"+ content , Utils::COLOR::GREEN) ;
-            break;
-        case GIT_DIFF_LINE_DELETION:
-            output_line = formatter->colorize("-" + content, Utils::COLOR::RED);
-            break;
-        case GIT_DIFF_LINE_CONTEXT:
-            output_line = std::string(" ") + content;
-            break;
-        default:
-            output_line = content;
-            break;
-    }
-
-    /* 
-        TODO: Perhaps should be a good idea use << operator instead of write, 
-        but for that we need to handle the string termination character, 
-        since content is not guaranteed to be null-terminated. 
-    */
-    data->output->write(output_line.data(), output_line.size());
-    return 0;
-}
-
 bool GitDiffFunction::diff_functions(const Path& first, const Path& second) const {
     FunctionLoader loader;
     auto first_function = loader.load(first);
@@ -182,33 +104,20 @@ bool GitDiffFunction::diff_functions(const Path& first, const Path& second) cons
     std::string first_text = build_text_from_lines(first_function.build_all_content());
     std::string second_text = build_text_from_lines(second_function.build_all_content());
 
-    git_libgit2_init();
-
-    git_diff_options diff_options = GIT_DIFF_OPTIONS_INIT;
-
-    DiffOutputPayload payload{&std::cout, false};
-    int error = git_diff_buffers(
-        first_text.c_str(),
-        first_text.size(),
-        first_function.name().c_str(),
-        second_text.c_str(),
-        second_text.size(),
-        second_function.name().c_str(),
-        &diff_options,
-        &GitDiffFunction::print_diff_file,
-        nullptr,
-        &GitDiffFunction::print_diff_hunk,
-        &GitDiffFunction::print_diff_line,
-        &payload
+    auto result = GitTextDiff::compare(
+        first_text,
+        first_function.name(),
+        second_text,
+        second_function.name(),
+        std::cout
     );
-    git_libgit2_shutdown();
 
-    if (error != 0) {
-        std::cerr << "Failed to compute diff between functions. libgit2 error code: " << error << "\n";
+    if (result.error != 0) {
+        std::cerr << "Failed to compute diff between functions. libgit2 error code: " << result.error << "\n";
         return false;
     }
 
-    if (!payload.printed) {
+    if (!result.has_difference) {
         std::cout << "No differences found between the selected functions.\n";
     }
 

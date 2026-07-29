@@ -50,7 +50,7 @@ if(ENABLE_TESTS)
         tests/e2e/test.cpp
     )
     target_link_libraries(arkanjo-test PRIVATE 
-        core_base core_utils core_commands core_cli project_options
+        core_base core_utils core_commands core_cli core_git project_options
     )
 
     add_test(NAME run_tests COMMAND arkanjo-test)
