@@ -151,7 +151,8 @@ class PreprocessorBuild : public Preprocess_State, public CommandBase<Preprocess
         "Duplication finder method: 1|tfidf, 2|diff, 3|ast, 4|embedding."},
       OPTION_END
     };
-    PreprocessorBuild();
+
+    PreprocessorBuild() = default;
 
     /**
      * @brief Testing constructor with direct parameter specification

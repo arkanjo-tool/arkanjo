@@ -160,8 +160,6 @@ void PreprocessorBuild::preprocess(const fs::path& path, double similarity, size
     fm::time("Execution time:", start);
 }
 
-PreprocessorBuild::PreprocessorBuild() { }
-
 PreprocessorBuild::PreprocessorBuild(bool force_preprocess, const fs::path& path, double similarity) {
     fs::path base_path = Config::config().base_path / Config::config().name_container;
     if (force_preprocess || !std::filesystem::exists(base_path / CONFIG_PATH)) {
