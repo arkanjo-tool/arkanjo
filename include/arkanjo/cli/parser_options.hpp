@@ -1,4 +1,5 @@
 #pragma once
+#include <optional>
 #include <string>
 #include <map>
 #include <vector>
@@ -43,6 +44,62 @@ struct ParsedOptions {
      * directly to a method-specific backend. 
      */
     std::vector<std::string> extra_args;
+
+    /**
+     * @brief Checks whether an option exists.
+     *
+     * @param name Option name.
+     * @return true if the option exists, otherwise false.
+     */
+    bool has(const std::string& name) const {
+        return args.find(name) != args.end();
+    }
+
+    /**
+     * @brief Returns the value of an option.
+     *
+     * @param name Option name.
+     * @return The option value, or std::nullopt if it does not exist.
+     */
+    std::optional<std::string_view> get(const std::string& name) const {
+        auto it = args.find(name);
+
+        if (it == args.end())
+            return std::nullopt;
+
+        return it->second;
+    }
+
+    /**
+     * @brief Returns the value of an option converted to the requested type.
+     *
+     * @tparam T Target type.
+     * @param name Option name.
+     * @return The converted value, or std::nullopt if the option does not exist.
+     *
+     * @throws std::invalid_argument If the value cannot be converted.
+     * @throws std::out_of_range If the value is outside the supported range.
+     */
+    template<typename T> std::optional<T> get_as(const std::string& name) const {
+        auto value = get(name);
+
+        if (!value)
+            return std::nullopt;
+
+        if constexpr (std::is_same_v<T, std::string>) {
+            return std::string(*value);
+        } else if constexpr (std::is_same_v<T, int>) {
+            return std::stoi(std::string(*value));
+        } else if constexpr (std::is_same_v<T, size_t>) {
+            return static_cast<size_t>(std::stoull(std::string(*value)));
+        } else if constexpr (std::is_same_v<T, double>) {
+            return std::stod(std::string(*value));
+        } else if constexpr (std::is_same_v<T, bool>) {
+            return *value == "true";
+        } else {
+            static_assert(!sizeof(T), "Unsupported type");
+        }
+    }
 };
 
 /**
