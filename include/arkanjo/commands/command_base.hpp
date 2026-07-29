@@ -103,7 +103,7 @@ class CommandBase : public ICommand {
     }
 
     bool do_run(const std::string command_name, const ParsedOptions& options, const OptionsCollector* collector = nullptr) override {
-        if (options.args.count("help") > 0) {
+        if (options.has("help")) {
             print_help(command_name, collector);
             return true;
         }

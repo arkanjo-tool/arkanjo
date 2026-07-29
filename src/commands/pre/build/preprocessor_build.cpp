@@ -10,20 +10,17 @@
 using fm = FormatterManager;
 
 std::tuple<std::string, double, size_t, std::vector<std::string>, Granularity>
-PreprocessorBuild::read_parameters(const std::optional<ParsedOptions>& options) {
+PreprocessorBuild::read_parameters(const ParsedOptions& options) {
     fm::write(INITIAL_MESSAGE);
-    std::string similarity_message;
+
     std::string path_str;
 
-    if (options) {
-        auto it_path = options->args.find("path");
-        if (it_path != options->args.end() && !it_path->second.empty()) {
-            path_str = it_path->second;
+    if (auto path = options.get("path")) {
+        path_str = *path;
 
-            if (!fs::exists(path_str)) {
-                std::cout << ERROR_PATH_MESSAGE << "\n";
-                path_str.clear();
-            }
+        if (!fs::exists(path_str)) {
+            std::cout << ERROR_PATH_MESSAGE << "\n";
+            path_str.clear();
         }
     }
 
@@ -34,14 +31,13 @@ PreprocessorBuild::read_parameters(const std::optional<ParsedOptions>& options) 
     fs::path path(path_str);
 
     double similarity = 0.0;
-    if (options) {
-        auto it = options->args.find("similarity");
-        if (it != options->args.end() && !it->second.empty()) {
-            similarity = std::stod(it->second);
-        }
-    }
+
+    if (auto similarity_value = options.get_as<double>("similarity"))
+        similarity = *similarity_value;
+
     if (similarity == 0.0) {
         fm::write(MINIMUM_SIMILARITY_MESSAGE);
+        std::string similarity_message;
         std::cin >> similarity_message;
         similarity = stod(similarity_message);
     }
@@ -49,29 +45,27 @@ PreprocessorBuild::read_parameters(const std::optional<ParsedOptions>& options) 
     size_t use_duplication_finder_index = 0;
     bool method_from_option = false;
 
-    if (options) {
-        auto it = options->args.find("method");
-        if (it != options->args.end() && !it->second.empty()) {
-            const auto& val = it->second;
-            auto found = std::find_if(MethodsType.begin(), MethodsType.end(),
-                [&val](const MethodInfo& mi) {
-                    return std::to_string(mi.id) == val || mi.name == val;
-                });
-            if (found == MethodsType.end()) {
-                std::string valid_methods;
-                for (size_t i = 0; i < MethodsType.size(); ++i) {
-                    if (i > 0) valid_methods += ", ";
-                    valid_methods += std::to_string(MethodsType[i].id);
-                    valid_methods += "|";
-                    valid_methods += MethodsType[i].name;
-                }
-                throw CLIError(
-                    "Invalid --method value: '" + val +
-                    "'. Use " + valid_methods + ".");
+    if (auto method = options.get("method")) {
+        auto found = std::find_if(MethodsType.begin(), MethodsType.end(),
+            [&method](const MethodInfo& mi) {
+                return std::to_string(mi.id) == *method || mi.name == *method;
+            });
+        if (found == MethodsType.end()) {
+            std::string valid_methods;
+            for (size_t i = 0; i < MethodsType.size(); ++i) {
+                if (i > 0) valid_methods += ", ";
+                valid_methods += std::to_string(MethodsType[i].id);
+                valid_methods += "|";
+                valid_methods += MethodsType[i].name;
             }
-            use_duplication_finder_index = found->id - 1;
-            method_from_option = true;
+            throw CLIError(
+                "Invalid --method value: '" +
+                std::string(*method) +
+                "'. Use " + valid_methods + "."
+            );
         }
+        use_duplication_finder_index = found->id - 1;
+        method_from_option = true;
     }
 
     if (!method_from_option) {
@@ -92,23 +86,24 @@ PreprocessorBuild::read_parameters(const std::optional<ParsedOptions>& options) 
         --use_duplication_finder_index;
     }
 
-    std::vector<std::string> pass_through_args;
     Granularity granularity = Granularity::Function;
-    if (options) {
-        pass_through_args = options->extra_args;
 
-        auto it = options->args.find("granularity");
-        if (it != options->args.end()) {
-            if (it->second == "file") {
-                granularity = Granularity::File;
-            } else if (it->second == "function" || it->second.empty()) {
-                granularity = Granularity::Function;
-            } else {
-                throw CLIError("Invalid --granularity value: '" + it->second +
-                               "'. Use 'function' (default) or 'file'.");
-            }
+    if (auto granularity_value = options.get("granularity")) {
+        std::string_view granularity_option = *granularity_value;
+        if (granularity_option == "file") {
+            granularity = Granularity::File;
+        } else if (granularity_option == "function") {
+            granularity = Granularity::Function;
+        } else {
+            throw CLIError(
+                "Invalid --granularity value: '" +
+                std::string(granularity_option) +
+                "'. Use 'function' (default) or 'file'."
+            );
         }
     }
+
+    auto pass_through_args = options.extra_args;
 
     return {path, similarity, use_duplication_finder_index, pass_through_args, granularity};
 }
@@ -168,28 +163,26 @@ PreprocessorBuild::PreprocessorBuild(bool force_preprocess, const fs::path& path
 }
 
 bool PreprocessorBuild::validate(const ParsedOptions& options) {
-    auto it_json = options.args.find("json");
-    if (it_json != options.args.end()) {
+    if (options.has("json"))
         throw CLIError("--json is not supported in this command.");
-        return false;
+
+    try {
+        if (auto minimum_lines = options.get_as<int>("minimum-lines"))
+            this->minimum_lines = *minimum_lines;
+    } catch (const std::invalid_argument&) {
+        throw CLIError(
+            "--minimum-lines must be a valid number (passing " +
+            std::string(*options.get("minimum-lines")) + ")"
+        );
+    } catch (const std::out_of_range&) {
+        throw CLIError("--minimum-lines outside the permitted range");
     }
-    auto it_minimum_lines = options.args.find("minimum-lines");
-    if (it_minimum_lines != options.args.end()) {
-        try {
-            minimum_lines = std::stoi(it_minimum_lines->second);
-        } catch (const std::invalid_argument&) {
-            throw CLIError("--minimum-lines must be a valid number (passing " + it_minimum_lines->second + ")");
-            return false;
-        } catch (const std::out_of_range&) {
-            throw CLIError("--minimum-lines outside the permitted range");
-            return false;
-        }
-    }
+
     return true;
 }
 
 bool PreprocessorBuild::run([[maybe_unused]] const ParsedOptions& options) {
-    mode_verbose = options.args.count("verbose") > 0;
+    mode_verbose = options.has("verbose");
 
     fs::path base_path = Config::config().base_path / Config::config().name_container;
     auto [path, similarity, use_duplication_finder_index,

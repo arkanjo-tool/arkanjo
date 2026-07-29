@@ -24,7 +24,7 @@ void PreprocessorList::print_containers(std::vector<ContainerInfo>& containers) 
 PreprocessorList::PreprocessorList() { }
 
 bool PreprocessorList::validate(const ParsedOptions& options) {
-    no_color = options.args.count("no-color") > 0;
+    no_color = options.has("no-color");
     return true;
 }
 

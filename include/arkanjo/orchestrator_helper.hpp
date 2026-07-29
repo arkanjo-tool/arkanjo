@@ -49,14 +49,12 @@ inline Step setup_command_step(
 }
 
 inline bool formatter_step(Context& ctx) {
-    bool json = ctx.options.args.count("json") > 0;
     enum Format format_output = Format::TEXT;
-    if (json)
+    if (ctx.options.has("json"))
         format_output = Format::JSON;
     FormatterManager::set_format(format_output);
     FormatterManager::set_formatter(std::make_shared<ConsoleFormatter>(true));
-    bool no_color = ctx.options.args.count("no-color") > 0;
-    if (no_color)
+    if (ctx.options.has("no-color"))
         FormatterManager::set_formatter(std::make_shared<ConsoleFormatter>(false));
     return true;
 }
@@ -76,11 +74,9 @@ inline Step similarity_step(Similarity_Table& table) {
             ". Results may be inaccurate.");
         }
 
-        auto it = ctx.options.args.find("similarity");
-        if (it != ctx.options.args.end()) {
-            double sim = std::stod(ctx.options.args["similarity"]);
-            table.update_similarity(sim);
-        }
+        if (auto similarity = ctx.options.get_as<double>("similarity"))
+            table.update_similarity(*similarity);
+
         return true;
     };
 }

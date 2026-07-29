@@ -6,7 +6,6 @@
 #include <arkanjo/orchestrator_helper.hpp>
 #include <arkanjo/orchestrator.hpp>
 #include "orchestrator_commands.hpp"
-#include "commands/pre/build/preprocessor_build.hpp"
 
 int main(int argc, char* argv[]) {
     auto& cfg = Config::config();
@@ -42,12 +41,10 @@ int main(int argc, char* argv[]) {
     orchestrator.add_step(OrchestratorHelper::formatter_step);
 
     orchestrator.add_step([&similarity_table, &orchestrator, &command, &collector](Context& ctx) {
-        auto it_name = ctx.options.args.find("name");
-        if (it_name != ctx.options.args.end()) {
-            Config::config().name_container = it_name->second;
-        }
+        if (auto name = ctx.options.get("name"))
+            Config::config().name_container = *name;
         
-        if (ctx.command_name != "help" && ctx.options.args.count("help") == 0)
+        if (ctx.command_name != "help" && !ctx.options.has("help"))
             orchestrator.add_step(OrchestratorHelper::similarity_step(similarity_table));
 
         orchestrator.add_step(OrchestratorHelper::command_run_step(std::move(command), collector));
@@ -58,7 +55,7 @@ int main(int argc, char* argv[]) {
     try {
         orchestrator.run_pipeline(ctx);
     } catch (const CommandNotFoundError& e) {
-        if (ctx.command_name != "help" && ctx.options.args.count("help") == 0)
+        if (ctx.command_name != "help" && !ctx.options.has("help"))
             FormatterManager::warn(ctx.command_name + " is not a " + Config::config().program_name + " command.");
         std::make_unique<Help>(internal_commands)->do_run(ctx.command_name, ctx.options);
         return 1;

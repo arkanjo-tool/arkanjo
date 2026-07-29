@@ -19,11 +19,6 @@ GitDiffFunction::GitDiffFunction(Similarity_Table* _similarity_table)
     : similarity_table(_similarity_table) {}
 
 bool GitDiffFunction::validate(const ParsedOptions& options) {
-
-    if (options.args.count("help") > 0) {
-        return true;
-    }
-
     if (options.extra_args.size() != 2) {
         throw CLIError("Git diff command expects two function name patterns.");
         return false;

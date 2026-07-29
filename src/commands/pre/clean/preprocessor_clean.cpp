@@ -8,7 +8,7 @@
 namespace fs = std::filesystem;
 
 bool PreprocessorClean::validate(const ParsedOptions& options) {
-    clean_all = options.args.count("all") > 0;
+    clean_all = options.has("all");
     return true;
 }
 

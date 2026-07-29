@@ -78,18 +78,12 @@ SimilarFunctionFinder::SimilarFunctionFinder(Similarity_Table* _similarity_table
 }
 
 bool SimilarFunctionFinder::validate(const ParsedOptions& options) {
-    open_folder = options.args.count("open") > 0;
-    show_mode = options.args.count("show") > 0;
-    no_numbers = options.args.count("no-numbers") > 0;
+    open_folder = options.has("open");
+    show_mode = options.has("show");
+    no_numbers = options.has("no-numbers");
 
-    if (options.args.count("help") > 0) {
-        return true;
-    }
-
-    if (options.extra_args.empty()) {
+    if (options.extra_args.empty())
         throw CLIError("Similar Function Finder Command expect one parameter, but none was given");
-        return false;
-    }
 
     return true;
 }

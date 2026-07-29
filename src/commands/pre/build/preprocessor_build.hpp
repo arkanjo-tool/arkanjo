@@ -124,7 +124,7 @@ class PreprocessorBuild : public Preprocess_State, public CommandBase<Preprocess
      *         - Comparison granularity
      */
     std::tuple<std::string, double, size_t, std::vector<std::string>, Granularity>
-    read_parameters(const std::optional<ParsedOptions>& options);
+    read_parameters(const ParsedOptions& options);
 
     /**
      * @brief Executes full preprocessing pipeline

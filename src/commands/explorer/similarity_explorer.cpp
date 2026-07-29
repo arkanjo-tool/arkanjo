@@ -184,18 +184,16 @@ SimilarityExplorer::SimilarityExplorer(Similarity_Table* table)
       use_clusters(false) {}
 
 bool SimilarityExplorer::validate(const ParsedOptions& options) {
-    auto it_limiter = options.args.find("limiter");
-
-    if (it_limiter != options.args.end()) {
-        try {
-            limit_on_results = std::stoi(it_limiter->second);
-        } catch (const std::invalid_argument&) {
-            throw CLIError("--limiter must be a valid number (passing " + it_limiter->second + ")");
-            return false;
-        } catch (const std::out_of_range&) {
-            throw CLIError("--limiter outside the permitted range");
-            return false;
-        }
+    try {
+        if (auto limiter = options.get_as<int>("limiter"))
+            this->limit_on_results = *limiter;
+    } catch (const std::invalid_argument&) {
+        throw CLIError(
+            "--limiter must be a valid number (passing " +
+            std::string(*options.get("limiter")) + ")"
+        );
+    } catch (const std::out_of_range&) {
+        throw CLIError("--limiter outside the permitted range");
     }
 
     return true;
@@ -217,27 +215,26 @@ void SimilarityExplorer::print_template_variables() {
 }
 
 bool SimilarityExplorer::run(const ParsedOptions& options) {
-    if (options.args.count("template-help")) {
+    if (options.has("template-help")) {
         print_template_variables();
         return true;
     }
 
-    auto it_pattern = options.args.find("pattern");
-    if (it_pattern != options.args.end()) {
-        pattern_to_match = it_pattern->second;
-    }
-    both_path_need_to_match_pattern = options.args.count("both-match") > 0;
-    sorted_by_number_of_duplicated_code = options.args.count("sort") > 0;
-    use_clusters = options.args.count("cluster") > 0;
-    auto it_template = options.args.find("template");
-    if (it_template != options.args.end()) {
-        template_processed_results_output = it_template->second;
-    }
+    if (auto pattern = options.get("pattern"))
+        this->pattern_to_match = *pattern;
+
+    both_path_need_to_match_pattern = options.has("both-match");
+    sorted_by_number_of_duplicated_code = options.has("sort");
+    use_clusters = options.has("cluster");
+
+    if (auto template_value = options.get("template"))
+        this->template_processed_results_output = *template_value;
 
     if (use_clusters) {
         explorer_clusters();
         return true;
     }
+
     explorer();
     return true;
 }
