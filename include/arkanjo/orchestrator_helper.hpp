@@ -18,7 +18,6 @@ constexpr CliOption global_long_opts[] = {
     {"color", 0, NoArgument, "Enable colored output."},
     {"no-color", 0, NoArgument, "Disable colored output."},
     {"json", 0, NoArgument, "Json output."},
-    {"preprocessor", 0, NoArgument, "Forces the preprocessor to execute."},
     {"similarity", 'S', RequiredArgument, "Changes the similarity threshold to `SIMILARITY` for the current command only."},
     {"help", 'h', NoArgument, "Show this help message."},
     OPTION_END

@@ -154,12 +154,6 @@ class PreprocessorBuild : public Preprocess_State, public CommandBase<Preprocess
     PreprocessorBuild();
 
     /**
-     * @brief Constructs preprocessor build with optional forcing
-     * @param force_preprocess Whether to force preprocessing even if cached results exist
-     */
-    PreprocessorBuild(bool force_preprocess);
-
-    /**
      * @brief Testing constructor with direct parameter specification
      * @param force_preprocess Whether to force preprocessing
      * @param path Direct project path specification

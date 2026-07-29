@@ -162,16 +162,6 @@ void PreprocessorBuild::preprocess(const fs::path& path, double similarity, size
 
 PreprocessorBuild::PreprocessorBuild() { }
 
-PreprocessorBuild::PreprocessorBuild(bool force_preprocess) {
-    fs::path base_path = Config::config().base_path / Config::config().name_container;
-    if (force_preprocess || !std::filesystem::exists(base_path / CONFIG_PATH)) {
-        auto [path, similarity, use_duplication_finder_index,
-              pass_through_args, granularity] = read_parameters(std::nullopt);
-        preprocess(path, similarity, use_duplication_finder_index,
-                   pass_through_args, granularity);
-    }
-}
-
 PreprocessorBuild::PreprocessorBuild(bool force_preprocess, const fs::path& path, double similarity) {
     fs::path base_path = Config::config().base_path / Config::config().name_container;
     if (force_preprocess || !std::filesystem::exists(base_path / CONFIG_PATH)) {
