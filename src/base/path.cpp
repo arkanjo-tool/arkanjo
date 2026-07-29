@@ -48,3 +48,7 @@ bool Path::operator<(const Path& path) const {
 bool Path::operator!=(const Path& path) const {
     return resource_path != path.resource_path;
 }
+
+bool Path::operator==(const Path& path) const {
+    return resource_path == path.resource_path;
+}
