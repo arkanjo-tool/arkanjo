@@ -81,4 +81,12 @@ class Path {
      * @return True if the paths are different.
      */
     bool operator!=(const Path& path) const;
+
+    /*
+     * @brief Path equality comparison operator.
+     *
+     * @param path Other path to compare.
+     * @return True if the paths are equal.
+     */
+    bool operator==(const Path& path) const;
 };
