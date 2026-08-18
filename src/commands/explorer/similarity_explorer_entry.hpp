@@ -19,6 +19,7 @@ struct SimilarityExplorerEntry {
   uint32_t end_a;
   uint32_t end_b;
   uint32_t duplicated_lines{0};
+  double similarity;
 };
 
 inline void to_json(json& j, const SimilarityExplorerEntry& d) {
@@ -35,7 +36,8 @@ inline void to_json(json& j, const SimilarityExplorerEntry& d) {
     {"start_b", d.start_b},
     {"end_a", d.end_a},
     {"end_b", d.end_b},
-    {"duplicated_lines", d.duplicated_lines}
+    {"duplicated_lines", d.duplicated_lines},
+    {"similarity", d.similarity},
   };
 }
 

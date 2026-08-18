@@ -59,7 +59,8 @@ SimilarityExplorerEntry SimilarityExplorer::process_similar_path_pair(const Path
         .start_b = location2.declaration,
         .end_a = location1.end,
         .end_b = location2.end,
-        .duplicated_lines = location1.size()
+        .duplicated_lines = location1.size(),
+        .similarity = similarity_table->get_similarity(path1, path2),
     };
 }
 
@@ -124,6 +125,7 @@ void SimilarityExplorer::explorer_clusters() {
                 location.end,
                 0,
                 location.size(),
+                0.0,
             });
         }
 
