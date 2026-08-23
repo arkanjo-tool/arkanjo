@@ -9,13 +9,23 @@ inline std::string name(const std::string& text) { \
     return fmt->colorize(text, Utils::name); \
 }
 
-// Manager global
+/**
+ * @brief Central manager for output formatting, active theme, and template rendering.
+ */
 class FormatterManager {
 public:
+    /**
+     * @brief Sets the global formatter instance.
+     * @param f Shared pointer to IFormatter.
+     */
     static void set_formatter(std::shared_ptr<IFormatter> f) {
         formatter() = std::move(f);
     }
 
+    /**
+     * @brief Retrieves the active global formatter.
+     * @return Shared pointer to active IFormatter.
+     */
     static std::shared_ptr<IFormatter> get_formatter() {
         auto f = formatter();
         if (!f) {
@@ -26,14 +36,31 @@ public:
         return f;
     }
 
+    /**
+     * @brief Sets the global output format.
+     * @param f Output format (TEXT, JSON, etc.).
+     */
     static void set_format(Format f) {
         current_format() = f;
     }
 
+    /**
+     * @brief Retrieves the active global output format.
+     * @return Current Format enum.
+     */
     static Format get_format() {
         return current_format();
     }
 
+    /**
+     * @brief Renders and writes a collection of data items using a template string.
+     * @tparam T Data item type convertible to json.
+     * @param template_str Template string with placeholders.
+     * @param data Vector of data items.
+     * @param effective Effective format to output (defaults to AUTO).
+     * @param color_fn Optional row coloring callback.
+     * @param out Output stream.
+     */
     template <typename T>
     static void write(
         const std::string& template_str,

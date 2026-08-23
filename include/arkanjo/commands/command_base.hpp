@@ -18,10 +18,20 @@ struct has_options : std::false_type {};
 template <typename T>
 struct has_options<T, std::void_t<decltype(T::options_)>> : std::true_type {};
 
+/**
+ * @brief CRTP base class providing help formatting, option introspection, and dispatch for CLI commands.
+ *
+ * @tparam Derived Concrete command type.
+ */
 template <typename Derived>
 class CommandBase : public ICommand {
 
   public:
+    /**
+     * @brief Formats and prints command usage, arguments, and options help to stdout.
+     * @param command_name Invocation name of the command.
+     * @param collector Optional options collector providing merged global/command options.
+     */
     virtual void print_help(const std::string command_name, const OptionsCollector* collector) const {
         constexpr int OPTION_WIDTH = 26;
 
@@ -94,6 +104,10 @@ class CommandBase : public ICommand {
         }
     }
 
+    /**
+     * @brief Returns the options table defined by the derived command, if any.
+     * @return Pointer to array of CliOption ending with OPTION_END, or nullptr.
+     */
     const CliOption* options() const final {
         if constexpr (has_options<Derived>::value) {
             return Derived::options_;
@@ -102,6 +116,13 @@ class CommandBase : public ICommand {
         }
     }
 
+    /**
+     * @brief Dispatches command execution, displaying help if `--help` was specified.
+     * @param command_name Invocation name of the command.
+     * @param options Parsed CLI options.
+     * @param collector Optional options collector for merged options.
+     * @return True on successful execution, false otherwise.
+     */
     bool do_run(const std::string command_name, const ParsedOptions& options, const OptionsCollector* collector = nullptr) override {
         if (options.has("help")) {
             print_help(command_name, collector);

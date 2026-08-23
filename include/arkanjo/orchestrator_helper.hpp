@@ -23,6 +23,12 @@ constexpr CliOption global_long_opts[] = {
     OPTION_END
 };
 
+/**
+ * @brief Creates an orchestration Step that resolves internal commands or attempts external subprocess execution.
+ * @param command Output reference to store resolved ICommand.
+ * @param commands List of command definitions to match against.
+ * @return Orchestration Step callback.
+ */
 inline Step setup_command_step(
     std::unique_ptr<ICommand>& command,
     const std::vector<std::pair<std::vector<std::string>, CommandsRegistry::CommandFactory>>& commands
@@ -48,6 +54,11 @@ inline Step setup_command_step(
     };
 }
 
+/**
+ * @brief Configures FormatterManager output format and color theme based on CLI context options.
+ * @param ctx Execution context.
+ * @return True on success.
+ */
 inline bool formatter_step(Context& ctx) {
     enum Format format_output = Format::TEXT;
     if (ctx.options.has("json"))
@@ -59,6 +70,11 @@ inline bool formatter_step(Context& ctx) {
     return true;
 }
 
+/**
+ * @brief Creates an orchestration Step that loads the similarity table and verifies cache compatibility.
+ * @param table Similarity table to load.
+ * @return Orchestration Step callback.
+ */
 inline Step similarity_step(Similarity_Table& table) {
     return [&table](Context& ctx) {
         auto result = table.load();
@@ -81,6 +97,12 @@ inline Step similarity_step(Similarity_Table& table) {
     };
 }
 
+/**
+ * @brief Creates an orchestration Step that validates options and executes the resolved command.
+ * @param command Command instance to run.
+ * @param collector Options collector with merged CLI options for help output.
+ * @return Orchestration Step callback.
+ */
 inline Step command_run_step(std::shared_ptr<ICommand> command, const OptionsCollector& collector) {
     return [cmd = std::move(command), &collector](Context& ctx) mutable {
         return cmd->validate(ctx.options) && cmd->do_run(ctx.command_name, ctx.options, &collector);
