@@ -20,8 +20,8 @@ target_compile_options(project_options INTERFACE
     $<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Release>>:/O2>
 
     # GCC / Clang
-    $<$<AND:$<NOT:$<C_COMPILER_ID:MSVC>>,$<COMPILE_LANGUAGE:C>,$<CONFIG:Debug>>:-O3>
-    $<$<AND:$<NOT:$<C_COMPILER_ID:MSVC>>,$<COMPILE_LANGUAGE:CXX>,$<CONFIG:Release>>:-O3>
+    $<$<AND:$<NOT:$<CXX_COMPILER_ID:MSVC>>,$<CONFIG:Debug>>:-O1 -g>
+    $<$<AND:$<NOT:$<CXX_COMPILER_ID:MSVC>>,$<CONFIG:Release>>:-O3>
 )
 if(ENABLE_WARNINGS)
     target_compile_options(project_options INTERFACE
