@@ -3,5 +3,11 @@
     "extensions": {
         "c": [".c", ".h"],
         "rust": [".rs"]
-    }
+    },
+    "methods": [
+        "tfidf",
+        "diff",
+        "ast",
+        "embedding"
+    ]
 }
