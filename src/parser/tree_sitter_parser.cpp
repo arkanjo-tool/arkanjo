@@ -45,6 +45,8 @@ static const char* field_names[] = {
 };
 
 std::string extract_name_generic(TSNode node, const std::string& source) {
+    std::string type_identifier_fallback;
+
     for (const auto& field_name : field_names) {
         TSNode name = ts_node_child_by_field_name(node, field_name, strlen(field_name));
         if (!ts_node_is_null(name)) {
@@ -56,11 +58,24 @@ std::string extract_name_generic(TSNode node, const std::string& source) {
             if (type == "qualified_identifier") {
                 TSNode qualified_identifier_name = ts_node_child_by_field_name(name, "name", strlen("name"));
                 if (!ts_node_is_null(qualified_identifier_name)) {
+                    std::string result = extract_name_generic(
+                        qualified_identifier_name,
+                        source
+                    );
+
+                    if (!result.empty())
+                        return result;
+
                     return source.substr(
                         ts_node_start_byte(qualified_identifier_name),
                         ts_node_end_byte(qualified_identifier_name) - ts_node_start_byte(qualified_identifier_name)
                     );
                 }
+            }
+
+            if (type == "type_identifier") {
+                if (type_identifier_fallback.empty())
+                    type_identifier_fallback = FeatureExtractor::get_node_text(name, source);
             }
         }
     }
@@ -71,6 +86,9 @@ std::string extract_name_generic(TSNode node, const std::string& source) {
         std::string result = extract_name_generic(child, source);
         if (!result.empty()) return result;
     }
+
+    if (!type_identifier_fallback.empty())
+        return type_identifier_fallback;
 
     return "";
 }
