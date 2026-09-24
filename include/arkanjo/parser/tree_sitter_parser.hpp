@@ -3,6 +3,7 @@
 #include <string>
 #include <filesystem>
 #include <functional>
+#include <memory>
 
 #include <tree_sitter/api.h>
 
@@ -11,10 +12,16 @@
 
 namespace fs = std::filesystem;
 
+/**
+ * @brief Statistics on skipped files or functions due to parsing errors.
+ */
 struct SkipStats {
-  size_t errors;
+  size_t errors; ///< Count of errors encountered during parsing.
 };
 
+/**
+ * @brief Tree-sitter parser for language detection, AST generation, and function extraction.
+ */
 class TreeSitterParser {
     static bool is_function_empty(TSNode body);
     
@@ -22,22 +29,12 @@ class TreeSitterParser {
 
     static std::string get_full_signature(TSNode func_node, const std::string& source);
 
-    // Extracts the function name from a Tree-sitter function node across multiple languages.
-    //
-    // Supports different AST structures depending on the language:
-    // - C/C++: uses "declarator" field (function_definition)
-    // - Rust: uses "name" field (function_item)
-    // - Fallback: recursively searches for an identifier-like node
-    //
-    // This abstraction allows the same FunctionBreaker pipeline to work across
-    // multiple Tree-sitter grammars without hardcoding per-language parsers.
-    //
     static std::string get_function_name(TSNode func_node, const std::string& source);
 
     static TSNode get_body(TSNode node);
 
     /**
-     * Returns whether a Tree-sitter subtree should be ignored due to parser errors.
+     * @brief Returns whether a Tree-sitter subtree should be ignored due to parser errors.
      *
      * The decision is based on the number and density of ERROR nodes in the
      * subtree, helping discard regions where the parser has likely lost
@@ -58,11 +55,27 @@ class TreeSitterParser {
         const fs::path& file_path, const std::string& source_code);
 
   public:
+    /**
+     * @brief Parses a source file into AST, discovers all contained functions, and invokes callback for each.
+     * @param file_path Absolute or relative path to the file.
+     * @param relative_path Project-relative path for reporting.
+     * @param source_code Source file content string.
+     * @param callback Callback invoked for each extracted FunctionData.
+     * @param stats Output statistics updated with error counts.
+     */
     static void process_file(
       const fs::path& file_path, const fs::path& relative_path, const std::string& source_code,
       std::function<void(const FunctionData&)> callback,
       SkipStats& stats);
 
+    /**
+     * @brief Parses a source file treating the entire file as a single compilation unit.
+     * @param file_path Absolute or relative path to the file.
+     * @param relative_path Project-relative path for reporting.
+     * @param source_code Source file content string.
+     * @param callback Callback invoked for the unit FunctionData.
+     * @param stats Output statistics updated with error counts.
+     */
     static void process_file_as_unit(
       const fs::path& file_path, const fs::path& relative_path, const std::string& source_code,
       std::function<void(const FunctionData&)> callback,
