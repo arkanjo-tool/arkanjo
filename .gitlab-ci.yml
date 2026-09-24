@@ -1,0 +1,155 @@
+stages:
+  - build
+  - test
+  - documentation
+  - deploy
+
+variables:
+  PYTHON_VERSION: '3.11'
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.pip-cache"
+  INSTALL_PREFIX: "$CI_PROJECT_DIR/install"
+
+workflow:
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - when: never
+
+.saas-runners:
+  parallel:
+    matrix:
+      - OS: linux
+        BUILD_TYPE: Release
+        RUNNER_TAG: saas-linux-small-amd64
+        IMAGE: ubuntu:24.04
+
+      # Tier GitLab: Premium, Ultimate
+      # - OS: macos
+      #   BUILD_TYPE: Release
+      #   RUNNER_TAG: saas-macos-medium-m1
+      #   IMAGE: macos-15-xcode-16
+
+  tags:
+    - ${RUNNER_TAG}
+
+  image: ${IMAGE}
+
+.linux-dependencies:
+  before_script:
+    - |
+      if [ "$OS" = "linux" ]; then
+        apt-get update
+        apt-get install -y build-essential cmake git libicu-dev
+      fi
+
+.python-environment:
+  before_script:
+    - |
+      if [ "$OS" = "linux" ]; then
+        apt-get update
+        apt-get install -y python3 python3-venv
+      fi
+    - python3 -m venv venv
+    - export PATH="$CI_PROJECT_DIR/venv/bin:$PATH"
+    - python -m pip install --upgrade pip
+  cache:
+    paths:
+      - ${PIP_CACHE_DIR}
+
+build:
+  stage: build
+
+  extends:
+    - .saas-runners
+    - .linux-dependencies
+
+  script:
+    # Configure CMake
+    - cmake -S . -B build -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX}
+
+    # Build
+    - cmake --build build --config ${BUILD_TYPE} --target install
+  artifacts:
+    name: "arkanjo-cli-${OS}"
+    paths:
+      - install/
+      - build/arkanjo-test
+    expire_in: 1 hour
+
+test:
+  stage: test
+
+  needs:
+    - job: build
+      artifacts: true
+      parallel:
+        matrix:
+          - OS: ['$[[ matrix.OS ]]']
+            BUILD_TYPE: ['$[[ matrix.BUILD_TYPE ]]']
+            RUNNER_TAG: ['$[[ matrix.RUNNER_TAG ]]']
+            IMAGE: ['$[[ matrix.IMAGE ]]']
+
+  extends:
+    - .saas-runners
+    - .linux-dependencies
+    - .python-environment
+
+  script:
+    - export PATH="$CI_PROJECT_DIR/install/bin:$CI_PROJECT_DIR/venv/bin:$PATH"
+
+    # Install Python dependencies
+    - python -m pip install -r requirements/tfidf.txt
+    - python -m nltk.downloader punkt punkt_tab
+
+    # Run C++ E2E tests
+    - ./build/arkanjo-test
+
+    # Run CLI integration tests
+    - echo -e "tests/e2e/codebase\n0.9\n1" | arkanjo preprocessor build
+    - arkanjo explorer
+    - arkanjo duplication
+
+documentation:
+  stage: documentation
+
+  needs:
+    - job: test
+      artifacts: false
+
+  before_script:
+    - apt-get update
+    - apt-get install -y
+        build-essential
+        cmake
+        doxygen
+        graphviz
+
+  script:
+    - cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+    - cmake --build build --target doc
+
+  artifacts:
+    name: arkanjo-documentation
+    paths:
+      - docs/doxygen/html
+    expire_in: 1 hour
+
+pages:
+  stage: deploy
+
+  needs:
+    - job: documentation
+      artifacts: true
+
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'
+
+  script:
+    - mkdir -p public
+    - cp -r docs/doxygen/html/* public/
+
+  pages: true
+
+  artifacts:
+    paths:
+      - public
