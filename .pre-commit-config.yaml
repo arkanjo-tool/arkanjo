@@ -1,0 +1,14 @@
+exclude: ^(third-party/|archive/)
+
+repos:
+  - repo: local
+    hooks:
+      - id: clang-format
+        name: clang-format (staged files)
+        entry: git-clang-format
+        language: system
+        args:
+          - --staged
+          - --extensions
+          - cpp,hpp,h,cc,cxx
+        pass_filenames: false
