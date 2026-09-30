@@ -32,19 +32,19 @@ The results show that code duplication is not always undesirable and depends on 
 
 Key findings from interactions with maintainers:
 
-- **Driver Forking (T1)**  
+- **Driver Forking (Takeaway T1)**  
   Code duplication is sometimes intentional. Entire drivers are cloned to serve as independent baselines.
 
-- **Readability over Deduplication (T2)**  
+- **Readability over Deduplication (Takeaway T2)**  
   Maintainers often prefer duplicated code if it improves clarity and reduces cognitive load.
 
-- **Integration Overhead (T3)**  
-  Small deduplication changes may be rejected due to the cost of integrating and maintaining them.
+- **Integration Overhead (Takeaway T3)**  
+  Small deduplication changes may be rejected due to the cost of integrating them upstream.
 
-- **Performance Trade-offs (T4)**  
-  In low-level code, duplication may be preferred to avoid performance regressions.
+- **Performance Trade-offs (Takeaway T4)**  
+  In low-level code, duplication may be tolerated to avoid performance regressions.
 
-These findings challenge the strict application of the DRY principle in large-scale systems.
+These findings challenge the strict application of the DRY principle in the Linux kernel.
 
 # How to install
 
