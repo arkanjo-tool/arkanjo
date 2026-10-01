@@ -4,6 +4,9 @@
 #include <string>
 
 namespace config {
+  /**
+   * @brief Supported terminal UI themes.
+   */
   enum class Theme {
     Light,
     Dark
@@ -11,6 +14,9 @@ namespace config {
 }
 
 namespace arkanjo {
+  /**
+   * @brief Global configuration schema for arkanjo execution settings.
+   */
   struct ConfigSchema {
     std::string program_name = "arkanjo";                  ///< Name of the program
     std::filesystem::path base_path = "tmp/arkanjo";       ///< Default base path for temporary files

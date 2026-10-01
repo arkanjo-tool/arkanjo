@@ -6,25 +6,46 @@
 
 #include <arkanjo/utils/utils.hpp>
 
+/**
+ * @brief Output presentation formats.
+ */
 enum class Format {
-    TEXT,
-    JSON,
-    AUTO
+    TEXT, ///< Human-readable styled text format.
+    JSON, ///< Structured JSON format.
+    AUTO  ///< Automatic selection based on context/terminal.
 };
 
 using StyleMap = std::unordered_map<std::string, Utils::COLOR>;
 using RowColorFn = std::function<Utils::COLOR(size_t)>;
 
+/**
+ * @brief Interface for formatting and coloring text output.
+ */
 class IFormatter {
 public:
     virtual ~IFormatter() = default;
+
+    /**
+     * @brief Formats text with the specified color.
+     * @param text Text string to format.
+     * @param color Color code to apply.
+     * @return Formatted string with ANSI escape codes or plaintext.
+     */
     virtual std::string colorize(
         const std::string& text, 
         Utils::COLOR color
     ) const = 0;
+
+    /**
+     * @brief Returns the active theme style map.
+     * @return Reference to StyleMap.
+     */
     virtual const StyleMap& style() const = 0;
 };
 
+/**
+ * @brief Terminal console formatter supporting ANSI colors and customizable themes.
+ */
 class ConsoleFormatter : public IFormatter {
 public:
     explicit ConsoleFormatter(
