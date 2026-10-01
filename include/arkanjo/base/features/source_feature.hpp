@@ -6,6 +6,9 @@
 namespace fs = std::filesystem;
 inline fs::path source_feature_path = fs::path("features") / "source";
 
+/**
+ * @brief Source code feature representation for extracted functions.
+ */
 struct SourceFeature {
     /**
      * @brief Full source code of the function.

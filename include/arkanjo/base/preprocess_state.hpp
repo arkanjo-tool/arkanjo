@@ -8,11 +8,14 @@ namespace fs = std::filesystem;
 
 using json = nlohmann::json;
 
+/**
+ * @brief Preprocessing execution summary parameters persisted to cache.
+ */
 struct PreprocessRunParams {
-    fs::path path;             ///< Path of the current preprocess
-    std::string finished_time; ///< Timing information for when preprocessing finished
-    std::string version;       ///< Version of the current preprocess 
-    std::uintmax_t size;       ///< Size of the preprocess output
+    fs::path path;             ///< Project path of the current preprocess run.
+    std::string finished_time; ///< Timestamp when preprocessing completed.
+    std::string version;       ///< Version of the arkanjo preprocessor used.
+    std::uintmax_t size;       ///< Total size of the preprocessed files in bytes.
 };
 
 inline void to_json(json& j, const PreprocessRunParams& d) {
@@ -31,22 +34,31 @@ inline void from_json(const json& j, PreprocessRunParams& d) {
     d.size = j.value("size", 0);
 }
 
+/**
+ * @brief Manages storage and validation of preprocessing run state.
+ */
 class Preprocess_State {
 protected:
-    static constexpr const char* CONFIG_PATH = "config.json"; ///< Configuration file path
+    static constexpr const char* CONFIG_PATH = "config.json"; ///< Configuration file path within cache.
 
 public:
     /**
-     * @brief Saves preprocessing parameters for future runs
-     * @param path Project path to save
-     * @param cache_path Project cache path
+     * @brief Saves current run parameters to the cache directory.
+     * @param path Project root path.
+     * @param cache_path Cache storage path.
      */
     static void save_current_run_params(const fs::path& path, const fs::path& cache_path);
 
     /**
-     * @brief read preprocessing parameters runs
+     * @brief Reads preprocessing parameters saved from the previous run.
+     * @return PreprocessRunParams with metadata from previous run.
      */
     static PreprocessRunParams read_current_run_params();
 
+    /**
+     * @brief Verifies whether the cached preprocessing data is compatible with the current version.
+     * @param cache_version Version string recorded in cache.
+     * @return True if compatible, false otherwise.
+     */
     static bool is_cache_compatible(const std::string& cache_version);
 };

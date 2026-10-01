@@ -5,13 +5,28 @@
 #include <string_view>
 #include <iostream>
 
+/**
+ * @brief Represents the outcome of a text diff comparison.
+ */
 struct DiffResult {
-    int error;
-    bool has_difference;
+    int error;           ///< Libgit2 error code (0 on success).
+    bool has_difference; ///< True if text contents differ.
 };
 
+/**
+ * @brief Computes and formats line-by-line unified text diffs using libgit2.
+ */
 class GitTextDiff {
   public:
+    /**
+     * @brief Compares two strings of text and prints unified diff output to the specified stream.
+     * @param first_text Old text buffer.
+     * @param first_name Identifier/label for old text.
+     * @param second_text New text buffer.
+     * @param second_name Identifier/label for new text.
+     * @param output Output stream for formatted diff.
+     * @return DiffResult indicating success and whether differences exist.
+     */
     static DiffResult compare(
         std::string_view first_text,
         std::string_view first_name,

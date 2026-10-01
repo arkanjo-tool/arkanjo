@@ -3,11 +3,17 @@
 #include <arkanjo/utils/utils.hpp>
 #include <arkanjo/formatter/base.hpp>
 
+/**
+ * @brief Represents a parsed template placeholder key and its associated color style.
+ */
 struct Placeholder {
-    std::string key;
-    Utils::COLOR style = Utils::COLOR::NONE;
+    std::string key;                         ///< Placeholder key name.
+    Utils::COLOR style = Utils::COLOR::NONE; ///< Resolved color style.
 };
 
+/**
+ * @brief Renders formatted text strings using template placeholders and JSON context data.
+ */
 class TemplateRenderer {
 private:
     static Utils::COLOR resolve_style(const std::string& name, const StyleMap& theme) {
@@ -33,6 +39,13 @@ private:
     }
 
 public:
+    /**
+     * @brief Renders a template string by replacing `{key}` and `{key:style}` placeholders.
+     * @param tpl Template string containing placeholders.
+     * @param ctx JSON object containing replacement key-value pairs.
+     * @param formatter Formatter used for color styling.
+     * @return Rendered string.
+     */
     static std::string render(const std::string& tpl, const json& ctx, std::shared_ptr<IFormatter> formatter) {
         std::string result;
         result.reserve(tpl.size());

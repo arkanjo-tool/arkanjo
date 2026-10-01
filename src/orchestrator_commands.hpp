@@ -17,6 +17,12 @@ namespace OrchestratorCommands {
     template<typename Table>
     using CommandMap = const std::vector<std::pair<std::vector<std::string>, CommandsRegistry::CommandFactory>>;
 
+    /**
+     * @brief Instantiates the built-in CLI commands table bound to the given similarity table.
+     * @tparam Table Similarity table type.
+     * @param table Reference to similarity table instance.
+     * @return Command map definitions with names, aliases, and factories.
+     */
     template<typename Table>
     inline CommandMap<Table> create_internal_commands(Table& table) {
         CommandMap<Table> commands = {
