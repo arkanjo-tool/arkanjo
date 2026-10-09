@@ -1,7 +1,8 @@
-#include <arkanjo/methods/tfidf/tfidf_method.hpp>
-#include <arkanjo/formatter/format_manager.hpp>
 #include <arkanjo/base/config/config.hpp>
 #include <arkanjo/base/features/source_feature.hpp>
+#include <arkanjo/base/storage/function_storage.hpp>
+#include <arkanjo/formatter/format_manager.hpp>
+#include <arkanjo/methods/tfidf/tfidf_method.hpp>
 
 #include <iostream>
 
@@ -13,7 +14,7 @@ TfidfMethod::TfidfMethod(const fs::path& base_path_, double similarity_) {
 }
 
 void TfidfMethod::execute_by_feature(const fs::path& folder_path, const std::string feature_name) {
-    fs::path output_parsed =  base_path / "output_parsed.txt";
+    fs::path output_parsed = FunctionStorage{}.build_similarity_path();
     if (!feature_name.empty())
         fs::path output_parsed = base_path / ("output_parsed" + feature_name + ".txt");
 

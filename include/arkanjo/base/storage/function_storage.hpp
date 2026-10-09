@@ -34,6 +34,12 @@ class FunctionStorage {
       */
     fs::path build_info_path(const Path& path) const;
 
+    /**
+      * @brief Builds similarity file path
+      * @return string Path to the similarity pairs file
+      */
+    fs::path build_similarity_path() const;
+
   private:
     static constexpr const char* JSON_EXTENSION = ".json"; ///< Extension for JSON metadata files
 };

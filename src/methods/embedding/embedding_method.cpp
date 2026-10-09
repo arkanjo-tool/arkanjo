@@ -1,7 +1,8 @@
-#include <arkanjo/methods/embedding/embedding_method.hpp>
-#include <arkanjo/formatter/format_manager.hpp>
 #include <arkanjo/base/config/config.hpp>
 #include <arkanjo/base/features/source_feature.hpp>
+#include <arkanjo/base/storage/function_storage.hpp>
+#include <arkanjo/formatter/format_manager.hpp>
+#include <arkanjo/methods/embedding/embedding_method.hpp>
 #include <arkanjo/utils/utils.hpp>
 
 #include <algorithm>
@@ -86,7 +87,7 @@ std::vector<DuplicationEntry> EmbeddingMethod::read_results(FILE* pipe) const {
 }
 
 void EmbeddingMethod::save_duplications(std::vector<DuplicationEntry>& file_duplication_pairs) {
-    fs::path output_file_path = base_path / "output_parsed.txt";
+    fs::path output_file_path = FunctionStorage{}.build_similarity_path();
 
     auto fout = std::ofstream(output_file_path.string());
 

@@ -1,9 +1,10 @@
-#include <arkanjo/formatter/format_manager.hpp>
-#include <arkanjo/methods/ast/ast_method.hpp>
 #include <arkanjo/base/config/config.hpp>
-#include <arkanjo/utils/utils.hpp>
 #include <arkanjo/base/features/ast_feature.hpp>
 #include <arkanjo/base/features/source_feature.hpp>
+#include <arkanjo/base/storage/function_storage.hpp>
+#include <arkanjo/formatter/format_manager.hpp>
+#include <arkanjo/methods/ast/ast_method.hpp>
+#include <arkanjo/utils/utils.hpp>
 
 #include <thread>
 
@@ -201,7 +202,7 @@ void ASTMethod::execute() {
     output_file.close();
 
     std::ifstream tmp(base_path / "output_parsed.tmp");
-    std::ofstream final(base_path / "output_parsed.txt");
+    std::ofstream final(FunctionStorage{}.build_similarity_path());
 
     final << total_matches.load() << '\n';
     final << tmp.rdbuf();

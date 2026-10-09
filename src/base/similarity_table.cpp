@@ -1,6 +1,7 @@
 #include <arkanjo/base/function/function_loader.hpp>
 #include <arkanjo/base/preprocess_state.hpp>
 #include <arkanjo/base/similarity_table.hpp>
+#include <arkanjo/base/storage/function_storage.hpp>
 
 #include <arkanjo/utils/utils.hpp>
 
@@ -53,7 +54,7 @@ Similarity_Table::Cache_Compatibility Similarity_Table::init_similarity_table() 
     }
 
     std::ifstream table_file;
-    const fs::path similarity_table_file_name = Config::config().base_path / Config::config().name_container / SIMILARITY_TABLE_FILE_NAME;
+    const fs::path similarity_table_file_name = FunctionStorage{}.build_similarity_path();
     table_file.open(similarity_table_file_name);
     Utils::ensure_file_is_open(table_file, similarity_table_file_name);
 

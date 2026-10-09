@@ -110,7 +110,6 @@ class Similarity_Table {
     };
 
   private:
-    static constexpr const char* SIMILARITY_TABLE_FILE_NAME = "output_parsed.txt"; ///< Default similarity data file
     static constexpr const double DEFAULT_SIMILARITY = 100.00; ///< Default similarity threshold
     static constexpr const double EPS_ERROR_MARGIN = 1e-6;     ///< Floating-point comparison margin
     static constexpr const double MAXIMUM_SIMILARITY = 100.00; ///< Maximum possible similarity score

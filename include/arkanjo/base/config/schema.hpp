@@ -22,6 +22,8 @@ namespace arkanjo {
     std::filesystem::path header_path = "header";          ///< Header subdirectory name
     std::filesystem::path info_path = "info";              ///< Info subdirectory name
 
+    std::filesystem::path similarity_path = "output_parsed.txt"; ///< Similarity pairs file name
+
     config::Theme theme = config::Theme::Dark;             ///< Current terminal theme
   };
 }

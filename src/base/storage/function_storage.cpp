@@ -17,3 +17,8 @@ fs::path FunctionStorage::build_info_path(const Path& path) const {
     p.replace_extension(JSON_EXTENSION);
     return p;
 }
+
+fs::path FunctionStorage::build_similarity_path() const {
+    auto& cfg = Config::config();
+    return cfg.base_path / cfg.name_container / cfg.similarity_path;
+}
