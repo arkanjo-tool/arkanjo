@@ -1,35 +1,12 @@
 #include "function_breaker.hpp"
-#include <iostream>
-#include <unordered_map>
-#include <arkanjo/utils/utils.hpp>
 #include <arkanjo/base/config/config.hpp>
-#include <arkanjo/base/features/source_feature.hpp>
 #include <arkanjo/base/features/ast_feature.hpp>
 #include <arkanjo/base/features/metadata_feature.hpp>
-
-std::string FunctionBreaker::extract_extension(const fs::path& file_path) {
-    std::string ext = file_path.extension().string();
-    if (!ext.empty() && ext[0] == '.') ext.erase(0, 1);
-    return ext;
-}
-
-fs::path FunctionBreaker::build_output_path(
-    const fs::path type_path,
-    const fs::path& relative_path,
-    const std::string& function_name
-) {
-    auto& cfg = Config::config();
-    fs::path base = cfg.base_path / cfg.name_container / type_path;
-
-    std::string ext;
-    if (type_path == cfg.info_path) {
-        ext = "json";
-    } else {
-        ext = extract_extension(relative_path);
-    }
-
-    return base / relative_path / (function_name + "." + ext);
-}
+#include <arkanjo/base/features/source_feature.hpp>
+#include <arkanjo/base/storage/function_storage.hpp>
+#include <arkanjo/utils/utils.hpp>
+#include <iostream>
+#include <unordered_map>
 
 void FunctionBreaker::write_output(
     const fs::path type_path,
@@ -37,7 +14,8 @@ void FunctionBreaker::write_output(
     const std::string& function_name,
     const std::string& content
 ) {
-    fs::path path = build_output_path(type_path, relative_path, function_name);
+    FunctionStorage storage;
+    fs::path path = storage.build_output_path(type_path, relative_path, function_name);
     Utils::write_file(path, content);
 }
 

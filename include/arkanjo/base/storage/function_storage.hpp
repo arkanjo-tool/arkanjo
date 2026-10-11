@@ -40,6 +40,14 @@ class FunctionStorage {
       */
     fs::path build_similarity_path() const;
 
+    /**
+     * @brief Builds file path for a function
+     * @return Full path for the file
+     */
+    fs::path build_output_path(
+        const fs::path type_path, const fs::path& relative_path, const std::string& function_name
+    ) const;
+
   private:
     static constexpr const char* JSON_EXTENSION = ".json"; ///< Extension for JSON metadata files
 };

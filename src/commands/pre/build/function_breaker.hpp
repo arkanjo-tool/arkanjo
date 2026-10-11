@@ -55,23 +55,6 @@ enum class Granularity {
  */
 class FunctionBreaker {
     /**
-     * @brief Extracts file extension from path
-     * @param file_path Path to the file
-     * @return string File extension
-     */
-    std::string extract_extension(const fs::path& file_path);
-
-    /**
-     * @brief Builds file path for a function
-     * @param type Output type
-     * @param relative_path Relative path of the original file
-     * @param function_name Name of the function
-     * @return Full path for the file
-     */
-
-    fs::path build_output_path(const fs::path type_path, const fs::path& relative_path, const std::string& function_name);
-
-    /**
      * @brief Creates file for a function
      * @param type Output type
      * @param relative_path Relative path of the original file
