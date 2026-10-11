@@ -71,6 +71,14 @@ class CounterDuplicationCode : public CommandBase<CounterDuplicationCode> {
      */
     void process_every_path_in_similarity_table();
 
+    /**
+     * @brief Finds common path components with another path.
+     *
+     * @param path Path to compare.
+     * @return List of common path components.
+     */
+    std::vector<std::string> common_folders(const Path& path1, const Path& path2) const;
+
   public:
     COMMAND_DESCRIPTION(
         "Analyze and report duplicated lines across the codebase, grouped by "

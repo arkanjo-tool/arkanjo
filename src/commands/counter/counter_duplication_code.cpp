@@ -2,6 +2,30 @@
 
 #include "counter_duplication_code.hpp"
 
+std::vector<std::string> CounterDuplicationCode::common_folders(
+    const Path& path1, const Path& path2
+) const {
+    std::vector<std::string> tokens_relative_1;
+    std::vector<std::string> tokens_relative_2;
+
+    for (const auto& part : path1.value())
+        tokens_relative_1.push_back(part.string());
+    for (const auto& part : path2.value())
+        tokens_relative_2.push_back(part.string());
+
+    size_t minimum_size_tokens = std::min(tokens_relative_1.size(), tokens_relative_2.size());
+    std::vector<std::string> common_folders;
+    for (size_t i = 0; i < minimum_size_tokens; i++) {
+        auto token_1 = tokens_relative_1[i];
+        auto token_2 = tokens_relative_2[i];
+        if (token_1 == token_2)
+            common_folders.push_back(token_1);
+        else
+            break;
+    }
+    return common_folders;
+}
+
 void CounterDuplicationCode::mark_path_as_processed(Path path) {
     processed_paths.insert(path);
 }
@@ -17,7 +41,7 @@ int CounterDuplicationCode::get_number_of_lines_in_path(const Path& path) {
 }
 
 void CounterDuplicationCode::register_code_duplication(const Path& path1, const Path& path2, int number_of_lines) {
-    std::vector<std::string> common_folder_path = path1.common_folders(path2);
+    std::vector<std::string> common_folder_path = common_folders(path1, path2);
     counter_duplication_code_trie.add_folder_duplication_code(common_folder_path, number_of_lines);
 }
 

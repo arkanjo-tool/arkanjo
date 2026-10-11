@@ -60,14 +60,6 @@ class Path {
     fs::path relative_path() const;
 
     /**
-     * @brief Finds common path components with another path.
-     *
-     * @param path Path to compare.
-     * @return List of common path components.
-     */
-    std::vector<std::string> common_folders(const Path& path) const;
-
-    /**
      * @brief Path comparison operator
      * @param Other path to compare
      * @return True if this path is ordered first
