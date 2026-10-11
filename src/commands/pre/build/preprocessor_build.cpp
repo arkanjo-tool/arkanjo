@@ -124,6 +124,8 @@ void PreprocessorBuild::preprocess(const fs::path& path, double similarity, size
             fm::write("Removed existing container folder");
     }
 
+    fs::create_directories(base_path);
+
     auto start_breaker = std::chrono::high_resolution_clock::now();
     auto method = MethodsType[use_duplication_finder_index].create(
         base_path, similarity, pass_through_args);
