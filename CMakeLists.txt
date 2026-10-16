@@ -40,8 +40,12 @@ set(THIRD_PARTY_BUILD_DIR "${CMAKE_BINARY_DIR}/third-party")
 include(cmake/TreeSitter.cmake)
 include(cmake/Libgit2.cmake)
 include(cmake/CompilerOptions.cmake)
-include(cmake/Targets.cmake)
 include(cmake/Documentation.cmake)
+
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+
+include(cmake/Targets.cmake)
 
 if(ENABLE_TESTS)
     enable_testing()
