@@ -93,3 +93,6 @@ _deps
 CMakeUserPresets.json
 
 .cache
+
+__pycache__/
+*.egg-info/
