@@ -1,5 +1,7 @@
 #include "help.hpp"
 
+#include <arkanjo/utils/os_utils.hpp>
+#include <arkanjo/utils/utils.hpp>
 #include <iostream>
 
 Help::Help(
@@ -22,25 +24,52 @@ bool Help::run([[maybe_unused]] const ParsedOptions& options) {
         title_str += command_name;
         title_str += " ";
     }
-    title_str += " - Available commands:";
-    std::cout << wrapped(title_str, 0);
-    std::cout << "\n";
 
-    for (const auto& [name, _] : internal_commands) {
-        if (name.empty()) continue;
-        std::cout << "  " << name[0] << "\n";
-    }
-    std::cout << "\n";
+    std::ostringstream avaible_commands;
 
-    std::string use_str = "Use '";
-    use_str += Config::config().program_name;
-    use_str += " ";
-    if (!command_name.empty()) {
-        use_str += command_name;
-        use_str += " ";
+    for (const auto& [name, func] : internal_commands) {
+        if (name.empty())
+            continue;
+
+        std::string external_cmd = Utils::external_command(Config::config().program_name, name[0]);
+        bool exists = UtilsOSDependable::process_exists(external_cmd);
+
+        if (func() == nullptr && !exists)
+            continue;
+
+        avaible_commands << "  " << name[0] << "\n";
     }
-    use_str += "<command> --help' for more information on a command.";
-    std::cout << wrapped(use_str, 0);
+    if (avaible_commands.tellp() != std::streampos(0)) {
+        std::cout << wrapped(title_str + " - Available commands:", 0);
+        std::cout << "\n";
+        std::cout << avaible_commands.str() << "\n";
+    }
+
+    if (options.has("all")) {
+        std::ostringstream optional_commands;
+
+        for (const auto& [name, func] : internal_commands) {
+            std::string external_cmd =
+                Utils::external_command(Config::config().program_name, name[0]);
+
+            if (name.empty() || func() != nullptr)
+                continue;
+            if (UtilsOSDependable::process_exists(external_cmd))
+                continue;
+
+            optional_commands << "  " << name[0] << "\n";
+        }
+        if (optional_commands.tellp() != std::streampos(0)) {
+            std::cout << wrapped("Optional commands not installed:", 0);
+            std::cout << "\n";
+            std::cout << optional_commands.str() << "\n";
+        }
+    }
+
+    std::cout << wrapped(
+        "Use '" + title_str + "<command> --help' for more information on a command.", 0
+    );
+    std::cout << wrapped("Use '" + title_str + "help --all' to list all known commands.", 0);
 
     return true;
 }

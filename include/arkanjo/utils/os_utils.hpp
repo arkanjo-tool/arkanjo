@@ -70,4 +70,6 @@ public:
      * - The command is searched in the system PATH.
      */
     static int run_process(const char* cmd, char* const argv[]);
+
+    static bool process_exists(const std::string& cmd);
 }; // UtilsOSDependable

@@ -33,7 +33,8 @@ inline Step setup_command_step(
             return true;
         }
 
-        std::string external_cmd = Config::config().program_name + "-" + ctx.command_name;
+        std::string external_cmd =
+            Utils::external_command(Config::config().program_name, ctx.command_name);
         std::vector<char*> new_argv;
         new_argv.push_back(const_cast<char*>(external_cmd.c_str()));
         for (int i = 2; i < ctx.argc; ++i) {

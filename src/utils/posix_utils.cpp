@@ -112,3 +112,27 @@ int UtilsOSDependable::run_process(const char* cmd, char* const argv[]) {
     execvp(cmd, argv);
     return -1;
 }
+
+bool UtilsOSDependable::process_exists(const std::string& cmd) {
+    const char* path = std::getenv("PATH");
+    if (!path)
+        return false;
+
+    std::string paths(path);
+    std::size_t pos = 0;
+
+    while (pos < paths.size()) {
+        auto end = paths.find(':', pos);
+        auto dir = paths.substr(pos, end - pos);
+
+        if (access((dir + "/" + cmd).c_str(), X_OK) == 0)
+            return true;
+
+        if (end == std::string::npos)
+            break;
+
+        pos = end + 1;
+    }
+
+    return false;
+}

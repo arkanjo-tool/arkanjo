@@ -22,6 +22,10 @@ class Help : public CommandBase<Help> {
     const std::string command_name{""};
 
   public:
+    static constexpr CliOption options_[] = {
+        {"all", 0, NoArgument, ""},
+        OPTION_END,
+    };
     COMMAND_DESCRIPTION("Help")
 
     explicit Help(

@@ -202,3 +202,7 @@ void Utils::open_folder(const std::string& path) {
     std::system(("xdg-open \"" + path + "\"").c_str());
 #endif
 }
+
+const std::string Utils::external_command(std::string program_name, std::string command_name) {
+    return program_name + "-" + command_name;
+}

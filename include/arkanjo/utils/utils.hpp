@@ -226,6 +226,8 @@ std::uintmax_t folder_size(const fs::path& folder);
 std::string format_size(std::uintmax_t bytes);
 
 void open_folder(const std::string& path);
+
+const std::string external_command(std::string program_name, std::string command_name);
 }; // namespace Utils
 
 struct Wrapped {
