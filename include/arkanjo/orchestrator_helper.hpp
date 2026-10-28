@@ -1,6 +1,7 @@
 #pragma once
 
 #include <arkanjo/base/path.hpp>
+#include <arkanjo/base/similarity.hpp>
 
 #include <arkanjo/base/similarity_table.hpp>
 
@@ -76,7 +77,7 @@ inline Step similarity_step(Similarity_Table& table) {
         }
 
         if (auto similarity = ctx.options.get_as<double>("similarity"))
-            table.update_similarity(*similarity);
+            table.update_similarity(Similarity::read(*similarity));
 
         return true;
     };

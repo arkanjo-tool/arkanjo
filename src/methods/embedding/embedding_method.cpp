@@ -9,20 +9,16 @@
 #include <array>
 #include <cstdio>
 #include <fstream>
-#include <iomanip>
 #include <iostream>
 
 using fm = FormatterManager;
 
-EmbeddingMethod::EmbeddingMethod(const fs::path& base_path_, double similarity_,
-                     std::vector<std::string> pass_through_args_) {
+EmbeddingMethod::EmbeddingMethod(
+    const fs::path& base_path_, Similarity similarity_, std::vector<std::string> pass_through_args_
+) {
     base_path = base_path_;
     similarity = similarity_;
     pass_through_args = std::move(pass_through_args_);
-
-    if (similarity < 0) {
-        std::cerr << "SIMILARITY SHOULD BE GREATER OR EQUAL 0 TO USE DUPLICATION FINDER BY LLM EMBEDDINGS";
-    }
 }
 
 std::string EmbeddingMethod::build_command(const fs::path& source_dir) const {
@@ -32,7 +28,7 @@ std::string EmbeddingMethod::build_command(const fs::path& source_dir) const {
     command += " --source-dir ";
     command += source_dir.string();
     command += " --min-similarity ";
-    command += std::to_string(similarity);
+    command += std::to_string(Similarity::write(similarity));
 
     for (const auto& arg : pass_through_args) {
         command += " '";
@@ -54,7 +50,7 @@ bool EmbeddingMethod::parse_line(const std::string& line, DuplicationEntry& entr
     }
 
     try {
-        double sim = std::stod(tokens[2]);
+        Similarity sim = Similarity::read(tokens[2]);
         entry = {sim, tokens[0], tokens[1]};
     } catch (const std::exception&) {
         return false;
@@ -76,9 +72,8 @@ std::vector<DuplicationEntry> EmbeddingMethod::read_results(FILE* pipe) const {
             leftover.erase(0, newline_pos + 1);
 
             DuplicationEntry entry;
-            if (parse_line(line, entry) && std::get<0>(entry) >= similarity) {
+            if (parse_line(line, entry) && std::get<0>(entry) >= similarity)
                 pairs.push_back(entry);
-            }
         }
     }
 
@@ -94,7 +89,7 @@ void EmbeddingMethod::save_duplications(std::vector<DuplicationEntry>& file_dupl
     fout << file_duplication_pairs.size() << '\n';
     for (const auto& [similarity, path1, path2] : file_duplication_pairs) {
         fout << path1 << ' ' << path2 << ' ';
-        fout << std::fixed << std::setprecision(2) << similarity << '\n';
+        fout << similarity << '\n';
     }
 
     fout.close();

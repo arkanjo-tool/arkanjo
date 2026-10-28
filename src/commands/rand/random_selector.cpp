@@ -47,7 +47,7 @@ void RandomSelector::print_path_pairs(std::vector<SimilarPair> path_pairs) {
         vector_entry.push_back(RandomSelectorEntry{
             FunctionPrinter::format_path_message_in_pair(function1),
             FunctionPrinter::format_path_message_in_pair(function2),
-            path_pair.similarity
+            Similarity::write(path_pair.similarity)
         });
     }
     if (vector_entry.size() <= 0) return;
@@ -62,8 +62,8 @@ void RandomSelector::print_path_pairs(std::vector<SimilarPair> path_pairs) {
 RandomSelector::RandomSelector(Similarity_Table* _similarity_table) {
     similarity_table = _similarity_table;
     similarity_table->update_similarity(0);
-    minimum_similarity = 0;
-    maximum_similarity = 0;
+    minimum_similarity = Similarity::MINIMUM;
+    maximum_similarity = Similarity::MAXIMUM;
     maximum_quantity = 0;
 }
 
@@ -77,8 +77,8 @@ bool RandomSelector::validate(const ParsedOptions& options) {
 }
 
 bool RandomSelector::run(const ParsedOptions& options) {
-    minimum_similarity = stod(options.extra_args[0]);
-    maximum_similarity = stod(options.extra_args[1]);
+    minimum_similarity = Similarity::read(options.extra_args[0]);
+    maximum_similarity = Similarity::read(options.extra_args[1]);
     maximum_quantity = stod(options.extra_args[2]);
 
     auto path_pairs = get_similarity_pairs_filtered();

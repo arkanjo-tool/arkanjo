@@ -1,5 +1,6 @@
 #include <arkanjo/base/function/function_loader.hpp>
 #include <arkanjo/base/preprocess_state.hpp>
+#include <arkanjo/base/similarity.hpp>
 #include <arkanjo/base/similarity_table.hpp>
 #include <arkanjo/base/storage/function_storage.hpp>
 
@@ -23,7 +24,7 @@ PathId Similarity_Table::find_id_path(const Path& path) {
 
 void Similarity_Table::read_comparation(std::ifstream& table_file) {
     std::string string_path1, string_path2;
-    double similarity;
+    Similarity similarity;
     table_file >> string_path1 >> string_path2 >> similarity;
 
     PathId id1 = find_id_path(Path(string_path1));
@@ -64,8 +65,8 @@ Similarity_Table::Cache_Compatibility Similarity_Table::init_similarity_table() 
     return res;
 }
 
-Similarity_Table::Similarity_Table(double _similarity_threshold)
-    : similarity_threshold{_similarity_threshold} { }
+Similarity_Table::Similarity_Table(Similarity _similarity_threshold)
+    : similarity_threshold{_similarity_threshold} {}
 
 Similarity_Table::Similarity_Table()
     :  similarity_threshold{DEFAULT_SIMILARITY} { }
@@ -74,39 +75,39 @@ Similarity_Table::Cache_Compatibility Similarity_Table::load() {
     return init_similarity_table();
 }
 
-void Similarity_Table::update_similarity(double new_similarity_threshold) {
+void Similarity_Table::update_similarity(Similarity new_similarity_threshold) {
     similarity_threshold = new_similarity_threshold;
 }
 
-double Similarity_Table::get_similarity(const Path& path1, const Path& path2) {
+Similarity Similarity_Table::get_similarity(const Path& path1, const Path& path2) {
     PathId id1 = find_id_path(path1);
     PathId id2 = find_id_path(path2);
 
     if (id1 == id2) {
-        return MAXIMUM_SIMILARITY;
+        return Similarity::MAXIMUM;
     }
     normalize_pair(id1, id2);
     std::pair<PathId, PathId> aux = std::make_pair(id1, id2);
     auto it = similarity_table.find(aux);
     if (it != similarity_table.end())
         return it->second;
-    return MINIMUM_SIMILARITY;
+    return Similarity::MINIMUM;
 }
 
 const Path& Similarity_Table::get_path(PathId id) const {
     return paths[id];
 }
 
-bool Similarity_Table::is_above_threshold(double similarity) const {
-    return similarity_threshold <= similarity + EPS_ERROR_MARGIN;
+bool Similarity_Table::is_above_threshold(Similarity similarity) const {
+    return similarity.approximately_at_least(similarity_threshold);
 }
 
-double Similarity_Table::get_threshold_similarity() const {
+Similarity Similarity_Table::get_threshold_similarity() const {
     return similarity_threshold;
 }
 
 bool Similarity_Table::is_similar(const Path& path1, const Path& path2) {
-    double similarity = get_similarity(path1, path2);
+    Similarity similarity = get_similarity(path1, path2);
     return is_above_threshold(similarity);
 }
 
@@ -138,7 +139,7 @@ std::vector<SimilarPair> Similarity_Table::get_all_similar_pairs() {
         auto function = loader.load(path1);
 
         similar_pairs.push_back({
-            similarity,
+            similarity.value(),
             function.scope_location().size(),
             ids.first,
             ids.second,

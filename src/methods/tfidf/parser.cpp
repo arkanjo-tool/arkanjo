@@ -1,8 +1,7 @@
 #include <arkanjo/methods/tfidf/parser.hpp>
-#include <iomanip>
 #include <iostream>
 
-Comparation::Comparation(std::string _path1, std::string _path2, double _sim) {
+Comparation::Comparation(std::string _path1, std::string _path2, Similarity _sim) {
     if (_path1 > _path2)
         std::swap(_path1, _path2);
     path1 = _path1;
@@ -59,11 +58,11 @@ void removeANSI_inplace(std::string& s) {
     s.resize(write);
 }
 
-double Parser::retrive_similarity(const std::string& s) {
+Similarity Parser::retrive_similarity(const std::string& s) {
     try {
-        return std::stod(s);
+        return Similarity::read(s);
     } catch (...) {
-        return 0.0;
+        return Similarity{0.0};
     }
 }
 
@@ -76,7 +75,7 @@ void Parser::parser_block_stream(const std::string& path, const std::vector<std:
     if (!fs::is_regular_file(path_comp))
         return;
 
-    double similarity = retrive_similarity(tokens[1]);
+    Similarity similarity = retrive_similarity(tokens[1]);
 
     if (similarity < similarity_cap)
         return;
@@ -117,12 +116,13 @@ void Parser::exec_from_stream(FILE* pipe) {
     fout << comparations.size() << '\n';
     for (const auto& com : comparations) {
         fout << com.path1 << ' ' << com.path2 << ' ';
-        fout << std::fixed << std::setprecision(2) << com.similarity << '\n';
+        fout << com.similarity << '\n';
     }
 }
 
-Parser::Parser(const fs::path& output_file, double similarity_cap)
-    : fout(output_file), similarity_cap(similarity_cap) {
+Parser::Parser(const fs::path& output_file, Similarity similarity_cap)
+    : fout(output_file),
+      similarity_cap(similarity_cap) {
 
     if (!fout) {
         throw std::runtime_error("Failed to open output file");

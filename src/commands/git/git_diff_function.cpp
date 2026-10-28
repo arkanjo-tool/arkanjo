@@ -35,7 +35,7 @@ bool GitDiffFunction::run(const ParsedOptions& options) {
         auto similarity =similarity_table->get_threshold_similarity();
 
         std::ostringstream ss;
-        ss << std::fixed << std::setprecision(2) << similarity;
+        ss << similarity;
 
         throw CLIError("The selected functions are not flagged as duplicates in the similarity table (similarity: " + ss.str() + ").");
         return false;

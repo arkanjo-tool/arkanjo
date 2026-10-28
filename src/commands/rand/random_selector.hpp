@@ -18,6 +18,7 @@
 #include <string>
 #include <vector>
 
+#include <arkanjo/base/similarity.hpp>
 #include <arkanjo/cli/cli_error.hpp>
 #include <arkanjo/commands/command_base.hpp>
 
@@ -33,8 +34,8 @@ class RandomSelector : public CommandBase<RandomSelector> {
       "Functions: {path_a} AND {path_b}. Similarity: {similarity} ";
 
     Similarity_Table* similarity_table; ///< Source of similarity data
-    double minimum_similarity;          ///< Minimum similarity threshold
-    double maximum_similarity;          ///< Maximum similarity threshold
+    Similarity minimum_similarity;      ///< Minimum similarity threshold
+    Similarity maximum_similarity;      ///< Maximum similarity threshold
     double maximum_quantity;            ///< Maximum number of pairs to show
 
     const int seed = 123456789;  ///< Fixed random seed for reproducibility
@@ -82,8 +83,8 @@ class RandomSelector : public CommandBase<RandomSelector> {
     /**
      * @brief Constructs selector with configuration
      * @param _similarity_table Source of similarity data
-     * @param _minimum_similarity Minimum similarity threshold (0-100)
-     * @param _maximum_similarity Maximum similarity threshold (0-100)
+     * @param _minimum_similarity Minimum similarity threshold
+     * @param _maximum_similarity Maximum similarity threshold
      * @param _maximum_quantity Maximum number of pairs to select
      */
     explicit RandomSelector(Similarity_Table* _similarity_table);

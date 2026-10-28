@@ -1,14 +1,15 @@
 #pragma once
 
-#include <vector>
-#include <string>
 #include <arkanjo/base/function/function_data.hpp>
+#include <arkanjo/base/similarity.hpp>
+#include <string>
+#include <vector>
 
 /**
  * tuple format of the detected duplicates
  * (similarity_percentage, path1, path2)
  */
-using DuplicationEntry = std::tuple<double, std::string, std::string>;
+using DuplicationEntry = std::tuple<Similarity, std::string, std::string>;
 
 class IMethod {
 public:

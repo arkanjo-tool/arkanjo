@@ -86,19 +86,15 @@ double ASTMethod::similarity_score(const PostOrderTree& a, const PostOrderTree& 
     return 1.0 - (static_cast<double>(dist) / max_size);
 }
 
-ASTMethod::ASTMethod(const fs::path& base_path_, double similarity_) {
+ASTMethod::ASTMethod(const fs::path& base_path_, Similarity similarity_) {
     base_path = base_path_;
     similarity = similarity_;
-
-    if (similarity < 0) {
-        std::cerr << "SIMILARITY SHOULD BE GREATER OR EQUAL 0 TO USE DUPLICATION FINDER BY AST COMMAND";
-    }
 }
 
 void ASTMethod::save_duplications(std::vector<DuplicationEntry>& file_duplication_pairs) {
     for (const auto& [similarity, path1, path2] : file_duplication_pairs) {
         output_file << path1 << ' ' << path2 << ' ';
-        output_file << std::fixed << std::setprecision(2) << similarity << '\n';
+        output_file << similarity << '\n';
     }
 }
 
@@ -131,7 +127,7 @@ void ASTMethod::compare_range(
 ) {
     for (size_t i = begin; i < end; i++) {
         for (size_t j = i + 1; j < processed.size(); j++) {
-            double sim = similarity_score(processed[i], processed[j]) * 100.0;
+            Similarity sim = similarity_score(processed[i], processed[j]);
 
             if (sim >= similarity)
                 local.push_back({sim, processed[i].path.string(), processed[j].path.string()});

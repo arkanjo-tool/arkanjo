@@ -8,7 +8,7 @@
 
 using fm = FormatterManager;
 
-TfidfMethod::TfidfMethod(const fs::path& base_path_, double similarity_) {
+TfidfMethod::TfidfMethod(const fs::path& base_path_, Similarity similarity_) {
     base_path = base_path_;
     similarity = similarity_;
 }

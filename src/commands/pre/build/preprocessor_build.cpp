@@ -9,7 +9,7 @@
 
 using fm = FormatterManager;
 
-std::tuple<std::string, double, size_t, std::vector<std::string>, Granularity>
+std::tuple<std::string, Similarity, size_t, std::vector<std::string>, Granularity>
 PreprocessorBuild::read_parameters(const ParsedOptions& options) {
     fm::write(INITIAL_MESSAGE);
 
@@ -30,16 +30,14 @@ PreprocessorBuild::read_parameters(const ParsedOptions& options) {
     }
     fs::path path(path_str);
 
-    double similarity = 0.0;
+    Similarity similarity{Similarity::MINIMUM};
 
     if (auto similarity_value = options.get_as<double>("similarity"))
-        similarity = *similarity_value;
+        similarity = Similarity::read(*similarity_value);
 
-    if (similarity == 0.0) {
+    if (similarity == Similarity::MINIMUM) {
         fm::write(MINIMUM_SIMILARITY_MESSAGE);
-        std::string similarity_message;
-        std::cin >> similarity_message;
-        similarity = stod(similarity_message);
+        std::cin >> similarity;
     }
 
     size_t use_duplication_finder_index = 0;
@@ -108,9 +106,13 @@ PreprocessorBuild::read_parameters(const ParsedOptions& options) {
     return {path, similarity, use_duplication_finder_index, pass_through_args, granularity};
 }
 
-void PreprocessorBuild::preprocess(const fs::path& path, double similarity, size_t use_duplication_finder_index,
-                                   const std::vector<std::string>& pass_through_args,
-                                   Granularity granularity) {
+void PreprocessorBuild::preprocess(
+    const fs::path& path,
+    Similarity similarity,
+    size_t use_duplication_finder_index,
+    const std::vector<std::string>& pass_through_args,
+    Granularity granularity
+) {
     auto start = std::chrono::high_resolution_clock::now();
 
     fm::write(BREAKER_MESSAGE);
@@ -157,7 +159,9 @@ void PreprocessorBuild::preprocess(const fs::path& path, double similarity, size
     fm::time("Execution time:", start);
 }
 
-PreprocessorBuild::PreprocessorBuild(bool force_preprocess, const fs::path& path, double similarity) {
+PreprocessorBuild::PreprocessorBuild(
+    bool force_preprocess, const fs::path& path, Similarity similarity
+) {
     fs::path base_path = Config::config().base_path / Config::config().name_container;
     if (force_preprocess || !std::filesystem::exists(base_path / CONFIG_PATH)) {
         preprocess(path, similarity, 0);

@@ -35,10 +35,11 @@ int BigCloneTailorEvaluator::path_to_id(Path path) {
     return stoi(file_name);
 }
 
-std::vector<std::tuple<double, int, int>> BigCloneTailorEvaluator::similar_path_pairs_formated_with_id() {
+std::vector<std::tuple<Similarity, int, int>> BigCloneTailorEvaluator::
+    similar_path_pairs_formated_with_id() {
     auto similar_path_pairs = similarity_table->get_all_similar_pairs();
     similarity_table->sort_pairs_by_similarity(similar_path_pairs);
-    std::vector<std::tuple<double, int, int>> ret;
+    std::vector<std::tuple<Similarity, int, int>> ret;
     for (const auto& similar_pair : similar_path_pairs) {
         auto id1 = similar_pair.id1;
         auto id2 = similar_pair.id2;
@@ -67,13 +68,12 @@ std::set<std::pair<int, int>> BigCloneTailorEvaluator::filter_similar_id_pairs_o
 }
 
 std::vector<std::pair<int, int>> BigCloneTailorEvaluator::filter_similar_path_pairs_by_similarity(
-    std::vector<std::tuple<double, int, int>> similar_id_pairs,
-    double minimum_similarity) {
+    std::vector<std::tuple<Similarity, int, int>> similar_id_pairs, Similarity minimum_similarity
+) {
     std::vector<std::pair<int, int>> ret;
     for (auto [similarity, id0, id1] : similar_id_pairs) {
-        if (similarity >= minimum_similarity) {
+        if (similarity >= minimum_similarity)
             ret.push_back({id0, id1});
-        }
     }
     return ret;
 }
@@ -107,8 +107,9 @@ void BigCloneTailorEvaluator::print_recall_per_type(std::vector<int> frequency) 
     }
 }
 
-void BigCloneTailorEvaluator::evaluate(double minimum_similarity) {
-    std::vector<std::tuple<double, int, int>> similar_id_pairs_similarity = similar_path_pairs_formated_with_id();
+void BigCloneTailorEvaluator::evaluate(Similarity minimum_similarity) {
+    std::vector<std::tuple<Similarity, int, int>> similar_id_pairs_similarity =
+        similar_path_pairs_formated_with_id();
     std::vector<std::pair<int, int>> similar_id_pairs = filter_similar_path_pairs_by_similarity(
         similar_id_pairs_similarity,
         minimum_similarity);

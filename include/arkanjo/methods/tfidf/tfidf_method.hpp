@@ -13,10 +13,11 @@
 
 #pragma once
 
-#include <string>
-#include <filesystem>
-#include <arkanjo/methods/tfidf/parser.hpp>
+#include <arkanjo/base/similarity.hpp>
 #include <arkanjo/methods/method.hpp>
+#include <arkanjo/methods/tfidf/parser.hpp>
+#include <filesystem>
+#include <string>
 namespace fs = std::filesystem;
 
 /**
@@ -31,15 +32,15 @@ class TfidfMethod : public IMethod {
     static constexpr const char* SAVING_MESSAGE = "Saving results..."; ///< Status message displayed when saving analysis results
 
     fs::path base_path;  ///< Root directory path of the codebase to analyze
-    double similarity; ///< Similarity threshold for considering code segments duplicates (0-100 scale)
+    Similarity similarity; ///< Similarity threshold for considering code segments duplicates
 
   public:
     /**
      * @brief Constructs the duplication finder tool
      * @param base_path_ Root path of the codebase to analyze
-     * @param similarity_ Minimum similarity threshold (0-100) to consider as duplicate
+     * @param similarity_ Minimum similarity threshold to consider as duplicate
      */
-    TfidfMethod(const fs::path& base_path_, double similarity_);
+    TfidfMethod(const fs::path& base_path_, Similarity similarity_);
 
     /**
      * @brief Executes the full duplication analysis pipeline

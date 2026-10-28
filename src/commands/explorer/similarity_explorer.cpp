@@ -5,7 +5,6 @@ The code filter every file that has the pattern as a substring, so be carefull w
 */
 
 #include <algorithm>
-#include <utility>
 
 #include "similarity_explorer.hpp"
 #include <arkanjo/base/function/function_loader.hpp>
@@ -60,7 +59,7 @@ SimilarityExplorerEntry SimilarityExplorer::process_similar_path_pair(const Path
         .end_a = location1.end,
         .end_b = location2.end,
         .duplicated_lines = location1.size(),
-        .similarity = similarity_table->get_similarity(path1, path2),
+        .similarity = similarity_table->get_similarity(path1, path2).value(),
     };
 }
 

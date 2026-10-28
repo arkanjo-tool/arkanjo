@@ -12,12 +12,12 @@
 
 #pragma once
 
-#include <algorithm>
+#include <arkanjo/base/similarity.hpp>
+#include <filesystem>
 #include <fstream>
 #include <set>
 #include <string>
 #include <vector>
-#include <filesystem>
 namespace fs = std::filesystem;
 
 /**
@@ -29,7 +29,7 @@ namespace fs = std::filesystem;
 struct Comparation {
     std::string path1;      ///< Path to first code file being compared
     std::string path2;      ///< Path to second code file being compared
-    double similarity; ///< Similarity score between the files (0-100)
+    Similarity similarity;  ///< Similarity score between the files
 
     /**
      * @brief Default constructor
@@ -42,7 +42,7 @@ struct Comparation {
      * @param _path2 Second file path
      * @param _sim Similarity score
      */
-    Comparation(std::string _path1, std::string _path2, double _sim);
+    Comparation(std::string _path1, std::string _path2, Similarity _sim);
 
     /**
      * @brief Comparison operator for sorting
@@ -67,11 +67,8 @@ struct Comparation {
  */
 class Parser {
   private:
-    static constexpr const char*  PROJECT_PATH_MESSAGE = "Enter your project path:";                                  ///< Project path prompt
-    static constexpr const char*  MINIMUM_SIMILARITY_MESSAGE = "Enter minimum similarity desired on using the tool:"; ///< Similarity threshold prompt
-
     std::ofstream fout;          ///< Output file stream
-    double similarity_cap; ///< Minimum similarity threshold
+    Similarity similarity_cap;   ///< Minimum similarity threshold
     std::set<Comparation> comparations;
 
     /**
@@ -91,9 +88,9 @@ class Parser {
     /**
      * @brief Extracts similarity score from string
      * @param s String containing similarity value
-     * @return double Parsed similarity score
+     * @return Similarity Parsed similarity score
      */
-    double retrive_similarity(const std::string& s);
+    Similarity retrive_similarity(const std::string& s);
 
     /**
      * @brief Processes a block of comparison results
@@ -106,9 +103,9 @@ class Parser {
     /**
      * @brief Constructs parser with configuration
      * @param output_file Path for cleaned output
-     * @param similarity_cap Minimum similarity threshold (0-100)
+     * @param similarity_cap Minimum similarity threshold
      */
-    explicit Parser(const fs::path& output_file, double similarity_cap);
+    explicit Parser(const fs::path& output_file, Similarity similarity_cap);
 
     /**
      * @brief Main parsing execution method using stream

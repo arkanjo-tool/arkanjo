@@ -10,11 +10,12 @@
 
 #pragma once
 
+#include <arkanjo/base/similarity.hpp>
+#include <arkanjo/methods/method.hpp>
 #include <cstdio>
+#include <filesystem>
 #include <string>
 #include <vector>
-#include <filesystem>
-#include <arkanjo/methods/method.hpp>
 
 namespace fs = std::filesystem;
 
@@ -31,7 +32,7 @@ class EmbeddingMethod : public IMethod {
     static constexpr const char* SAVING_MESSAGE = "Saving results...";
 
     fs::path base_path;
-    double similarity;
+    Similarity similarity;
     std::vector<std::string> pass_through_args;
 
     /**
@@ -66,12 +67,15 @@ class EmbeddingMethod : public IMethod {
     /**
      * @brief Constructs the LLM detector.
      * @param base_path_ Root path of the codebase cache.
-     * @param similarity_ Minimum similarity threshold (0-100) to consider as duplicate.
+     * @param similarity_ Minimum similarity threshold to consider as duplicate.
      * @param pass_through_args_ Raw arguments forwarded to the embedding script
      *         (e.g. --max-seq-length, --batch-size, --model).
      */
-    EmbeddingMethod(const fs::path& base_path_, double similarity_,
-              std::vector<std::string> pass_through_args_ = {});
+    EmbeddingMethod(
+        const fs::path& base_path_,
+        Similarity similarity_,
+        std::vector<std::string> pass_through_args_ = {}
+    );
 
     void on_function(const FunctionData& fd) override;
 

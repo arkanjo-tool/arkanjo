@@ -17,6 +17,7 @@
 #include <vector>
 
 #include <arkanjo/base/path.hpp>
+#include <arkanjo/base/similarity.hpp>
 #include <arkanjo/base/similarity_table.hpp>
 
 #include <arkanjo/commands/command_base.hpp>
@@ -34,7 +35,7 @@ class BigCloneTailorEvaluator : public CommandBase<BigCloneTailorEvaluator> {
     int NUMBER_OF_TYPES = 6;                                                                                        ///< Number of clone types
     int NOT_CLONE_TYPE_ID = 5;                                                                                      ///< ID for non-clone pairs
     std::string RECALL_PER_TYPE_PRINT = "Recall Value of each type";                                                     ///< Recall header text
-    double MINIMUM_SIMILARITY_TEMP = 0;                                                                             ///< Temporary similarity threshold
+    Similarity MINIMUM_SIMILARITY_TEMP{Similarity::MINIMUM}; ///< Temporary similarity threshold
 
     /// Clone type labels for output
     std::vector<std::string> ID_TO_TYPE_LABEL = {
@@ -64,9 +65,9 @@ class BigCloneTailorEvaluator : public CommandBase<BigCloneTailorEvaluator> {
 
     /**
      * @brief Formats similar path pairs with IDs
-     * @return vector<tuple<double,int,int>> Similarity scores with ID pairs
+     * @return vector<tuple<Similarity,int,int>> Similarity scores with ID pairs
      */
-    std::vector<std::tuple<double, int, int>> similar_path_pairs_formated_with_id();
+    std::vector<std::tuple<Similarity, int, int>> similar_path_pairs_formated_with_id();
 
     /**
      * @brief Checks if ID pair exists in ground truth
@@ -91,8 +92,9 @@ class BigCloneTailorEvaluator : public CommandBase<BigCloneTailorEvaluator> {
      * @return vector<pair<int,int>> Filtered pairs
      */
     std::vector<std::pair<int, int>> filter_similar_path_pairs_by_similarity(
-        std::vector<std::tuple<double, int, int>> similar_id_pairs,
-        double minimum_similarity);
+        std::vector<std::tuple<Similarity, int, int>> similar_id_pairs,
+        Similarity minimum_similarity
+    );
 
     /**
      * @brief Builds frequency statistics per clone type
@@ -120,7 +122,7 @@ class BigCloneTailorEvaluator : public CommandBase<BigCloneTailorEvaluator> {
      * @brief Runs full evaluation pipeline
      * @param minimum_similarity Similarity threshold
      */
-    void evaluate(double minimum_similarity);
+    void evaluate(Similarity minimum_similarity);
 
   public:
     COMMAND_DESCRIPTION(

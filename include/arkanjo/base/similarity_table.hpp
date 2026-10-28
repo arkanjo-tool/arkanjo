@@ -12,10 +12,9 @@
 
 #pragma once
 
+#include <arkanjo/base/similarity.hpp>
 #include <fstream>
 #include <map>
-#include <string>
-#include <tuple>
 #include <utility>
 #include <vector>
 
@@ -43,10 +42,10 @@ struct PathId {
 };
 
 struct SimilarPair {
-  double similarity;
-  uint32_t number_lines = 0;
-  PathId id1;
-  PathId id2;
+    Similarity similarity;
+    uint32_t number_lines = 0;
+    PathId id1;
+    PathId id2;
 };
 
 /**
@@ -110,20 +109,19 @@ class Similarity_Table {
     };
 
   private:
-    static constexpr const double DEFAULT_SIMILARITY = 100.00; ///< Default similarity threshold
-    static constexpr const double EPS_ERROR_MARGIN = 1e-6;     ///< Floating-point comparison margin
-    static constexpr const double MAXIMUM_SIMILARITY = 100.00; ///< Maximum possible similarity score
-    static constexpr const double MINIMUM_SIMILARITY = 0.00;   ///< Minimum possible similarity score
+    static constexpr const double DEFAULT_SIMILARITY =
+        Similarity::MAXIMUM; ///< Default similarity threshold
 
-    double similarity_threshold;    ///< Current similarity threshold
+    Similarity similarity_threshold; ///< Current similarity threshold
     std::vector<Path> paths;        ///< List of all known paths
     std::map<Path, PathId> path_id; ///< Path to ID mapping
 
     /// Adjacency list representing the similarity graph.
     /// Each index corresponds to a function ID, and stores
     /// (neighbor_id, similarity_score).
-    AdjacencyList<PathId, double> similarity_graph;
-    std::map<std::pair<PathId, PathId>, double> similarity_table; ///< Similarity score lookup table
+    AdjacencyList<PathId, Similarity> similarity_graph;
+    std::map<std::pair<PathId, PathId>, Similarity>
+        similarity_table; ///< Similarity score lookup table
 
     /**
      * @brief Finds or assigns ID for a path
@@ -154,17 +152,17 @@ class Similarity_Table {
 
     /**
      * @brief Checks if similarity meets threshold
-     * @param similarity Similarity score to check
+     * @param similarity score to check
      * @return bool True if score meets threshold
      */
-    bool is_above_threshold(double similarity) const;
+    bool is_above_threshold(Similarity similarity) const;
 
   public:
     /**
      * @brief Constructs with custom similarity threshold
      * @param _similarity_threshold Initial threshold value
      */
-    explicit Similarity_Table(double _similarity_threshold);
+    explicit Similarity_Table(Similarity _similarity_threshold);
 
     /**
      * @brief Constructs with default similarity threshold
@@ -177,21 +175,21 @@ class Similarity_Table {
      * @brief Updates similarity threshold
      * @param new_similarity_threshold New threshold value
      */
-    void update_similarity(double new_similarity_threshold);
+    void update_similarity(Similarity new_similarity_threshold);
 
     /**
      * @brief Gets similarity between two paths
      * @param path1 First path to compare
      * @param path2 Second path to compare
-     * @return double Similarity score
+     * @return Similarity score
      */
-    double get_similarity(const Path& path1, const Path& path2);
+    Similarity get_similarity(const Path& path1, const Path& path2);
 
     /**
      * @brief Gets the similarity threshold.
-     * @return double Similarity threshold value.
+     * @return Similarity threshold value.
      */
-    double get_threshold_similarity() const;
+    Similarity get_threshold_similarity() const;
 
     const Path& get_path(PathId id) const;
 

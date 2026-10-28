@@ -7,13 +7,9 @@
 
 using fm = FormatterManager;
 
-DiffMethod::DiffMethod(const fs::path& base_path_, double similarity_) {
+DiffMethod::DiffMethod(const fs::path& base_path_, Similarity similarity_) {
     base_path = base_path_;
     similarity = similarity_;
-
-    if (similarity < 0) {
-        std::cerr << "SIMILARITY SHOULD BE GREATER OR EQUAL 0 TO USE DUPLICATION FINDER BY DIFF COMMAND";
-    }
 }
 
 std::vector<std::string> DiffMethod::find_files(const fs::path& folder_path) {
@@ -67,7 +63,7 @@ double DiffMethod::find_similarity(std::string path1, std::string path2) {
     content2 = remove_blank_lines(content2);
 
     if (is_equal_files(content1, content2)) {
-        return 100;
+        return Similarity::MAXIMUM;
     }
 
     // execute diff command to extract the differences
@@ -98,13 +94,13 @@ double DiffMethod::find_similarity(std::string path1, std::string path2) {
     equal_lines -= different_lines;
 
     if (different_lines + equal_lines == 0) {
-        return -1;
+        return Similarity::MINIMUM;
     }
 
     double db_equal_lines = equal_lines;
     double db_different_lines = different_lines;
     double similarity_metric = db_equal_lines / (db_different_lines + db_equal_lines);
-    similarity_metric *= 100;
+
     return similarity_metric;
 }
 
@@ -116,10 +112,9 @@ std::vector<DuplicationEntry> DiffMethod::find_similar_pairs(std::vector<std::st
             if (i != j) {
                 std::string file_path1 = file_paths[i];
                 std::string file_path2 = file_paths[j];
-                double similarity_metric = find_similarity(file_path1, file_path2);
-                if (similarity_metric >= similarity) {
+                Similarity similarity_metric{find_similarity(file_path1, file_path2)};
+                if (similarity_metric >= similarity)
                     ret.push_back({similarity_metric, file_path1, file_path2});
-                }
             }
     }
     sort(ret.rbegin(), ret.rend());
@@ -134,7 +129,7 @@ void DiffMethod::save_duplications(std::vector<DuplicationEntry>& file_duplicati
     fout << file_duplication_pairs.size() << '\n';
     for (const auto& [similarity, path1, path2] : file_duplication_pairs) {
         fout << path1 << ' ' << path2 << ' ';
-        fout << std::fixed << std::setprecision(2) << similarity << '\n';
+        fout << similarity << '\n';
     }
 
     fout.close();

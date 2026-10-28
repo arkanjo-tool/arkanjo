@@ -12,24 +12,23 @@
 
 #pragma once
 
-#include <arkanjo/methods/diff/diff_method.hpp>
-#include <arkanjo/methods/tfidf/tfidf_method.hpp>
+#include <arkanjo/base/similarity.hpp>
 #include <arkanjo/methods/ast/ast_method.hpp>
+#include <arkanjo/methods/diff/diff_method.hpp>
 #include <arkanjo/methods/embedding/embedding_method.hpp>
+#include <arkanjo/methods/tfidf/tfidf_method.hpp>
 
 #include "function_breaker.hpp"
 #include <arkanjo/base/preprocess_state.hpp>
 #include <arkanjo/commands/command_base.hpp>
-#include <optional>
+#include <filesystem>
 #include <string>
 #include <tuple>
-#include <filesystem>
 
 namespace fs = std::filesystem;
 
-using MethodFactory = std::function<std::unique_ptr<IMethod>(
-  const std::string&, float, const std::vector<std::string>&
-)>;
+using MethodFactory = std::function<
+    std::unique_ptr<IMethod>(const std::string&, Similarity, const std::vector<std::string>&)>;
 
 struct MethodInfo {
   size_t id;
@@ -75,55 +74,59 @@ class PreprocessorBuild : public Preprocess_State, public CommandBase<Preprocess
     int minimum_lines = 0;     ///< Minimum clone size in original lines
 
     const std::vector<MethodInfo> MethodsType = {
-      {
-        1,
-        "tfidf",
-        [](const std::string& base_path, float similarity,
-           const std::vector<std::string>&) {
-          return std::make_unique<TfidfMethod>(base_path, similarity);
+        {
+            1,
+            "tfidf",
+            [](const std::string& base_path,
+               Similarity similarity,
+               const std::vector<std::string>&) {
+                return std::make_unique<TfidfMethod>(base_path, similarity);
+            },
+            "NLP text similarity using gensim",
         },
-        "NLP text similarity using gensim"
-      },
-      {
-        2,
-        "diff",
-        [](const std::string& base_path, float similarity,
-           const std::vector<std::string>&) {
-          return std::make_unique<DiffMethod>(base_path, similarity);
+        {
+            2,
+            "diff",
+            [](const std::string& base_path,
+               Similarity similarity,
+               const std::vector<std::string>&) {
+                return std::make_unique<DiffMethod>(base_path, similarity);
+            },
+            "Count proportion of equal lines using diff command",
         },
-        "Count proportion of equal lines using diff command"
-      },
-      {
-        3,
-        "ast",
-        [](const std::string& base_path, float similarity,
-           const std::vector<std::string>&) {
-          return std::make_unique<ASTMethod>(base_path, similarity);
+        {
+            3,
+            "ast",
+            [](const std::string& base_path,
+               Similarity similarity,
+               const std::vector<std::string>&) {
+                return std::make_unique<ASTMethod>(base_path, similarity);
+            },
+            "Compare linearized structural sequences extracted from Tree-sitter ASTs",
         },
-        "Compare linearized structural sequences extracted from Tree-sitter ASTs"
-      },
-      {
-        4,
-        "embedding",
-        [](const std::string& base_path, float similarity,
-           const std::vector<std::string>& pass_through_args) {
-          return std::make_unique<EmbeddingMethod>(base_path, similarity, pass_through_args);
+        {
+            4,
+            "embedding",
+            [](const std::string& base_path,
+               Similarity similarity,
+               const std::vector<std::string>& pass_through_args) {
+                return std::make_unique<EmbeddingMethod>(base_path, similarity, pass_through_args);
+            },
+            "Embedding-based similarity using a code language model",
         },
-        "Embedding-based similarity using a code language model"
-      }
     };
 
     /**
      * @brief Reads preprocessing parameters from user/config
      * @param options Parsed command line options. std::nullopt represents default behavior.
-     * @return tuple<string,double,bool>
+     * @return tuple<string,Similarity,bool>
      *         - Project path
      *         - Similarity threshold
      *         - Duplication finder selection index
      *         - Pass-through arguments forwarded to the selected method's backend
      *         - Comparison granularity
      */
-    std::tuple<std::string, double, size_t, std::vector<std::string>, Granularity>
+    std::tuple<std::string, Similarity, size_t, std::vector<std::string>, Granularity>
     read_parameters(const ParsedOptions& options);
 
     /**
@@ -134,9 +137,13 @@ class PreprocessorBuild : public Preprocess_State, public CommandBase<Preprocess
      * @param pass_through_args Raw arguments forwarded to the selected method's
      *        backend (everything after `--`); ignored by methods that take none
      */
-    void preprocess(const fs::path& path, double similarity, size_t use_duplication_finder_index,
-                    const std::vector<std::string>& pass_through_args = {},
-                    Granularity granularity = Granularity::Function);
+    void preprocess(
+        const fs::path& path,
+        Similarity similarity,
+        size_t use_duplication_finder_index,
+        const std::vector<std::string>& pass_through_args = {},
+        Granularity granularity = Granularity::Function
+    );
 
   public:
     static constexpr CliOption options_[] = {
@@ -161,7 +168,7 @@ class PreprocessorBuild : public Preprocess_State, public CommandBase<Preprocess
      * @param similarity Direct similarity threshold specification
      * @note Exposed for testing purposes only
      */
-    PreprocessorBuild(bool force_preprocess, const fs::path& path, double similarity);
+    PreprocessorBuild(bool force_preprocess, const fs::path& path, Similarity similarity);
 
     COMMAND_DESCRIPTION("Creates the foundation for fast query responses during the main operation phase.")
 
