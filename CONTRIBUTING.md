@@ -1,5 +1,20 @@
 # Contributing
 
+## Code Formatting
+
+This project uses `pre-commit` and `clang-format` to enforce code formatting on staged changes.
+
+Install the development dependencies and configure the Git hooks:
+
+```bash
+pip install -r requirements/dev.txt
+pre-commit install
+```
+
+For additional formatting guidelines and recommendations, refer to the comments at the end of the `.clang-format` file.
+
+Ensure all formatting changes are reviewed before committing and all checks pass before submitting a pull request.
+
 ## Pull Requests
 
 * Keep pull requests focused on a single change whenever possible.
