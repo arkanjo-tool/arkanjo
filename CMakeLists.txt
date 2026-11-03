@@ -37,8 +37,8 @@ include(GNUInstallDirs)
 
 set(THIRD_PARTY_BUILD_DIR "${CMAKE_BINARY_DIR}/third-party")
 
-set(DOXYGEN_VERSION "1.12.0" CACHE STRING "Doxygen version")
-set(DOXYGEN_SHA256 "3c42c3f3fb206732b503862d9c9c11978920a8214f223a3950bbf2520be5f647" CACHE STRING "Doxygen SHA256")
+set(DOXYGEN_VERSION "1.18.0" CACHE STRING "Doxygen version")
+set(DOXYGEN_SHA256 "14fa81bdc34171edb5f1f02b1d60e74802f0439b77fa44e592565d517d72df90" CACHE STRING "Doxygen SHA256")
 
 include(cmake/TreeSitter.cmake)
 include(cmake/Libgit2.cmake)
