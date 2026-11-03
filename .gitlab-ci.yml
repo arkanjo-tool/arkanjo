@@ -121,10 +121,13 @@ documentation:
     - apt-get install -y
         build-essential
         cmake
-        doxygen
         graphviz
 
   script:
+    - cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+    - DOXYGEN_VERSION=$(cmake -LA -N build | grep '^DOXYGEN_VERSION:' | cut -d= -f2)
+    - DOXYGEN_SHA256=$(cmake -LA -N build | grep '^DOXYGEN_SHA256:' | cut -d= -f2)
+    - ./scripts/install-doxygen.sh "$DOXYGEN_VERSION" "$DOXYGEN_SHA256"
     - cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
     - cmake --build build --target doc
 

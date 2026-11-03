@@ -1,4 +1,4 @@
-find_package(Doxygen)
+find_package(Doxygen ${DOXYGEN_VERSION} EXACT QUIET)
 
 if(DOXYGEN_FOUND)
     set(DOXYGEN_INPUT ${CMAKE_BINARY_DIR}/Doxyfile)
