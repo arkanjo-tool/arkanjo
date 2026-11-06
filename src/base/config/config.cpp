@@ -56,9 +56,8 @@ void Config::setDefaultConfig() {
 }
 
 void Config::validate() {
-    if (base_path.empty() || !fs::exists(third_party_dir) || !fs::is_directory(third_party_dir)) {
-        throw std::runtime_error("Could not locate base-path directory");
-    }
+    if (base_path.empty())
+        throw std::runtime_error("Could not determine the base directory path");
 
     if (!fs::exists(third_party_dir) || !fs::is_directory(third_party_dir)) {
         throw std::runtime_error("Could not locate third-party directory");
