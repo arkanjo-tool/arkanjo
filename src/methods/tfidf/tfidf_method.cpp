@@ -33,8 +33,7 @@ void TfidfMethod::execute_by_feature(const fs::path& folder_path, const std::str
     
     FILE* pipe = popen(command_tool.c_str(), "r");
     if (!pipe) {
-        std::cerr << "Error executing the tool.\n";
-        return;
+        throw std::runtime_error("Failed to execute the tool.");
     }
     
     Parser parser(output_parsed, similarity);

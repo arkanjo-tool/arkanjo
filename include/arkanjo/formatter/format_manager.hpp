@@ -101,6 +101,18 @@ public:
         write(warning + str, std::cerr);
     }
 
+    static void error(const std::string& str, const std::string& prefix = "Error: ") {
+        auto fmt = get_formatter();
+
+        Utils::COLOR bold = fmt->style().at("bold");
+        Utils::COLOR error_color = fmt->style().at("error");
+
+        std::string message = fmt->colorize(prefix, bold);
+        message = fmt->colorize(message, error_color);
+
+        write(message + str, std::cerr);
+    }
+
     static void time(const std::string& str, std::chrono::high_resolution_clock::time_point start, std::ostream& out = std::cout) {
         auto end = std::chrono::high_resolution_clock::now();
 

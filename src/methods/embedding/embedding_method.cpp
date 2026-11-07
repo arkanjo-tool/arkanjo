@@ -115,8 +115,7 @@ void EmbeddingMethod::execute() {
 
     FILE* pipe = popen(command.c_str(), "r");
     if (!pipe) {
-        std::cerr << "Error executing the LLM detection script.\n";
-        return;
+        throw std::runtime_error("Failed to execute the LLM detection script.");
     }
 
     std::vector<DuplicationEntry> file_duplication_pairs = read_results(pipe);

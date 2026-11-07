@@ -113,7 +113,10 @@ bool GitDiffFunction::diff_functions(const Path& first, const Path& second) cons
     );
 
     if (result.error != 0) {
-        std::cerr << "Failed to compute diff between functions. libgit2 error code: " << result.error << "\n";
+        throw std::runtime_error(
+            "Failed to compute diff between functions. libgit2 error code: " +
+            std::to_string(result.error)
+        );
         return false;
     }
 

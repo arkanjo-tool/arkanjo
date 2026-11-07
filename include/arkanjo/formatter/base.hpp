@@ -60,6 +60,7 @@ private:
         {"number", Utils::COLOR::YELLOW},
         {"bold", Utils::COLOR::BOLD},
         {"warning", Utils::COLOR::MAGENTA},
+        {"error", Utils::COLOR::RED},
         {"row_even", Utils::COLOR::GRAY},
         {"row_odd", Utils::COLOR::CYAN},
     };

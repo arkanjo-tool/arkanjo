@@ -9,7 +9,12 @@
 
 int main(int argc, char* argv[]) {
     auto& cfg = Config::config();
-    cfg.setDefaultConfig();
+    try {
+        cfg.setDefaultConfig();
+    } catch (const std::exception& e) {
+        FormatterManager::error(e.what());
+        return 1;
+    }
 
     Orchestrator orchestrator;
     Context ctx;
@@ -60,10 +65,10 @@ int main(int argc, char* argv[]) {
         std::make_unique<Help>(internal_commands)->do_run(ctx.command_name, ctx.options);
         return 1;
     } catch (const CLIError& e) {
-        std::cerr << e.what() << "\n";
+        FormatterManager::error(e.what());
         return 1;
     } catch (const std::exception& e) {
-        std::cerr << "Unexpected error: " << e.what() << "\n";
+        FormatterManager::error(e.what(), "Unexpected error: ");
         return 1;
     }
 

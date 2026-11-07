@@ -19,6 +19,7 @@
 #include <arkanjo/base/similarity_table.hpp>
 
 #include <arkanjo/cli/parser_options.hpp>
+#include <arkanjo/formatter/format_manager.hpp>
 
 struct Context {
     std::string command_name;
@@ -50,7 +51,9 @@ class Orchestrator {
     void run_pipeline(Context& ctx) {
         for (current_step = 0; current_step < steps.size(); ++current_step) {
             if (!steps[current_step] || !steps[current_step](ctx)) {
-                std::cerr << "Pipeline aborted (" << current_step << ")\n";
+                FormatterManager::error(
+                    "(" + std::to_string(current_step) + ")", "Pipeline aborted "
+                );
                 break;
             }
         }

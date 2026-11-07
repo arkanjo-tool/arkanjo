@@ -1,6 +1,7 @@
-#include <arkanjo/base/preprocess_state.hpp>
-#include <arkanjo/utils/utils.hpp>
 #include <arkanjo/base/config/config.hpp>
+#include <arkanjo/base/preprocess_state.hpp>
+#include <arkanjo/formatter/format_manager.hpp>
+#include <arkanjo/utils/utils.hpp>
 
 void Preprocess_State::save_current_run_params(const fs::path& path, const fs::path& cache_path) {
     auto end = std::chrono::system_clock::now();
@@ -22,13 +23,13 @@ PreprocessRunParams Preprocess_State::read_current_run_params() {
 
     std::ifstream infile(file_path);
     if (!infile.is_open()) {
-        std::cerr << "Error: could not open " << file_path << "\n";
+        FormatterManager::error("could not open " + file_path.string());
         return {};
     }
 
     json data = json::parse(infile, nullptr, false);
     if (data.is_discarded()) {
-        std::cerr << "Error: could not parse " << file_path << "\n";
+        FormatterManager::error("could not parse " + file_path.string());
         return {};
     }
 
