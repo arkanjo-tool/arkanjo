@@ -46,7 +46,7 @@ void Config::setDefaultConfig() {
             : third_party_dir;
     });
 
-    project_version = CONFIG_VALUE(ARKANJO_PROJECT_VERSION, [this](auto v) -> std::filesystem::path {
+    project_version = CONFIG_VALUE(ARKANJO_PROJECT_VERSION, [this](auto v) -> std::string_view {
         return v.has_value()
             ? *v
             : project_version;
@@ -57,16 +57,23 @@ void Config::setDefaultConfig() {
 
 void Config::validate() {
     if (base_path.empty())
-        throw std::runtime_error("Could not determine the base directory path");
+        throw std::runtime_error("Could not determine the base directory path.\n"
+                                 "Set it using: ARKANJO_CACHE_PATH=\"<path>\" ./build/arkanjo");
 
     if (third_party_dir.empty())
-        throw std::runtime_error("Could not determine the third party directory path");
-
-    if (!fs::exists(third_party_dir) || !fs::is_directory(third_party_dir)) {
         throw std::runtime_error(
-            "Could not locate third-party directory: " + third_party_dir.string()
+            "Could not determine the third-party directory path.\n"
+            "Set it using: ARKANJO_THIRD_PARTY_DIR=\"<path>\" " +
+            program_name
         );
-    }
+
+    if (!fs::exists(third_party_dir) || !fs::is_directory(third_party_dir))
+        throw std::runtime_error(
+            "Could not locate third-party directory: " + third_party_dir.string() +
+            "\n"
+            "Set a valid path using: ARKANJO_THIRD_PARTY_DIR=\"<path>\" " +
+            program_name
+        );
 }
 
 Config& Config::config() {
