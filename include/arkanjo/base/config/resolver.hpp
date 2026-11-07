@@ -19,11 +19,14 @@ namespace arkanjo::config {
     }
 }
 
-#define CONFIG_VALUE(name, fallback_lambda)                                         \
-    ([](auto&& f) {                                                                   \
-        if constexpr (std::string_view(#name) != std::string_view(STRINGIFY(name))) { \
-            return f(std::optional<std::string_view>{STRINGIFY(name)});               \
-        } else {                                                                      \
-            return arkanjo::config::resolve_config_impl(#name, f);                    \
-        }                                                                             \
+#define CONFIG_VALUE(name, fallback_lambda)                                                        \
+    ([](auto&& f) {                                                                                \
+        return arkanjo::config::resolve_config_impl(#name, [&](auto env) {                         \
+            if (env.has_value())                                                                   \
+                return f(env);                                                                     \
+            if constexpr (std::string_view(#name) != std::string_view(STRINGIFY(name)))            \
+                return f(std::optional<std::string_view>{STRINGIFY(name)});                        \
+            else                                                                                   \
+                return f(std::optional<std::string_view>{std::nullopt});                           \
+        });                                                                                        \
     })(fallback_lambda)
