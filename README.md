@@ -72,6 +72,9 @@ Optionally, install the binaries using:
 cmake --install . [--prefix ~/.local]
 ```
 
+> [!NOTE]
+> The `--prefix` option only specifies the installation directory. It does not change ArKanjo's runtime paths. By default, ArKanjo uses its configured cache directory. To override the third-party directory, for example, set `ARKANJO_THIRD_PARTY_DIR` when running the program.
+
 ## Methods
 
 ArKanjo supports multiple code duplication detection methods.
