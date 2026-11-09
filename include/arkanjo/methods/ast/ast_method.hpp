@@ -35,7 +35,7 @@ struct PostOrderTree {
    *
    * Currently not used by the similarity computation.
    */
-  std::vector<int> lmd;
+  std::vector<size_t> lmd;
 
   fs::path path;
 };
@@ -74,10 +74,11 @@ class ASTMethod : public IMethod {
      *
      * @param a First post-order tree.
      * @param b Second post-order tree.
+     * @param max_distance Maximum distance for stopping the compute.
      *
      * @return Edit distance between both label sequences.
      */
-    int tree_distance(const PostOrderTree& a, const PostOrderTree& b);
+    int tree_distance(const PostOrderTree& a, const PostOrderTree& b, const int max_distance);
 
     /**
      * @brief Computes a normalized similarity score between two trees.
@@ -92,10 +93,11 @@ class ASTMethod : public IMethod {
      *
      * @param a First post-order tree.
      * @param b Second post-order tree.
+     * @param threshold Similarity threshold.
      *
      * @return Normalized similarity score in the range [0.0, 1.0].
      */
-    double similarity_score(const PostOrderTree& a, const PostOrderTree& b);
+    double similarity_score(const PostOrderTree& a, const PostOrderTree& b, const double threshold);
 
     /**
      * @brief Compares a subset of trees against all remaining trees.

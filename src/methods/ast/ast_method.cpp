@@ -6,6 +6,10 @@
 #include <arkanjo/methods/ast/ast_method.hpp>
 #include <arkanjo/utils/utils.hpp>
 
+#include <algorithm>
+#include <cmath>
+#include <limits>
+#include <stdexcept>
 #include <thread>
 
 using fm = FormatterManager;
@@ -23,48 +27,50 @@ ZSNode ASTMethod::from_tsnode(TSNode node) {
     return out;
 }
 
-int build_postorder(const ZSNode& node, PostOrderTree& tree) {
-    int leftmost = -1;
+size_t build_postorder(const ZSNode& node, PostOrderTree& tree) {
+    size_t leftmost = std::numeric_limits<size_t>::max();
 
     for (const auto& child : node.children) {
-        int child_lmd = build_postorder(child, tree);
+        size_t child_lmd = build_postorder(child, tree);
 
-        if (leftmost == -1) {
+        if (leftmost == std::numeric_limits<size_t>::max())
             leftmost = child_lmd;
-        }
     }
 
     // node type
-    int id = tree.labels.size();
+    size_t id = tree.labels.size();
 
     tree.labels.push_back(node.symbol);
 
-    if (leftmost == -1) {
+    if (leftmost == std::numeric_limits<size_t>::max())
         leftmost = id;
-    }
 
     tree.lmd.push_back(leftmost);
 
     return leftmost;
 }
 
-int ASTMethod::tree_distance(const PostOrderTree& a, const PostOrderTree& b) {
+int ASTMethod::tree_distance(
+    const PostOrderTree& a, const PostOrderTree& b, const int max_distance
+) {
     size_t n = a.labels.size();
     size_t m = b.labels.size();
 
+    if (std::abs(static_cast<long long>(n) - static_cast<long long>(m)) > max_distance)
+        return max_distance + 1;
+
     std::vector<std::vector<int>> dp(n + 1, std::vector<int>(m + 1));
 
-    for (size_t i = 0; i <= n; i++) {
+    for (size_t i = 0; i <= n; i++)
         dp[i][0] = i;
-    }
 
-    for (size_t j = 0; j <= m; j++) {
+    for (size_t j = 0; j <= m; j++)
         dp[0][j] = j;
-    }
 
     for (size_t i = 1; i <= n; i++) {
-        for (size_t j = 1; j <= m; j++) {
+        int row_min = dp[i][0];
 
+        for (size_t j = 1; j <= m; j++) {
             int rename_cost = a.labels[i - 1] == b.labels[j - 1] ? 0 : 1;
 
             dp[i][j] = std::min({
@@ -72,16 +78,37 @@ int ASTMethod::tree_distance(const PostOrderTree& a, const PostOrderTree& b) {
                 dp[i][j - 1] + 1,
                 dp[i - 1][j - 1] + rename_cost
             });
+
+            row_min = std::min(row_min, dp[i][j]);
         }
+
+        if (row_min > max_distance)
+            return max_distance + 1;
     }
 
-    return dp[n][m];
+    return dp[n][m] <= max_distance ? dp[n][m] : max_distance + 1;
 }
 
-double ASTMethod::similarity_score(const PostOrderTree& a, const PostOrderTree& b) {
-    int dist = tree_distance(a, b);
+double ASTMethod::similarity_score(
+    const PostOrderTree& a, const PostOrderTree& b, const double threshold
+) {
+    if (!std::isfinite(threshold) || threshold < 0.0 || threshold > 1.0)
+        throw std::invalid_argument("Threshold must be between 0.0 and 1.0");
 
-    int max_size = std::max(a.labels.size(), b.labels.size());
+    size_t max_size = std::max(a.labels.size(), b.labels.size());
+
+    if (max_size == 0)
+        return 1.0;
+
+    const int max_distance = static_cast<int>(std::floor(max_size * (1.0 - threshold) + 1e-8));
+
+    if (max_distance < 0)
+        throw std::invalid_argument("Maximum distance cannot be negative");
+
+    int dist = tree_distance(a, b, max_distance);
+
+    if (dist > max_distance)
+        return 0.0;
 
     return 1.0 - (static_cast<double>(dist) / max_size);
 }
@@ -127,7 +154,7 @@ void ASTMethod::compare_range(
 ) {
     for (size_t i = begin; i < end; i++) {
         for (size_t j = i + 1; j < processed.size(); j++) {
-            Similarity sim = similarity_score(processed[i], processed[j]);
+            Similarity sim = similarity_score(processed[i], processed[j], similarity.value());
 
             if (sim >= similarity)
                 local.push_back({sim, processed[i].path.string(), processed[j].path.string()});
@@ -161,7 +188,6 @@ void ASTMethod::execute() {
     const size_t threads = std::max<size_t>(1, thread_count);
 
     size_t n = processed.size();
-    size_t chunk = (n + threads - 1) / threads;
 
     constexpr size_t block_size = 4;
     constexpr size_t flush_size = 10000;
