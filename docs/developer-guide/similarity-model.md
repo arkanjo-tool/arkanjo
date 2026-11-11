@@ -1,14 +1,12 @@
-\page developer-guide Developer Guide
+# Similarity Model {#similarity-model}
 
-# Similarity Model
-
-ArKanjo represents code duplication as a graph, implemented in the `Similarity_Table` class.
+ArKanjo represents code duplication as a graph, implemented in the \ref Similarity_Table class.
 
 ## Graph Model
 
 - Nodes: functions (identified by their path)
 - Edges: similarity between functions
-- Weight: similarity score (@f$0.0@f$ - @f$1.0@f$)
+- Weight: \ref Similarity score (@f$0.0@f$ - @f$1.0@f$)
 
 ```
 A ------0.9------ B
@@ -30,4 +28,4 @@ Edges are considered during analysis only if:
 
 ## Implementation
 
-This model is implemented in the `Similarity_Table` class.
+This model is implemented in the \ref Similarity_Table class.
