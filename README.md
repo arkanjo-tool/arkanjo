@@ -25,27 +25,6 @@ the tool provides good results with similarity thresholds around **90.0**.
 
 For more details about the similarity model, see [**Similarity Model**](docs/developer-guide/similarity-model.md).
 
-# Insights from the Linux Kernel
-
-ArKanjo was used in an ethnographic study involving real contributions to the Linux kernel.  
-The results show that code duplication is not always undesirable and depends on context.
-
-Key findings from interactions with maintainers:
-
-- **Driver Forking (Takeaway T1)**  
-  Code duplication is sometimes intentional. Entire drivers are cloned to serve as independent baselines.
-
-- **Readability over Deduplication (Takeaway T2)**  
-  Maintainers often prefer duplicated code if it improves clarity and reduces cognitive load.
-
-- **Integration Overhead (Takeaway T3)**  
-  Small deduplication changes may be rejected due to the cost of integrating them upstream.
-
-- **Performance Trade-offs (Takeaway T4)**  
-  In low-level code, duplication may be tolerated to avoid performance regressions.
-
-These findings challenge the strict application of the DRY principle in the Linux kernel.
-
 # How to install
 
 Download the source code:
