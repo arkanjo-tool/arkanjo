@@ -1,32 +1,18 @@
-\page method Method
-
-# Embedding-based detection method
+# Embedding-based detection method {#embedding}
 
 A function-level code duplication detector that measures *semantic* similarity
 between function bodies. Instead of comparing tokens or lines, it embeds each
 function with a Hugging Face embedding model
 (default `jinaai/jina-embeddings-v2-base-code`) and computes the pairwise cosine
-similarity, scaled to a 0-100 range. This lets it flag functions that do the
+similarity, scaled to a 0.0-100.0 range. This lets it flag functions that do the
 same thing even when names, formatting, or syntax differ.
 
 ## Preparing the environment
 
 The embedding dependencies are **not** installed with the rest of the project.
-Install them in the same `python3` interpreter that Arkanjo will call (watch out
-for virtualenvs):
 
 ```sh
 python3 -m pip install -r requirements/embedding.txt
-```
-
-We recommend installing them inside a Python virtual environment (e.g. `venv`,
-`virtualenv`, or `conda`), and keeping that environment **activated** whenever
-you run the method — Arkanjo invokes the `python3` on your `PATH`, so the
-dependencies must be visible to the active interpreter. For example, with
-`venv`:
-
-```sh
-source .venv/bin/activate
 ```
 
 The first run downloads the model (~hundreds of MB) to `~/.cache/huggingface`.
@@ -52,7 +38,7 @@ arkanjo-preprocessor build --path <path> \
 
 ## Notes
 
-- **Cost is @f$O(n^2)@f$**: every function is compared against every other. The
+- <b>Cost is @f$O(n^2)@f$</b>: every function is compared against every other. The
   embedding step is vectorized, but the comparison matrix sets the cost ceiling
   on large codebases.
 - To switch the embedding model, either pass `-- --model NAME` or edit

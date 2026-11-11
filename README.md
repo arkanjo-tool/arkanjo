@@ -60,7 +60,7 @@ ArKanjo supports multiple code duplication detection methods.
 
 See the documentation for details:
 
-- [Methods documentation](docs/methods/)
+- [Methods documentation](docs/methods/index.md)
 
 # How to Run
 

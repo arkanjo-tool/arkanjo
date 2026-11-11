@@ -73,6 +73,7 @@ class PreprocessorBuild : public Preprocess_State, public CommandBase<Preprocess
     bool mode_verbose = false; ///< Detailed execution information
     int minimum_lines = 0;     ///< Minimum clone size in original lines
 
+    //! [MethodsType]
     const std::vector<MethodInfo> MethodsType = {
         {
             1,
@@ -115,6 +116,7 @@ class PreprocessorBuild : public Preprocess_State, public CommandBase<Preprocess
             "Embedding-based similarity using a code language model",
         },
     };
+    //! [MethodsType]
 
     /**
      * @brief Reads preprocessing parameters from user/config
