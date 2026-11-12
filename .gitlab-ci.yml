@@ -156,3 +156,17 @@ pages:
   artifacts:
     paths:
       - public
+
+validate-citation:
+  stage: test
+  image: python:3.11-slim
+
+  before_script:
+    - pip install --no-cache-dir cffconvert
+
+  script:
+    - cffconvert --validate
+
+  rules:
+    - changes:
+        - CITATION.cff

@@ -1,0 +1,68 @@
+cff-version: 1.2.0
+
+message: >
+  If you use ArKanjo in your research, please cite
+  the software and its associated scientific publication.
+
+title: "ArKanjo: a tool for detecting function-level Code Duplication in the Linux Kernel"
+
+type: software
+
+authors:
+  - family-names: "Arcanjo"
+    given-names: "Luan"
+    affiliation: "Universidade de São Paulo"
+
+license: LGPL-3.0-or-later
+
+keywords:
+  - "linux-kernel"
+  - "code-duplication"
+  - "static-analysis"
+  - "cli"
+
+repository-code: "https://gitlab.com/ccsl-usp/codev/arkanjo-tool"
+url: "https://ccsl-usp.gitlab.io/codev/arkanjo-tool/"
+
+preferred-citation:
+  type: conference-paper
+
+  title: "ArKanjo: a tool for detecting function-level Code Duplication in the Linux Kernel"
+
+  version: "0.1.0"
+
+  authors:
+    - family-names: "Arcanjo"
+      given-names: "Luan"
+      affiliation: "Universidade de São Paulo"
+
+    - family-names: "Tadokoro"
+      given-names: "David"
+      affiliation: "Universidade de São Paulo"
+
+    - family-names: "Meirelles"
+      given-names: "Paulo"
+      affiliation: "Universidade de São Paulo"
+
+  year: 2025
+  month: 7
+
+  collection-title: "DebConf25"
+
+  publisher:
+    name: "IRISA"
+
+  location:
+    name: "Brest, France"
+    city: "Brest"
+    country: "FR"
+
+  url: "https://hal.science/hal-05335545"
+
+  identifiers:
+    - type: other
+      value: "hal-05335545"
+      description: "HAL repository identifier"
+
+  notes: >
+    Original publication introducing ArKanjo (evaluated on version 0.1.0).
