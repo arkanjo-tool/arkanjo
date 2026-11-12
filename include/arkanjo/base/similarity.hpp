@@ -63,7 +63,19 @@ struct Similarity {
     }
 
     static Similarity read(const std::string& value) {
-        return read(std::stod(value));
+        try {
+            size_t consumed = 0;
+            double parsed = std::stod(value, &consumed);
+
+            if (consumed != value.size())
+                throw std::invalid_argument("trailing characters");
+
+            return read(parsed);
+        } catch (const std::invalid_argument&) {
+            throw std::invalid_argument("Invalid similarity value '" + value + "'");
+        } catch (const std::out_of_range&) {
+            throw std::out_of_range("Similarity value out of range '" + value + "'");
+        }
     }
 
     Similarity(double value = MINIMUM)
