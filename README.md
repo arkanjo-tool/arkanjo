@@ -13,7 +13,7 @@ Some other commands were used for the creator's master's degree, but they are no
 
 The tool currently supports only the languages provided by the Tree-sitter API; these must be explicitly added to the `config.json` file.
 
-# Similarity
+## Similarity
 
 The tool currently uses the concept of **similarity**. A user can pass a **similarity threshold** to the 
 tool, which is a number between 0.0 and 100.0. This threshold is used to limit what the tool 
@@ -25,7 +25,7 @@ the tool provides good results with similarity thresholds around **90.0**.
 
 For more details about the similarity model, see [**Similarity Model**](docs/developer-guide/similarity-model.md).
 
-# How to install
+## How to install
 
 Download the source code:
 
@@ -54,7 +54,7 @@ cmake --install . [--prefix ~/.local]
 > [!NOTE]
 > The `--prefix` option only specifies the installation directory. It does not change ArKanjo's runtime paths. By default, ArKanjo uses its configured cache directory. To override the third-party directory, for example, set `ARKANJO_THIRD_PARTY_DIR` when running the program.
 
-## Methods
+### Methods
 
 ArKanjo supports multiple code duplication detection methods.
 
@@ -62,9 +62,9 @@ See the documentation for details:
 
 - [Methods documentation](docs/methods/index.md)
 
-# How to Run
+## How to Run
 
-## Preprocessing and Cache
+### Preprocessing and Cache
 
 The tool is designed with **heavy preprocessing**, which enables it to answer different kinds of queries quickly. Cache files are stored on your system and can grow significantly depending on codebase size.
 
@@ -77,7 +77,7 @@ arkanjo-preprocessor build
 * The preprocessor will ask for the complete path to the codebase you want to analyze and the desired similarity threshold. 
 * **Cache fallback:** `./tmp/arkanjo`
 
-## Execute the tool
+### Execute the tool
 
 To execute the tool's commands, you need to run a command that follows this format:
 
@@ -93,7 +93,7 @@ The parameters common to all commands are:
 
 - `-S <SIMILARITY>`: Changes the similarity threshold to `SIMILARITY` for the current command only.
 
-### Commands (summary)
+#### Commands (summary)
 
 | Command       | Purpose | Example |
 |---------------|---------|---------|
