@@ -117,7 +117,7 @@ DiffResult GitTextDiff::compare(
     git_libgit2_shutdown();
 
     return {
-        .error = error,
-        .has_difference = payload.printed,
+        error,
+        payload.printed,
     };
 }

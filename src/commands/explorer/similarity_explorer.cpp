@@ -45,21 +45,21 @@ SimilarityExplorerEntry SimilarityExplorer::process_similar_path_pair(const Path
     }
     processed_results++;
 
-    return {
-        .path_a = FunctionPrinter::format_path_message_in_pair(function1),
-        .path_b = FunctionPrinter::format_path_message_in_pair(function2),
-        .dir_a = path1.relative_path().parent_path().string(),
-        .dir_b = path2.relative_path().parent_path().string(),
-        .filename_a = path1.relative_path().filename().string(),
-        .filename_b = path2.relative_path().filename().string(),
-        .func_a = function1.name(),
-        .func_b = function2.name(),
-        .start_a = location1.declaration,
-        .start_b = location2.declaration,
-        .end_a = location1.end,
-        .end_b = location2.end,
-        .duplicated_lines = location1.size(),
-        .similarity = similarity_table->get_similarity(path1, path2).value(),
+    return SimilarityExplorerEntry{
+        FunctionPrinter::format_path_message_in_pair(function1),
+        FunctionPrinter::format_path_message_in_pair(function2),
+        path1.relative_path().parent_path().string(),
+        path2.relative_path().parent_path().string(),
+        path1.relative_path().filename().string(),
+        path2.relative_path().filename().string(),
+        function1.name(),
+        function2.name(),
+        location1.declaration,
+        location2.declaration,
+        location1.end,
+        location2.end,
+        location1.size(),
+        similarity_table->get_similarity(path1, path2).value(),
     };
 }
 

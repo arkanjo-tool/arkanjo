@@ -187,7 +187,7 @@ bool PreprocessorBuild::validate(const ParsedOptions& options) {
     return true;
 }
 
-bool PreprocessorBuild::run([[maybe_unused]] const ParsedOptions& options) {
+bool PreprocessorBuild::run(const ParsedOptions& options) {
     mode_verbose = options.has("verbose");
 
     fs::path base_path = Config::config().base_path / Config::config().name_container;

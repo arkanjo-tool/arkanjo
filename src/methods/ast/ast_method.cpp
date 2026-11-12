@@ -187,8 +187,6 @@ void ASTMethod::execute() {
     unsigned int thread_count = std::thread::hardware_concurrency();
     const size_t threads = std::max<size_t>(1, thread_count);
 
-    size_t n = processed.size();
-
     constexpr size_t block_size = 4;
     constexpr size_t flush_size = 10000;
     std::atomic<size_t> next{0};

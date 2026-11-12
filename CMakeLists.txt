@@ -20,7 +20,7 @@ project(arkanjo
 
 set(CMAKE_PROJECT_LICENSE "LGPL-3.0-or-later")
 
-option(ENABLE_WARNINGS "Enable compiler warnings" OFF)
+option(ENABLE_WARNINGS "Enable compiler warnings" ON)
 option(ENABLE_TESTS "Build tests" ON)
 
 set(CMAKE_CXX_STANDARD 17)

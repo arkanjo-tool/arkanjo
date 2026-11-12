@@ -17,7 +17,7 @@ bool Help::validate([[maybe_unused]] const ParsedOptions& options) {
     return true;
 }
 
-bool Help::run([[maybe_unused]] const ParsedOptions& options) {
+bool Help::run(const ParsedOptions& options) {
     std::string title_str = Config::config().program_name;
     title_str += " ";
     if (!command_name.empty()) {

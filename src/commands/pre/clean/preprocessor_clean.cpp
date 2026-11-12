@@ -12,7 +12,7 @@ bool PreprocessorClean::validate(const ParsedOptions& options) {
     return true;
 }
 
-bool PreprocessorClean::run(const ParsedOptions& options) {
+bool PreprocessorClean::run([[maybe_unused]] const ParsedOptions& options) {
     fs::path base_path = Config::config().base_path;
 
     if (base_path.filename() != "arkanjo") {

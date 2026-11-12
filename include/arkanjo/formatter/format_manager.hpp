@@ -151,12 +151,9 @@ class FormatterManager {
         std::chrono::duration<double, std::milli> duration = end - start;
         auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
 
-        std::cout << str << " "
-            << std::setfill('0') << std::setw(2) << (ms / 3600000) << ":"
-            << std::setw(2) << (ms / 60000 % 60) << ":"
-            << std::setw(2) << (ms / 1000 % 60) << "."
-            << std::setw(3) << (ms % 1000)
-            << "\n";
+        out << str << " " << std::setfill('0') << std::setw(2) << (ms / 3600000) << ":"
+            << std::setw(2) << (ms / 60000 % 60) << ":" << std::setw(2) << (ms / 1000 % 60) << "."
+            << std::setw(3) << (ms % 1000) << "\n";
     }
 
 private:

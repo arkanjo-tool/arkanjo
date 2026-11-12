@@ -39,8 +39,6 @@ std::filesystem::path GitRepository::root() const {
 }
 
 std::string GitRepository::head_commit() const {
-    git_oid oid;
-
     git_reference* head = nullptr;
 
     if (git_repository_head(&head, repository) != 0)
