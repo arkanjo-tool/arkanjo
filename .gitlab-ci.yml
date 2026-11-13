@@ -15,12 +15,69 @@ workflow:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     - when: never
 
+.code-paths: &code-paths
+  - 'cmake/**/*'
+  - 'include/**/*'
+  - 'requirements/**/*'
+  - 'scripts/**/*'
+  - 'src/**/*'
+  - 'tests/**/*'
+  - 'third-party/**/*'
+  - '.gitlab-ci.yml'
+  - 'CMakeLists.txt'
+  - 'config.json'
+
+.docs-paths: &docs-paths
+  - 'cmake/**/*'
+  - 'include/**/*'
+  - 'src/**/*'
+  - 'docs/**/*'
+  - 'scripts/**/*'
+  - 'CMakeLists.txt'
+  - 'Doxyfile'
+  - '.gitlab-ci.yml'
+  - 'CONTRIBUTING.md'
+  - 'MAINTAINERS.md'
+  - 'README.md'
+
+# - main branch             -> always runs automatically
+# - Draft MR                -> MANUAL and optional
+# - MR with code changes    -> runs automatically
+# - MR without code changes -> MANUAL and optional
+.rules-code: &rules-code
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TITLE =~ /^(\[Draft\]|\[WIP\]|Draft:|WIP:)/i'
+      when: manual
+      allow_failure: true
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes: *code-paths
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: manual
+      allow_failure: true
+
+# - main branch                 -> always runs automatically
+# - Draft MR                    -> MANUAL and optional
+# - MR with relevant changes    -> runs automatically
+# - MR without relevant changes -> MANUAL and optional
+.rules-docs: &rules-docs
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TITLE =~ /^(\[Draft\]|\[WIP\]|Draft:|WIP:)/i'
+      when: manual
+      allow_failure: true
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes: *docs-paths
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: manual
+      allow_failure: true
+
 .saas-runners:
   parallel:
     matrix:
       - OS: linux
         BUILD_TYPE: Release
-        RUNNER_TAG: saas-linux-small-amd64
+        RUNNER_TAG: hipo-docker
         IMAGE: ubuntu:24.04
 
       # Tier GitLab: Premium, Ultimate
@@ -63,6 +120,8 @@ build:
     - .saas-runners
     - .linux-dependencies
 
+  <<: *rules-code
+
   script:
     # Configure CMake
     - cmake -S . -B build -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX}
@@ -94,6 +153,8 @@ test:
     - .linux-dependencies
     - .python-environment
 
+  <<: *rules-code
+
   script:
     - export PATH="$CI_PROJECT_DIR/install/bin:$CI_PROJECT_DIR/venv/bin:$PATH"
 
@@ -112,16 +173,20 @@ test:
 documentation:
   stage: documentation
 
+  tags:
+    - hipo-docker
+
+  image: ubuntu:24.04
+
   needs:
     - job: test
       artifacts: false
 
+  <<: *rules-docs
+
   before_script:
     - apt-get update
-    - apt-get install -y
-        build-essential
-        cmake
-        graphviz
+    - apt-get install -y build-essential cmake graphviz git wget
 
   script:
     - cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
@@ -156,6 +221,7 @@ pages:
   artifacts:
     paths:
       - public
+    expire_in: 1 hour
 
 validate-citation:
   stage: test
@@ -168,5 +234,12 @@ validate-citation:
     - cffconvert --validate
 
   rules:
-    - changes:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TITLE =~ /^(\[Draft\]|\[WIP\]|Draft:|WIP:)/i'
+      when: manual
+      allow_failure: true
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - CITATION.cff
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      changes:
         - CITATION.cff
