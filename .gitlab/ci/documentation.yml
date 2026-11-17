@@ -1,14 +1,10 @@
-documentation:
+documentation:doxygen:
   stage: documentation
 
   tags:
     - hipo-docker
 
   image: ubuntu:24.04
-
-  needs:
-    - job: test
-      artifacts: false
 
   rules: !reference [.rules-docs, rules]
 

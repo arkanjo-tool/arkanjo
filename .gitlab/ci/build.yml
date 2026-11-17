@@ -1,4 +1,4 @@
-build:
+build:arkanjo:
   stage: build
 
   extends:

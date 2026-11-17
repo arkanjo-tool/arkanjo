@@ -1,9 +1,5 @@
-pages:
+publish:doxygen:
   stage: deploy
-
-  needs:
-    - job: documentation
-      artifacts: true
 
   rules:
     - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'

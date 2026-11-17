@@ -1,8 +1,8 @@
-test:
+test:arkanjo:
   stage: test
 
   needs:
-    - job: build
+    - job: build:arkanjo
       artifacts: true
       parallel:
         matrix:
