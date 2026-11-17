@@ -18,3 +18,66 @@ citation:
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
         - CITATION.cff
+
+clang-format:
+  stage: validate
+
+  image: ubuntu:24.04
+
+  before_script:
+    - apt-get update
+    - apt-get install -y clang-format clang-format-19 git
+    - ln -sf /usr/bin/clang-format-19 /usr/local/bin/clang-format
+    - export CLANG_FORMAT=/usr/local/bin/clang-format
+
+  rules: !reference [.rules-code, rules]
+
+  allow_failure: true
+
+  script:
+    - |
+      set +e
+
+      echo "Clang-format:"
+      clang-format --version
+
+      echo "Git-clang-format:"
+      command -v git-clang-format-19
+
+      echo ""
+      echo "Checking C++ formatting..."
+
+      if [ "$CI_PIPELINE_SOURCE" = "merge_request_event" ]; then
+        BASE_SHA="$CI_MERGE_REQUEST_DIFF_BASE_SHA"
+      else
+        BASE_SHA="HEAD~1"
+      fi
+
+      echo "HEAD: $(git rev-parse HEAD)"
+      echo "BASE: $BASE_SHA"
+
+      if ! git rev-parse --verify "$BASE_SHA" >/dev/null 2>&1; then
+        echo "WARNING: Unable to determine comparison base."
+        exit 0
+      fi
+
+      echo "Running git-clang-format-19..."
+
+      OUTPUT=$(git-clang-format-19 --diff "$BASE_SHA" 2>&1)
+      STATUS=$?
+
+      echo "Command exit code: $STATUS"
+      echo "Formatting output:"
+      echo "$OUTPUT"
+
+      if [ "$STATUS" -gt 1 ]; then
+        echo "ERROR: git-clang-format execution failed."
+        exit "$STATUS"
+      fi
+
+      if echo "$OUTPUT" | grep -q '^diff --git '; then
+        echo "WARNING: Some files are not formatted."
+        exit 1
+      fi
+
+      echo "INFO: No formatting differences detected."
