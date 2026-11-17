@@ -1,4 +1,5 @@
 stages:
+  - validate
   - build
   - test
   - documentation
@@ -114,6 +115,7 @@ workflow:
       - ${PIP_CACHE_DIR}
 
 include:
+  - local: .gitlab/ci/validate.yml
   - local: .gitlab/ci/build.yml
   - local: .gitlab/ci/test.yml
   - local: .gitlab/ci/documentation.yml
