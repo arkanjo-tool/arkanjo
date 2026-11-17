@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
 
     Similarity_Table similarity_table;
 
-    ctx.command_name = (argc > 1) ? argv[1] : OrchestratorHelper::DEFAULT_COMMAND;
+    ctx.command_name = (argc > 1) ? argv[1] : OrchestratorHelper::kDefaultCommand;
 
     ctx.argc = argc;
     ctx.argv = argv;

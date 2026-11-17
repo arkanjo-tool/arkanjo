@@ -13,7 +13,6 @@
 #pragma once
 
 #include <string>
-#include <utility>
 #include <vector>
 
 #include <arkanjo/base/function/function.hpp>
@@ -33,8 +32,8 @@
  */
 class SimilarityExplorer : public CommandBase<SimilarityExplorer> {
   public:
-    static constexpr int UNLIMITED_RESULTS = 0;      ///< Constant for unlimited results display
-    static constexpr const char* EMPTY_PATTERN = ""; ///< Constant for empty search pattern
+    static constexpr int kUnlimitedResults = 0;      ///< Constant for unlimited results display
+    static constexpr const char* kEmptyPattern = ""; ///< Constant for empty search pattern
 
     static constexpr CliOption options_[] = {
         {"limiter", 'l', RequiredArgument, "Limits the number of results shown to the user. By default, all results are shown."},
@@ -64,19 +63,19 @@ class SimilarityExplorer : public CommandBase<SimilarityExplorer> {
     bool run(const ParsedOptions& options) override;
 
   private:
-    static constexpr const char* TEMPLATE_PROCESSED_RESULTS = 
-      "Functions find: {path_a} "
-      "AND {path_b}"
-      ", TOTAL NUMBER LINES IN FUNCTIONS: {duplicated_lines}";
-    static constexpr const char* TEMPLATE_PROCESSED_RESULTS_CLUSTERS = 
-      "Function find: {path_a}"
-      ", TOTAL NUMBER LINES IN FUNCTION: {duplicated_lines}";
-    static constexpr const char* TEMPLATE_INITIAL_TEXT =
-      "It was found a total of {found:bold} "
-      "pair of duplicate functions in the codebase. Which the first "
-      "{show:bold} can be found below.";
-      
-    int INITIAL_PROCESSED_RESULTS = 0;                                                                                    ///< Initial counter for processed results
+    static constexpr const char* kTemplateProcessedResults =
+        "Functions find: {path_a} "
+        "AND {path_b}"
+        ", TOTAL NUMBER LINES IN FUNCTIONS: {duplicated_lines}";
+    static constexpr const char* kTemplateProcessedResultsClusters =
+        "Function find: {path_a}"
+        ", TOTAL NUMBER LINES IN FUNCTION: {duplicated_lines}";
+    static constexpr const char* kTemplateInitialText =
+        "It was found a total of {found:bold} "
+        "pair of duplicate functions in the codebase. Which the first "
+        "{show:bold} can be found below.";
+
+    static constexpr int kInitialProcessedResults = 0; ///< Initial counter for processed results
 
     Similarity_Table* similarity_table;                ///< Source of similarity data
     int limit_on_results;                              ///< Maximum number of results to show
@@ -84,9 +83,9 @@ class SimilarityExplorer : public CommandBase<SimilarityExplorer> {
     bool both_path_need_to_match_pattern;              ///< Whether both paths must match pattern
     bool sorted_by_number_of_duplicated_code;          ///< Whether to sort by line count
     bool use_clusters;                                 ///< Whether clusters be printed
-    int processed_results = INITIAL_PROCESSED_RESULTS; ///< Counter for processed results
+    int processed_results = kInitialProcessedResults;  ///< Counter for processed results
     bool mode_verbose = false;                         ///< Detailed execution information
-    std::string template_processed_results_output = TEMPLATE_PROCESSED_RESULTS;
+    std::string template_processed_results_output = kTemplateProcessedResults;
 
     /**
      * @brief Determines number of pairs to show

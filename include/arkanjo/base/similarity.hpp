@@ -15,10 +15,10 @@
 #endif
 
 struct Similarity {
-    static constexpr const double MAXIMUM = 1.0; ///< Maximum possible similarity score
-    static constexpr const double MINIMUM = 0.0; ///< Minimum possible similarity score
+    static constexpr double kMaximum = 1.0; ///< Maximum possible similarity score
+    static constexpr double kMinimum = 0.0; ///< Minimum possible similarity score
 
-    static constexpr const double EPS_ERROR_MARGIN = 1e-8; ///< Floating-point comparison margin
+    static constexpr double kEpsErrorMargin = 1e-8; ///< Floating-point comparison margin
 
     double value_;
 
@@ -27,9 +27,9 @@ struct Similarity {
             throw std::invalid_argument("Similarity must be finite.");
 
 #ifdef USE_SIMILARITY_CLAMP
-        return std::clamp(value, MINIMUM, MAXIMUM);
+        return std::clamp(value, kMinimum, kMaximum);
 #else
-        if (value < MINIMUM || value > MAXIMUM)
+        if (value < kMinimum || value > kMaximum)
             throw std::out_of_range(
                 "Similarity must be in the range [0.0, 1.0]. (value " + std::to_string(value) + ")"
             );
@@ -78,7 +78,7 @@ struct Similarity {
         }
     }
 
-    Similarity(double value = MINIMUM)
+    Similarity(double value = kMinimum)
         : value_(clamp(value)) {}
 
     Similarity& operator=(double value) {
@@ -101,7 +101,7 @@ struct Similarity {
      * @return true if the scores are approximately equal; false otherwise.
      */
     bool approximately_equal(const Similarity& other) const {
-        return std::abs(value_ - other.value_) <= EPS_ERROR_MARGIN;
+        return std::abs(value_ - other.value_) <= kEpsErrorMargin;
     }
 
     /**
@@ -115,7 +115,7 @@ struct Similarity {
     * @return true if this score is approximately less; false otherwise.
     */
     bool approximately_less(const Similarity& other) const {
-        return value_ < other.value_ - EPS_ERROR_MARGIN;
+        return value_ < other.value_ - kEpsErrorMargin;
     }
 
     /**
@@ -129,7 +129,7 @@ struct Similarity {
     * @return true if this score is approximately greater; false otherwise.
     */
     bool approximately_greater(const Similarity& other) const {
-        return value_ > other.value_ + EPS_ERROR_MARGIN;
+        return value_ > other.value_ + kEpsErrorMargin;
     }
 
     /**
@@ -145,7 +145,7 @@ struct Similarity {
     *         to the other score; false otherwise.
     */
     bool approximately_at_least(const Similarity& other) const {
-        return value_ >= other.value_ - EPS_ERROR_MARGIN;
+        return value_ >= other.value_ - kEpsErrorMargin;
     }
 
     /**
@@ -161,7 +161,7 @@ struct Similarity {
     *         to the other score; false otherwise.
     */
     bool approximately_at_most(const Similarity& other) const {
-        return value_ <= other.value_ + EPS_ERROR_MARGIN;
+        return value_ <= other.value_ + kEpsErrorMargin;
     }
 
     bool operator<(const Similarity& similarity) const {

@@ -5,11 +5,11 @@ It is not simple to understand if you do not know the structure. Please refer to
 #include "counter_duplication_code_trie.hpp"
 #include <arkanjo/formatter/format_manager.hpp>
 
-Utils::COLOR CounterDuplicationCodeTrie::choose_text_color() {
+Utils::Color CounterDuplicationCodeTrie::choose_text_color() {
     number_printed_lines++;
-    Utils::COLOR ret = Utils::BLACK;
+    Utils::Color ret = Utils::Color::BLACK;
     if (number_printed_lines % 2 == 0) {
-        ret = Utils::BLUE;
+        ret = Utils::Color::BLUE;
     }
     return ret;
 }
@@ -18,7 +18,7 @@ int CounterDuplicationCodeTrie::create_node_at_the_end() {
     int id = trie.size();
     std::map<std::string, int> aux;
     trie.push_back(aux);
-    counter_duplication_lines.push_back(ZERO_INITIAL_COUNTER);
+    counter_duplication_lines.push_back(kZeroInitialCounter);
     return id;
 }
 
@@ -31,15 +31,15 @@ void CounterDuplicationCodeTrie::create_edge_if_not_exist(int node, const std::s
 std::string CounterDuplicationCodeTrie::create_context_string_on_depth(int depth) {
     std::string ret = "";
     for (int i = 0; i < depth; i++) {
-        ret += BASIC_SHIFT_PER_DEPTH;
+        ret += kBasicShiftPerDepth;
     }
-    ret += END_ARROW;
+    ret += kEndArrow;
     return ret;
 }
 
 void CounterDuplicationCodeTrie::print_node_information(int node, int depth, const std::string& folder) {
-    std::string line = create_context_string_on_depth(depth) + folder + TWO_POINTER_AFTER_FOLDER;
-    line += std::to_string(counter_duplication_lines[node]) + LINE_TEXT;
+    std::string line = create_context_string_on_depth(depth) + folder + kTwoPointerAfterFolder;
+    line += std::to_string(counter_duplication_lines[node]) + kLineText;
 
     std::cout << FormatterManager::get_formatter()->colorize(line, choose_text_color()) << '\n';
 }
@@ -53,7 +53,7 @@ void CounterDuplicationCodeTrie::dfs_print_duplication_code_trie(int current_nod
 }
 
 void CounterDuplicationCodeTrie::add_folder_duplication_code(const std::vector<std::string>& folder_path, int number_of_duplication_lines) {
-    int current_node = ROOT_NODE;
+    int current_node = kRootNode;
     counter_duplication_lines[current_node] += number_of_duplication_lines;
     for (const auto& folder : folder_path) {
         create_edge_if_not_exist(current_node, folder);
@@ -63,7 +63,7 @@ void CounterDuplicationCodeTrie::add_folder_duplication_code(const std::vector<s
 }
 
 void CounterDuplicationCodeTrie::print_duplication_code_trie() {
-    dfs_print_duplication_code_trie(ROOT_NODE, BASE_DEPTH, EMPTY_FOLDER);
+    dfs_print_duplication_code_trie(kRootNode, kBaseDepth, kEmptyFolder);
 }
 
 CounterDuplicationCodeTrie::CounterDuplicationCodeTrie() {

@@ -49,5 +49,5 @@ class FunctionStorage {
     ) const;
 
   private:
-    static constexpr const char* JSON_EXTENSION = ".json"; ///< Extension for JSON metadata files
+    static constexpr const char* kJsonExtension = ".json"; ///< Extension for JSON metadata files
 };

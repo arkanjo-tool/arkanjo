@@ -32,12 +32,11 @@ class FunctionLoader {
     Function load_metadata(const Path& path);
 
   private:
-    static constexpr const char* LINE_DECLARATION_JSON =
+    static constexpr const char* kLineDeclarationJson =
         "line_declaration"; ///< JSON key for declaration line
-    static constexpr const char* START_NUMBER_LINE_JSON =
+    static constexpr const char* kStartNumberLineJson =
         "start_number_line"; ///< JSON key for start line
-    static constexpr const char* END_NUMBER_LINE_JSON =
-        "end_number_line"; ///< JSON key for end line
+    static constexpr const char* kEndNumberLineJson = "end_number_line"; ///< JSON key for end line
 
     /**
      * @brief Loads the function source content.

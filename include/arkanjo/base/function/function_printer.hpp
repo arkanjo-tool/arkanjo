@@ -36,11 +36,11 @@ class FunctionPrinter {
     static std::string format_path_message_in_pair(const Function& function);
 
   private:
-    static constexpr const char* BETWEEN_RELATIVE_AND_FUNCTION_NAME =
+    static constexpr const char* kBetweenRelativeAndFunctionName =
         "::"; ///< Separator for path formatting
-    static constexpr const char* FUNCTION_PREFIX_PRINT =
+    static constexpr const char* kFunctionPrefixPrint =
         "Function: "; ///< Prefix for function name display
-    static constexpr const char* RELATIVE_PATH_PRINT = "File: ";     ///< Prefix for path display
-    static constexpr const char* LINE_DECLARATION_PRINT = "Lines: "; ///< Prefix for line display
-    static constexpr const char* NUMBER_LINE_PRINT = "Size: "; ///< Prefix for line count display
+    static constexpr const char* kRelativePathPrint = "File: ";     ///< Prefix for path display
+    static constexpr const char* kLineDeclarationPrint = "Lines: "; ///< Prefix for line display
+    static constexpr const char* kNumberLinePrint = "Size: "; ///< Prefix for line count display
 };

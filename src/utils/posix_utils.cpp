@@ -1,10 +1,12 @@
 #include <arkanjo/utils/os_utils.hpp>
 
-#include <termios.h>
+#include <algorithm>
+#include <sstream>
 #include <sys/ioctl.h>
-#include <unistd.h>
 #include <sys/utsname.h>
+#include <termios.h>
 #include <tuple>
+#include <unistd.h>
 
 int convert_16_bit_to_8_bit(const std::string& hex16) {
     try {
@@ -28,7 +30,7 @@ std::tuple<int, int, int> UtilsOSDependable::parse_terminal_color_response(const
 
     std::string rgb_str = response.substr(start_pos + 4, end_pos - (start_pos + 4));
 
-    replace(rgb_str.begin(), rgb_str.end(), '/', ' ');
+    std::replace(rgb_str.begin(), rgb_str.end(), '/', ' ');
 
     std::istringstream iss(rgb_str);
     std::string r_hex, g_hex, b_hex;

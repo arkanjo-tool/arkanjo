@@ -14,9 +14,8 @@ The code filter every file that has the pattern as a substring, so be carefull w
 using fm = FormatterManager;
 
 int SimilarityExplorer::find_number_pairs_show(int number_pair_found) const {
-    if (limit_on_results == UNLIMITED_RESULTS) {
+    if (limit_on_results == kUnlimitedResults)
         return number_pair_found;
-    }
     return std::min(limit_on_results, number_pair_found);
 }
 
@@ -40,9 +39,8 @@ SimilarityExplorerEntry SimilarityExplorer::process_similar_path_pair(const Path
 
     if (!match_pattern(function1, function2))
         return {};
-    if (limit_on_results != UNLIMITED_RESULTS && processed_results >= limit_on_results) {
+    if (limit_on_results != kUnlimitedResults && processed_results >= limit_on_results)
         return {};
-    }
     processed_results++;
 
     return SimilarityExplorerEntry{
@@ -103,7 +101,7 @@ void SimilarityExplorer::explorer_clusters() {
           + ", Pairs: " + std::to_string(info.total_pairs)
           + ", Lines: " + std::to_string(info.total_lines)
           + ", Score: " + std::to_string(info.score()) + ")");
-        fm::write(Utils::LIMITER_PRINT);
+        fm::write(Utils::kLimiterPrint);
 
         std::vector<SimilarityExplorerEntry> entries{};
         FunctionLoader loader;
@@ -128,7 +126,7 @@ void SimilarityExplorer::explorer_clusters() {
             });
         }
 
-        fm::write(TEMPLATE_PROCESSED_RESULTS_CLUSTERS, entries, Format::AUTO, [](size_t i) {
+        fm::write(kTemplateProcessedResultsClusters, entries, Format::AUTO, [](size_t i) {
             return (i % 2 == 0)
                 ? fm::get_formatter()->style().at("row_even")
                 : fm::get_formatter()->style().at("row_odd");
@@ -154,10 +152,12 @@ void SimilarityExplorer::explorer() {
     if (mode_verbose)
         fm::time("Execution time build similar path pairs:", start);
 
-    fm::write(TEMPLATE_INITIAL_TEXT, SimilarityExplorerInitialMessage{
-        number_pair_found, number_pairs_show
-    }, Format::TEXT);
-    fm::write(Utils::LIMITER_PRINT);
+    fm::write(
+        kTemplateInitialText,
+        SimilarityExplorerInitialMessage{number_pair_found, number_pairs_show},
+        Format::TEXT
+    );
+    fm::write(Utils::kLimiterPrint);
 
     std::vector<SimilarityExplorerEntry> vector_entry = {};
     for (const auto& similar_pair : similar_path_pairs) {

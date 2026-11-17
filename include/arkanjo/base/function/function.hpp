@@ -17,16 +17,16 @@
 
 #include <arkanjo/base/path.hpp>
 
-static constexpr uint32_t INVALID_LINE = std::numeric_limits<uint32_t>::max();
+static constexpr uint32_t kInvalidLine = std::numeric_limits<uint32_t>::max();
 
 struct FunctionLocation {
-    uint32_t declaration{INVALID_LINE}; ///< Line number of function declaration
-    uint32_t begin{INVALID_LINE};       ///< Line number where function starts
-    uint32_t end{INVALID_LINE};         ///< Line number where function ends
+    uint32_t declaration{kInvalidLine}; ///< Line number of function declaration
+    uint32_t begin{kInvalidLine};       ///< Line number where function starts
+    uint32_t end{kInvalidLine};         ///< Line number where function ends
 
     [[nodiscard]]
     constexpr uint32_t size() const noexcept {
-        if (declaration == INVALID_LINE || end == INVALID_LINE)
+        if (declaration == kInvalidLine || end == kInvalidLine)
             return 0;
 
         if (end < declaration)

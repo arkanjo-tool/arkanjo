@@ -8,7 +8,7 @@
  */
 struct Placeholder {
     std::string key;                         ///< Placeholder key name.
-    Utils::COLOR style = Utils::COLOR::NONE; ///< Resolved color style.
+    Utils::Color style = Utils::Color::NONE; ///< Resolved color style.
 };
 
 /**
@@ -16,10 +16,10 @@ struct Placeholder {
  */
 class TemplateRenderer {
 private:
-    static Utils::COLOR resolve_style(const std::string& name, const StyleMap& theme) {
-        auto it = theme.find(name);
-        return (it != theme.end()) ? it->second : Utils::COLOR::NONE;
-    }
+  static Utils::Color resolve_style(const std::string& name, const StyleMap& theme) {
+      auto it = theme.find(name);
+      return (it != theme.end()) ? it->second : Utils::Color::NONE;
+  }
 
     static Placeholder parse_placeholder(const std::string& raw, const StyleMap& theme) {
         Placeholder p;

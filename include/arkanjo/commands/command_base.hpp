@@ -34,7 +34,7 @@ class CommandBase : public ICommand {
      * @param collector Optional options collector providing merged global/command options.
      */
     virtual void print_help(const std::string command_name, const OptionsCollector* collector) const {
-        constexpr int OPTION_WIDTH = 26;
+        constexpr int kOptionWidth = 26;
 
         std::string s(description());
         std::cout << wrapped(s, 0) << "\n";
@@ -65,9 +65,9 @@ class CommandBase : public ICommand {
                     opts_str += "<";
                     opts_str += Utils::to_uppercase(item->long_name);
                     opts_str += ">";
-                    std::cout << std::left << std::setw(OPTION_WIDTH) << opts_str;
+                    std::cout << std::left << std::setw(kOptionWidth) << opts_str;
                     if (item->description != nullptr) {
-                        std::cout << wrapped(item->description, OPTION_WIDTH);
+                        std::cout << wrapped(item->description, kOptionWidth);
                     }
                     std::cout << "\n";
                 }
@@ -95,9 +95,9 @@ class CommandBase : public ICommand {
                     if (item->has_arg == RequiredArgument || item->has_arg == OptionalArgument) {
                         opts_str += " <" + Utils::to_uppercase(item->long_name) + "> ";
                     }
-                    std::cout << std::left << std::setw(OPTION_WIDTH + 8) << opts_str;
+                    std::cout << std::left << std::setw(kOptionWidth + 8) << opts_str;
                     if (item->description != nullptr) {
-                        std::cout << wrapped(item->description, OPTION_WIDTH);
+                        std::cout << wrapped(item->description, kOptionWidth);
                     }
                     std::cout << "\n";
                 }

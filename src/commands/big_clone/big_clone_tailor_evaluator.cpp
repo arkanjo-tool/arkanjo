@@ -6,8 +6,8 @@
 #include <arkanjo/utils/utils.hpp>
 
 void BigCloneTailorEvaluator::read_clone_labels() {
-    count_of_samples_by_type = std::vector<int>(NUMBER_OF_TYPES);
-    std::vector<std::string> content = Utils::read_file_with_vector(CLONE_LABELS_FILE_PATH);
+    count_of_samples_by_type = std::vector<int>(kNumberOfTypes);
+    std::vector<std::string> content = Utils::read_file_with_vector(kCloneLabelsFilePath);
     for (auto line : content) {
         std::vector<std::string> tokens = Utils::split_string(line, ',');
         if (int(tokens.size()) < 4) {
@@ -29,9 +29,8 @@ int BigCloneTailorEvaluator::path_to_id(Path path) {
     std::string relative_path = path.relative_path();
     std::vector<std::string> tokens = Utils::split_string(relative_path, '/');
     std::string file_name = tokens.back();
-    for (int i = 0; i < int(EXTENSION.size()); i++) {
+    for (int i = 0; i < int(kExtension.size()); i++)
         file_name.pop_back();
-    }
     return stoi(file_name);
 }
 
@@ -81,13 +80,13 @@ std::vector<std::pair<int, int>> BigCloneTailorEvaluator::filter_similar_path_pa
 std::vector<int> BigCloneTailorEvaluator::build_frequency_corrected_guessed_by_type(
     std::vector<std::pair<int, int>> similar_id_pairs) {
     std::set<std::pair<int, int>> similar_id_pairs_set = filter_similar_id_pairs_only_relevant_ones(similar_id_pairs);
-    std::vector<int> frequency(NUMBER_OF_TYPES);
+    std::vector<int> frequency(kNumberOfTypes);
     for (auto ids : similar_id_pairs_set) {
         frequency[id_pair_to_type[ids]] += 1;
     }
     // for not clone if it is marked as duplicate count is wrong instead of right
-    frequency[NOT_CLONE_TYPE_ID] *= -1;
-    frequency[NOT_CLONE_TYPE_ID] += count_of_samples_by_type[NOT_CLONE_TYPE_ID];
+    frequency[kNotCloneTypeId] *= -1;
+    frequency[kNotCloneTypeId] += count_of_samples_by_type[kNotCloneTypeId];
     return frequency;
 }
 
@@ -99,10 +98,10 @@ double BigCloneTailorEvaluator::calc_recall(std::vector<int> frequency, int type
 }
 
 void BigCloneTailorEvaluator::print_recall_per_type(std::vector<int> frequency) {
-    std::cout << RECALL_PER_TYPE_PRINT << '\n';
-    for (int type = 0; type < NUMBER_OF_TYPES; type++) {
+    std::cout << kRecallPerTypePrint << '\n';
+    for (int type = 0; type < kNumberOfTypes; type++) {
         double recall = calc_recall(frequency, type);
-        std::cout << ID_TO_TYPE_LABEL[type] << ' ';
+        std::cout << kIdToTypeLabel[type] << ' ';
         std::cout << std::fixed << std::setprecision(2) << recall << '\n';
     }
 }
@@ -127,7 +126,7 @@ bool BigCloneTailorEvaluator::validate([[maybe_unused]] const ParsedOptions& opt
 
 bool BigCloneTailorEvaluator::run([[maybe_unused]] const ParsedOptions& options) {
     read_clone_labels();
-    evaluate(MINIMUM_SIMILARITY_TEMP);
+    evaluate(minimumSimilarityTemp);
 
     return true;
 }

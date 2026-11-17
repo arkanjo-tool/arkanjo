@@ -122,7 +122,7 @@ void EmbeddingMethod::execute() {
 
     pclose(pipe);
 
-    fm::write(SAVING_MESSAGE);
+    fm::write(kSavingMessage);
 
     save_duplications(file_duplication_pairs);
 }

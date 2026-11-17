@@ -16,10 +16,9 @@
 
 #pragma once
 
-#include <string>
-#include <vector>
 #include <filesystem>
 #include <functional>
+#include <string>
 
 #include <tree_sitter/api.h>
 

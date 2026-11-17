@@ -29,7 +29,7 @@ namespace fs = std::filesystem;
  */
 class EmbeddingMethod : public IMethod {
   private:
-    static constexpr const char* SAVING_MESSAGE = "Saving results...";
+    static constexpr const char* kSavingMessage = "Saving results...";
 
     fs::path base_path;
     Similarity similarity;

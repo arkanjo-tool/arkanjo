@@ -51,8 +51,8 @@ void RandomSelector::print_path_pairs(std::vector<SimilarPair> path_pairs) {
         });
     }
     if (vector_entry.size() <= 0) return;
-    
-    fm::write(TEMPLATE_RANDOM_ENTRY, vector_entry, Format::AUTO, [](size_t i) {
+
+    fm::write(kTemplateRandomEntry, vector_entry, Format::AUTO, [](size_t i) {
         return (i % 2 == 0)
             ? fm::get_formatter()->style().at("row_even")
             : fm::get_formatter()->style().at("row_odd");
@@ -62,8 +62,8 @@ void RandomSelector::print_path_pairs(std::vector<SimilarPair> path_pairs) {
 RandomSelector::RandomSelector(Similarity_Table* _similarity_table) {
     similarity_table = _similarity_table;
     similarity_table->update_similarity(0);
-    minimum_similarity = Similarity::MINIMUM;
-    maximum_similarity = Similarity::MAXIMUM;
+    minimum_similarity = Similarity::kMinimum;
+    maximum_similarity = Similarity::kMaximum;
     maximum_quantity = 0;
 }
 

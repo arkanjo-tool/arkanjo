@@ -26,9 +26,9 @@ void FunctionLoader::read_info(Function& function) {
 
     fs::path info_path = storage.build_info_path(function.path());
     json info = Utils::read_json(info_path);
-    function.location_.declaration = info.value(LINE_DECLARATION_JSON, INVALID_LINE);
-    function.location_.begin = info.value(START_NUMBER_LINE_JSON, INVALID_LINE);
-    function.location_.end = info.value(END_NUMBER_LINE_JSON, INVALID_LINE);
+    function.location_.declaration = info.value(kLineDeclarationJson, kInvalidLine);
+    function.location_.begin = info.value(kStartNumberLineJson, kInvalidLine);
+    function.location_.end = info.value(kEndNumberLineJson, kInvalidLine);
 }
 
 Function FunctionLoader::load(const Path& path) {

@@ -30,14 +30,15 @@
  */
 class CounterDuplicationCodeTrie {
   private:
-    static constexpr const int ZERO_INITIAL_COUNTER = 0;                     ///< Initial counter value for new nodes
-    static constexpr const int ROOT_NODE = 0;                                ///< Index of root node
-    static constexpr const int BASE_DEPTH = 0;                               ///< Base depth level (root)
-    static constexpr const char* EMPTY_FOLDER = "";                         ///< Representation of empty folder
-    static constexpr const char* BASIC_SHIFT_PER_DEPTH = "----";            ///< Indentation per depth level
-    static constexpr const char* END_ARROW = "--> ";                        ///< Suffix for folder display
-    static constexpr const char* TWO_POINTER_AFTER_FOLDER = "/: ";          ///< Separator after folder name
-    static constexpr const char* LINE_TEXT = " duplicated lines detected."; ///< Duplication count suffix
+    static constexpr int kZeroInitialCounter = 0;   ///< Initial counter value for new nodes
+    static constexpr int kRootNode = 0;             ///< Index of root node
+    static constexpr int kBaseDepth = 0;            ///< Base depth level (root)
+    static constexpr const char* kEmptyFolder = ""; ///< Representation of empty folder
+    static constexpr const char* kBasicShiftPerDepth = "----";   ///< Indentation per depth level
+    static constexpr const char* kEndArrow = "--> ";             ///< Suffix for folder display
+    static constexpr const char* kTwoPointerAfterFolder = "/: "; ///< Separator after folder name
+    static constexpr const char* kLineText =
+        " duplicated lines detected."; ///< Duplication count suffix
 
     std::vector<std::map<std::string, int>> trie;         ///< Trie structure: {edge_value -> node}
     std::vector<int> counter_duplication_lines; ///< Duplication counts per node
@@ -47,7 +48,7 @@ class CounterDuplicationCodeTrie {
      * @brief Chooses text color based on duplication count
      * @return COLOR Text color for output
      */
-    Utils::COLOR choose_text_color();
+    Utils::Color choose_text_color();
 
     /**
      * @brief Creates new node at end of trie

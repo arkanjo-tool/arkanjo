@@ -109,8 +109,8 @@ class Similarity_Table {
     };
 
   private:
-    static constexpr const double DEFAULT_SIMILARITY =
-        Similarity::MAXIMUM; ///< Default similarity threshold
+    static constexpr double kDefaultSimilarity =
+        Similarity::kMaximum; ///< Default similarity threshold
 
     Similarity similarity_threshold; ///< Current similarity threshold
     std::vector<Path> paths;        ///< List of all known paths

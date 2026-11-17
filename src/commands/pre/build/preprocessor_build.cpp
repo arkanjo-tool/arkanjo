@@ -11,7 +11,7 @@ using fm = FormatterManager;
 
 std::tuple<std::string, Similarity, size_t, std::vector<std::string>, Granularity>
 PreprocessorBuild::read_parameters(const ParsedOptions& options) {
-    fm::write(INITIAL_MESSAGE);
+    fm::write(kInitialMessage);
 
     std::string path_str;
 
@@ -19,24 +19,24 @@ PreprocessorBuild::read_parameters(const ParsedOptions& options) {
         path_str = *path;
 
         if (!fs::exists(path_str)) {
-            std::cout << ERROR_PATH_MESSAGE << "\n";
+            std::cout << kErrorPathMessage << "\n";
             path_str.clear();
         }
     }
 
     if (path_str.empty()) {
-        fm::write(PROJECT_PATH_MESSAGE);
+        fm::write(kProjectPathMessage);
         std::cin >> path_str;
     }
     fs::path path(path_str);
 
-    Similarity similarity{Similarity::MINIMUM};
+    Similarity similarity{Similarity::kMinimum};
 
     if (auto similarity_value = options.get_as<double>("similarity"))
         similarity = Similarity::read(*similarity_value);
 
-    if (similarity == Similarity::MINIMUM) {
-        fm::write(MINIMUM_SIMILARITY_MESSAGE);
+    if (similarity == Similarity::kMinimum) {
+        fm::write(kMinimumSimilarityMessage);
         std::cin >> similarity;
     }
 
@@ -68,7 +68,7 @@ PreprocessorBuild::read_parameters(const ParsedOptions& options) {
 
     if (!method_from_option) {
         while (true) {
-            fm::write(MESSAGE_DUPLICATION_FINDER_TYPE);
+            fm::write(kMessageDuplicationFinderType);
             for (size_t i = 0; i < MethodsType.size(); ++i) {
                 std::cout << i + 1 << ") " << MethodsType[i].description << '\n';
             }
@@ -77,7 +77,7 @@ PreprocessorBuild::read_parameters(const ParsedOptions& options) {
                 use_duplication_finder_index == 0 ||
                 use_duplication_finder_index > MethodsType.size()
             ) {
-                throw CLIError(INVALID_CODE_DUPLICATION_FINDER);
+                throw CLIError(kInvalidCodeDuplicationFinder);
             }
             break;
         }
@@ -115,7 +115,7 @@ void PreprocessorBuild::preprocess(
 ) {
     auto start = std::chrono::high_resolution_clock::now();
 
-    fm::write(BREAKER_MESSAGE);
+    fm::write(kBreakerMessage);
 
     fs::path base_path = Config::config().base_path / Config::config().name_container;
 
@@ -146,7 +146,7 @@ void PreprocessorBuild::preprocess(
     }
 
     auto start_duplication = std::chrono::high_resolution_clock::now();
-    fm::write(DUPLICATION_MESSAGE);
+    fm::write(kDuplicationMessage);
 
     method->execute();
     if (mode_verbose)
@@ -154,7 +154,7 @@ void PreprocessorBuild::preprocess(
 
     Preprocess_State::save_current_run_params(path, base_path);
 
-    fm::write(END_MESSAGE);
+    fm::write(kEndMessage);
 
     fm::time("Execution time:", start);
 }
@@ -163,9 +163,8 @@ PreprocessorBuild::PreprocessorBuild(
     bool force_preprocess, const fs::path& path, Similarity similarity
 ) {
     fs::path base_path = Config::config().base_path / Config::config().name_container;
-    if (force_preprocess || !std::filesystem::exists(base_path / CONFIG_PATH)) {
+    if (force_preprocess || !std::filesystem::exists(base_path / kConfigPath))
         preprocess(path, similarity, 0);
-    }
 }
 
 bool PreprocessorBuild::validate(const ParsedOptions& options) {

@@ -1,19 +1,19 @@
 #include <arkanjo/parser/feature_extractor.hpp>
 
 bool FeatureExtractor::is_lexical_node(std::string_view type) {
-    for (auto& n : NODES)
+    for (auto& n : kNodes)
         if (n == type) return true;
     return false;
 }
 
 bool FeatureExtractor::is_block_node(std::string_view type) {
-    for (auto& n : BLOCK_NODES)
+    for (auto& n : kBlockNodes)
         if (n == type) return true;
     return false;
 }
 
 bool FeatureExtractor::is_function_node(std::string_view type) {
-    for (auto& n : FUNCTION_NODES)
+    for (auto& n : kFunctionNodes)
         if (n == type) return true;
     return false;
 }

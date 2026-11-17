@@ -3,11 +3,11 @@
 #include <arkanjo/formatter/template_renderer.hpp>
 #include <arkanjo/formatter/base.hpp>
 
-#define DEFINE_COLOR_HELPER(name)      \
-inline std::string name(const std::string& text) { \
-    auto fmt = FormatterManager::get_formatter();  \
-    return fmt->colorize(text, Utils::name); \
-}
+#define DEFINE_COLOR_HELPER(name)                                                                  \
+    inline std::string name(const std::string& text) {                                             \
+        auto fmt = FormatterManager::get_formatter();                                              \
+        return fmt->colorize(text, Utils::Color::name);                                            \
+    }
 
 /**
  * @brief Central manager for output formatting, active theme, and template rendering.
@@ -124,8 +124,8 @@ class FormatterManager {
     static void warn(const std::string& str) {
         auto fmt = get_formatter();
 
-        Utils::COLOR bold = fmt->style().at("bold");
-        Utils::COLOR warn_color = fmt->style().at("warning");
+        Utils::Color bold = fmt->style().at("bold");
+        Utils::Color warn_color = fmt->style().at("warning");
 
         std::string warning = fmt->colorize("Warning: ", bold);
         warning = fmt->colorize(warning, warn_color);
@@ -136,8 +136,8 @@ class FormatterManager {
     static void error(const std::string& str, const std::string& prefix = "Error: ") {
         auto fmt = get_formatter();
 
-        Utils::COLOR bold = fmt->style().at("bold");
-        Utils::COLOR error_color = fmt->style().at("error");
+        Utils::Color bold = fmt->style().at("bold");
+        Utils::Color error_color = fmt->style().at("error");
 
         std::string message = fmt->colorize(prefix, bold);
         message = fmt->colorize(message, error_color);

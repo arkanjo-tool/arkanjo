@@ -5,8 +5,6 @@
 #include <arkanjo/base/features/source_feature.hpp>
 #include <arkanjo/base/storage/function_storage.hpp>
 #include <arkanjo/utils/utils.hpp>
-#include <iostream>
-#include <unordered_map>
 
 void FunctionBreaker::write_output(
     const fs::path type_path,

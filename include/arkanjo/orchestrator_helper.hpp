@@ -12,7 +12,7 @@
 #include <arkanjo/base/preprocess_state.hpp>
 
 namespace OrchestratorHelper {
-static constexpr const char* DEFAULT_COMMAND = "help";
+static constexpr const char* kDefaultCommand = "help";
 
 constexpr CliOption global_long_opts[] = {
     {"name", 'n', RequiredArgument, "Assign a name to the cache container; defaults to 'default' if not provided."},

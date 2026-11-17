@@ -7,14 +7,9 @@
  */
 
 #pragma once
-#include <algorithm>
 #include <cstdlib>
 #include <fcntl.h>
-#include <iomanip>
-#include <iostream>
-#include <sstream>
 #include <string>
-#include <vector>
 
 class UtilsOSDependable {
     /**

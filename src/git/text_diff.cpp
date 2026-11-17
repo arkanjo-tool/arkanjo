@@ -38,7 +38,7 @@ int GitTextDiff::print_diff_hunk(const git_diff_delta*,const git_diff_hunk* hunk
     auto formatter = FormatterManager::get_formatter();
 
     std::string header(hunk->header, hunk->header_len);
-    header = formatter->colorize(header, Utils::COLOR::MAGENTA);
+    header = formatter->colorize(header, Utils::Color::MAGENTA);
 
     data->output->write(header.data(), header.size());
 
@@ -64,10 +64,10 @@ int GitTextDiff::print_diff_line(
 
     switch (line->origin) {
         case GIT_DIFF_LINE_ADDITION:
-            output_line = formatter->colorize("+"+ content , Utils::COLOR::GREEN);
+            output_line = formatter->colorize("+" + content, Utils::Color::GREEN);
             break;
         case GIT_DIFF_LINE_DELETION:
-            output_line = formatter->colorize("-" + content, Utils::COLOR::RED);
+            output_line = formatter->colorize("-" + content, Utils::Color::RED);
             break;
         case GIT_DIFF_LINE_CONTEXT:
             output_line = std::string(" ") + content;

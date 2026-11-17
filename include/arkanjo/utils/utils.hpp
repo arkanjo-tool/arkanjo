@@ -9,14 +9,10 @@
 #pragma once
 #include <cassert>
 #include <cctype>
-#include <fstream>
-#include <iomanip>
 #include <iostream>
-#include <sstream>
 #include <string>
 #include <sys/stat.h>
 #include <vector>
-#include <sstream>
 
 #include "nlohmann/json.hpp"
 
@@ -30,12 +26,7 @@ namespace Utils {
 /**
  * @brief Constant string used as a visual delimiter/separator in prints
  */
-const std::string LIMITER_PRINT = "---------------------";
-
-/**
- * @brief Permission flags used when creating directories (rwx for owner)
- */
-const int MKDIR_FLAG = 0700;
+static constexpr const char* kLimiterPrint = "---------------------";
 
 /**
  * @brief ANSI color codes for light terminal backgrounds
@@ -55,21 +46,21 @@ const int MKDIR_FLAG = 0700;
  * - BOLD
  * - UNDERLINE
  */
-const std::vector<std::string> COLOR_TOKENS_UTILS_LIGTH = {
-    "\033[0m",     // RESET
-    "\033[31;2m",  // DARK_RED
-    "\033[32;2m",  // DARK_GREEN
-    "\033[33;2m",  // DARK_YELLOW
-    "\033[34;2m",  // DARK_BLUE
-    "\033[35;2m",  // DARK_MAGENTA
-    "\033[36;2m",  // DARK_CYAN
-    "\033[37;2m",  // DARK_GRAY
+static constexpr std::string_view kColorTokensUtilsLight[] = {
+    "\033[0m",    // RESET
+    "\033[31;2m", // DARK_RED
+    "\033[32;2m", // DARK_GREEN
+    "\033[33;2m", // DARK_YELLOW
+    "\033[34;2m", // DARK_BLUE
+    "\033[35;2m", // DARK_MAGENTA
+    "\033[36;2m", // DARK_CYAN
+    "\033[37;2m", // DARK_GRAY
     "\033[30;2m", // BLACK
-    "\033[33;2m",  // YELLOW
-    "\033[30m",    // BLACK
-    "\033[01m",    // BOLD
-    "\033[04m",    // UNDERLINE
-    "",            // NONE
+    "\033[33;2m", // YELLOW
+    "\033[30m",   // BLACK
+    "\033[01m",   // BOLD
+    "\033[04m",   // UNDERLINE
+    "",           // NONE
 };
 
 /**
@@ -88,27 +79,27 @@ const std::vector<std::string> COLOR_TOKENS_UTILS_LIGTH = {
  * - YELLOW
  * - WHITE
  */
-const std::vector<std::string> COLOR_TOKENS_UTILS_DARK = {
-    "\033[00m",  // RESET
-    "\033[31m",  // RED
-    "\033[32m",  // GREEN
-    "\033[33m",  // YELLOW
-    "\033[34m",  // BLUE
-    "\033[35m",  // MAGENTA
-    "\033[36m",  // CYAN
-    "\033[37m",  // GRAY
-    "\033[97m",  // WHITE
-    "\033[33m",  // BRIGHT_YELLOW
-    "\033[97m",  // WHITE
-    "\033[01m",  // BOLD
-    "\033[04m",  // UNDERLINE
-    "",          // NONE
+static constexpr std::string_view kColorTokensUtilsDark[] = {
+    "\033[00m", // RESET
+    "\033[31m", // RED
+    "\033[32m", // GREEN
+    "\033[33m", // YELLOW
+    "\033[34m", // BLUE
+    "\033[35m", // MAGENTA
+    "\033[36m", // CYAN
+    "\033[37m", // GRAY
+    "\033[97m", // WHITE
+    "\033[33m", // BRIGHT_YELLOW
+    "\033[97m", // WHITE
+    "\033[01m", // BOLD
+    "\033[04m", // UNDERLINE
+    "",         // NONE
 };
 
 /**
  * @brief Enumeration of available colors for formatted messages
  */
-enum COLOR {
+enum class Color {
     RESET,         ///< Reset to default color
     RED,           ///< Red color
     GREEN,         ///< Green color
@@ -174,7 +165,7 @@ json read_json(const fs::path& string_path);
  * @param color Color to apply
  * @return string Colorized message with reset code at the end
  */
-std::string format_colored_message(const std::string& message, COLOR color);
+std::string format_colored_message(const std::string& message, Color color);
 
 /**
  * @brief Checks if a character is considered empty/whitespace

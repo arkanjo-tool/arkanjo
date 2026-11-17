@@ -42,7 +42,8 @@ struct PostOrderTree {
 
 class ASTMethod : public IMethod {
   private:
-    static constexpr const char* SAVING_MESSAGE = "Saving results..."; ///< Status message for saving output
+    static constexpr const char* kSavingMessage =
+        "Saving results..."; ///< Status message for saving output
 
     fs::path base_path;  ///< Root path of the codebase to analyze
     Similarity similarity; ///< Similarity threshold for considering duplicates

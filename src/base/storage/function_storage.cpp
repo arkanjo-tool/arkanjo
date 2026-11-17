@@ -14,7 +14,7 @@ fs::path FunctionStorage::build_header_path(const Path& path) const {
 fs::path FunctionStorage::build_info_path(const Path& path) const {
     auto& cfg = Config::config();
     fs::path p = cfg.base_path / cfg.name_container / cfg.info_path / path.value();
-    p.replace_extension(JSON_EXTENSION);
+    p.replace_extension(kJsonExtension);
     return p;
 }
 

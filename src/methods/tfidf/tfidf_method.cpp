@@ -4,8 +4,6 @@
 #include <arkanjo/formatter/format_manager.hpp>
 #include <arkanjo/methods/tfidf/tfidf_method.hpp>
 
-#include <iostream>
-
 using fm = FormatterManager;
 
 TfidfMethod::TfidfMethod(const fs::path& base_path_, Similarity similarity_) {
@@ -29,8 +27,8 @@ void TfidfMethod::execute_by_feature(const fs::path& folder_path, const std::str
     command_tool += " -d ";
     command_tool += folder_path.string();
 
-    fm::write(SAVING_MESSAGE);
-    
+    fm::write(kSavingMessage);
+
     FILE* pipe = popen(command_tool.c_str(), "r");
     if (!pipe) {
         throw std::runtime_error("Failed to execute the tool.");

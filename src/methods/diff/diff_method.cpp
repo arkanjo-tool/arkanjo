@@ -5,6 +5,8 @@
 #include <arkanjo/methods/diff/diff_method.hpp>
 #include <arkanjo/utils/utils.hpp>
 
+#include <fstream>
+
 using fm = FormatterManager;
 
 DiffMethod::DiffMethod(const fs::path& base_path_, Similarity similarity_) {
@@ -63,7 +65,7 @@ double DiffMethod::find_similarity(std::string path1, std::string path2) {
     content2 = remove_blank_lines(content2);
 
     if (is_equal_files(content1, content2)) {
-        return Similarity::MAXIMUM;
+        return Similarity::kMaximum;
     }
 
     // execute diff command to extract the differences
@@ -94,7 +96,7 @@ double DiffMethod::find_similarity(std::string path1, std::string path2) {
     equal_lines -= different_lines;
 
     if (different_lines + equal_lines == 0) {
-        return Similarity::MINIMUM;
+        return Similarity::kMinimum;
     }
 
     double db_equal_lines = equal_lines;
@@ -160,7 +162,7 @@ void DiffMethod::execute() {
         path2 = fs::relative(path2, base).string();
     }
 
-    fm::write(SAVING_MESSAGE);
+    fm::write(kSavingMessage);
 
     save_duplications(file_duplication_pairs);
 }

@@ -2,6 +2,7 @@
 #include <arkanjo/base/preprocess_state.hpp>
 #include <arkanjo/formatter/format_manager.hpp>
 #include <arkanjo/utils/utils.hpp>
+#include <fstream>
 
 void Preprocess_State::save_current_run_params(const fs::path& path, const fs::path& cache_path) {
     auto end = std::chrono::system_clock::now();
@@ -14,12 +15,13 @@ void Preprocess_State::save_current_run_params(const fs::path& path, const fs::p
 
     json data = PreprocessRunParams{path, time_str, version, size};
 
-    fs::path config_path = Config::config().base_path / Config::config().name_container / CONFIG_PATH;
+    fs::path config_path =
+        Config::config().base_path / Config::config().name_container / kConfigPath;
     Utils::write_file(config_path, data.dump(4) + '\n');
 }
 
 PreprocessRunParams Preprocess_State::read_current_run_params() {
-    fs::path file_path = Config::config().base_path / Config::config().name_container / CONFIG_PATH;
+    fs::path file_path = Config::config().base_path / Config::config().name_container / kConfigPath;
 
     std::ifstream infile(file_path);
     if (!infile.is_open()) {
@@ -35,8 +37,6 @@ PreprocessRunParams Preprocess_State::read_current_run_params() {
 
     return data.get<PreprocessRunParams>();
 }
-
-constexpr int MAX_MINOR_VERSION_DIFF = 1;
 
 bool Preprocess_State::is_cache_compatible(const std::string& cache_version) {
     int current_major, current_minor, current_patch;

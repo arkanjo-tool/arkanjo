@@ -2,7 +2,6 @@
 
 #include <string>
 #include <vector>
-#include <unordered_set>
 
 #include <tree_sitter/api.h>
 
@@ -17,26 +16,26 @@ struct Features {
  * @brief Utility for classifying Tree-sitter AST nodes and extracting node text.
  */
 class FeatureExtractor {
-    static constexpr std::string_view FUNCTION_NODES[] = {
+    static constexpr std::string_view kFunctionNodes[] = {
         "function_definition",
         "function_item",
         "closure_expression",
         "method_definition",
-        "method_declaration"
+        "method_declaration",
     };
 
-    static constexpr std::string_view BLOCK_NODES[] = {
+    static constexpr std::string_view kBlockNodes[] = {
         "block",
         "block_expression",
-        "compound_statement"
+        "compound_statement",
     };
 
-    static constexpr std::string_view NODES[] = {
+    static constexpr std::string_view kNodes[] = {
         "identifier",
         "field_identifier",
         "type_identifier",
         "number_literal",
-        "string_literal"
+        "string_literal",
     };
 
   public:

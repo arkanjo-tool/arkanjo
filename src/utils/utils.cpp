@@ -1,6 +1,7 @@
 #include <arkanjo/utils/utils.hpp>
 
 #include <arkanjo/base/config/config.hpp>
+#include <fstream>
 
 template <typename Stream>
 void Utils::ensure_file_is_open(const Stream& file, const fs::path& file_name) {
@@ -55,15 +56,27 @@ json Utils::read_json(const fs::path& string_path) {
     return j_read;
 }
 
-std::string Utils::format_colored_message(const std::string& message, COLOR color) {
-    if (color == COLOR::NONE) {
+std::string Utils::format_colored_message(const std::string& message, Color color) {
+    if (color == Color::NONE)
         return message;
-    }
-    if (Config::config().theme == config::Theme::Dark) {
-        return COLOR_TOKENS_UTILS_DARK[color] + message + COLOR_TOKENS_UTILS_DARK[RESET];
-    } else {
-        return COLOR_TOKENS_UTILS_LIGTH[color] + message + COLOR_TOKENS_UTILS_LIGTH[RESET];
-    }
+
+    const auto& colorTokens = Config::config().theme == config::Theme::Dark
+        ? kColorTokensUtilsDark
+        : kColorTokensUtilsLight;
+
+    const auto index = static_cast<std::size_t>(color);
+
+    std::string result;
+    result.reserve(
+        colorTokens[index].size() + message.size() +
+        colorTokens[static_cast<std::size_t>(Color::RESET)].size()
+    );
+
+    result.append(colorTokens[index]);
+    result.append(message);
+    result.append(colorTokens[static_cast<std::size_t>(Color::RESET)]);
+
+    return result;
 }
 
 bool Utils::is_empty_char(char c) {

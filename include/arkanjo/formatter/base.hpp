@@ -15,8 +15,8 @@ enum class Format {
     AUTO  ///< Automatic selection based on context/terminal.
 };
 
-using StyleMap = std::unordered_map<std::string, Utils::COLOR>;
-using RowColorFn = std::function<Utils::COLOR(size_t)>;
+using StyleMap = std::unordered_map<std::string, Utils::Color>;
+using RowColorFn = std::function<Utils::Color(size_t)>;
 
 /**
  * @brief Interface for formatting and coloring text output.
@@ -33,10 +33,7 @@ public:
      *
      * @return Formatted string with ANSI escape codes or plaintext.
      */
-    virtual std::string colorize(
-        const std::string& text, 
-        Utils::COLOR color
-    ) const = 0;
+    virtual std::string colorize(const std::string& text, Utils::Color color) const = 0;
 
     /**
      * @brief Returns the active theme style map.
@@ -56,10 +53,7 @@ public:
     )
         : enabled(enable_color) {}
 
-    std::string colorize(
-        const std::string& text,
-        Utils::COLOR color
-    ) const override {
+    std::string colorize(const std::string& text, Utils::Color color) const override {
         if (!enabled) return text;
         return Utils::format_colored_message(text, color);
     }
@@ -68,7 +62,7 @@ public:
         return theme;
     }
 
-    void set(const std::string& key, Utils::COLOR c) {
+    void set(const std::string& key, Utils::Color c) {
         theme[key] = c;
     }
 
@@ -79,13 +73,13 @@ public:
 private:
     bool enabled;
     StyleMap theme = {
-        {"file", Utils::COLOR::RED},
-        {"function", Utils::COLOR::BOLD},
-        {"number", Utils::COLOR::YELLOW},
-        {"bold", Utils::COLOR::BOLD},
-        {"warning", Utils::COLOR::MAGENTA},
-        {"error", Utils::COLOR::RED},
-        {"row_even", Utils::COLOR::GRAY},
-        {"row_odd", Utils::COLOR::CYAN},
+        {"file", Utils::Color::RED},
+        {"function", Utils::Color::BOLD},
+        {"number", Utils::Color::YELLOW},
+        {"bold", Utils::Color::BOLD},
+        {"warning", Utils::Color::MAGENTA},
+        {"error", Utils::Color::RED},
+        {"row_even", Utils::Color::GRAY},
+        {"row_odd", Utils::Color::CYAN},
     };
 };

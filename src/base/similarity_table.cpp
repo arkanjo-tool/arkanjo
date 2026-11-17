@@ -69,7 +69,7 @@ Similarity_Table::Similarity_Table(Similarity _similarity_threshold)
     : similarity_threshold{_similarity_threshold} {}
 
 Similarity_Table::Similarity_Table()
-    :  similarity_threshold{DEFAULT_SIMILARITY} { }
+    : similarity_threshold{kDefaultSimilarity} {}
 
 Similarity_Table::Cache_Compatibility Similarity_Table::load() {
     return init_similarity_table();
@@ -84,14 +84,14 @@ Similarity Similarity_Table::get_similarity(const Path& path1, const Path& path2
     PathId id2 = find_id_path(path2);
 
     if (id1 == id2) {
-        return Similarity::MAXIMUM;
+        return Similarity::kMaximum;
     }
     normalize_pair(id1, id2);
     std::pair<PathId, PathId> aux = std::make_pair(id1, id2);
     auto it = similarity_table.find(aux);
     if (it != similarity_table.end())
         return it->second;
-    return Similarity::MINIMUM;
+    return Similarity::kMinimum;
 }
 
 const Path& Similarity_Table::get_path(PathId id) const {

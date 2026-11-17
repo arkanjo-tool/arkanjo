@@ -50,25 +50,32 @@ struct MethodInfo {
  */
 class PreprocessorBuild : public Preprocess_State, public CommandBase<PreprocessorBuild> {
   private:
-    static constexpr const char* TEMPLATE_COUNT =
-      "The total number of functions that are "
-      "similar to the found one is {count}. "
-      "More info about them are listed below.";
+    static constexpr const char* kTemplateCount = "The total number of functions that are "
+                                                  "similar to the found one is {count}. "
+                                                  "More info about them are listed below.";
     // User interaction messages
-    static constexpr const char* PROJECT_PATH_MESSAGE = "Enter your project path:";                                  ///< Project path prompt
-    static constexpr const char* MINIMUM_SIMILARITY_MESSAGE = "Enter minimum similarity desired on using the tool:"; ///< Similarity threshold prompt
+    static constexpr const char* kProjectPathMessage =
+        "Enter your project path:"; ///< Project path prompt
+    static constexpr const char* kMinimumSimilarityMessage =
+        "Enter minimum similarity desired on using the tool:"; ///< Similarity threshold prompt
 
     // Processing stage messages
-    static constexpr const char* INITIAL_MESSAGE = "Initiating Preprocessing";                                           ///< Initialization message
-    static constexpr const char* BREAKER_MESSAGE = "Reading codebase... (this may take a while)";                        ///< Code analysis message
-    static constexpr const char* DUPLICATION_MESSAGE = "Finding duplication in the codebase... (this may take a while)"; ///< Duplication detection message
-    static constexpr const char* SAVING_MESSAGE = "Saving results...";                                                   ///< Results saving message
-    static constexpr const char* END_MESSAGE = "Finished preprocessing";                                                 ///< Completion message
-    static constexpr const char* ERROR_PATH_MESSAGE = "Provided path does not exist.";                 ///< Error message for invalid paths
+    static constexpr const char* kInitialMessage =
+        "Initiating Preprocessing"; ///< Initialization message
+    static constexpr const char* kBreakerMessage =
+        "Reading codebase... (this may take a while)"; ///< Code analysis message
+    static constexpr const char* kDuplicationMessage =
+        "Finding duplication in the codebase... (this may take a while)"; ///< Duplication detection message
+    static constexpr const char* kSavingMessage = "Saving results...";   ///< Results saving message
+    static constexpr const char* kEndMessage = "Finished preprocessing"; ///< Completion message
+    static constexpr const char* kErrorPathMessage =
+        "Provided path does not exist."; ///< Error message for invalid paths
 
     // Duplication finder selection messages
-    static constexpr const char* MESSAGE_DUPLICATION_FINDER_TYPE = "Enter the number of the duplication finder technique you want to use:";
-    static constexpr const char* INVALID_CODE_DUPLICATION_FINDER = "Invalid option entered. Stopping Program...";
+    static constexpr const char* kMessageDuplicationFinderType =
+        "Enter the number of the duplication finder technique you want to use:";
+    static constexpr const char* kInvalidCodeDuplicationFinder =
+        "Invalid option entered. Stopping Program...";
 
     bool mode_verbose = false; ///< Detailed execution information
     int minimum_lines = 0;     ///< Minimum clone size in original lines

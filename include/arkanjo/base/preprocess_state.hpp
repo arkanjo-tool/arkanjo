@@ -39,7 +39,8 @@ inline void from_json(const json& j, PreprocessRunParams& d) {
  */
 class Preprocess_State {
   protected:
-    static constexpr const char* CONFIG_PATH = "config.json"; ///< Configuration file path within cache.
+    static constexpr const char* kConfigPath =
+        "config.json"; ///< Configuration file path within cache.
 
   public:
     /**

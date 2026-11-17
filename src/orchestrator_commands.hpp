@@ -12,33 +12,33 @@
 #include "commands/version/version.hpp"
 
 namespace OrchestratorCommands {
-    static constexpr const char* DEFAULT_COMMAND = "help";
+static constexpr const char* kDefaultCommand = "help";
 
-    template<typename Table>
-    using CommandMap = const std::vector<std::pair<std::vector<std::string>, CommandsRegistry::CommandFactory>>;
+template <typename Table>
+using CommandMap =
+    const std::vector<std::pair<std::vector<std::string>, CommandsRegistry::CommandFactory>>;
 
-    /**
-     * @brief Instantiates the built-in CLI commands table bound to the given similarity table.
-     *
-     * @tparam Table Similarity table type.
-     * @param table Reference to similarity table instance.
-     *
-     * @return Command map definitions with names, aliases, and factories.
-     */
-    template<typename Table>
-    inline CommandMap<Table> create_internal_commands(Table& table) {
-        CommandMap<Table> commands = {
-            {{"explorer", "ex"}, [&]() { return std::make_unique<SimilarityExplorer>(&table); }},
-            {{"duplication", "du"}, [&]() { return std::make_unique<CounterDuplicationCode>(&table); }},
-            {{"function", "fu"}, [&]() { return std::make_unique<SimilarFunctionFinder>(&table); }},
-            {{"random"}, [&]() { return std::make_unique<RandomSelector>(&table); }},
-            {{"bigclone-evaluator"}, [&]() { return std::make_unique<BigCloneTailorEvaluator>(&table); }},
-            {{"git-diff"}, [&]() { return std::make_unique<GitDiffFunction>(&table); }},
-            {{"version"}, [&]() { return std::make_unique<Version>(&table); }},
-            {{"help"}, [&]() { return std::make_unique<Help>(commands); }},
-            {{"preprocessor"}, [&]() { return nullptr; }}
-        };
+/**
+ * @brief Instantiates the built-in CLI commands table bound to the given similarity table.
+ *
+ * @tparam Table Similarity table type.
+ * @param table Reference to similarity table instance.
+ *
+ * @return Command map definitions with names, aliases, and factories.
+ */
+template <typename Table> inline CommandMap<Table> create_internal_commands(Table& table) {
+    CommandMap<Table> commands = {
+        {{"explorer", "ex"}, [&]() { return std::make_unique<SimilarityExplorer>(&table); }},
+        {{"duplication", "du"}, [&]() { return std::make_unique<CounterDuplicationCode>(&table); }},
+        {{"function", "fu"}, [&]() { return std::make_unique<SimilarFunctionFinder>(&table); }},
+        {{"random"}, [&]() { return std::make_unique<RandomSelector>(&table); }},
+        {{"bigclone-evaluator"}, [&]() { return std::make_unique<BigCloneTailorEvaluator>(&table); }},
+        {{"git-diff"}, [&]() { return std::make_unique<GitDiffFunction>(&table); }},
+        {{"version"}, [&]() { return std::make_unique<Version>(&table); }},
+        {{"help"}, [&]() { return std::make_unique<Help>(commands); }},
+        {{"preprocessor"}, [&]() { return nullptr; }}
+    };
 
-        return commands;
-    }
+    return commands;
+}
 } // namespace OrchestratorCommands

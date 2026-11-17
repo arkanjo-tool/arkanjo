@@ -12,7 +12,6 @@
 
 #include <map>
 #include <set>
-#include <string>
 #include <tuple>
 #include <vector>
 
@@ -30,15 +29,18 @@
  */
 class BigCloneTailorEvaluator : public CommandBase<BigCloneTailorEvaluator> {
   private:
-    std::string CLONE_LABELS_FILE_PATH = "/home/luan/linux/test-duplication-code/parser/bigclonebench/clone_labels.txt"; ///< Path to ground truth labels
-    std::string EXTENSION = ".java";                                                                                     ///< Expected file extension
-    int NUMBER_OF_TYPES = 6;                                                                                        ///< Number of clone types
-    int NOT_CLONE_TYPE_ID = 5;                                                                                      ///< ID for non-clone pairs
-    std::string RECALL_PER_TYPE_PRINT = "Recall Value of each type";                                                     ///< Recall header text
-    Similarity MINIMUM_SIMILARITY_TEMP{Similarity::MINIMUM}; ///< Temporary similarity threshold
+    static constexpr const char* kCloneLabelsFilePath =
+        "/home/luan/linux/test-duplication-code/parser/bigclonebench/"
+        "clone_labels.txt";                                 ///< Path to ground truth labels
+    static constexpr std::string_view kExtension = ".java"; ///< Expected file extension
+    static constexpr int kNumberOfTypes = 6;                ///< Number of clone types
+    static constexpr int kNotCloneTypeId = 5;               ///< ID for non-clone pairs
+    static constexpr const char* kRecallPerTypePrint =
+        "Recall Value of each type";                        ///< Recall header text
+    Similarity minimumSimilarityTemp{Similarity::kMinimum}; ///< Temporary similarity threshold
 
     /// Clone type labels for output
-    std::vector<std::string> ID_TO_TYPE_LABEL = {
+    static constexpr std::string_view kIdToTypeLabel[] = {
         "T1",
         "T2",
         "ST3",

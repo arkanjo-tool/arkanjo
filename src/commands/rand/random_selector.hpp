@@ -15,7 +15,6 @@
 #include <arkanjo/base/path.hpp>
 #include <arkanjo/base/similarity_table.hpp>
 #include <random>
-#include <string>
 #include <vector>
 
 #include <arkanjo/base/similarity.hpp>
@@ -30,8 +29,8 @@
  * color-coded display options.
  */
 class RandomSelector : public CommandBase<RandomSelector> {
-    static constexpr const char* TEMPLATE_RANDOM_ENTRY =
-      "Functions: {path_a} AND {path_b}. Similarity: {similarity} ";
+    static constexpr const char* kTemplateRandomEntry =
+        "Functions: {path_a} AND {path_b}. Similarity: {similarity} ";
 
     Similarity_Table* similarity_table; ///< Source of similarity data
     Similarity minimum_similarity;      ///< Minimum similarity threshold

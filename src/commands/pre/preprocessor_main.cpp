@@ -1,15 +1,13 @@
 // As preprocessor is, in the moment, separated from orchestrator
 // we define a main function to use it.
 
+#include "../help/help.hpp"
 #include "build/preprocessor_build.hpp"
+#include "clean/preprocessor_clean.hpp"
 #include "list/preprocessor_list.hpp"
 #include "path/preprocessor_path.hpp"
-#include "../help/help.hpp"
-#include "clean/preprocessor_clean.hpp"
 #include <cassert>
 #include <filesystem>
-#include <iomanip>
-#include <iostream>
 #include <string>
 
 #include <arkanjo/orchestrator_helper.hpp>
@@ -30,8 +28,8 @@ int main(int argc, char* argv[]) {
     Orchestrator orchestrator;
     Context ctx;
 
-    ctx.command_name = (argc > 1) ? argv[1] : OrchestratorHelper::DEFAULT_COMMAND;
-    
+    ctx.command_name = (argc > 1) ? argv[1] : OrchestratorHelper::kDefaultCommand;
+
     ctx.argc = argc;
     ctx.argv = argv;
 

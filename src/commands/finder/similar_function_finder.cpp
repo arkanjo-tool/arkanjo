@@ -19,9 +19,7 @@ void SimilarFunctionFinder::find_path_that_meets_pattern() {
 }
 
 void SimilarFunctionFinder::print_empty_path_message() const {
-    fm::write(TEMPLATE_EMPTY_FUNCTION, SimilarFunctionEmptyEntry{
-        function_pattern
-    }, Format::TEXT);
+    fm::write(kTemplateEmptyFunction, SimilarFunctionEmptyEntry{function_pattern}, Format::TEXT);
 }
 
 Function SimilarFunctionFinder::get_reference_function(const Path& path) const {
@@ -30,21 +28,19 @@ Function SimilarFunctionFinder::get_reference_function(const Path& path) const {
 }
 
 void SimilarFunctionFinder::print_reference_path() {
-    fm::write(REFERENCE_PATH_MESSAGE);
+    fm::write(kReferencePathMessage);
     auto function = get_reference_function(path);
     FunctionPrinter::print_basic_info(function);
 }
 
 void SimilarFunctionFinder::print_similar_functions(const std::vector<Path>& similar_paths) {
-    fm::write(TEMPLATE_COUNT, SimilarFunctionCountEntry{
-        similar_paths.size()
-    }, Format::TEXT);
+    fm::write(kTemplateCount, SimilarFunctionCountEntry{similar_paths.size()}, Format::TEXT);
     fm::write("");
     for (const auto& similar_path : similar_paths) {
         auto function = get_reference_function(similar_path);
-        fm::write(Utils::LIMITER_PRINT);
+        fm::write(Utils::kLimiterPrint);
         FunctionPrinter::print_basic_info(function);
-        fm::write(Utils::LIMITER_PRINT);
+        fm::write(Utils::kLimiterPrint);
         fm::write("");
     }
 }
@@ -52,9 +48,9 @@ void SimilarFunctionFinder::print_similar_functions(const std::vector<Path>& sim
 void SimilarFunctionFinder::print_similar_functions() {
     std::vector<Path> similar_paths = similarity_table->get_similar_path_to_the_reference(path);
 
-    fm::write(Utils::LIMITER_PRINT);
+    fm::write(Utils::kLimiterPrint);
     print_reference_path();
-    fm::write(Utils::LIMITER_PRINT);
+    fm::write(Utils::kLimiterPrint);
     if (open_folder) {
         auto params = Preprocess_State::read_current_run_params();
         fs::path full_path = params.path / fs::path{path.relative_path()};

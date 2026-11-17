@@ -29,7 +29,8 @@ namespace fs = std::filesystem;
  */
 class TfidfMethod : public IMethod {
   private:
-    static constexpr const char* SAVING_MESSAGE = "Saving results..."; ///< Status message displayed when saving analysis results
+    static constexpr const char* kSavingMessage =
+        "Saving results..."; ///< Status message displayed when saving analysis results
 
     fs::path base_path;  ///< Root directory path of the codebase to analyze
     Similarity similarity; ///< Similarity threshold for considering code segments duplicates
