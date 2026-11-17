@@ -45,8 +45,12 @@ set(DOXYGEN_SHA256 "14fa81bdc34171edb5f1f02b1d60e74802f0439b77fa44e592565d517d72
 include(cmake/TreeSitter.cmake)
 include(cmake/Libgit2.cmake)
 include(cmake/CompilerOptions.cmake)
-include(cmake/Targets.cmake)
 include(cmake/Documentation.cmake)
+
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+
+include(cmake/Targets.cmake)
 
 if(ENABLE_TESTS)
     enable_testing()
