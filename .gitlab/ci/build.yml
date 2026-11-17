@@ -1,0 +1,21 @@
+build:
+  stage: build
+
+  extends:
+    - .saas-runners
+    - .linux-dependencies
+
+  rules: !reference [.rules-code, rules]
+
+  script:
+    # Configure CMake
+    - cmake -S . -B build -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX}
+
+    # Build
+    - cmake --build build --config ${BUILD_TYPE} --target install
+  artifacts:
+    name: "arkanjo-cli-${OS}"
+    paths:
+      - install/
+      - build/arkanjo-test
+    expire_in: 1 hour

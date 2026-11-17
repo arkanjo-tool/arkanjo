@@ -1,0 +1,55 @@
+test:
+  stage: test
+
+  needs:
+    - job: build
+      artifacts: true
+      parallel:
+        matrix:
+          - OS: ['$[[ matrix.OS ]]']
+            BUILD_TYPE: ['$[[ matrix.BUILD_TYPE ]]']
+            RUNNER_TAG: ['$[[ matrix.RUNNER_TAG ]]']
+            IMAGE: ['$[[ matrix.IMAGE ]]']
+
+  extends:
+    - .saas-runners
+    - .linux-dependencies
+    - .python-environment
+
+  rules: !reference [.rules-code, rules]
+
+  script:
+    - export PATH="$CI_PROJECT_DIR/install/bin:$CI_PROJECT_DIR/venv/bin:$PATH"
+
+    # Install Python dependencies
+    - python -m pip install -r requirements/tfidf.txt
+    - python -m nltk.downloader punkt punkt_tab
+
+    # Run C++ E2E tests
+    - ./build/arkanjo-test
+
+    # Run CLI integration tests
+    - echo -e "tests/e2e/codebase\n0.9\n1" | arkanjo preprocessor build
+    - arkanjo explorer
+    - arkanjo duplication
+
+validate-citation:
+  stage: test
+  image: python:3.11-slim
+
+  before_script:
+    - pip install --no-cache-dir cffconvert
+
+  script:
+    - cffconvert --validate
+
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TITLE =~ /^(\[Draft\]|\[WIP\]|Draft:|WIP:)/i'
+      when: manual
+      allow_failure: true
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - CITATION.cff
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      changes:
+        - CITATION.cff

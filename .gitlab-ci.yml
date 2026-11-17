@@ -44,7 +44,7 @@ workflow:
 # - Draft MR                -> MANUAL and optional
 # - MR with code changes    -> runs automatically
 # - MR without code changes -> MANUAL and optional
-.rules-code: &rules-code
+.rules-code:
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TITLE =~ /^(\[Draft\]|\[WIP\]|Draft:|WIP:)/i'
@@ -60,7 +60,7 @@ workflow:
 # - Draft MR                    -> MANUAL and optional
 # - MR with relevant changes    -> runs automatically
 # - MR without relevant changes -> MANUAL and optional
-.rules-docs: &rules-docs
+.rules-docs:
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TITLE =~ /^(\[Draft\]|\[WIP\]|Draft:|WIP:)/i'
@@ -113,133 +113,8 @@ workflow:
     paths:
       - ${PIP_CACHE_DIR}
 
-build:
-  stage: build
-
-  extends:
-    - .saas-runners
-    - .linux-dependencies
-
-  <<: *rules-code
-
-  script:
-    # Configure CMake
-    - cmake -S . -B build -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX}
-
-    # Build
-    - cmake --build build --config ${BUILD_TYPE} --target install
-  artifacts:
-    name: "arkanjo-cli-${OS}"
-    paths:
-      - install/
-      - build/arkanjo-test
-    expire_in: 1 hour
-
-test:
-  stage: test
-
-  needs:
-    - job: build
-      artifacts: true
-      parallel:
-        matrix:
-          - OS: ['$[[ matrix.OS ]]']
-            BUILD_TYPE: ['$[[ matrix.BUILD_TYPE ]]']
-            RUNNER_TAG: ['$[[ matrix.RUNNER_TAG ]]']
-            IMAGE: ['$[[ matrix.IMAGE ]]']
-
-  extends:
-    - .saas-runners
-    - .linux-dependencies
-    - .python-environment
-
-  <<: *rules-code
-
-  script:
-    - export PATH="$CI_PROJECT_DIR/install/bin:$CI_PROJECT_DIR/venv/bin:$PATH"
-
-    # Install Python dependencies
-    - python -m pip install -r requirements/tfidf.txt
-    - python -m nltk.downloader punkt punkt_tab
-
-    # Run C++ E2E tests
-    - ./build/arkanjo-test
-
-    # Run CLI integration tests
-    - echo -e "tests/e2e/codebase\n0.9\n1" | arkanjo preprocessor build
-    - arkanjo explorer
-    - arkanjo duplication
-
-documentation:
-  stage: documentation
-
-  tags:
-    - hipo-docker
-
-  image: ubuntu:24.04
-
-  needs:
-    - job: test
-      artifacts: false
-
-  <<: *rules-docs
-
-  before_script:
-    - apt-get update
-    - apt-get install -y build-essential cmake graphviz git wget
-
-  script:
-    - cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-    - DOXYGEN_VERSION=$(cmake -LA -N build | grep '^DOXYGEN_VERSION:' | cut -d= -f2)
-    - DOXYGEN_SHA256=$(cmake -LA -N build | grep '^DOXYGEN_SHA256:' | cut -d= -f2)
-    - ./scripts/install-doxygen.sh "$DOXYGEN_VERSION" "$DOXYGEN_SHA256"
-    - cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-    - cmake --build build --target doc
-
-  artifacts:
-    name: arkanjo-documentation
-    paths:
-      - docs/doxygen/html
-    expire_in: 1 hour
-
-pages:
-  stage: deploy
-
-  needs:
-    - job: documentation
-      artifacts: true
-
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'
-
-  script:
-    - mkdir -p public
-    - cp -r docs/doxygen/html/* public/
-
-  pages: true
-
-  artifacts:
-    paths:
-      - public
-    expire_in: 1 hour
-
-validate-citation:
-  stage: test
-  image: python:3.11-slim
-
-  before_script:
-    - pip install --no-cache-dir cffconvert
-
-  script:
-    - cffconvert --validate
-
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TITLE =~ /^(\[Draft\]|\[WIP\]|Draft:|WIP:)/i'
-      when: manual
-      allow_failure: true
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - CITATION.cff
-    - if: '$CI_COMMIT_BRANCH == "main"'
-      changes:
-        - CITATION.cff
+include:
+  - local: .gitlab/ci/build.yml
+  - local: .gitlab/ci/test.yml
+  - local: .gitlab/ci/documentation.yml
+  - local: .gitlab/ci/deploy.yml

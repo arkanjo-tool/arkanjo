@@ -1,0 +1,20 @@
+pages:
+  stage: deploy
+
+  needs:
+    - job: documentation
+      artifacts: true
+
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'
+
+  script:
+    - mkdir -p public
+    - cp -r docs/doxygen/html/* public/
+
+  pages: true
+
+  artifacts:
+    paths:
+      - public
+    expire_in: 1 hour
