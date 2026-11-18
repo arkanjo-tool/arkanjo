@@ -119,9 +119,9 @@ ASTMethod::ASTMethod(const fs::path& base_path_, Similarity similarity_) {
 }
 
 void ASTMethod::save_duplications(std::vector<DuplicationEntry>& file_duplication_pairs) {
-    for (const auto& [similarity, path1, path2] : file_duplication_pairs) {
+    for (const auto& [s, path1, path2] : file_duplication_pairs) {
         output_file << path1 << ' ' << path2 << ' ';
-        output_file << similarity << '\n';
+        output_file << s << '\n';
     }
 }
 
@@ -148,16 +148,17 @@ void ASTMethod::flush_duplications(std::vector<DuplicationEntry>& local) {
 }
 
 void ASTMethod::compare_range(
-    const std::vector<PostOrderTree>& processed,
-    size_t begin, size_t end,
+    const std::vector<PostOrderTree>& _processed,
+    size_t begin,
+    size_t end,
     std::vector<DuplicationEntry>& local
 ) {
     for (size_t i = begin; i < end; i++) {
-        for (size_t j = i + 1; j < processed.size(); j++) {
-            Similarity sim = similarity_score(processed[i], processed[j], similarity.value());
+        for (size_t j = i + 1; j < _processed.size(); j++) {
+            Similarity sim = similarity_score(_processed[i], _processed[j], similarity.value());
 
             if (sim >= similarity)
-                local.push_back({sim, processed[i].path.string(), processed[j].path.string()});
+                local.push_back({sim, _processed[i].path.string(), _processed[j].path.string()});
         }
     }
 }

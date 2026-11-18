@@ -95,7 +95,8 @@ DiffResult GitTextDiff::compare(
 ) {
     git_libgit2_init();
 
-    git_diff_options diff_options = GIT_DIFF_OPTIONS_INIT;
+    git_diff_options diff_options{};
+    git_diff_options_init(&diff_options, GIT_DIFF_OPTIONS_VERSION);
 
     DiffOutputPayload payload{&output, false};
 

@@ -15,7 +15,6 @@ GitDiffFunction::GitDiffFunction(Similarity_Table* _similarity_table)
 bool GitDiffFunction::validate(const ParsedOptions& options) {
     if (options.extra_args.size() != 2) {
         throw CLIError("Git diff command expects two function name patterns.");
-        return false;
     }
     return true;
 }
@@ -37,8 +36,11 @@ bool GitDiffFunction::run(const ParsedOptions& options) {
         std::ostringstream ss;
         ss << similarity;
 
-        throw CLIError("The selected functions are not flagged as duplicates in the similarity table (similarity: " + ss.str() + ").");
-        return false;
+        throw CLIError(
+            "The selected functions are not flagged as duplicates in the similarity table "
+            "(similarity: " +
+            ss.str() + ")."
+        );
     }
 
     return diff_functions(first_path, second_path);
@@ -117,7 +119,6 @@ bool GitDiffFunction::diff_functions(const Path& first, const Path& second) cons
             "Failed to compute diff between functions. libgit2 error code: " +
             std::to_string(result.error)
         );
-        return false;
     }
 
     if (!result.has_difference) {

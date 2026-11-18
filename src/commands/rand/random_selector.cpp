@@ -70,7 +70,6 @@ RandomSelector::RandomSelector(Similarity_Table* _similarity_table) {
 bool RandomSelector::validate(const ParsedOptions& options) {
     if (options.extra_args.size() <= 2) {
         throw CLIError("Random expect three parameters, but less was given");
-        return false;
     }
 
     return true;

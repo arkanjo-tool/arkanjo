@@ -66,7 +66,11 @@ Similarity Parser::retrive_similarity(const std::string& s) {
     }
 }
 
-void Parser::parser_block_stream(const std::string& path, const std::vector<std::string>& tokens, std::set<Comparation>& comparations) {
+void Parser::parser_block_stream(
+    const std::string& path,
+    const std::vector<std::string>& tokens,
+    std::set<Comparation>& _comparations
+) {
     if (tokens.size() < 2)
         return;
 
@@ -81,7 +85,7 @@ void Parser::parser_block_stream(const std::string& path, const std::vector<std:
         return;
     
     Comparation com(path, path_comp, similarity);
-    comparations.insert(com);
+    _comparations.insert(com);
 }
 
 void Parser::exec_from_stream(FILE* pipe) {
@@ -120,9 +124,9 @@ void Parser::exec_from_stream(FILE* pipe) {
     }
 }
 
-Parser::Parser(const fs::path& output_file, Similarity similarity_cap)
+Parser::Parser(const fs::path& output_file, Similarity _similarity_cap)
     : fout(output_file),
-      similarity_cap(similarity_cap) {
+      similarity_cap(_similarity_cap) {
 
     if (!fout) {
         throw std::runtime_error("Failed to open output file");

@@ -14,7 +14,7 @@ class Version : public CommandBase<Version> {
 public:
     explicit Version(Similarity_Table* _similarity_table);
 
-    COMMAND_DESCRIPTION("Version.");
+    COMMAND_DESCRIPTION("Version.")
 
     static constexpr CliOption options_[] = {
         OPTION_END

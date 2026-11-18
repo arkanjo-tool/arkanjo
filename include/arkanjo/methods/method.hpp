@@ -15,8 +15,8 @@ using DuplicationEntry = std::tuple<Similarity, std::string, std::string>;
  * @brief Interface for duplicate detection and analysis methods.
  */
 class IMethod {
-public:
-    virtual ~IMethod() = default;
+  public:
+    virtual ~IMethod();
 
     /**
      * Output line format:

@@ -31,7 +31,7 @@ inline void from_json(const json& j, PreprocessRunParams& d) {
     d.path = j.value("path", "");
     d.finished_time = j.value("finished_time", "");
     d.version = j.value("version","");
-    d.size = j.value("size", 0);
+    d.size = j.value("size", std::uintmax_t{0});
 }
 
 /**

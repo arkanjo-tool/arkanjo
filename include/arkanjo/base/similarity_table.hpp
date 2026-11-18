@@ -76,7 +76,7 @@ struct ClusterInfo {
         double w_files = 0.3;
         double w_lines = 0.4;
         double w_density = 0.3;
-        double d = total_pairs > 0 ? (double)total_lines / total_pairs : 0;
+        double d = total_pairs > 0 ? static_cast<double>(total_lines) / total_pairs : 0;
         return w_files * paths.size() + w_lines * total_lines + w_density * d;
     }
 };

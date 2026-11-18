@@ -9,9 +9,8 @@
  * implement to be executed by the command-line system.
  */
 class ICommand {
-
   public:
-    virtual ~ICommand() = default;
+    virtual ~ICommand();
 
     virtual const CliOption* options() const = 0;
     virtual std::string_view description() const = 0;

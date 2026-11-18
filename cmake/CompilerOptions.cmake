@@ -26,6 +26,6 @@ target_compile_options(project_options INTERFACE
 if(ENABLE_WARNINGS)
     target_compile_options(project_options INTERFACE
         $<$<CXX_COMPILER_ID:MSVC>:/W4 /permissive->
-        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic>
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Wold-style-cast -Wshadow>
     )
 endif()

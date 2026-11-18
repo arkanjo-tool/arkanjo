@@ -22,9 +22,9 @@ void SimilarFunctionFinder::print_empty_path_message() const {
     fm::write(kTemplateEmptyFunction, SimilarFunctionEmptyEntry{function_pattern}, Format::TEXT);
 }
 
-Function SimilarFunctionFinder::get_reference_function(const Path& path) const {
+Function SimilarFunctionFinder::get_reference_function(const Path& _path) const {
     FunctionLoader loader;
-    return loader.load(path);
+    return loader.load(_path);
 }
 
 void SimilarFunctionFinder::print_reference_path() {

@@ -62,7 +62,6 @@ bool parse_options(int argc, char* argv[], const std::vector<CliOption>& options
             }
             cerr += "\nTry '--help' for usage.";
             throw CLIError(cerr);
-            return false;
         }
 
         std::string name;

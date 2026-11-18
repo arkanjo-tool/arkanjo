@@ -113,14 +113,15 @@ class ASTMethod : public IMethod {
      * Returned tuple format:
      * (similarity_percentage, path1, path2)
      *
-     * @param processed Vector containing processed post-order trees.
+     * @param _processed Vector containing processed post-order trees.
      * @param begin Initial comparison index.
      * @param end Final comparison index.
      */
     void compare_range(
-      const std::vector<PostOrderTree>& processed,
-      size_t begin, size_t end,
-      std::vector<DuplicationEntry>& local
+        const std::vector<PostOrderTree>& _processed,
+        size_t begin,
+        size_t end,
+        std::vector<DuplicationEntry>& local
     );
 
     void save_duplications(std::vector<DuplicationEntry>& file_duplication_pairs) override;

@@ -95,17 +95,21 @@ class Parser {
     /**
      * @brief Processes a block of comparison results
      * @param tokens Tokenized line components
-     * @param comparations Set to store parsed comparisons
+     * @param _comparations Set to store parsed comparisons
      */
-    void parser_block_stream(const std::string& path, const std::vector<std::string>& tokens, std::set<Comparation>& comparations);
+    void parser_block_stream(
+        const std::string& path,
+        const std::vector<std::string>& tokens,
+        std::set<Comparation>& _comparations
+    );
 
   public:
     /**
      * @brief Constructs parser with configuration
      * @param output_file Path for cleaned output
-     * @param similarity_cap Minimum similarity threshold
+     * @param _similarity_cap Minimum similarity threshold
      */
-    explicit Parser(const fs::path& output_file, Similarity similarity_cap);
+    explicit Parser(const fs::path& output_file, Similarity _similarity_cap);
 
     /**
      * @brief Main parsing execution method using stream

@@ -172,8 +172,8 @@ bool PreprocessorBuild::validate(const ParsedOptions& options) {
         throw CLIError("--json is not supported in this command.");
 
     try {
-        if (auto minimum_lines = options.get_as<int>("minimum-lines"))
-            this->minimum_lines = *minimum_lines;
+        if (auto value_minimum_lines = options.get_as<int>("minimum-lines"))
+            this->minimum_lines = *value_minimum_lines;
     } catch (const std::invalid_argument&) {
         throw CLIError(
             "--minimum-lines must be a valid number (passing " +

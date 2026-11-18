@@ -32,4 +32,4 @@ namespace arkanjo {
 
     config::Theme theme = config::Theme::Dark;             ///< Current terminal theme
   };
-}
+  } // namespace arkanjo

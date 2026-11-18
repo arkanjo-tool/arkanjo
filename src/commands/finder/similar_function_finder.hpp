@@ -58,9 +58,9 @@ class SimilarFunctionFinder : public CommandBase<SimilarFunctionFinder> {
 
     /**
      * @brief Prints details about a single function
-     * @param path Path of function to display
+     * @param _path Path of function to display
      */
-    Function get_reference_function(const Path& path) const;
+    Function get_reference_function(const Path& _path) const;
 
     /**
      * @brief Prints reference function information

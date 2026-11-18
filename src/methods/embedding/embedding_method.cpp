@@ -87,9 +87,9 @@ void EmbeddingMethod::save_duplications(std::vector<DuplicationEntry>& file_dupl
     auto fout = std::ofstream(output_file_path.string());
 
     fout << file_duplication_pairs.size() << '\n';
-    for (const auto& [similarity, path1, path2] : file_duplication_pairs) {
+    for (const auto& [s, path1, path2] : file_duplication_pairs) {
         fout << path1 << ' ' << path2 << ' ';
-        fout << similarity << '\n';
+        fout << s << '\n';
     }
 
     fout.close();

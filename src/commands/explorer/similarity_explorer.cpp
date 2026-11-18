@@ -90,9 +90,9 @@ std::vector<SimilarPair> SimilarityExplorer::build_similar_path_pairs() {
 void SimilarityExplorer::explorer_clusters() {
     auto clusters_info = similarity_table->get_clusters_info(sorted_by_number_of_duplicated_code);
 
-    int clusters_to_show = limit_on_results > 0 
-        ? std::min(limit_on_results, (int)clusters_info.size()) 
-        : (int)clusters_info.size();
+    int clusters_to_show = limit_on_results > 0
+        ? std::min(limit_on_results, static_cast<int>(clusters_info.size()))
+        : static_cast<int>(clusters_info.size());
 
     for (int idx = 0; idx < clusters_to_show; idx++) {
         const auto& info = clusters_info[idx];

@@ -45,11 +45,11 @@ int main(int argc, char* argv[]) {
 
     orchestrator.add_step(OrchestratorHelper::formatter_step);
 
-    orchestrator.add_step([&similarity_table, &orchestrator, &command, &collector](Context& ctx) {
-        if (auto name = ctx.options.get("name"))
+    orchestrator.add_step([&similarity_table, &orchestrator, &command, &collector](Context& _ctx) {
+        if (auto name = _ctx.options.get("name"))
             Config::config().name_container = *name;
-        
-        if (ctx.command_name != "help" && !ctx.options.has("help"))
+
+        if (_ctx.command_name != "help" && !_ctx.options.has("help"))
             orchestrator.add_step(OrchestratorHelper::similarity_step(similarity_table));
 
         orchestrator.add_step(OrchestratorHelper::command_run_step(std::move(command), collector));
@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
 
     try {
         orchestrator.run_pipeline(ctx);
-    } catch (const CommandNotFoundError& e) {
+    } catch (const CommandNotFoundError&) {
         if (ctx.command_name != "help" && !ctx.options.has("help"))
             FormatterManager::warn(ctx.command_name + " is not a " + Config::config().program_name + " command.");
         std::make_unique<Help>(internal_commands)->do_run(ctx.command_name, ctx.options);

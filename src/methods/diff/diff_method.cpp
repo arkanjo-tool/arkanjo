@@ -92,7 +92,7 @@ double DiffMethod::find_similarity(std::string path1, std::string path2) {
         }
     }
 
-    int equal_lines = (int)content1.size() + (int)content2.size();
+    int equal_lines = static_cast<int>(content1.size()) + static_cast<int>(content2.size());
     equal_lines -= different_lines;
 
     if (different_lines + equal_lines == 0) {
@@ -129,9 +129,9 @@ void DiffMethod::save_duplications(std::vector<DuplicationEntry>& file_duplicati
     auto fout = std::ofstream(output_file_path.string());
 
     fout << file_duplication_pairs.size() << '\n';
-    for (const auto& [similarity, path1, path2] : file_duplication_pairs) {
+    for (const auto& [s, path1, path2] : file_duplication_pairs) {
         fout << path1 << ' ' << path2 << ' ';
-        fout << similarity << '\n';
+        fout << s << '\n';
     }
 
     fout.close();
