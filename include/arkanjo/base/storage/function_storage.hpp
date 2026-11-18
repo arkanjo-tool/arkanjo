@@ -20,31 +20,31 @@ class FunctionStorage {
       * @brief Builds source file path
       * @return string Path to source file
       */
-    fs::path build_source_path(const Path& path) const;
+    [[nodiscard]] fs::path build_source_path(const Path& path) const;
 
     /**
       * @brief Builds header file path
       * @return string Path to header file
       */
-    fs::path build_header_path(const Path& path) const;
+    [[nodiscard]] fs::path build_header_path(const Path& path) const;
 
     /**
       * @brief Builds metadata file path
       * @return string Path to JSON metadata file
       */
-    fs::path build_info_path(const Path& path) const;
+    [[nodiscard]] fs::path build_info_path(const Path& path) const;
 
     /**
       * @brief Builds similarity file path
       * @return string Path to the similarity pairs file
       */
-    fs::path build_similarity_path() const;
+    [[nodiscard]] fs::path build_similarity_path() const;
 
     /**
      * @brief Builds file path for a function
      * @return Full path for the file
      */
-    fs::path build_output_path(
+    [[nodiscard]] fs::path build_output_path(
         const fs::path type_path, const fs::path& relative_path, const std::string& function_name
     ) const;
 
