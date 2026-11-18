@@ -26,7 +26,7 @@ class FunctionLoader {
      * Loads function information such as name, location, and path without
      * loading source or header contents.
      *
-     * @param Path identifying the function.
+     * @param path Path identifying the function.
      * @return Function containing metadata information.
      */
     Function load_metadata(const Path& path);

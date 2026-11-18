@@ -74,7 +74,9 @@ class CounterDuplicationCode : public CommandBase<CounterDuplicationCode> {
     /**
      * @brief Finds common path components with another path.
      *
-     * @param path Path to compare.
+     * @param path1 First path to compare.
+     * @param path2 Second path to compare.
+     *
      * @return List of common path components.
      */
     std::vector<std::string> common_folders(const Path& path1, const Path& path2) const;

@@ -82,9 +82,6 @@ class RandomSelector : public CommandBase<RandomSelector> {
     /**
      * @brief Constructs selector with configuration
      * @param _similarity_table Source of similarity data
-     * @param _minimum_similarity Minimum similarity threshold
-     * @param _maximum_similarity Maximum similarity threshold
-     * @param _maximum_quantity Maximum number of pairs to select
      */
     explicit RandomSelector(Similarity_Table* _similarity_table);
 

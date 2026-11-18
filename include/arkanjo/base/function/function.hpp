@@ -97,7 +97,7 @@ class Function {
     /**
      * @brief Checks whether the function contains a pattern.
      *
-     * @param Text pattern to search.
+     * @param pattern Text pattern to search.
      * @return if the pattern is found.
      */
     bool contains_given_pattern(const std::string& pattern) const;

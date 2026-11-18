@@ -59,7 +59,7 @@ class Path {
 
     /**
      * @brief Path comparison operator
-     * @param Other path to compare
+     * @param path Other path to compare
      * @return True if this path is ordered first
      */
     bool operator<(const Path& path) const;

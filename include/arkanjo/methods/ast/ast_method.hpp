@@ -116,8 +116,6 @@ class ASTMethod : public IMethod {
      * @param processed Vector containing processed post-order trees.
      * @param begin Initial comparison index.
      * @param end Final comparison index.
-     *
-     * @return Vector containing detected similar tree pairs.
      */
     void compare_range(
       const std::vector<PostOrderTree>& processed,

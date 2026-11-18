@@ -228,15 +228,13 @@ class Similarity_Table {
 
     /**
      * @brief Sorts path pairs by line count
-     * @param similar_path_pairs Pairs to sort
-     * @return Sorted pairs with line counts
+     * @param similar_pairs Pairs to sort
      */
     void sort_pairs_by_line_number(std::vector<SimilarPair>& similar_pairs) const;
 
     /**
      * @brief Sorts path pairs by similarity
-     * @param similar_path_pairs Pairs to sort
-     * @return Sorted pairs with similarity
+     * @param similar_pairs Pairs to sort
      */
     void sort_pairs_by_similarity(std::vector<SimilarPair>& similar_pairs) const;
 

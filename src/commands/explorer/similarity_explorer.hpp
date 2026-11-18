@@ -96,8 +96,8 @@ class SimilarityExplorer : public CommandBase<SimilarityExplorer> {
 
     /**
      * @brief Checks if paths match pattern filter
-     * @param path1 First path to check
-     * @param path2 Second path to check
+     * @param function1 First path to check
+     * @param function2 Second path to check
      * @return bool True if paths pass filter
      */
     bool match_pattern(const Function& function1, const Function& function2) const;

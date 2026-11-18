@@ -55,7 +55,7 @@ enum class Granularity {
 class FunctionBreaker {
     /**
      * @brief Creates file for a function
-     * @param type Output type
+     * @param type_path Output type
      * @param relative_path Relative path of the original file
      * @param function_name Name of the function
      * @param content Vector of strings containing the content

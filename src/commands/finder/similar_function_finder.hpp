@@ -92,7 +92,6 @@ class SimilarFunctionFinder : public CommandBase<SimilarFunctionFinder> {
 
     /**
      * @brief Constructs finder and initiates search
-     * @param _function_pattern Function name pattern to match
      * @param _similarity_table Source of similarity data
      */
     explicit SimilarFunctionFinder(Similarity_Table* _similarity_table);
