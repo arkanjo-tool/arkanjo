@@ -1,12 +1,13 @@
 #pragma once
 
-#include "cli/formatter/template_renderer.hpp"
 #include "cli/formatter/base.hpp"
+#include "cli/formatter/template_renderer.hpp"
+#include <iostream>
 
 #define DEFINE_COLOR_HELPER(name)                                                                  \
     inline std::string name(const std::string& text) {                                             \
         auto fmt = FormatterManager::get_formatter();                                              \
-        return fmt->colorize(text, Utils::Color::name);                                            \
+        return fmt->colorize(text, formatter::Color::name);                                        \
     }
 
 /**
@@ -124,8 +125,8 @@ class FormatterManager {
     static void warn(const std::string& str) {
         auto fmt = get_formatter();
 
-        Utils::Color bold = fmt->style().at("bold");
-        Utils::Color warn_color = fmt->style().at("warning");
+        formatter::Color bold = fmt->style().at("bold");
+        formatter::Color warn_color = fmt->style().at("warning");
 
         std::string warning = fmt->colorize("Warning: ", bold);
         warning = fmt->colorize(warning, warn_color);
@@ -136,8 +137,8 @@ class FormatterManager {
     static void error(const std::string& str, const std::string& prefix = "Error: ") {
         auto fmt = get_formatter();
 
-        Utils::Color bold = fmt->style().at("bold");
-        Utils::Color error_color = fmt->style().at("error");
+        formatter::Color bold = fmt->style().at("bold");
+        formatter::Color error_color = fmt->style().at("error");
 
         std::string message = fmt->colorize(prefix, bold);
         message = fmt->colorize(message, error_color);

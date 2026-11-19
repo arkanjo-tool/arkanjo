@@ -5,11 +5,11 @@ It is not simple to understand if you do not know the structure. Please refer to
 #include "counter_duplication_code_trie.hpp"
 #include "cli/formatter/format_manager.hpp"
 
-Utils::Color CounterDuplicationCodeTrie::choose_text_color() {
+formatter::Color CounterDuplicationCodeTrie::choose_text_color() {
     number_printed_lines++;
-    Utils::Color ret = Utils::Color::BLACK;
+    formatter::Color ret = formatter::Color::BLACK;
     if (number_printed_lines % 2 == 0) {
-        ret = Utils::Color::BLUE;
+        ret = formatter::Color::BLUE;
     }
     return ret;
 }

@@ -1,14 +1,16 @@
 #pragma once
 
-#include <arkanjo/utils/utils.hpp>
 #include "cli/formatter/base.hpp"
+#include "nlohmann/json.hpp"
+
+using json = nlohmann::json;
 
 /**
  * @brief Represents a parsed template placeholder key and its associated color style.
  */
 struct Placeholder {
     std::string key;                         ///< Placeholder key name.
-    Utils::Color style = Utils::Color::NONE; ///< Resolved color style.
+    formatter::Color style = formatter::Color::NONE; ///< Resolved color style.
 };
 
 /**
@@ -16,9 +18,9 @@ struct Placeholder {
  */
 class TemplateRenderer {
 private:
-  static Utils::Color resolve_style(const std::string& name, const StyleMap& theme) {
+  static formatter::Color resolve_style(const std::string& name, const StyleMap& theme) {
       auto it = theme.find(name);
-      return (it != theme.end()) ? it->second : Utils::Color::NONE;
+      return (it != theme.end()) ? it->second : formatter::Color::NONE;
   }
 
     static Placeholder parse_placeholder(const std::string& raw, const StyleMap& theme) {

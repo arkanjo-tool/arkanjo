@@ -16,7 +16,7 @@
 #include <string>
 #include <vector>
 
-#include <arkanjo/utils/utils.hpp>
+#include "cli/formatter/theme.hpp"
 
 /**
  * @brief Trie structure for hierarchical duplication counting
@@ -48,7 +48,7 @@ class CounterDuplicationCodeTrie {
      * @brief Chooses text color based on duplication count
      * @return COLOR Text color for output
      */
-    Utils::Color choose_text_color();
+    formatter::Color choose_text_color();
 
     /**
      * @brief Creates new node at end of trie

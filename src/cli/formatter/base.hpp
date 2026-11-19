@@ -4,7 +4,7 @@
 #include <functional>
 #include <string>
 
-#include <arkanjo/utils/utils.hpp>
+#include "cli/formatter/theme.hpp"
 
 /**
  * @brief Output presentation formats.
@@ -15,8 +15,8 @@ enum class Format {
     AUTO  ///< Automatic selection based on context/terminal.
 };
 
-using StyleMap = std::unordered_map<std::string, Utils::Color>;
-using RowColorFn = std::function<Utils::Color(size_t)>;
+using StyleMap = std::unordered_map<std::string, formatter::Color>;
+using RowColorFn = std::function<formatter::Color(size_t)>;
 
 /**
  * @brief Interface for formatting and coloring text output.
@@ -33,7 +33,7 @@ public:
      *
      * @return Formatted string with ANSI escape codes or plaintext.
      */
-    virtual std::string colorize(const std::string& text, Utils::Color color) const = 0;
+    virtual std::string colorize(const std::string& text, formatter::Color color) const = 0;
 
     /**
      * @brief Returns the active theme style map.
@@ -53,16 +53,16 @@ public:
     )
         : enabled(enable_color) {}
 
-    std::string colorize(const std::string& text, Utils::Color color) const override {
+    std::string colorize(const std::string& text, formatter::Color color) const override {
         if (!enabled) return text;
-        return Utils::format_colored_message(text, color);
+        return formatter::format_colored_message(text, color);
     }
 
     const StyleMap& style() const override {
         return theme;
     }
 
-    void set(const std::string& key, Utils::Color c) {
+    void set(const std::string& key, formatter::Color c) {
         theme[key] = c;
     }
 
@@ -73,13 +73,13 @@ public:
 private:
     bool enabled;
     StyleMap theme = {
-        {"file", Utils::Color::RED},
-        {"function", Utils::Color::BOLD},
-        {"number", Utils::Color::YELLOW},
-        {"bold", Utils::Color::BOLD},
-        {"warning", Utils::Color::MAGENTA},
-        {"error", Utils::Color::RED},
-        {"row_even", Utils::Color::GRAY},
-        {"row_odd", Utils::Color::CYAN},
+        {"file", formatter::Color::RED},
+        {"function", formatter::Color::BOLD},
+        {"number", formatter::Color::YELLOW},
+        {"bold", formatter::Color::BOLD},
+        {"warning", formatter::Color::MAGENTA},
+        {"error", formatter::Color::RED},
+        {"row_even", formatter::Color::GRAY},
+        {"row_odd", formatter::Color::CYAN},
     };
 };

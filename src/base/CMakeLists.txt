@@ -18,4 +18,5 @@ target_include_directories(core_base
         ${ARKANJO_PRIVATE_INCLUDE_DIRS}
 )
 
+target_link_libraries(core_base PRIVATE core_utils)
 target_link_libraries(core_base PRIVATE project_options)
