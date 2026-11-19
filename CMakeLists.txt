@@ -54,6 +54,12 @@ if(ENABLE_TESTS)
     add_executable(arkanjo-test
         tests/e2e/test.cpp
     )
+    target_include_directories(arkanjo-test
+        PUBLIC
+            ${ARKANJO_PUBLIC_INCLUDE_DIRS}
+        PRIVATE
+            ${ARKANJO_PRIVATE_INCLUDE_DIRS}
+    )
     target_link_libraries(arkanjo-test PRIVATE 
         core_base core_utils core_commands core_cli core_git project_options
     )
