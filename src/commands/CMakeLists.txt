@@ -19,8 +19,7 @@ target_include_directories(core_commands
 )
 
 target_link_libraries(core_commands PRIVATE 
-    core_base 
-    core_utils 
+    core_base
     core_parser 
     core_methods
     core_git

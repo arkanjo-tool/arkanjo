@@ -63,7 +63,7 @@ if(ENABLE_TESTS)
             ${ARKANJO_PRIVATE_INCLUDE_DIRS}
     )
     target_link_libraries(arkanjo-test PRIVATE 
-        core_base core_utils core_commands core_cli core_git project_options
+        core_base core_commands core_cli core_git project_options
     )
 
     add_test(NAME run_tests COMMAND arkanjo-test)

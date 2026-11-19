@@ -17,6 +17,6 @@ target_include_directories(core_methods
 )
 
 target_sources(core_methods PRIVATE ${GENERATED_FILE})
-target_link_libraries(core_methods PRIVATE core_base core_utils core_cli)
+target_link_libraries(core_methods PRIVATE core_base core_cli)
 target_link_libraries(core_methods PRIVATE ${PARSER_LIBS} PUBLIC tree_sitter_core)
 target_link_libraries(core_methods PRIVATE project_options)

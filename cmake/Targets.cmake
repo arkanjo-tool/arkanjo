@@ -30,7 +30,7 @@ target_include_directories(arkanjo
         ${ARKANJO_PRIVATE_INCLUDE_DIRS}
 )
 
-target_link_libraries(arkanjo PRIVATE core_base core_utils core_commands core_cli core_git)
+target_link_libraries(arkanjo PRIVATE core_base core_commands core_cli core_git)
 
 add_executable(arkanjo-preprocessor
     src/commands/pre/preprocessor_main.cpp
@@ -41,7 +41,7 @@ target_include_directories(arkanjo-preprocessor
     PRIVATE
         ${ARKANJO_PRIVATE_INCLUDE_DIRS}
 )
-target_link_libraries(arkanjo-preprocessor PRIVATE core_base core_utils core_commands core_cli core_git)
+target_link_libraries(arkanjo-preprocessor PRIVATE core_base core_commands core_cli core_git)
 
 target_link_libraries(arkanjo PRIVATE project_options)
 target_link_libraries(arkanjo-preprocessor PRIVATE project_options)
