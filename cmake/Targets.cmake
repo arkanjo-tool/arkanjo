@@ -45,7 +45,7 @@ else()
         util
         xdiff
         llhttp
-        pcre
+        pcre2
         zlib
     )
 endif()

@@ -24,7 +24,7 @@ function(setup_libgit2)
     FetchContent_Declare(
         libgit2
         GIT_REPOSITORY https://github.com/libgit2/libgit2.git
-        GIT_TAG        v1.9.1
+        GIT_TAG        v1.9.7
     )
 
     set(BUILD_TESTS OFF CACHE BOOL "Disable libgit2 tests" FORCE)
