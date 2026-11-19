@@ -3,7 +3,6 @@
 #include <git2.h>
 
 #include <string_view>
-#include <iostream>
 
 /**
  * @brief Represents the outcome of a text diff comparison.
@@ -40,12 +39,12 @@ class GitTextDiff {
   private:
     static int print_diff_file(const git_diff_delta* delta, float, void* payload);
 
-    static int print_diff_hunk(const git_diff_delta*,const git_diff_hunk* hunk,void* payload);
+    static int print_diff_hunk(const git_diff_delta*, const git_diff_hunk* hunk, void* payload);
 
     static int print_diff_line(
-      const git_diff_delta* /*delta*/,
-      const git_diff_hunk* /*hunk*/,
-      const git_diff_line* line,
-      void* payload
+        const git_diff_delta* /*delta*/,
+        const git_diff_hunk* /*hunk*/,
+        const git_diff_line* line,
+        void* payload
     );
 };

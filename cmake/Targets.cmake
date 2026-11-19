@@ -8,55 +8,6 @@ set(ARKANJO_PRIVATE_INCLUDE_DIRS
     ${PROJECT_SOURCE_DIR}/third-party
 )
 
-#
-file(GLOB_RECURSE CORE_BASE_SOURCES
-    src/base/*.cpp
-)
-add_library(core_base ${CORE_BASE_SOURCES})
-
-target_include_directories(core_base
-    PUBLIC
-        ${ARKANJO_PUBLIC_INCLUDE_DIRS}
-    PRIVATE
-        ${ARKANJO_PRIVATE_INCLUDE_DIRS}
-)
-
-#
-add_library(core_utils src/utils/utils.cpp)
-if(WIN32)
-    target_sources(core_utils PRIVATE src/utils/windows_utils.cpp)
-elseif(APPLE)
-    target_sources(core_utils PRIVATE src/utils/posix_utils.cpp)
-else(UNIX)
-    target_sources(core_utils PRIVATE src/utils/posix_utils.cpp)
-endif()
-
-target_include_directories(core_utils
-    PUBLIC
-        ${ARKANJO_PUBLIC_INCLUDE_DIRS}
-    PRIVATE
-        ${ARKANJO_PRIVATE_INCLUDE_DIRS}
-)
-
-target_link_libraries(core_utils PUBLIC core_base)
-
-#
-file(GLOB_RECURSE CORE_PARSER_SOURCES
-    src/parser/*.cpp
-)
-add_library(core_parser ${CORE_PARSER_SOURCES})
-
-target_include_directories(core_parser
-    PUBLIC
-        ${ARKANJO_PUBLIC_INCLUDE_DIRS}
-    PRIVATE
-        ${ARKANJO_PRIVATE_INCLUDE_DIRS}
-)
-
-target_sources(core_parser PRIVATE ${GENERATED_FILE})
-target_link_libraries(core_parser PUBLIC ${PARSER_LIBS} tree_sitter_core)
-
-#
 if(ARKANJO_LIBGIT2_SYSTEM)
     set(ARKANJO_LIBGIT2_LIBS git2)
 else()
@@ -70,86 +21,15 @@ else()
     )
 endif()
 
-file(GLOB_RECURSE CORE_GIT_SOURCES
-    src/git/*.cpp
-)
+add_executable(arkanjo)
 
-add_library(core_git ${CORE_GIT_SOURCES})
-target_include_directories(core_git
-    PUBLIC
-        ${ARKANJO_PUBLIC_INCLUDE_DIRS}
-        ${libgit2_SOURCE_DIR}/include
-    PRIVATE
-        ${ARKANJO_PRIVATE_INCLUDE_DIRS}
-)
-
-target_link_libraries(core_git PRIVATE core_base ${ARKANJO_LIBGIT2_LIBS} ${ICONV_LIBRARY})
-
-#
-file(GLOB_RECURSE CORE_METHODS_SOURCES
-    src/methods/*.cpp
-)
-add_library(core_methods ${CORE_METHODS_SOURCES})
-target_sources(core_methods PRIVATE ${GENERATED_FILE})
-
-target_include_directories(core_methods
-    PUBLIC
-        ${ARKANJO_PUBLIC_INCLUDE_DIRS}
-    PRIVATE
-        ${ARKANJO_PRIVATE_INCLUDE_DIRS}
-)
-
-target_link_libraries(core_methods PUBLIC core_base ${PARSER_LIBS} tree_sitter_core)
-
-#
-file(GLOB_RECURSE CORE_COMMANDS_SOURCES
-    src/commands/*.cpp
-)
-add_library(core_commands ${CORE_COMMANDS_SOURCES})
-
-target_include_directories(core_commands
-    PUBLIC
-        ${ARKANJO_PUBLIC_INCLUDE_DIRS}
-    PRIVATE
-        ${ARKANJO_PRIVATE_INCLUDE_DIRS}
-)
-
-target_sources(core_commands PRIVATE ${GENERATED_FILE})
-target_link_libraries(core_commands PUBLIC 
-    core_base 
-    core_utils 
-    ${PARSER_LIBS} 
-    tree_sitter_core 
-    core_parser 
-    core_methods
-    core_git
-)
-
-#
-file(GLOB_RECURSE CORE_CLI_SOURCES
-    src/cli/*.cpp
-)
-add_library(core_cli ${CORE_CLI_SOURCES})
-
-target_include_directories(core_cli
-    PUBLIC
-        ${ARKANJO_PUBLIC_INCLUDE_DIRS}
-    PRIVATE
-        ${ARKANJO_PRIVATE_INCLUDE_DIRS}
-)
-
-target_link_libraries(core_cli PUBLIC core_base core_utils)
-
-#
-add_executable(arkanjo
-    src/main.cpp
-)
 target_include_directories(arkanjo
     PUBLIC
         ${ARKANJO_PUBLIC_INCLUDE_DIRS}
     PRIVATE
         ${ARKANJO_PRIVATE_INCLUDE_DIRS}
 )
+
 target_link_libraries(arkanjo PRIVATE core_base core_utils core_commands core_cli core_git)
 
 add_executable(arkanjo-preprocessor
@@ -163,11 +43,6 @@ target_include_directories(arkanjo-preprocessor
 )
 target_link_libraries(arkanjo-preprocessor PRIVATE core_base core_utils core_commands core_cli core_git)
 
-target_link_libraries(core_base PUBLIC project_options)
-target_link_libraries(core_utils PUBLIC project_options)
-target_link_libraries(core_commands PUBLIC project_options)
-target_link_libraries(core_cli PUBLIC project_options)
-target_link_libraries(core_git PRIVATE project_options)
 target_link_libraries(arkanjo PRIVATE project_options)
 target_link_libraries(arkanjo-preprocessor PRIVATE project_options)
 

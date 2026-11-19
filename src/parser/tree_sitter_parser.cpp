@@ -136,7 +136,7 @@ bool TreeSitterParser::should_ignore(TSNode node) {
     if (size == 0) return false;
 
     double ratio = static_cast<double>(errors) / static_cast<double>(size);
-    int threshold = 1 + static_cast<int>(std::log2(size));
+    size_t threshold = 1 + static_cast<size_t>(std::log2(size));
 
     return (errors > threshold) || (ratio > 0.1);
 }
@@ -177,21 +177,21 @@ void TreeSitterParser::collect_functions(
         function.path = relative_path.string();
         function.function_name = function_name;
 
-        auto source = std::make_shared<SourceFeature>();
-        source->code = code;
-        function.add_feature(source);
+        auto source_feature = std::make_shared<SourceFeature>();
+        source_feature->code = code;
+        function.add_feature(source_feature);
 
-        auto ast = std::make_shared<ASTFeature>();
-        ast->tree = tree;
-        ast->root = body;
-        function.add_feature(ast);
+        auto ast_feature = std::make_shared<ASTFeature>();
+        ast_feature->tree = tree;
+        ast_feature->root = body;
+        function.add_feature(ast_feature);
 
-        auto metadata = std::make_shared<MetadataFeature>();
-        metadata->signature = signature;
-        metadata->line_declaration = start.row;
-        metadata->start_number_line = body_start.row;
-        metadata->end_number_line = end.row;
-        function.add_feature(metadata);
+        auto metadata_feature = std::make_shared<MetadataFeature>();
+        metadata_feature->signature = signature;
+        metadata_feature->line_declaration = start.row;
+        metadata_feature->start_number_line = body_start.row;
+        metadata_feature->end_number_line = end.row;
+        function.add_feature(metadata_feature);
 
         callback(function);
     }
@@ -272,6 +272,8 @@ void TreeSitterParser::process_file_as_unit(
     std::function<void(const FunctionData&)> callback,
     SkipStats& stats
 ) {
+    stats.errors = 0;
+
     std::shared_ptr<TSTree> tree = parse_source(file_path, source_code);
     if (!tree) return;
 

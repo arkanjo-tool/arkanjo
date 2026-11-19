@@ -48,6 +48,8 @@ include(cmake/CompilerOptions.cmake)
 include(cmake/Targets.cmake)
 include(cmake/Documentation.cmake)
 
+add_subdirectory(src)
+
 if(ENABLE_TESTS)
     enable_testing()
 
