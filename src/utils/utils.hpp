@@ -16,8 +16,6 @@
 
 #include "nlohmann/json.hpp"
 
-#include <arkanjo/utils/os_utils.hpp>
-
 using json = nlohmann::json;
 namespace fs = std::filesystem;
 

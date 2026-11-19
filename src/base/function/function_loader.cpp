@@ -2,7 +2,7 @@
 #include <arkanjo/base/path.hpp>
 #include <arkanjo/base/storage/function_storage.hpp>
 
-#include <arkanjo/utils/utils.hpp>
+#include "utils/utils.hpp"
 
 #include "nlohmann/json.hpp"
 using json = nlohmann::json;

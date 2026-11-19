@@ -1,9 +1,9 @@
 #include "cli/formatter/format_manager.hpp"
+#include "utils/utils.hpp"
 #include <arkanjo/base/config/config.hpp>
 #include <arkanjo/base/features/source_feature.hpp>
 #include <arkanjo/base/storage/function_storage.hpp>
 #include <arkanjo/methods/embedding/embedding_method.hpp>
-#include <arkanjo/utils/utils.hpp>
 
 #include <algorithm>
 #include <array>

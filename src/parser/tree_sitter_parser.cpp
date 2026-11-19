@@ -1,10 +1,11 @@
+#include <arkanjo/base/features/ast_feature.hpp>
+#include <arkanjo/base/features/metadata_feature.hpp>
+#include <arkanjo/base/features/source_feature.hpp>
 #include <arkanjo/parser/tree_sitter_parser.hpp>
+#include <cmath>
+#include <cstring>
 #include <iostream>
 #include <unordered_map>
-#include <arkanjo/utils/utils.hpp>
-#include <arkanjo/base/features/ast_feature.hpp>
-#include <arkanjo/base/features/source_feature.hpp>
-#include <arkanjo/base/features/metadata_feature.hpp>
 
 std::unordered_map<std::string, TSLanguage* (*)()> get_language_map();
 std::unordered_map<std::string, std::string> get_extension_map();

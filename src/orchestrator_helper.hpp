@@ -6,9 +6,11 @@
 #include <arkanjo/base/similarity_table.hpp>
 
 #include "cli/parser_options.hpp"
-#include "orchestrator.hpp"
 #include "commands/command.hpp"
 #include "commands/commands_registry.hpp"
+#include "orchestrator.hpp"
+#include "utils/os_utils.hpp"
+#include "utils/utils.hpp"
 #include <arkanjo/base/preprocess_state.hpp>
 
 namespace OrchestratorHelper {

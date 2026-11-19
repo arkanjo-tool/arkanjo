@@ -4,7 +4,7 @@
 #include <arkanjo/base/similarity_table.hpp>
 #include <arkanjo/base/storage/function_storage.hpp>
 
-#include <arkanjo/utils/utils.hpp>
+#include "utils/utils.hpp"
 
 void Similarity_Table::normalize_pair(PathId& id1, PathId& id2) const {
     if (paths[id2] < paths[id1])

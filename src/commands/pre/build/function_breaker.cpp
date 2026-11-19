@@ -1,10 +1,10 @@
 #include "function_breaker.hpp"
+#include "utils/utils.hpp"
 #include <arkanjo/base/config/config.hpp>
 #include <arkanjo/base/features/ast_feature.hpp>
 #include <arkanjo/base/features/metadata_feature.hpp>
 #include <arkanjo/base/features/source_feature.hpp>
 #include <arkanjo/base/storage/function_storage.hpp>
-#include <arkanjo/utils/utils.hpp>
 
 void FunctionBreaker::write_output(
     const fs::path type_path,

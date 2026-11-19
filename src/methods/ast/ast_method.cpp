@@ -4,7 +4,6 @@
 #include <arkanjo/base/features/source_feature.hpp>
 #include <arkanjo/base/storage/function_storage.hpp>
 #include <arkanjo/methods/ast/ast_method.hpp>
-#include <arkanjo/utils/utils.hpp>
 
 #include <algorithm>
 #include <cmath>

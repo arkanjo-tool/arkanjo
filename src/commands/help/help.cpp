@@ -1,7 +1,7 @@
 #include "help.hpp"
 
-#include <arkanjo/utils/os_utils.hpp>
-#include <arkanjo/utils/utils.hpp>
+#include "utils/os_utils.hpp"
+#include "utils/utils.hpp"
 #include <iostream>
 
 Help::Help(

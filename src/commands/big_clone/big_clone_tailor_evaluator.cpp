@@ -3,7 +3,7 @@
 #include <iomanip>
 #include <iostream>
 
-#include <arkanjo/utils/utils.hpp>
+#include "utils/utils.hpp"
 
 void BigCloneTailorEvaluator::read_clone_labels() {
     count_of_samples_by_type = std::vector<int>(kNumberOfTypes);

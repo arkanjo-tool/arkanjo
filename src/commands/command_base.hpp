@@ -1,10 +1,10 @@
 #pragma once
 
-#include "commands/command.hpp"
-#include <arkanjo/utils/utils.hpp>
 #include "cli/formatter/format_manager.hpp"
+#include "commands/command.hpp"
+#include "utils/utils.hpp"
+#include <algorithm>
 #include <arkanjo/base/config/config.hpp>
-#include <algorithm> 
 
 #define COMMAND_DESCRIPTION(str)                       \
     std::string_view description() const override {    \
