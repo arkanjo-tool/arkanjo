@@ -1,9 +1,9 @@
 #include "similar_function_finder.hpp"
+#include "cli/formatter/format_manager.hpp"
 #include "similar_function_finder_entry.hpp"
 #include <arkanjo/base/function/function_loader.hpp>
 #include <arkanjo/base/function/function_printer.hpp>
 #include <arkanjo/base/preprocess_state.hpp>
-#include <arkanjo/formatter/format_manager.hpp>
 
 using fm = FormatterManager;
 

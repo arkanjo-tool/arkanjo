@@ -14,6 +14,10 @@
  * files: example/a.c and example/b.c
  */
 
+// TODO: Consider moving FunctionBreaker to include/ if its functionality
+// becomes part of the public API. It provides reusable source-code
+// decomposition functionality beyond the CLI.
+
 #pragma once
 
 #include <filesystem>

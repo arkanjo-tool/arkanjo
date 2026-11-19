@@ -4,8 +4,8 @@
 #include <algorithm>
 #include <optional>
 
+#include "cli/formatter/format_manager.hpp"
 #include <arkanjo/base/config/config.hpp>
-#include <arkanjo/formatter/format_manager.hpp>
 
 using fm = FormatterManager;
 

@@ -3,9 +3,9 @@
 #include <string>
 #include <vector>
 
+#include "commands/command_base.hpp"
 #include <arkanjo/base/path.hpp>
 #include <arkanjo/base/similarity_table.hpp>
-#include <arkanjo/commands/command_base.hpp>
 
 /**
  * @brief Generate a git-style diff between two duplicate functions.

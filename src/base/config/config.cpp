@@ -1,6 +1,6 @@
+#include "cli/formatter/format_manager.hpp"
 #include <arkanjo/base/config/config.hpp>
 #include <arkanjo/base/config/resolver.hpp>
-#include <arkanjo/formatter/format_manager.hpp>
 
 void Config::setTestConfig() {
     fs::path cwd = fs::current_path();

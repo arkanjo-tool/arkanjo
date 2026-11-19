@@ -1,7 +1,7 @@
 #pragma once
 
-#include <arkanjo/formatter/template_renderer.hpp>
-#include <arkanjo/formatter/base.hpp>
+#include "cli/formatter/template_renderer.hpp"
+#include "cli/formatter/base.hpp"
 
 #define DEFINE_COLOR_HELPER(name)                                                                  \
     inline std::string name(const std::string& text) {                                             \

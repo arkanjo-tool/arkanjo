@@ -1,8 +1,8 @@
 #pragma once
 
-#include <arkanjo/commands/command.hpp>
+#include "commands/command.hpp"
 #include <arkanjo/utils/utils.hpp>
-#include <arkanjo/formatter/format_manager.hpp>
+#include "cli/formatter/format_manager.hpp"
 #include <arkanjo/base/config/config.hpp>
 #include <algorithm> 
 

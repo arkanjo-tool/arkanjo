@@ -1,6 +1,6 @@
 #include <arkanjo/base/function/function.hpp>
 
-#include <arkanjo/formatter/format_manager.hpp>
+#include "cli/formatter/format_manager.hpp"
 
 const Path& Function::path() const {
     return path_;

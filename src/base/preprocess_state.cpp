@@ -1,6 +1,6 @@
+#include "cli/formatter/format_manager.hpp"
 #include <arkanjo/base/config/config.hpp>
 #include <arkanjo/base/preprocess_state.hpp>
-#include <arkanjo/formatter/format_manager.hpp>
 #include <arkanjo/utils/utils.hpp>
 #include <fstream>
 

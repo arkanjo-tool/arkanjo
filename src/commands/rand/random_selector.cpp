@@ -1,8 +1,8 @@
 #include "random_selector.hpp"
+#include "cli/formatter/format_manager.hpp"
 #include "random_selector_entry.hpp"
 #include <arkanjo/base/function/function_loader.hpp>
 #include <arkanjo/base/function/function_printer.hpp>
-#include <arkanjo/formatter/format_manager.hpp>
 
 using fm = FormatterManager;
 

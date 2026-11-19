@@ -1,4 +1,4 @@
-#include <arkanjo/git/repository.hpp>
+#include "git/repository.hpp"
 
 GitRepository::GitRepository(const fs::path& path) {
     git_libgit2_init();

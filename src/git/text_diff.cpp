@@ -1,6 +1,6 @@
-#include <arkanjo/git/text_diff.hpp>
+#include "git/text_diff.hpp"
 
-#include <arkanjo/formatter/format_manager.hpp>
+#include "cli/formatter/format_manager.hpp"
 
 #include <string>
 

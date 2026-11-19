@@ -1,6 +1,6 @@
 #pragma once
-#include <arkanjo/cli/parser_options.hpp>
-#include <arkanjo/cli/options_collector.hpp>
+#include "cli/parser_options.hpp"
+#include "cli/options_collector.hpp"
 
 /**
  * @brief Basic interface for all CLI commands.

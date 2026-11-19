@@ -1,7 +1,7 @@
 #pragma once
 
 #include <arkanjo/utils/utils.hpp>
-#include <arkanjo/formatter/base.hpp>
+#include "cli/formatter/base.hpp"
 
 /**
  * @brief Represents a parsed template placeholder key and its associated color style.

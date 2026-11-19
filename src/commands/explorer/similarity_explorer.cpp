@@ -6,10 +6,10 @@ The code filter every file that has the pattern as a substring, so be carefull w
 
 #include <algorithm>
 
+#include "cli/formatter/format_manager.hpp"
 #include "similarity_explorer.hpp"
 #include <arkanjo/base/function/function_loader.hpp>
 #include <arkanjo/base/function/function_printer.hpp>
-#include <arkanjo/formatter/format_manager.hpp>
 
 using fm = FormatterManager;
 

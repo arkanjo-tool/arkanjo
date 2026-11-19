@@ -10,10 +10,10 @@
 #include <filesystem>
 #include <string>
 
-#include <arkanjo/orchestrator_helper.hpp>
-#include <arkanjo/orchestrator.hpp>
-#include <arkanjo/commands/command.hpp>
-#include <arkanjo/formatter/format_manager.hpp>
+#include "cli/formatter/format_manager.hpp"
+#include "commands/command.hpp"
+#include "orchestrator.hpp"
+#include "orchestrator_helper.hpp"
 
 int main(int argc, char* argv[]) {
     auto& cfg = Config::config();

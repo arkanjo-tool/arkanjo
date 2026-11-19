@@ -19,7 +19,7 @@
 #include <arkanjo/base/similarity.hpp>
 #include <arkanjo/base/similarity_table.hpp>
 
-#include <arkanjo/commands/command_base.hpp>
+#include "commands/command_base.hpp"
 
 /**
  * @brief Evaluates clone detection using BigCloneBench methodology

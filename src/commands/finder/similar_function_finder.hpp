@@ -18,8 +18,8 @@
 #include <arkanjo/base/path.hpp>
 #include <arkanjo/base/similarity_table.hpp>
 
-#include <arkanjo/cli/cli_error.hpp>
-#include <arkanjo/commands/command_base.hpp>
+#include "cli/cli_error.hpp"
+#include "commands/command_base.hpp"
 
 /**
  * @brief Similar function locator and reporter

@@ -17,9 +17,9 @@
 #include <random>
 #include <vector>
 
+#include "cli/cli_error.hpp"
+#include "commands/command_base.hpp"
 #include <arkanjo/base/similarity.hpp>
-#include <arkanjo/cli/cli_error.hpp>
-#include <arkanjo/commands/command_base.hpp>
 
 /**
  * @brief Random pair selector for similar code segments

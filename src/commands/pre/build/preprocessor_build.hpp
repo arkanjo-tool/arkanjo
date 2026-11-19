@@ -18,9 +18,9 @@
 #include <arkanjo/methods/embedding/embedding_method.hpp>
 #include <arkanjo/methods/tfidf/tfidf_method.hpp>
 
+#include "commands/command_base.hpp"
 #include "function_breaker.hpp"
 #include <arkanjo/base/preprocess_state.hpp>
-#include <arkanjo/commands/command_base.hpp>
 #include <filesystem>
 #include <string>
 #include <tuple>

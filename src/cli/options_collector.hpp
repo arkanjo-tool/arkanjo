@@ -1,7 +1,7 @@
 #pragma once
 
-#include <arkanjo/cli/parser_options.hpp>
-#include <arkanjo/orchestrator.hpp>
+#include "cli/parser_options.hpp"
+#include "orchestrator.hpp"
 #include <string>
 #include <vector>
 

@@ -12,9 +12,9 @@
 
 #pragma once
 
+#include "commands/command_base.hpp"
 #include <arkanjo/base/path.hpp>
 #include <arkanjo/base/similarity_table.hpp>
-#include <arkanjo/commands/command_base.hpp>
 #include <set>
 
 #include "counter_duplication_code_trie.hpp"

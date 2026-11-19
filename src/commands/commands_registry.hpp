@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <functional>
 #include <memory>
-#include <arkanjo/commands/command.hpp>
+#include "commands/command.hpp"
 
 namespace CommandsRegistry {
     using CommandFactory = std::function<std::unique_ptr<ICommand>()>;

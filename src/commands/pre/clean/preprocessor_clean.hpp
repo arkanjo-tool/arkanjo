@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <arkanjo/commands/command_base.hpp>
+#include "commands/command_base.hpp"
 
 class PreprocessorClean : public CommandBase<PreprocessorClean> {
 

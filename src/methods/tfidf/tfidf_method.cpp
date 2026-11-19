@@ -1,7 +1,7 @@
+#include "cli/formatter/format_manager.hpp"
 #include <arkanjo/base/config/config.hpp>
 #include <arkanjo/base/features/source_feature.hpp>
 #include <arkanjo/base/storage/function_storage.hpp>
-#include <arkanjo/formatter/format_manager.hpp>
 #include <arkanjo/methods/tfidf/tfidf_method.hpp>
 
 using fm = FormatterManager;

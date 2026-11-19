@@ -1,3 +1,3 @@
-#include <arkanjo/commands/command.hpp>
+#include "commands/command.hpp"
 
 ICommand::~ICommand() = default;

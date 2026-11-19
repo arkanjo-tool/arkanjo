@@ -12,9 +12,9 @@
 
 #pragma once
 
-#include <arkanjo/cli/cli_error.hpp>
-#include <arkanjo/commands/command_base.hpp>
-#include <arkanjo/commands/commands_registry.hpp>
+#include "cli/cli_error.hpp"
+#include "commands/command_base.hpp"
+#include "commands/commands_registry.hpp"
 
 class Help : public CommandBase<Help> {
   private:

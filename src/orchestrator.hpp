@@ -18,8 +18,8 @@
 
 #include <arkanjo/base/similarity_table.hpp>
 
-#include <arkanjo/cli/parser_options.hpp>
-#include <arkanjo/formatter/format_manager.hpp>
+#include "cli/parser_options.hpp"
+#include "cli/formatter/format_manager.hpp"
 
 struct Context {
     std::string command_name;

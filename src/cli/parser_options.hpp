@@ -5,7 +5,7 @@
 #include <vector>
 #include <getopt.h>
 
-#include <arkanjo/cli/cli_error.hpp>
+#include "cli/cli_error.hpp"
 
 enum ArgumentsType {
     NoArgument,

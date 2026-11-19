@@ -3,11 +3,11 @@
 #include <iostream>
 #include <sstream>
 
+#include "cli/cli_error.hpp"
+#include "cli/formatter/format_manager.hpp"
+#include "git/text_diff.hpp"
 #include <arkanjo/base/function/function_loader.hpp>
 #include <arkanjo/base/function/function_printer.hpp>
-#include <arkanjo/git/text_diff.hpp>
-#include <arkanjo/cli/cli_error.hpp>
-#include <arkanjo/formatter/format_manager.hpp>
 
 GitDiffFunction::GitDiffFunction(Similarity_Table* _similarity_table)
     : similarity_table(_similarity_table) {}
