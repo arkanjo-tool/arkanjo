@@ -8,19 +8,6 @@ set(ARKANJO_PRIVATE_INCLUDE_DIRS
     ${PROJECT_SOURCE_DIR}/third-party
 )
 
-if(ARKANJO_LIBGIT2_SYSTEM)
-    set(ARKANJO_LIBGIT2_LIBS git2)
-else()
-    set(ARKANJO_LIBGIT2_LIBS
-        libgit2
-        util
-        xdiff
-        llhttp
-        pcre2
-        zlib
-    )
-endif()
-
 add_executable(arkanjo)
 
 target_include_directories(arkanjo

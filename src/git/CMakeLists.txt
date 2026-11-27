@@ -14,7 +14,7 @@ target_include_directories(core_git
 )
 
 target_link_libraries(core_git PRIVATE core_cli)
-target_link_libraries(core_git PUBLIC ${ARKANJO_LIBGIT2_LIBS})
+target_link_libraries(core_git PUBLIC ${ARKANJO_LIBGIT2_TARGET})
 target_link_libraries(core_git PRIVATE project_options)
 
 if(APPLE)
