@@ -2,6 +2,7 @@
 #include <arkanjo/base/preprocess_state.hpp>
 
 #include "cli/formatter/format_manager.hpp"
+#include <sstream>
 
 void FunctionPrinter::print_basic_info(const Function& function) {
     auto params = Preprocess_State::read_current_run_params();

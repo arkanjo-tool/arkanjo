@@ -1,6 +1,7 @@
 #include "utils/utils.hpp"
 
 #include <fstream>
+#include <sstream>
 
 template <typename Stream>
 void Utils::ensure_file_is_open(const Stream& file, const fs::path& file_name) {
